@@ -1,0 +1,112 @@
+{
+  "calendar_by_exchange": [
+    [
+      "SSE",
+      3120,
+      "20131227",
+      "20261030"
+    ],
+    [
+      "SZSE",
+      3120,
+      "20131227",
+      "20261030"
+    ]
+  ],
+  "daily_by_exchange": [
+    [
+      "BJ",
+      349052,
+      350,
+      "20150105",
+      "20260922"
+    ],
+    [
+      "SH",
+      4887598,
+      2423,
+      "20150105",
+      "20260922"
+    ],
+    [
+      "SZ",
+      6528089,
+      3052,
+      "20150105",
+      "20260922"
+    ]
+  ],
+  "master_orphan_codes": [
+    [
+      "000022.SZ",
+      691,
+      "20150105",
+      "20181220"
+    ],
+    [
+      "000043.SZ",
+      1127,
+      "20150105",
+      "20191213"
+    ],
+    [
+      "300114.SZ",
+      2447,
+      "20150105",
+      "20250214"
+    ]
+  ],
+  "daily_missing_daily_basic_by_exchange": [
+    [
+      "BJ",
+      90362,
+      241,
+      "20150105",
+      "20221230"
+    ]
+  ],
+  "daily_missing_stk_limit_by_exchange": [
+    [
+      "BJ",
+      91014,
+      241,
+      "20150105",
+      "20221230"
+    ],
+    [
+      "SH",
+      1,
+      1,
+      "20190722",
+      "20190722"
+    ],
+    [
+      "SZ",
+      1129,
+      2,
+      "20150105",
+      "20191213"
+    ]
+  ],
+  "daily_missing_adj_factor_by_exchange": [],
+  "calendar_unmatched_by_exchange": [
+    [
+      "BJ",
+      349052,
+      350
+    ]
+  ],
+  "expected_stock_sessions_within_observed_span": 11682934,
+  "gaps_by_exchange": [
+    [
+      "SH",
+      82108
+    ],
+    [
+      "SZ",
+      185139
+    ]
+  ],
+  "gaps_matching_same_day_suspend_S": 257115,
+  "limitation": "Same-day S is only one suspension marker; multi-day suspension intervals and lifecycle explanations have not been reconstructed. BSE has no expected-session denominator if its calendar is absent."
+}

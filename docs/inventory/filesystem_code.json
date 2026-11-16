@@ -1,0 +1,142 @@
+{
+  "root": "E:\\quant",
+  "excluded": [
+    ".git",
+    ".venv",
+    ".cache",
+    ".pytest_cache",
+    ".ruff_cache"
+  ],
+  "groups": {
+    "(root)": {
+      "files": 8,
+      "bytes": 459167,
+      "extensions": {
+        "": 3,
+        ".example": 1,
+        ".md": 2,
+        ".toml": 1,
+        ".lock": 1
+      },
+      "earliest_mtime_utc": "2026-09-23T03:56:19.175553+00:00",
+      "latest_mtime_utc": "2026-10-17T14:42:10.808031+00:00",
+      "examples": [
+        "E:\\quant\\.env",
+        "E:\\quant\\.env.example"
+      ]
+    },
+    "config": {
+      "files": 2,
+      "bytes": 413787,
+      "extensions": {
+        ".json": 1,
+        ".toml": 1
+      },
+      "earliest_mtime_utc": "2026-09-23T05:07:57.949144+00:00",
+      "latest_mtime_utc": "2026-09-29T05:36:08.650750+00:00",
+      "examples": [
+        "E:\\quant\\config\\official_api_schema.json",
+        "E:\\quant\\config\\settings.toml"
+      ]
+    },
+    "docs": {
+      "files": 22,
+      "bytes": 105584,
+      "extensions": {
+        ".md": 21,
+        ".json": 1
+      },
+      "earliest_mtime_utc": "2026-09-23T04:54:55.856009+00:00",
+      "latest_mtime_utc": "2026-10-17T15:51:11.182832+00:00",
+      "examples": [
+        "E:\\quant\\docs\\adjustment_audit_v2.md",
+        "E:\\quant\\docs\\adjustment_policy.md"
+      ]
+    },
+    "logs": {
+      "files": 1065,
+      "bytes": 94665631,
+      "extensions": {
+        ".log": 1036,
+        ".py": 12,
+        ".json": 14,
+        ".md": 2,
+        ".lock": 1
+      },
+      "earliest_mtime_utc": "2026-09-23T05:21:19.909435+00:00",
+      "latest_mtime_utc": "2026-10-21T00:21:42.210003+00:00",
+      "examples": [
+        "E:\\quant\\logs\\benchmark-income-120.err.log",
+        "E:\\quant\\logs\\benchmark-income-120.out.log"
+      ]
+    },
+    "scripts": {
+      "files": 18,
+      "bytes": 87776,
+      "extensions": {
+        ".py": 16,
+        ".ps1": 2
+      },
+      "earliest_mtime_utc": "2026-09-23T05:06:10.662181+00:00",
+      "latest_mtime_utc": "2026-10-17T15:30:24.468774+00:00",
+      "examples": [
+        "E:\\quant\\scripts\\audit_foundation_v2.py",
+        "E:\\quant\\scripts\\audit_orphans_v2.py"
+      ]
+    },
+    "scripts/__pycache__": {
+      "files": 16,
+      "bytes": 119529,
+      "extensions": {
+        ".pyc": 16
+      },
+      "earliest_mtime_utc": "2026-09-23T05:07:57.271823+00:00",
+      "latest_mtime_utc": "2026-10-17T15:31:00.491543+00:00",
+      "examples": [
+        "E:\\quant\\scripts\\__pycache__\\audit_foundation_v2.cpython-311.pyc",
+        "E:\\quant\\scripts\\__pycache__\\audit_orphans_v2.cpython-311.pyc"
+      ]
+    },
+    "src/quant": {
+      "files": 106,
+      "bytes": 647482,
+      "extensions": {
+        ".py": 53,
+        ".pyc": 53
+      },
+      "earliest_mtime_utc": "2026-09-23T04:20:43.763158+00:00",
+      "latest_mtime_utc": "2026-10-17T15:30:27.327372+00:00",
+      "examples": [
+        "E:\\quant\\src\\quant\\cli.py",
+        "E:\\quant\\src\\quant\\__init__.py"
+      ]
+    },
+    "tests": {
+      "files": 19,
+      "bytes": 84231,
+      "extensions": {
+        ".py": 19
+      },
+      "earliest_mtime_utc": "2026-09-23T05:06:10.662181+00:00",
+      "latest_mtime_utc": "2026-10-17T15:30:24.826288+00:00",
+      "examples": [
+        "E:\\quant\\tests\\conftest.py",
+        "E:\\quant\\tests\\test_data_gate.py"
+      ]
+    },
+    "tests/__pycache__": {
+      "files": 19,
+      "bytes": 369249,
+      "extensions": {
+        ".pyc": 19
+      },
+      "earliest_mtime_utc": "2026-09-23T05:06:11.156408+00:00",
+      "latest_mtime_utc": "2026-10-17T15:30:27.256246+00:00",
+      "examples": [
+        "E:\\quant\\tests\\__pycache__\\conftest.cpython-311-pytest-9.1.1.pyc",
+        "E:\\quant\\tests\\__pycache__\\test_data_gate.cpython-311-pytest-9.1.1.pyc"
+      ]
+    }
+  },
+  "errors": []
+}

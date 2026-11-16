@@ -1,0 +1,5399 @@
+{
+  "scope": "E:\\QuantData\\reports",
+  "csv": [
+    {
+      "path": "E:\\QuantData\\reports\\data_audit\\adj_factor_instruments.csv",
+      "bytes": 220784,
+      "fields": [
+        "ts_code",
+        "row_count",
+        "start_date",
+        "end_date"
+      ],
+      "rows_exact_streamed": 5831,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_audit\\balancesheet_instruments.csv",
+      "bytes": 211121,
+      "fields": [
+        "ts_code",
+        "row_count",
+        "start_date",
+        "end_date"
+      ],
+      "rows_exact_streamed": 5865,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_audit\\block_trade_instruments.csv",
+      "bytes": 546918,
+      "fields": [
+        "ts_code",
+        "row_count",
+        "start_date",
+        "end_date"
+      ],
+      "rows_exact_streamed": 15335,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_audit\\cashflow_instruments.csv",
+      "bytes": 210985,
+      "fields": [
+        "ts_code",
+        "row_count",
+        "start_date",
+        "end_date"
+      ],
+      "rows_exact_streamed": 5861,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_audit\\coverage_matrix.csv",
+      "bytes": 24277,
+      "fields": [
+        "endpoint",
+        "year",
+        "rows",
+        "observed_dates"
+      ],
+      "rows_exact_streamed": 932,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_audit\\daily_basic_instruments.csv",
+      "bytes": 223172,
+      "fields": [
+        "ts_code",
+        "row_count",
+        "start_date",
+        "end_date"
+      ],
+      "rows_exact_streamed": 5904,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_audit\\daily_info_instruments.csv",
+      "bytes": 1282,
+      "fields": [
+        "ts_code",
+        "row_count",
+        "start_date",
+        "end_date"
+      ],
+      "rows_exact_streamed": 33,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_audit\\daily_instruments.csv",
+      "bytes": 220493,
+      "fields": [
+        "ts_code",
+        "row_count",
+        "start_date",
+        "end_date"
+      ],
+      "rows_exact_streamed": 5825,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_audit\\disclosure_date_instruments.csv",
+      "bytes": 212594,
+      "fields": [
+        "ts_code",
+        "row_count",
+        "start_date",
+        "end_date"
+      ],
+      "rows_exact_streamed": 5890,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_audit\\dividend_instruments.csv",
+      "bytes": 209249,
+      "fields": [
+        "ts_code",
+        "row_count",
+        "start_date",
+        "end_date"
+      ],
+      "rows_exact_streamed": 5819,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_audit\\etf_limit_instruments.csv",
+      "bytes": 96459,
+      "fields": [
+        "ts_code",
+        "row_count",
+        "start_date",
+        "end_date"
+      ],
+      "rows_exact_streamed": 2582,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_audit\\express_instruments.csv",
+      "bytes": 144290,
+      "fields": [
+        "ts_code",
+        "row_count",
+        "start_date",
+        "end_date"
+      ],
+      "rows_exact_streamed": 4113,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_audit\\fina_audit_instruments.csv",
+      "bytes": 207800,
+      "fields": [
+        "ts_code",
+        "row_count",
+        "start_date",
+        "end_date"
+      ],
+      "rows_exact_streamed": 5810,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_audit\\fina_indicator_instruments.csv",
+      "bytes": 211115,
+      "fields": [
+        "ts_code",
+        "row_count",
+        "start_date",
+        "end_date"
+      ],
+      "rows_exact_streamed": 5864,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_audit\\fina_mainbz_instruments.csv",
+      "bytes": 216182,
+      "fields": [
+        "ts_code",
+        "row_count",
+        "start_date",
+        "end_date"
+      ],
+      "rows_exact_streamed": 5843,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_audit\\forecast_instruments.csv",
+      "bytes": 201590,
+      "fields": [
+        "ts_code",
+        "row_count",
+        "start_date",
+        "end_date"
+      ],
+      "rows_exact_streamed": 5670,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_audit\\fund_adj_instruments.csv",
+      "bytes": 101632,
+      "fields": [
+        "ts_code",
+        "row_count",
+        "start_date",
+        "end_date"
+      ],
+      "rows_exact_streamed": 2713,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_audit\\fund_basic_instruments.csv",
+      "bytes": 99840,
+      "fields": [
+        "ts_code",
+        "row_count",
+        "start_date",
+        "end_date"
+      ],
+      "rows_exact_streamed": 2912,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_audit\\fund_daily_instruments.csv",
+      "bytes": 101524,
+      "fields": [
+        "ts_code",
+        "row_count",
+        "start_date",
+        "end_date"
+      ],
+      "rows_exact_streamed": 2714,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_audit\\fund_div_instruments.csv",
+      "bytes": 14760,
+      "fields": [
+        "ts_code",
+        "row_count",
+        "start_date",
+        "end_date"
+      ],
+      "rows_exact_streamed": 418,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_audit\\fund_nav_instruments.csv",
+      "bytes": 105439,
+      "fields": [
+        "ts_code",
+        "row_count",
+        "start_date",
+        "end_date"
+      ],
+      "rows_exact_streamed": 2823,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_audit\\fund_share_instruments.csv",
+      "bytes": 102608,
+      "fields": [
+        "ts_code",
+        "row_count",
+        "start_date",
+        "end_date"
+      ],
+      "rows_exact_streamed": 2767,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_audit\\hsgt_top10_instruments.csv",
+      "bytes": 22359,
+      "fields": [
+        "ts_code",
+        "row_count",
+        "start_date",
+        "end_date"
+      ],
+      "rows_exact_streamed": 628,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_audit\\income_instruments.csv",
+      "bytes": 211123,
+      "fields": [
+        "ts_code",
+        "row_count",
+        "start_date",
+        "end_date"
+      ],
+      "rows_exact_streamed": 5865,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_audit\\index_basic_instruments.csv",
+      "bytes": 398398,
+      "fields": [
+        "ts_code",
+        "row_count",
+        "start_date",
+        "end_date"
+      ],
+      "rows_exact_streamed": 10604,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_audit\\index_dailybasic_instruments.csv",
+      "bytes": 612,
+      "fields": [
+        "ts_code",
+        "row_count",
+        "start_date",
+        "end_date"
+      ],
+      "rows_exact_streamed": 15,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_audit\\index_daily_instruments.csv",
+      "bytes": 391734,
+      "fields": [
+        "ts_code",
+        "row_count",
+        "start_date",
+        "end_date"
+      ],
+      "rows_exact_streamed": 9598,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_audit\\index_member_all_instruments.csv",
+      "bytes": 207032,
+      "fields": [
+        "ts_code",
+        "row_count",
+        "start_date",
+        "end_date"
+      ],
+      "rows_exact_streamed": 5914,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_audit\\margin_detail_instruments.csv",
+      "bytes": 195721,
+      "fields": [
+        "ts_code",
+        "row_count",
+        "start_date",
+        "end_date"
+      ],
+      "rows_exact_streamed": 5223,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_audit\\margin_secs_instruments.csv",
+      "bytes": 192885,
+      "fields": [
+        "ts_code",
+        "row_count",
+        "start_date",
+        "end_date"
+      ],
+      "rows_exact_streamed": 5131,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_audit\\moneyflow_instruments.csv",
+      "bytes": 219884,
+      "fields": [
+        "ts_code",
+        "row_count",
+        "start_date",
+        "end_date"
+      ],
+      "rows_exact_streamed": 5822,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_audit\\namechange_instruments.csv",
+      "bytes": 206901,
+      "fields": [
+        "ts_code",
+        "row_count",
+        "start_date",
+        "end_date"
+      ],
+      "rows_exact_streamed": 5905,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_audit\\new_share_instruments.csv",
+      "bytes": 113862,
+      "fields": [
+        "ts_code",
+        "row_count",
+        "start_date",
+        "end_date"
+      ],
+      "rows_exact_streamed": 3252,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_audit\\pledge_detail_instruments.csv",
+      "bytes": 122291,
+      "fields": [
+        "ts_code",
+        "row_count",
+        "start_date",
+        "end_date"
+      ],
+      "rows_exact_streamed": 3399,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_audit\\pledge_stat_instruments.csv",
+      "bytes": 164634,
+      "fields": [
+        "ts_code",
+        "row_count",
+        "start_date",
+        "end_date"
+      ],
+      "rows_exact_streamed": 4462,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_audit\\repurchase_instruments.csv",
+      "bytes": 132491,
+      "fields": [
+        "ts_code",
+        "row_count",
+        "start_date",
+        "end_date"
+      ],
+      "rows_exact_streamed": 3727,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_audit\\share_float_instruments.csv",
+      "bytes": 192965,
+      "fields": [
+        "ts_code",
+        "row_count",
+        "start_date",
+        "end_date"
+      ],
+      "rows_exact_streamed": 5326,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_audit\\stk_holdernumber_instruments.csv",
+      "bytes": 203256,
+      "fields": [
+        "ts_code",
+        "row_count",
+        "start_date",
+        "end_date"
+      ],
+      "rows_exact_streamed": 5610,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_audit\\stk_holdertrade_instruments.csv",
+      "bytes": 193923,
+      "fields": [
+        "ts_code",
+        "row_count",
+        "start_date",
+        "end_date"
+      ],
+      "rows_exact_streamed": 5423,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_audit\\stk_limit_instruments.csv",
+      "bytes": 225943,
+      "fields": [
+        "ts_code",
+        "row_count",
+        "start_date",
+        "end_date"
+      ],
+      "rows_exact_streamed": 5976,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_audit\\stk_managers_instruments.csv",
+      "bytes": 209242,
+      "fields": [
+        "ts_code",
+        "row_count",
+        "start_date",
+        "end_date"
+      ],
+      "rows_exact_streamed": 5799,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_audit\\stk_rewards_instruments.csv",
+      "bytes": 217101,
+      "fields": [
+        "ts_code",
+        "row_count",
+        "start_date",
+        "end_date"
+      ],
+      "rows_exact_streamed": 5896,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_audit\\stk_seasoned_instruments.csv",
+      "bytes": 134873,
+      "fields": [
+        "ts_code",
+        "row_count",
+        "start_date",
+        "end_date"
+      ],
+      "rows_exact_streamed": 3852,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_audit\\stock_basic_instruments.csv",
+      "bytes": 206788,
+      "fields": [
+        "ts_code",
+        "row_count",
+        "start_date",
+        "end_date"
+      ],
+      "rows_exact_streamed": 5907,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_audit\\stock_company_instruments.csv",
+      "bytes": 94452,
+      "fields": [
+        "ts_code",
+        "row_count",
+        "start_date",
+        "end_date"
+      ],
+      "rows_exact_streamed": 6294,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_audit\\suspend_d_instruments.csv",
+      "bytes": 159813,
+      "fields": [
+        "ts_code",
+        "row_count",
+        "start_date",
+        "end_date"
+      ],
+      "rows_exact_streamed": 4443,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_audit\\sz_daily_info_instruments.csv",
+      "bytes": 881,
+      "fields": [
+        "ts_code",
+        "row_count",
+        "start_date",
+        "end_date"
+      ],
+      "rows_exact_streamed": 22,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_audit\\top10_floatholders_instruments.csv",
+      "bytes": 213720,
+      "fields": [
+        "ts_code",
+        "row_count",
+        "start_date",
+        "end_date"
+      ],
+      "rows_exact_streamed": 5784,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_audit\\top10_holders_instruments.csv",
+      "bytes": 215417,
+      "fields": [
+        "ts_code",
+        "row_count",
+        "start_date",
+        "end_date"
+      ],
+      "rows_exact_streamed": 5825,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_audit\\top_inst_instruments.csv",
+      "bytes": 230851,
+      "fields": [
+        "ts_code",
+        "row_count",
+        "start_date",
+        "end_date"
+      ],
+      "rows_exact_streamed": 6268,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_audit\\top_list_instruments.csv",
+      "bytes": 232536,
+      "fields": [
+        "ts_code",
+        "row_count",
+        "start_date",
+        "end_date"
+      ],
+      "rows_exact_streamed": 6504,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\adj_factor\\conflicts.csv",
+      "bytes": 62,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "observations",
+        "contents",
+        "first_seen",
+        "last_seen"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\adj_factor\\dates.csv",
+      "bytes": 71267,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 2850,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\adj_factor\\instruments.csv",
+      "bytes": 319903,
+      "fields": [
+        "ts_code",
+        "rows",
+        "first_date",
+        "last_date"
+      ],
+      "rows_exact_streamed": 5831,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\adj_factor\\invalid_adj_factor.csv",
+      "bytes": 215,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "adj_factor",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\adj_factor\\invalid_trade_date.csv",
+      "bytes": 215,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "adj_factor",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\adj_factor\\monthly.csv",
+      "bytes": 2031,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 141,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\balancesheet\\conflicts.csv",
+      "bytes": 114,
+      "fields": [
+        "ts_code",
+        "end_date",
+        "ann_date",
+        "f_ann_date",
+        "report_type",
+        "update_flag",
+        "comp_type",
+        "observations",
+        "contents",
+        "first_seen",
+        "last_seen"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\balancesheet\\dates.csv",
+      "bytes": 68090,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 2979,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\balancesheet\\instruments.csv",
+      "bytes": 310818,
+      "fields": [
+        "ts_code",
+        "rows",
+        "first_date",
+        "last_date"
+      ],
+      "rows_exact_streamed": 5865,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\balancesheet\\monthly.csv",
+      "bytes": 1742,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 141,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\balancesheet\\report_variants.csv",
+      "bytes": 2104443,
+      "fields": [
+        "ts_code",
+        "end_date",
+        "variants",
+        "contents"
+      ],
+      "rows_exact_streamed": 91496,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\block_trade\\dates.csv",
+      "bytes": 68028,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 2850,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\block_trade\\instruments.csv",
+      "bytes": 807605,
+      "fields": [
+        "ts_code",
+        "rows",
+        "first_date",
+        "last_date"
+      ],
+      "rows_exact_streamed": 15335,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\block_trade\\invalid_amount.csv",
+      "bytes": 234,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "price",
+        "vol",
+        "amount",
+        "buyer",
+        "seller",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\block_trade\\invalid_trade_date.csv",
+      "bytes": 234,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "price",
+        "vol",
+        "amount",
+        "buyer",
+        "seller",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\block_trade\\invalid_vol.csv",
+      "bytes": 234,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "price",
+        "vol",
+        "amount",
+        "buyer",
+        "seller",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\block_trade\\monthly.csv",
+      "bytes": 1847,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 141,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\bse_mapping\\dates.csv",
+      "bytes": 22,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 1,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\bse_mapping\\monthly.csv",
+      "bytes": 16,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 1,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\cashflow\\conflicts.csv",
+      "bytes": 114,
+      "fields": [
+        "ts_code",
+        "end_date",
+        "ann_date",
+        "f_ann_date",
+        "report_type",
+        "update_flag",
+        "comp_type",
+        "observations",
+        "contents",
+        "first_seen",
+        "last_seen"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\cashflow\\dates.csv",
+      "bytes": 66573,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 2917,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\cashflow\\instruments.csv",
+      "bytes": 310614,
+      "fields": [
+        "ts_code",
+        "rows",
+        "first_date",
+        "last_date"
+      ],
+      "rows_exact_streamed": 5861,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\cashflow\\monthly.csv",
+      "bytes": 1738,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 141,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\cashflow\\report_variants.csv",
+      "bytes": 1978012,
+      "fields": [
+        "ts_code",
+        "end_date",
+        "variants",
+        "contents"
+      ],
+      "rows_exact_streamed": 85999,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\cn_cpi\\conflicts.csv",
+      "bytes": 49,
+      "fields": [
+        "month",
+        "observations",
+        "contents",
+        "first_seen",
+        "last_seen"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\cn_cpi\\dates.csv",
+      "bytes": 3097,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 140,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\cn_cpi\\monthly.csv",
+      "bytes": 1411,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 140,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\cn_gdp\\conflicts.csv",
+      "bytes": 51,
+      "fields": [
+        "quarter",
+        "observations",
+        "contents",
+        "first_seen",
+        "last_seen"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\cn_gdp\\dates.csv",
+      "bytes": 1029,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 46,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\cn_gdp\\monthly.csv",
+      "bytes": 471,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 46,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\cn_m\\conflicts.csv",
+      "bytes": 49,
+      "fields": [
+        "month",
+        "observations",
+        "contents",
+        "first_seen",
+        "last_seen"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\cn_m\\dates.csv",
+      "bytes": 3097,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 140,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\cn_m\\monthly.csv",
+      "bytes": 1411,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 140,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\cn_pmi\\conflicts.csv",
+      "bytes": 49,
+      "fields": [
+        "month",
+        "observations",
+        "contents",
+        "first_seen",
+        "last_seen"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\cn_pmi\\dates.csv",
+      "bytes": 3119,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 141,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\cn_pmi\\monthly.csv",
+      "bytes": 1421,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 141,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\cn_ppi\\conflicts.csv",
+      "bytes": 49,
+      "fields": [
+        "month",
+        "observations",
+        "contents",
+        "first_seen",
+        "last_seen"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\cn_ppi\\dates.csv",
+      "bytes": 3097,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 140,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\cn_ppi\\monthly.csv",
+      "bytes": 1411,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 140,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\cn_schedule\\dates.csv",
+      "bytes": 1491,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 67,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\cn_schedule\\monthly.csv",
+      "bytes": 109,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 9,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\daily\\change_disagreement.csv",
+      "bytes": 277,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "pre_close",
+        "change",
+        "pct_chg",
+        "vol",
+        "amount",
+        "ah_vol",
+        "ah_amount",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\daily\\conflicts.csv",
+      "bytes": 62,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "observations",
+        "contents",
+        "first_seen",
+        "last_seen"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\daily\\dates.csv",
+      "bytes": 71267,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 2850,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\daily\\extreme_moves.csv",
+      "bytes": 2143051,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "pre_close",
+        "change",
+        "pct_chg",
+        "vol",
+        "amount",
+        "ah_vol",
+        "ah_amount",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version",
+        "classification"
+      ],
+      "rows_exact_streamed": 5226,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\daily\\instruments.csv",
+      "bytes": 319510,
+      "fields": [
+        "ts_code",
+        "rows",
+        "first_date",
+        "last_date"
+      ],
+      "rows_exact_streamed": 5825,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\daily\\invalid_amount.csv",
+      "bytes": 277,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "pre_close",
+        "change",
+        "pct_chg",
+        "vol",
+        "amount",
+        "ah_vol",
+        "ah_amount",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\daily\\invalid_ohlc.csv",
+      "bytes": 277,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "pre_close",
+        "change",
+        "pct_chg",
+        "vol",
+        "amount",
+        "ah_vol",
+        "ah_amount",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\daily\\invalid_price.csv",
+      "bytes": 277,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "pre_close",
+        "change",
+        "pct_chg",
+        "vol",
+        "amount",
+        "ah_vol",
+        "ah_amount",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\daily\\invalid_trade_date.csv",
+      "bytes": 277,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "pre_close",
+        "change",
+        "pct_chg",
+        "vol",
+        "amount",
+        "ah_vol",
+        "ah_amount",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\daily\\invalid_vol.csv",
+      "bytes": 277,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "pre_close",
+        "change",
+        "pct_chg",
+        "vol",
+        "amount",
+        "ah_vol",
+        "ah_amount",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\daily\\monthly.csv",
+      "bytes": 2028,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 141,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\daily\\pct_disagreement.csv",
+      "bytes": 277,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "pre_close",
+        "change",
+        "pct_chg",
+        "vol",
+        "amount",
+        "ah_vol",
+        "ah_amount",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\daily\\statistical_outliers.csv",
+      "bytes": 360834,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "close",
+        "vol",
+        "prior_vol",
+        "close_20_observations_ago",
+        "cmin",
+        "cmax",
+        "classification"
+      ],
+      "rows_exact_streamed": 4823,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\daily_basic\\conflicts.csv",
+      "bytes": 228,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "observations",
+        "contents",
+        "first_seen",
+        "last_seen"
+      ],
+      "rows_exact_streamed": 2,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\daily_basic\\dates.csv",
+      "bytes": 71267,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 2850,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\daily_basic\\instruments.csv",
+      "bytes": 323532,
+      "fields": [
+        "ts_code",
+        "rows",
+        "first_date",
+        "last_date"
+      ],
+      "rows_exact_streamed": 5904,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\daily_basic\\invalid_trade_date.csv",
+      "bytes": 357,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "close",
+        "turnover_rate",
+        "turnover_rate_f",
+        "volume_ratio",
+        "pe",
+        "pe_ttm",
+        "pb",
+        "ps",
+        "ps_ttm",
+        "dv_ratio",
+        "dv_ttm",
+        "total_share",
+        "float_share",
+        "free_share",
+        "total_mv",
+        "circ_mv",
+        "limit_status",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\daily_basic\\monthly.csv",
+      "bytes": 2028,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 141,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\daily_info\\dates.csv",
+      "bytes": 65567,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 2850,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\daily_info\\instruments.csv",
+      "bytes": 1835,
+      "fields": [
+        "ts_code",
+        "rows",
+        "first_date",
+        "last_date"
+      ],
+      "rows_exact_streamed": 33,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\daily_info\\invalid_amount.csv",
+      "bytes": 302,
+      "fields": [
+        "trade_date",
+        "ts_code",
+        "ts_name",
+        "com_count",
+        "total_share",
+        "float_share",
+        "total_mv",
+        "float_mv",
+        "amount",
+        "vol",
+        "trans_count",
+        "pe",
+        "tr",
+        "exchange",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\daily_info\\invalid_trade_date.csv",
+      "bytes": 302,
+      "fields": [
+        "trade_date",
+        "ts_code",
+        "ts_name",
+        "com_count",
+        "total_share",
+        "float_share",
+        "total_mv",
+        "float_mv",
+        "amount",
+        "vol",
+        "trans_count",
+        "pe",
+        "tr",
+        "exchange",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\daily_info\\invalid_vol.csv",
+      "bytes": 302,
+      "fields": [
+        "trade_date",
+        "ts_code",
+        "ts_name",
+        "com_count",
+        "total_share",
+        "float_share",
+        "total_mv",
+        "float_mv",
+        "amount",
+        "vol",
+        "trans_count",
+        "pe",
+        "tr",
+        "exchange",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\daily_info\\monthly.csv",
+      "bytes": 1703,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 141,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\disclosure_date\\dates.csv",
+      "bytes": 101683,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 4472,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\disclosure_date\\instruments.csv",
+      "bytes": 312554,
+      "fields": [
+        "ts_code",
+        "rows",
+        "first_date",
+        "last_date"
+      ],
+      "rows_exact_streamed": 5890,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\disclosure_date\\monthly.csv",
+      "bytes": 3689,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 321,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\disclosure_date\\report_variants.csv",
+      "bytes": 35,
+      "fields": [
+        "ts_code",
+        "end_date",
+        "variants",
+        "contents"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\dividend\\dates.csv",
+      "bytes": 60071,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 2641,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\dividend\\instruments.csv",
+      "bytes": 308110,
+      "fields": [
+        "ts_code",
+        "rows",
+        "first_date",
+        "last_date"
+      ],
+      "rows_exact_streamed": 5819,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\dividend\\monthly.csv",
+      "bytes": 2119,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 185,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\dividend\\report_variants.csv",
+      "bytes": 1838195,
+      "fields": [
+        "ts_code",
+        "end_date",
+        "variants",
+        "contents"
+      ],
+      "rows_exact_streamed": 79920,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\etf_limit\\conflicts.csv",
+      "bytes": 62,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "observations",
+        "contents",
+        "first_seen",
+        "last_seen"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\etf_limit\\dates.csv",
+      "bytes": 43471,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 1760,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\etf_limit\\instruments.csv",
+      "bytes": 140345,
+      "fields": [
+        "ts_code",
+        "rows",
+        "first_date",
+        "last_date"
+      ],
+      "rows_exact_streamed": 2582,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\etf_limit\\invalid_trade_date.csv",
+      "bytes": 254,
+      "fields": [
+        "trade_date",
+        "ts_code",
+        "pre_close",
+        "up_limit",
+        "down_limit",
+        "asset_type",
+        "exchange",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\etf_limit\\monthly.csv",
+      "bytes": 1242,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 88,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\express\\dates.csv",
+      "bytes": 34295,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 1543,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\express\\instruments.csv",
+      "bytes": 214203,
+      "fields": [
+        "ts_code",
+        "rows",
+        "first_date",
+        "last_date"
+      ],
+      "rows_exact_streamed": 4113,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\express\\monthly.csv",
+      "bytes": 1083,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 94,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\express\\report_variants.csv",
+      "bytes": 242,
+      "fields": [
+        "ts_code",
+        "end_date",
+        "variants",
+        "contents"
+      ],
+      "rows_exact_streamed": 9,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\fina_audit\\dates.csv",
+      "bytes": 50610,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 2254,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\fina_audit\\instruments.csv",
+      "bytes": 306562,
+      "fields": [
+        "ts_code",
+        "rows",
+        "first_date",
+        "last_date"
+      ],
+      "rows_exact_streamed": 5810,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\fina_audit\\monthly.csv",
+      "bytes": 1632,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 139,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\fina_audit\\report_variants.csv",
+      "bytes": 7855,
+      "fields": [
+        "ts_code",
+        "end_date",
+        "variants",
+        "contents"
+      ],
+      "rows_exact_streamed": 340,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\fina_indicator\\conflicts.csv",
+      "bytes": 81,
+      "fields": [
+        "ts_code",
+        "end_date",
+        "ann_date",
+        "update_flag",
+        "observations",
+        "contents",
+        "first_seen",
+        "last_seen"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\fina_indicator\\dates.csv",
+      "bytes": 66936,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 2919,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\fina_indicator\\instruments.csv",
+      "bytes": 310795,
+      "fields": [
+        "ts_code",
+        "rows",
+        "first_date",
+        "last_date"
+      ],
+      "rows_exact_streamed": 5864,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\fina_indicator\\monthly.csv",
+      "bytes": 1716,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 138,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\fina_indicator\\report_variants.csv",
+      "bytes": 3717157,
+      "fields": [
+        "ts_code",
+        "end_date",
+        "variants",
+        "contents"
+      ],
+      "rows_exact_streamed": 161614,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\fina_mainbz\\dates.csv",
+      "bytes": 1681,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 68,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\fina_mainbz\\instruments.csv",
+      "bytes": 315505,
+      "fields": [
+        "ts_code",
+        "rows",
+        "first_date",
+        "last_date"
+      ],
+      "rows_exact_streamed": 5843,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\fina_mainbz\\monthly.csv",
+      "bytes": 848,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 67,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\fina_mainbz\\report_variants.csv",
+      "bytes": 2851631,
+      "fields": [
+        "ts_code",
+        "end_date",
+        "variants",
+        "contents"
+      ],
+      "rows_exact_streamed": 115920,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\forecast\\dates.csv",
+      "bytes": 64665,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 2882,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\forecast\\instruments.csv",
+      "bytes": 297972,
+      "fields": [
+        "ts_code",
+        "rows",
+        "first_date",
+        "last_date"
+      ],
+      "rows_exact_streamed": 5670,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\forecast\\monthly.csv",
+      "bytes": 1673,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 141,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\forecast\\report_variants.csv",
+      "bytes": 143302,
+      "fields": [
+        "ts_code",
+        "end_date",
+        "variants",
+        "contents"
+      ],
+      "rows_exact_streamed": 6229,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\fund_adj\\conflicts.csv",
+      "bytes": 62,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "observations",
+        "contents",
+        "first_seen",
+        "last_seen"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\fund_adj\\dates.csv",
+      "bytes": 69631,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 2850,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\fund_adj\\instruments.csv",
+      "bytes": 147745,
+      "fields": [
+        "ts_code",
+        "rows",
+        "first_date",
+        "last_date"
+      ],
+      "rows_exact_streamed": 2713,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\fund_adj\\invalid_adj_factor.csv",
+      "bytes": 215,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "adj_factor",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\fund_adj\\invalid_trade_date.csv",
+      "bytes": 215,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "adj_factor",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\fund_adj\\monthly.csv",
+      "bytes": 1979,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 141,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\fund_basic\\conflicts.csv",
+      "bytes": 51,
+      "fields": [
+        "ts_code",
+        "observations",
+        "contents",
+        "first_seen",
+        "last_seen"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\fund_basic\\dates.csv",
+      "bytes": 34395,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 1563,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\fund_basic\\instruments.csv",
+      "bytes": 147410,
+      "fields": [
+        "ts_code",
+        "rows",
+        "first_date",
+        "last_date"
+      ],
+      "rows_exact_streamed": 2912,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\fund_basic\\monthly.csv",
+      "bytes": 2707,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 260,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\fund_daily\\change_disagreement.csv",
+      "bytes": 260,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "pre_close",
+        "change",
+        "pct_chg",
+        "vol",
+        "amount",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\fund_daily\\conflicts.csv",
+      "bytes": 62,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "observations",
+        "contents",
+        "first_seen",
+        "last_seen"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\fund_daily\\dates.csv",
+      "bytes": 69589,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 2850,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\fund_daily\\extreme_moves.csv",
+      "bytes": 691,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "pre_close",
+        "change",
+        "pct_chg",
+        "vol",
+        "amount",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version",
+        "classification"
+      ],
+      "rows_exact_streamed": 1,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\fund_daily\\instruments.csv",
+      "bytes": 147654,
+      "fields": [
+        "ts_code",
+        "rows",
+        "first_date",
+        "last_date"
+      ],
+      "rows_exact_streamed": 2714,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\fund_daily\\invalid_amount.csv",
+      "bytes": 260,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "pre_close",
+        "change",
+        "pct_chg",
+        "vol",
+        "amount",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\fund_daily\\invalid_ohlc.csv",
+      "bytes": 260,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "pre_close",
+        "change",
+        "pct_chg",
+        "vol",
+        "amount",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\fund_daily\\invalid_price.csv",
+      "bytes": 260,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "pre_close",
+        "change",
+        "pct_chg",
+        "vol",
+        "amount",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\fund_daily\\invalid_trade_date.csv",
+      "bytes": 260,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "pre_close",
+        "change",
+        "pct_chg",
+        "vol",
+        "amount",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\fund_daily\\invalid_vol.csv",
+      "bytes": 260,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "pre_close",
+        "change",
+        "pct_chg",
+        "vol",
+        "amount",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\fund_daily\\monthly.csv",
+      "bytes": 1976,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 141,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\fund_daily\\pct_disagreement.csv",
+      "bytes": 260,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "pre_close",
+        "change",
+        "pct_chg",
+        "vol",
+        "amount",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\fund_daily\\statistical_outliers.csv",
+      "bytes": 2439906,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "close",
+        "vol",
+        "prior_vol",
+        "close_20_observations_ago",
+        "cmin",
+        "cmax",
+        "classification"
+      ],
+      "rows_exact_streamed": 33028,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\fund_div\\dates.csv",
+      "bytes": 28164,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 1277,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\fund_div\\instruments.csv",
+      "bytes": 21822,
+      "fields": [
+        "ts_code",
+        "rows",
+        "first_date",
+        "last_date"
+      ],
+      "rows_exact_streamed": 418,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\fund_div\\monthly.csv",
+      "bytes": 1503,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 139,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\fund_nav\\conflicts.csv",
+      "bytes": 60,
+      "fields": [
+        "ts_code",
+        "nav_date",
+        "observations",
+        "contents",
+        "first_seen",
+        "last_seen"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\fund_nav\\dates.csv",
+      "bytes": 83536,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 3456,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\fund_nav\\instruments.csv",
+      "bytes": 153422,
+      "fields": [
+        "ts_code",
+        "rows",
+        "first_date",
+        "last_date"
+      ],
+      "rows_exact_streamed": 2823,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\fund_nav\\monthly.csv",
+      "bytes": 1981,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 141,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\fund_share\\conflicts.csv",
+      "bytes": 62,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "observations",
+        "contents",
+        "first_seen",
+        "last_seen"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\fund_share\\dates.csv",
+      "bytes": 71893,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 2981,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\fund_share\\instruments.csv",
+      "bytes": 149639,
+      "fields": [
+        "ts_code",
+        "rows",
+        "first_date",
+        "last_date"
+      ],
+      "rows_exact_streamed": 2767,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\fund_share\\invalid_trade_date.csv",
+      "bytes": 213,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "fd_share",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\fund_share\\monthly.csv",
+      "bytes": 1947,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 141,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\gz_index\\conflicts.csv",
+      "bytes": 48,
+      "fields": [
+        "date",
+        "observations",
+        "contents",
+        "first_seen",
+        "last_seen"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\gz_index\\dates.csv",
+      "bytes": 14185,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 644,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\gz_index\\monthly.csv",
+      "bytes": 428,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 39,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\hsgt_top10\\dates.csv",
+      "bytes": 62669,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 2724,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\hsgt_top10\\instruments.csv",
+      "bytes": 33027,
+      "fields": [
+        "ts_code",
+        "rows",
+        "first_date",
+        "last_date"
+      ],
+      "rows_exact_streamed": 628,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\hsgt_top10\\invalid_amount.csv",
+      "bytes": 266,
+      "fields": [
+        "trade_date",
+        "ts_code",
+        "name",
+        "close",
+        "change",
+        "rank",
+        "market_type",
+        "amount",
+        "net_amount",
+        "buy",
+        "sell",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\hsgt_top10\\invalid_trade_date.csv",
+      "bytes": 266,
+      "fields": [
+        "trade_date",
+        "ts_code",
+        "name",
+        "close",
+        "change",
+        "rank",
+        "market_type",
+        "amount",
+        "net_amount",
+        "buy",
+        "sell",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\hsgt_top10\\monthly.csv",
+      "bytes": 1703,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 141,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\income\\conflicts.csv",
+      "bytes": 114,
+      "fields": [
+        "ts_code",
+        "end_date",
+        "ann_date",
+        "f_ann_date",
+        "report_type",
+        "update_flag",
+        "comp_type",
+        "observations",
+        "contents",
+        "first_seen",
+        "last_seen"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\income\\dates.csv",
+      "bytes": 67315,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 2949,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\income\\instruments.csv",
+      "bytes": 310820,
+      "fields": [
+        "ts_code",
+        "rows",
+        "first_date",
+        "last_date"
+      ],
+      "rows_exact_streamed": 5865,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\income\\monthly.csv",
+      "bytes": 1741,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 141,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\income\\report_variants.csv",
+      "bytes": 1699229,
+      "fields": [
+        "ts_code",
+        "end_date",
+        "variants",
+        "contents"
+      ],
+      "rows_exact_streamed": 73878,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\index_basic\\conflicts.csv",
+      "bytes": 51,
+      "fields": [
+        "ts_code",
+        "observations",
+        "contents",
+        "first_seen",
+        "last_seen"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\index_basic\\dates.csv",
+      "bytes": 18102,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 811,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\index_basic\\instruments.csv",
+      "bytes": 578262,
+      "fields": [
+        "ts_code",
+        "rows",
+        "first_date",
+        "last_date"
+      ],
+      "rows_exact_streamed": 10604,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\index_basic\\monthly.csv",
+      "bytes": 2700,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 249,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\index_classify\\conflicts.csv",
+      "bytes": 58,
+      "fields": [
+        "index_code",
+        "src",
+        "observations",
+        "contents",
+        "first_seen",
+        "last_seen"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\index_classify\\dates.csv",
+      "bytes": 22,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 1,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\index_classify\\monthly.csv",
+      "bytes": 16,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 1,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\index_daily\\change_disagreement.csv",
+      "bytes": 686,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "close",
+        "open",
+        "high",
+        "low",
+        "pre_close",
+        "change",
+        "pct_chg",
+        "vol",
+        "amount",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 1,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\index_daily\\conflicts.csv",
+      "bytes": 62,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "observations",
+        "contents",
+        "first_seen",
+        "last_seen"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\index_daily\\dates.csv",
+      "bytes": 88497,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 3607,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\index_daily\\extreme_moves.csv",
+      "bytes": 121373,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "close",
+        "open",
+        "high",
+        "low",
+        "pre_close",
+        "change",
+        "pct_chg",
+        "vol",
+        "amount",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version",
+        "classification"
+      ],
+      "rows_exact_streamed": 306,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\index_daily\\instruments.csv",
+      "bytes": 554892,
+      "fields": [
+        "ts_code",
+        "rows",
+        "first_date",
+        "last_date"
+      ],
+      "rows_exact_streamed": 9598,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\index_daily\\invalid_amount.csv",
+      "bytes": 260,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "close",
+        "open",
+        "high",
+        "low",
+        "pre_close",
+        "change",
+        "pct_chg",
+        "vol",
+        "amount",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\index_daily\\invalid_nonnull_price.csv",
+      "bytes": 517307,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "close",
+        "open",
+        "high",
+        "low",
+        "pre_close",
+        "change",
+        "pct_chg",
+        "vol",
+        "amount",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 1472,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\index_daily\\invalid_ohlc.csv",
+      "bytes": 260,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "close",
+        "open",
+        "high",
+        "low",
+        "pre_close",
+        "change",
+        "pct_chg",
+        "vol",
+        "amount",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\index_daily\\invalid_price.csv",
+      "bytes": 8023975598,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "close",
+        "open",
+        "high",
+        "low",
+        "pre_close",
+        "change",
+        "pct_chg",
+        "vol",
+        "amount",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 20776974,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\index_daily\\invalid_trade_date.csv",
+      "bytes": 260,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "close",
+        "open",
+        "high",
+        "low",
+        "pre_close",
+        "change",
+        "pct_chg",
+        "vol",
+        "amount",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\index_daily\\invalid_vol.csv",
+      "bytes": 260,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "close",
+        "open",
+        "high",
+        "low",
+        "pre_close",
+        "change",
+        "pct_chg",
+        "vol",
+        "amount",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\index_daily\\monthly.csv",
+      "bytes": 2126,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 141,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\index_daily\\pct_disagreement.csv",
+      "bytes": 260,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "close",
+        "open",
+        "high",
+        "low",
+        "pre_close",
+        "change",
+        "pct_chg",
+        "vol",
+        "amount",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\index_daily\\statistical_outliers.csv",
+      "bytes": 5320711,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "close",
+        "vol",
+        "prior_vol",
+        "close_20_observations_ago",
+        "cmin",
+        "cmax",
+        "classification"
+      ],
+      "rows_exact_streamed": 62521,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\index_dailybasic\\conflicts.csv",
+      "bytes": 1058,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "observations",
+        "contents",
+        "first_seen",
+        "last_seen"
+      ],
+      "rows_exact_streamed": 12,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\index_dailybasic\\dates.csv",
+      "bytes": 65567,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 2850,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\index_dailybasic\\instruments.csv",
+      "bytes": 859,
+      "fields": [
+        "ts_code",
+        "rows",
+        "first_date",
+        "last_date"
+      ],
+      "rows_exact_streamed": 15,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\index_dailybasic\\invalid_trade_date.csv",
+      "bytes": 300,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "total_mv",
+        "float_mv",
+        "total_share",
+        "float_share",
+        "free_share",
+        "turnover_rate",
+        "turnover_rate_f",
+        "pe",
+        "pe_ttm",
+        "pb",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\index_dailybasic\\monthly.csv",
+      "bytes": 1703,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 141,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\index_member_all\\dates.csv",
+      "bytes": 45093,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 2042,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\index_member_all\\instruments.csv",
+      "bytes": 307562,
+      "fields": [
+        "ts_code",
+        "rows",
+        "first_date",
+        "last_date"
+      ],
+      "rows_exact_streamed": 5914,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\index_member_all\\monthly.csv",
+      "bytes": 4146,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 392,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\index_weight\\conflicts.csv",
+      "bytes": 74,
+      "fields": [
+        "index_code",
+        "con_code",
+        "trade_date",
+        "observations",
+        "contents",
+        "first_seen",
+        "last_seen"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\index_weight\\dates.csv",
+      "bytes": 3517,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 140,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\index_weight\\invalid_trade_date.csv",
+      "bytes": 223,
+      "fields": [
+        "index_code",
+        "con_code",
+        "trade_date",
+        "weight",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\index_weight\\monthly.csv",
+      "bytes": 1831,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 140,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\margin\\conflicts.csv",
+      "bytes": 66,
+      "fields": [
+        "trade_date",
+        "exchange_id",
+        "observations",
+        "contents",
+        "first_seen",
+        "last_seen"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\margin\\dates.csv",
+      "bytes": 62717,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 2850,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\margin\\invalid_trade_date.csv",
+      "bytes": 248,
+      "fields": [
+        "trade_date",
+        "exchange_id",
+        "rzye",
+        "rzmre",
+        "rzche",
+        "rqye",
+        "rqmcl",
+        "rzrqye",
+        "rqyl",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\margin\\monthly.csv",
+      "bytes": 1562,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 141,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\margin_detail\\conflicts.csv",
+      "bytes": 62,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "observations",
+        "contents",
+        "first_seen",
+        "last_seen"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\margin_detail\\dates.csv",
+      "bytes": 70181,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 2850,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\margin_detail\\instruments.csv",
+      "bytes": 284504,
+      "fields": [
+        "ts_code",
+        "rows",
+        "first_date",
+        "last_date"
+      ],
+      "rows_exact_streamed": 5223,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\margin_detail\\invalid_trade_date.csv",
+      "bytes": 255,
+      "fields": [
+        "trade_date",
+        "ts_code",
+        "name",
+        "rzye",
+        "rqye",
+        "rzmre",
+        "rqyl",
+        "rzche",
+        "rqchl",
+        "rqmcl",
+        "rzrqye",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\margin_detail\\monthly.csv",
+      "bytes": 1986,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 141,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\margin_secs\\dates.csv",
+      "bytes": 70937,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 2850,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\margin_secs\\instruments.csv",
+      "bytes": 280104,
+      "fields": [
+        "ts_code",
+        "rows",
+        "first_date",
+        "last_date"
+      ],
+      "rows_exact_streamed": 5131,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\margin_secs\\invalid_trade_date.csv",
+      "bytes": 218,
+      "fields": [
+        "trade_date",
+        "ts_code",
+        "name",
+        "exchange",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\margin_secs\\monthly.csv",
+      "bytes": 1970,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 141,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\moneyflow\\conflicts.csv",
+      "bytes": 62,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "observations",
+        "contents",
+        "first_seen",
+        "last_seen"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\moneyflow\\dates.csv",
+      "bytes": 71267,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 2850,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\moneyflow\\instruments.csv",
+      "bytes": 318850,
+      "fields": [
+        "ts_code",
+        "rows",
+        "first_date",
+        "last_date"
+      ],
+      "rows_exact_streamed": 5822,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\moneyflow\\invalid_trade_date.csv",
+      "bytes": 441,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "buy_sm_vol",
+        "buy_sm_amount",
+        "sell_sm_vol",
+        "sell_sm_amount",
+        "buy_md_vol",
+        "buy_md_amount",
+        "sell_md_vol",
+        "sell_md_amount",
+        "buy_lg_vol",
+        "buy_lg_amount",
+        "sell_lg_vol",
+        "sell_lg_amount",
+        "buy_elg_vol",
+        "buy_elg_amount",
+        "sell_elg_vol",
+        "sell_elg_amount",
+        "net_mf_vol",
+        "net_mf_amount",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\moneyflow\\monthly.csv",
+      "bytes": 2019,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 141,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\namechange\\dates.csv",
+      "bytes": 110429,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 5015,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\namechange\\instruments.csv",
+      "bytes": 307278,
+      "fields": [
+        "ts_code",
+        "rows",
+        "first_date",
+        "last_date"
+      ],
+      "rows_exact_streamed": 5905,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\namechange\\monthly.csv",
+      "bytes": 4524,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 417,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\new_share\\conflicts.csv",
+      "bytes": 392,
+      "fields": [
+        "ts_code",
+        "ipo_date",
+        "observations",
+        "contents",
+        "first_seen",
+        "last_seen"
+      ],
+      "rows_exact_streamed": 4,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\new_share\\dates.csv",
+      "bytes": 36394,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 1653,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\new_share\\instruments.csv",
+      "bytes": 169138,
+      "fields": [
+        "ts_code",
+        "rows",
+        "first_date",
+        "last_date"
+      ],
+      "rows_exact_streamed": 3252,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\new_share\\invalid_amount.csv",
+      "bytes": 283,
+      "fields": [
+        "ts_code",
+        "sub_code",
+        "name",
+        "ipo_date",
+        "issue_date",
+        "amount",
+        "market_amount",
+        "price",
+        "pe",
+        "limit_amount",
+        "funds",
+        "ballot",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\new_share\\monthly.csv",
+      "bytes": 1490,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 137,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\pledge_detail\\dates.csv",
+      "bytes": 79655,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 3447,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\pledge_detail\\instruments.csv",
+      "bytes": 180066,
+      "fields": [
+        "ts_code",
+        "rows",
+        "first_date",
+        "last_date"
+      ],
+      "rows_exact_streamed": 3399,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\pledge_detail\\monthly.csv",
+      "bytes": 1821,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 141,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\pledge_stat\\conflicts.csv",
+      "bytes": 60,
+      "fields": [
+        "ts_code",
+        "end_date",
+        "observations",
+        "contents",
+        "first_seen",
+        "last_seen"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\pledge_stat\\dates.csv",
+      "bytes": 16010,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 645,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\pledge_stat\\instruments.csv",
+      "bytes": 240480,
+      "fields": [
+        "ts_code",
+        "rows",
+        "first_date",
+        "last_date"
+      ],
+      "rows_exact_streamed": 4462,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\pledge_stat\\monthly.csv",
+      "bytes": 2054,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 151,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\relationships\\bar_and_full_suspension.csv",
+      "bytes": 827,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "suspend_type",
+        "suspend_timing",
+        "_batch_id"
+      ],
+      "rows_exact_streamed": 14,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\relationships\\daily_adjustment_events.csv",
+      "bytes": 7135245,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "close",
+        "_batch_id",
+        "adj_factor",
+        "v",
+        "prior_v",
+        "prior_factor",
+        "prior_close",
+        "adjusted_return",
+        "classification"
+      ],
+      "rows_exact_streamed": 54077,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\relationships\\daily_after_delisting.csv",
+      "bytes": 41,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "delist_date",
+        "_batch_id"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\relationships\\daily_basic_close_disagreement.csv",
+      "bytes": 11416,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "raw_close",
+        "basic_close",
+        "_batch_id"
+      ],
+      "rows_exact_streamed": 181,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\relationships\\daily_corporate_action_join.csv",
+      "bytes": 21188379,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "close",
+        "_batch_id",
+        "adj_factor",
+        "v",
+        "prior_v",
+        "prior_factor",
+        "prior_close",
+        "end_date",
+        "ann_date",
+        "div_proc",
+        "stk_div",
+        "stk_bo_rate",
+        "stk_co_rate",
+        "cash_div",
+        "cash_div_tax",
+        "record_date",
+        "ex_date",
+        "pay_date",
+        "div_listdate",
+        "imp_ann_date",
+        "base_date",
+        "base_share",
+        "_row_hash",
+        "_batch_id_1",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "adjusted_return"
+      ],
+      "rows_exact_streamed": 39799,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\relationships\\daily_expected_by_day.csv",
+      "bytes": 63023,
+      "fields": [
+        "trade_date",
+        "expected",
+        "actual",
+        "missing"
+      ],
+      "rows_exact_streamed": 2850,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\relationships\\daily_invalid_adjusted_value.csv",
+      "bytes": 81,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "close",
+        "_batch_id",
+        "adj_factor",
+        "v",
+        "prior_v",
+        "prior_factor",
+        "prior_close"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\relationships\\daily_lifecycle.csv",
+      "bytes": 4856533,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "list_date",
+        "_batch_id"
+      ],
+      "rows_exact_streamed": 80174,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\relationships\\daily_missing_adj_factor.csv",
+      "bytes": 39,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "_batch_id",
+        "_row_hash"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\relationships\\daily_missing_daily_basic.csv",
+      "bytes": 10572393,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "_batch_id",
+        "_row_hash"
+      ],
+      "rows_exact_streamed": 90362,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\relationships\\daily_missing_instrument_days.csv",
+      "bytes": 12284322,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "reason"
+      ],
+      "rows_exact_streamed": 282422,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\relationships\\daily_missing_stk_limit.csv",
+      "bytes": 10780887,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "_batch_id",
+        "_row_hash"
+      ],
+      "rows_exact_streamed": 92144,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\relationships\\derived_st_evidence.csv",
+      "bytes": 1103437,
+      "fields": [
+        "ts_code",
+        "name",
+        "start_date",
+        "end_date",
+        "ann_date",
+        "change_reason",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version",
+        "st_quality"
+      ],
+      "rows_exact_streamed": 2986,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\relationships\\fund_daily_adjustment_events.csv",
+      "bytes": 556183,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "close",
+        "_batch_id",
+        "adj_factor",
+        "v",
+        "prior_v",
+        "prior_factor",
+        "prior_close",
+        "adjusted_return",
+        "classification"
+      ],
+      "rows_exact_streamed": 4142,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\relationships\\fund_daily_after_delisting.csv",
+      "bytes": 41,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "delist_date",
+        "_batch_id"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\relationships\\fund_daily_corporate_action_join.csv",
+      "bytes": 1917280,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "close",
+        "_batch_id",
+        "adj_factor",
+        "v",
+        "prior_v",
+        "prior_factor",
+        "prior_close",
+        "ann_date",
+        "imp_anndate",
+        "base_date",
+        "div_proc",
+        "record_date",
+        "ex_date",
+        "pay_date",
+        "earpay_date",
+        "net_ex_date",
+        "div_cash",
+        "base_unit",
+        "ear_distr",
+        "ear_amount",
+        "account_date",
+        "base_year",
+        "_row_hash",
+        "_batch_id_1",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version",
+        "adjusted_return"
+      ],
+      "rows_exact_streamed": 3620,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\relationships\\fund_daily_expected_by_day.csv",
+      "bytes": 55867,
+      "fields": [
+        "trade_date",
+        "expected",
+        "actual",
+        "missing"
+      ],
+      "rows_exact_streamed": 2850,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\relationships\\fund_daily_invalid_adjusted_value.csv",
+      "bytes": 81,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "close",
+        "_batch_id",
+        "adj_factor",
+        "v",
+        "prior_v",
+        "prior_factor",
+        "prior_close"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\relationships\\fund_daily_lifecycle.csv",
+      "bytes": 2346092,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "list_date",
+        "_batch_id"
+      ],
+      "rows_exact_streamed": 38460,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\relationships\\fund_daily_missing_fund_adj.csv",
+      "bytes": 1311909,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "_batch_id",
+        "_row_hash"
+      ],
+      "rows_exact_streamed": 11202,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\relationships\\fund_daily_missing_instrument_days.csv",
+      "bytes": 1038714,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "reason"
+      ],
+      "rows_exact_streamed": 18548,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\relationships\\index_daily_lifecycle.csv",
+      "bytes": 529439008,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "list_date",
+        "_batch_id"
+      ],
+      "rows_exact_streamed": 8134499,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\relationships\\outside_source_limits.csv",
+      "bytes": 862,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "high",
+        "low",
+        "up_limit",
+        "down_limit",
+        "_batch_id"
+      ],
+      "rows_exact_streamed": 11,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\repurchase\\dates.csv",
+      "bytes": 75459,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 3334,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\repurchase\\instruments.csv",
+      "bytes": 195842,
+      "fields": [
+        "ts_code",
+        "rows",
+        "first_date",
+        "last_date"
+      ],
+      "rows_exact_streamed": 3727,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\repurchase\\invalid_amount.csv",
+      "bytes": 257,
+      "fields": [
+        "ts_code",
+        "ann_date",
+        "end_date",
+        "proc",
+        "exp_date",
+        "vol",
+        "amount",
+        "high_limit",
+        "low_limit",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\repurchase\\invalid_vol.csv",
+      "bytes": 257,
+      "fields": [
+        "ts_code",
+        "ann_date",
+        "end_date",
+        "proc",
+        "exp_date",
+        "vol",
+        "amount",
+        "high_limit",
+        "low_limit",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\repurchase\\monthly.csv",
+      "bytes": 1691,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 141,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\sf_month\\conflicts.csv",
+      "bytes": 49,
+      "fields": [
+        "month",
+        "observations",
+        "contents",
+        "first_seen",
+        "last_seen"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\sf_month\\dates.csv",
+      "bytes": 3097,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 140,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\sf_month\\monthly.csv",
+      "bytes": 1411,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 140,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\share_float\\dates.csv",
+      "bytes": 95356,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 4094,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\share_float\\instruments.csv",
+      "bytes": 283499,
+      "fields": [
+        "ts_code",
+        "rows",
+        "first_date",
+        "last_date"
+      ],
+      "rows_exact_streamed": 5326,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\share_float\\monthly.csv",
+      "bytes": 3071,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 247,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\shibor\\conflicts.csv",
+      "bytes": 48,
+      "fields": [
+        "date",
+        "observations",
+        "contents",
+        "first_seen",
+        "last_seen"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\shibor\\dates.csv",
+      "bytes": 63905,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 2904,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\shibor\\monthly.csv",
+      "bytes": 1562,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 141,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\shibor_lpr\\conflicts.csv",
+      "bytes": 48,
+      "fields": [
+        "date",
+        "observations",
+        "contents",
+        "first_seen",
+        "last_seen"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\shibor_lpr\\dates.csv",
+      "bytes": 7189,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 326,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\shibor_lpr\\monthly.csv",
+      "bytes": 176,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 15,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\shibor_quote\\dates.csv",
+      "bytes": 6503,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 282,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\shibor_quote\\monthly.csv",
+      "bytes": 167,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 13,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\stk_holdernumber\\dates.csv",
+      "bytes": 89921,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 3890,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\stk_holdernumber\\instruments.csv",
+      "bytes": 298618,
+      "fields": [
+        "ts_code",
+        "rows",
+        "first_date",
+        "last_date"
+      ],
+      "rows_exact_streamed": 5610,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\stk_holdernumber\\monthly.csv",
+      "bytes": 1827,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 142,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\stk_holdertrade\\dates.csv",
+      "bytes": 78985,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 3435,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\stk_holdertrade\\instruments.csv",
+      "bytes": 286106,
+      "fields": [
+        "ts_code",
+        "rows",
+        "first_date",
+        "last_date"
+      ],
+      "rows_exact_streamed": 5423,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\stk_holdertrade\\monthly.csv",
+      "bytes": 1775,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 141,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\stk_limit\\conflicts.csv",
+      "bytes": 62,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "observations",
+        "contents",
+        "first_seen",
+        "last_seen"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\stk_limit\\dates.csv",
+      "bytes": 71267,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 2850,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\stk_limit\\instruments.csv",
+      "bytes": 327527,
+      "fields": [
+        "ts_code",
+        "rows",
+        "first_date",
+        "last_date"
+      ],
+      "rows_exact_streamed": 5976,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\stk_limit\\invalid_trade_date.csv",
+      "bytes": 254,
+      "fields": [
+        "trade_date",
+        "ts_code",
+        "pre_close",
+        "up_limit",
+        "down_limit",
+        "asset_type",
+        "exchange",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\stk_limit\\monthly.csv",
+      "bytes": 2029,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 141,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\stk_managers\\dates.csv",
+      "bytes": 80737,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 3455,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\stk_managers\\instruments.csv",
+      "bytes": 307817,
+      "fields": [
+        "ts_code",
+        "rows",
+        "first_date",
+        "last_date"
+      ],
+      "rows_exact_streamed": 5799,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\stk_managers\\monthly.csv",
+      "bytes": 1837,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 141,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\stk_rewards\\dates.csv",
+      "bytes": 130450,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 5572,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\stk_rewards\\instruments.csv",
+      "bytes": 317325,
+      "fields": [
+        "ts_code",
+        "rows",
+        "first_date",
+        "last_date"
+      ],
+      "rows_exact_streamed": 5896,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\stk_rewards\\monthly.csv",
+      "bytes": 4530,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 366,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\stk_seasoned\\dates.csv",
+      "bytes": 59387,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 2694,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\stk_seasoned\\instruments.csv",
+      "bytes": 200349,
+      "fields": [
+        "ts_code",
+        "rows",
+        "first_date",
+        "last_date"
+      ],
+      "rows_exact_streamed": 3852,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\stk_seasoned\\monthly.csv",
+      "bytes": 1582,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 141,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\stock_basic\\conflicts.csv",
+      "bytes": 51,
+      "fields": [
+        "ts_code",
+        "observations",
+        "contents",
+        "first_seen",
+        "last_seen"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\stock_basic\\dates.csv",
+      "bytes": 66579,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 3025,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\stock_basic\\instruments.csv",
+      "bytes": 307199,
+      "fields": [
+        "ts_code",
+        "rows",
+        "first_date",
+        "last_date"
+      ],
+      "rows_exact_streamed": 5907,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\stock_basic\\monthly.csv",
+      "bytes": 3984,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 376,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\stock_company\\conflicts.csv",
+      "bytes": 51,
+      "fields": [
+        "ts_code",
+        "observations",
+        "contents",
+        "first_seen",
+        "last_seen"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\stock_company\\dates.csv",
+      "bytes": 23,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 1,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\stock_company\\instruments.csv",
+      "bytes": 88150,
+      "fields": [
+        "ts_code",
+        "rows",
+        "first_date",
+        "last_date"
+      ],
+      "rows_exact_streamed": 6294,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\stock_company\\monthly.csv",
+      "bytes": 17,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 1,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\suspend_d\\dates.csv",
+      "bytes": 66429,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 2850,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\suspend_d\\instruments.csv",
+      "bytes": 235336,
+      "fields": [
+        "ts_code",
+        "rows",
+        "first_date",
+        "last_date"
+      ],
+      "rows_exact_streamed": 4443,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\suspend_d\\invalid_trade_date.csv",
+      "bytes": 232,
+      "fields": [
+        "ts_code",
+        "trade_date",
+        "suspend_timing",
+        "suspend_type",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\suspend_d\\monthly.csv",
+      "bytes": 1772,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 141,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\sz_daily_info\\dates.csv",
+      "bytes": 65427,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 2844,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\sz_daily_info\\instruments.csv",
+      "bytes": 1247,
+      "fields": [
+        "ts_code",
+        "rows",
+        "first_date",
+        "last_date"
+      ],
+      "rows_exact_streamed": 22,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\sz_daily_info\\invalid_amount.csv",
+      "bytes": 263,
+      "fields": [
+        "trade_date",
+        "ts_code",
+        "count",
+        "amount",
+        "vol",
+        "total_share",
+        "total_mv",
+        "float_share",
+        "float_mv",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\sz_daily_info\\invalid_trade_date.csv",
+      "bytes": 263,
+      "fields": [
+        "trade_date",
+        "ts_code",
+        "count",
+        "amount",
+        "vol",
+        "total_share",
+        "total_mv",
+        "float_share",
+        "float_mv",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\sz_daily_info\\invalid_vol.csv",
+      "bytes": 263,
+      "fields": [
+        "trade_date",
+        "ts_code",
+        "count",
+        "amount",
+        "vol",
+        "total_share",
+        "total_mv",
+        "float_share",
+        "float_mv",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\sz_daily_info\\monthly.csv",
+      "bytes": 1703,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 141,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\top10_floatholders\\dates.csv",
+      "bytes": 67584,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 2872,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\top10_floatholders\\instruments.csv",
+      "bytes": 312040,
+      "fields": [
+        "ts_code",
+        "rows",
+        "first_date",
+        "last_date"
+      ],
+      "rows_exact_streamed": 5784,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\top10_floatholders\\monthly.csv",
+      "bytes": 1793,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 139,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\top10_holders\\dates.csv",
+      "bytes": 80855,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 3415,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\top10_holders\\instruments.csv",
+      "bytes": 314434,
+      "fields": [
+        "ts_code",
+        "rows",
+        "first_date",
+        "last_date"
+      ],
+      "rows_exact_streamed": 5825,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\top10_holders\\monthly.csv",
+      "bytes": 1897,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 142,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\top_inst\\dates.csv",
+      "bytes": 69196,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 2850,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\top_inst\\instruments.csv",
+      "bytes": 337399,
+      "fields": [
+        "ts_code",
+        "rows",
+        "first_date",
+        "last_date"
+      ],
+      "rows_exact_streamed": 6268,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\top_inst\\invalid_trade_date.csv",
+      "bytes": 260,
+      "fields": [
+        "trade_date",
+        "ts_code",
+        "exalter",
+        "side",
+        "buy",
+        "buy_rate",
+        "sell",
+        "sell_rate",
+        "net_buy",
+        "reason",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\top_inst\\monthly.csv",
+      "bytes": 1971,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 141,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\top_list\\dates.csv",
+      "bytes": 65778,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 2850,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\top_list\\instruments.csv",
+      "bytes": 343096,
+      "fields": [
+        "ts_code",
+        "rows",
+        "first_date",
+        "last_date"
+      ],
+      "rows_exact_streamed": 6504,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\top_list\\invalid_amount.csv",
+      "bytes": 321,
+      "fields": [
+        "trade_date",
+        "ts_code",
+        "name",
+        "close",
+        "pct_change",
+        "turnover_rate",
+        "amount",
+        "l_sell",
+        "l_buy",
+        "l_amount",
+        "net_amount",
+        "net_rate",
+        "amount_rate",
+        "float_values",
+        "reason",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\top_list\\invalid_trade_date.csv",
+      "bytes": 321,
+      "fields": [
+        "trade_date",
+        "ts_code",
+        "name",
+        "close",
+        "pct_change",
+        "turnover_rate",
+        "amount",
+        "l_sell",
+        "l_buy",
+        "l_amount",
+        "net_amount",
+        "net_rate",
+        "amount_rate",
+        "float_values",
+        "reason",
+        "_row_hash",
+        "_batch_id",
+        "_ingested_at",
+        "_available_at",
+        "_event_date",
+        "_period_date",
+        "_announcement_date",
+        "_actual_announcement_date",
+        "_revision",
+        "_knowledge_quality",
+        "_event_available_at",
+        "_transform_version"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\top_list\\monthly.csv",
+      "bytes": 1824,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 141,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\trade_cal\\conflicts.csv",
+      "bytes": 61,
+      "fields": [
+        "exchange",
+        "cal_date",
+        "observations",
+        "contents",
+        "first_seen",
+        "last_seen"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\trade_cal\\dates.csv",
+      "bytes": 103263,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 4693,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\trade_cal\\monthly.csv",
+      "bytes": 1726,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 156,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\wz_index\\conflicts.csv",
+      "bytes": 48,
+      "fields": [
+        "date",
+        "observations",
+        "contents",
+        "first_seen",
+        "last_seen"
+      ],
+      "rows_exact_streamed": 0,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\wz_index\\dates.csv",
+      "bytes": 59483,
+      "fields": [
+        "_event_date",
+        "rows"
+      ],
+      "rows_exact_streamed": 2703,
+      "types": "CSV text; semantic types not independently confirmed"
+    },
+    {
+      "path": "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\wz_index\\monthly.csv",
+      "bytes": 1543,
+      "fields": [
+        "month",
+        "rows"
+      ],
+      "rows_exact_streamed": 140,
+      "types": "CSV text; semantic types not independently confirmed"
+    }
+  ],
+  "sqlite": [
+    {
+      "path": "E:\\QuantData\\reports\\data_integrity\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\file_checks.sqlite",
+      "tables": {
+        "checks": {
+          "fields": [
+            [
+              0,
+              "path",
+              "TEXT",
+              0,
+              null,
+              1
+            ],
+            [
+              1,
+              "signature",
+              "TEXT",
+              0,
+              null,
+              0
+            ],
+            [
+              2,
+              "result",
+              "TEXT",
+              0,
+              null,
+              0
+            ]
+          ],
+          "rows": 226894
+        }
+      }
+    }
+  ],
+  "errors": []
+}

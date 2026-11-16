@@ -1,0 +1,4 @@
+# External sources are read-only. Copy to paths.local.toml for this machine.
+quant_project = 'E:\quant'
+data_root = 'E:\QuantData'
+output_dir = 'docs/inventory'

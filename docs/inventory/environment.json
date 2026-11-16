@@ -1,0 +1,10 @@
+{
+  "duckdb": "1.5.5",
+  "pyarrow": "23.0.1",
+  "pandas": "2.3.3",
+  "pydantic": "2.13.5",
+  "python-dotenv": "1.2.3",
+  "filelock": "3.32.7",
+  "ruff": "0.16.8",
+  "pytest": "9.1.1"
+}

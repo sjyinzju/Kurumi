@@ -1,0 +1,2115 @@
+{
+  "root": "E:\\QuantData",
+  "excluded": [],
+  "groups": {
+    "(root)": {
+      "files": 1,
+      "bytes": 1207971840,
+      "extensions": {
+        ".duckdb": 1
+      },
+      "earliest_mtime_utc": "2026-10-21T00:21:41.125322+00:00",
+      "latest_mtime_utc": "2026-10-21T00:21:41.125322+00:00",
+      "examples": [
+        "E:\\QuantData\\quant.duckdb"
+      ]
+    },
+    "00_raw/tushare/adj_factor": {
+      "files": 5758,
+      "bytes": 104588428,
+      "extensions": {
+        ".json": 2879,
+        ".parquet": 2879
+      },
+      "earliest_mtime_utc": "2026-09-23T04:38:57.468078+00:00",
+      "latest_mtime_utc": "2026-09-24T06:31:37.703978+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\adj_factor\\2026\\09\\0012cbc35fb14bed8ff3465f532c2d92.json",
+        "E:\\QuantData\\00_raw\\tushare\\adj_factor\\2026\\09\\0012cbc35fb14bed8ff3465f532c2d92.parquet"
+      ]
+    },
+    "00_raw/tushare/balancesheet": {
+      "files": 11820,
+      "bytes": 628962895,
+      "extensions": {
+        ".json": 5910,
+        ".parquet": 5910
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:14.005164+00:00",
+      "latest_mtime_utc": "2026-09-29T09:59:35.194396+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\balancesheet\\2026\\09\\0001e1ef27294886b0d12508843523f2.json",
+        "E:\\QuantData\\00_raw\\tushare\\balancesheet\\2026\\09\\0001e1ef27294886b0d12508843523f2.parquet"
+      ]
+    },
+    "00_raw/tushare/block_trade": {
+      "files": 5756,
+      "bytes": 33028968,
+      "extensions": {
+        ".json": 2878,
+        ".parquet": 2878
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:30.545119+00:00",
+      "latest_mtime_utc": "2026-09-30T21:00:24.790772+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\block_trade\\2026\\09\\0023f986cf234a7f85f8a5c6fa641890.json",
+        "E:\\QuantData\\00_raw\\tushare\\block_trade\\2026\\09\\0023f986cf234a7f85f8a5c6fa641890.parquet"
+      ]
+    },
+    "00_raw/tushare/bse_mapping": {
+      "files": 6,
+      "bytes": 19893,
+      "extensions": {
+        ".json": 3,
+        ".parquet": 3
+      },
+      "earliest_mtime_utc": "2026-09-23T05:12:44.221445+00:00",
+      "latest_mtime_utc": "2026-09-23T05:22:49.949618+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\bse_mapping\\2026\\09\\760d3558273544b2b128789b6c8890ad.json",
+        "E:\\QuantData\\00_raw\\tushare\\bse_mapping\\2026\\09\\760d3558273544b2b128789b6c8890ad.parquet"
+      ]
+    },
+    "00_raw/tushare/cashflow": {
+      "files": 11820,
+      "bytes": 436667830,
+      "extensions": {
+        ".json": 5910,
+        ".parquet": 5910
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:14.765176+00:00",
+      "latest_mtime_utc": "2026-09-29T12:37:31.285323+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\cashflow\\2026\\09\\0004ada389a940ac9e491e72a5429a4a.json",
+        "E:\\QuantData\\00_raw\\tushare\\cashflow\\2026\\09\\0004ada389a940ac9e491e72a5429a4a.parquet"
+      ]
+    },
+    "00_raw/tushare/cn_cpi": {
+      "files": 6,
+      "bytes": 29886,
+      "extensions": {
+        ".json": 3,
+        ".parquet": 3
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:45.551892+00:00",
+      "latest_mtime_utc": "2026-10-01T18:18:44.139282+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\cn_cpi\\2026\\10\\8415689a1ae94d628cbb54cd7883914a.json",
+        "E:\\QuantData\\00_raw\\tushare\\cn_cpi\\2026\\10\\8415689a1ae94d628cbb54cd7883914a.parquet"
+      ]
+    },
+    "00_raw/tushare/cn_gdp": {
+      "files": 6,
+      "bytes": 19411,
+      "extensions": {
+        ".json": 3,
+        ".parquet": 3
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:44.796008+00:00",
+      "latest_mtime_utc": "2026-10-01T18:18:41.789136+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\cn_gdp\\2026\\10\\459e8de4a582469a95da2963a0d96827.json",
+        "E:\\QuantData\\00_raw\\tushare\\cn_gdp\\2026\\10\\459e8de4a582469a95da2963a0d96827.parquet"
+      ]
+    },
+    "00_raw/tushare/cn_m": {
+      "files": 6,
+      "bytes": 26859,
+      "extensions": {
+        ".json": 3,
+        ".parquet": 3
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:47.055412+00:00",
+      "latest_mtime_utc": "2026-10-01T18:18:49.163059+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\cn_m\\2026\\10\\c0918da9a2e240e4866728def8340caf.json",
+        "E:\\QuantData\\00_raw\\tushare\\cn_m\\2026\\10\\c0918da9a2e240e4866728def8340caf.parquet"
+      ]
+    },
+    "00_raw/tushare/cn_pmi": {
+      "files": 6,
+      "bytes": 125419,
+      "extensions": {
+        ".json": 3,
+        ".parquet": 3
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:47.816137+00:00",
+      "latest_mtime_utc": "2026-10-01T18:18:51.369071+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\cn_pmi\\2026\\10\\d601f6f5ff904d098e080a42c189ebd1.json",
+        "E:\\QuantData\\00_raw\\tushare\\cn_pmi\\2026\\10\\d601f6f5ff904d098e080a42c189ebd1.parquet"
+      ]
+    },
+    "00_raw/tushare/cn_ppi": {
+      "files": 6,
+      "bytes": 71630,
+      "extensions": {
+        ".json": 3,
+        ".parquet": 3
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:46.310441+00:00",
+      "latest_mtime_utc": "2026-10-01T18:18:46.799127+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\cn_ppi\\2026\\10\\6fe9fbb478d04df1ba737a417eb83d6e.json",
+        "E:\\QuantData\\00_raw\\tushare\\cn_ppi\\2026\\10\\6fe9fbb478d04df1ba737a417eb83d6e.parquet"
+      ]
+    },
+    "00_raw/tushare/cn_schedule": {
+      "files": 288,
+      "bytes": 510688,
+      "extensions": {
+        ".json": 144,
+        ".parquet": 144
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:49.296783+00:00",
+      "latest_mtime_utc": "2026-10-01T18:23:39.245501+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\cn_schedule\\2026\\10\\00aa55e501844115b28e92105fbd4858.json",
+        "E:\\QuantData\\00_raw\\tushare\\cn_schedule\\2026\\10\\00aa55e501844115b28e92105fbd4858.parquet"
+      ]
+    },
+    "00_raw/tushare/daily": {
+      "files": 5756,
+      "bytes": 540215867,
+      "extensions": {
+        ".json": 2878,
+        ".parquet": 2878
+      },
+      "earliest_mtime_utc": "2026-09-23T04:38:56.725280+00:00",
+      "latest_mtime_utc": "2026-09-23T14:11:10.330232+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\daily\\2026\\09\\002d6f5b28244e4097115111abfcdd6d.json",
+        "E:\\QuantData\\00_raw\\tushare\\daily\\2026\\09\\002d6f5b28244e4097115111abfcdd6d.parquet"
+      ]
+    },
+    "00_raw/tushare/daily_basic": {
+      "files": 5756,
+      "bytes": 1297562545,
+      "extensions": {
+        ".json": 2878,
+        ".parquet": 2878
+      },
+      "earliest_mtime_utc": "2026-09-23T04:38:58.213324+00:00",
+      "latest_mtime_utc": "2026-09-24T15:20:56.412439+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\daily_basic\\2026\\09\\0003b3c1ac7a4855a08c49a71a05c793.json",
+        "E:\\QuantData\\00_raw\\tushare\\daily_basic\\2026\\09\\0003b3c1ac7a4855a08c49a71a05c793.parquet"
+      ]
+    },
+    "00_raw/tushare/daily_info": {
+      "files": 5756,
+      "bytes": 29868001,
+      "extensions": {
+        ".json": 2878,
+        ".parquet": 2878
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:51.583604+00:00",
+      "latest_mtime_utc": "2026-10-01T19:18:34.089883+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\daily_info\\2026\\10\\001eb2babd2a456d8495f30b06dc3d53.json",
+        "E:\\QuantData\\00_raw\\tushare\\daily_info\\2026\\10\\001eb2babd2a456d8495f30b06dc3d53.parquet"
+      ]
+    },
+    "00_raw/tushare/disclosure_date": {
+      "files": 13768,
+      "bytes": 36687839,
+      "extensions": {
+        ".json": 6884,
+        ".parquet": 6884
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:18.509559+00:00",
+      "latest_mtime_utc": "2026-09-29T20:52:07.134450+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\disclosure_date\\2026\\09\\000521977aa340ed971fc4be85c02f7d.json",
+        "E:\\QuantData\\00_raw\\tushare\\disclosure_date\\2026\\09\\000521977aa340ed971fc4be85c02f7d.parquet"
+      ]
+    },
+    "00_raw/tushare/dividend": {
+      "files": 11862,
+      "bytes": 66375667,
+      "extensions": {
+        ".json": 5931,
+        ".parquet": 5931
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:17.743792+00:00",
+      "latest_mtime_utc": "2026-10-03T13:48:34.215484+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\dividend\\2026\\10\\0013cbf7d7f24f518ab4f99826099db8.json",
+        "E:\\QuantData\\00_raw\\tushare\\dividend\\2026\\10\\0013cbf7d7f24f518ab4f99826099db8.parquet"
+      ]
+    },
+    "00_raw/tushare/etf_limit": {
+      "files": 5756,
+      "bytes": 34251687,
+      "extensions": {
+        ".json": 2878,
+        ".parquet": 2878
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:02.713439+00:00",
+      "latest_mtime_utc": "2026-09-25T07:38:47.395915+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\etf_limit\\2026\\09\\001f083bc30a4c66ab4ea6a98842e3e3.json",
+        "E:\\QuantData\\00_raw\\tushare\\etf_limit\\2026\\09\\001f083bc30a4c66ab4ea6a98842e3e3.parquet"
+      ]
+    },
+    "00_raw/tushare/express": {
+      "files": 11816,
+      "bytes": 104601295,
+      "extensions": {
+        ".json": 5908,
+        ".parquet": 5908
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:17.020512+00:00",
+      "latest_mtime_utc": "2026-09-29T17:01:10.577059+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\express\\2026\\09\\000054ba31464283be426d55d74dd683.json",
+        "E:\\QuantData\\00_raw\\tushare\\express\\2026\\09\\000054ba31464283be426d55d74dd683.parquet"
+      ]
+    },
+    "00_raw/tushare/fina_audit": {
+      "files": 11816,
+      "bytes": 34245892,
+      "extensions": {
+        ".json": 5908,
+        ".parquet": 5908
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:19.261369+00:00",
+      "latest_mtime_utc": "2026-09-29T23:26:13.875145+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\fina_audit\\2026\\09\\00014602c22f4988904819a109bb08b8.json",
+        "E:\\QuantData\\00_raw\\tushare\\fina_audit\\2026\\09\\00014602c22f4988904819a109bb08b8.parquet"
+      ]
+    },
+    "00_raw/tushare/fina_indicator": {
+      "files": 11824,
+      "bytes": 919513812,
+      "extensions": {
+        ".json": 5912,
+        ".parquet": 5912
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:15.783600+00:00",
+      "latest_mtime_utc": "2026-10-04T01:58:19.576144+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\fina_indicator\\2026\\10\\00095c9ac8494753b4ea5a4059784e0e.json",
+        "E:\\QuantData\\00_raw\\tushare\\fina_indicator\\2026\\10\\00095c9ac8494753b4ea5a4059784e0e.parquet"
+      ]
+    },
+    "00_raw/tushare/fina_mainbz": {
+      "files": 41654,
+      "bytes": 170596263,
+      "extensions": {
+        ".json": 20827,
+        ".parquet": 20827
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:20.029999+00:00",
+      "latest_mtime_utc": "2026-09-30T10:41:32.949403+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\fina_mainbz\\2026\\09\\0000b0c071644dcab41c46cf2a31bf63.json",
+        "E:\\QuantData\\00_raw\\tushare\\fina_mainbz\\2026\\09\\0000b0c071644dcab41c46cf2a31bf63.parquet"
+      ]
+    },
+    "00_raw/tushare/forecast": {
+      "files": 11818,
+      "bytes": 81272614,
+      "extensions": {
+        ".json": 5909,
+        ".parquet": 5909
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:16.241004+00:00",
+      "latest_mtime_utc": "2026-09-29T14:19:19.298443+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\forecast\\2026\\09\\00045e8cbe784837a2baed1931335010.json",
+        "E:\\QuantData\\00_raw\\tushare\\forecast\\2026\\09\\00045e8cbe784837a2baed1931335010.parquet"
+      ]
+    },
+    "00_raw/tushare/fund_adj": {
+      "files": 5994,
+      "bytes": 30723139,
+      "extensions": {
+        ".json": 2997,
+        ".parquet": 2997
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:04.985751+00:00",
+      "latest_mtime_utc": "2026-09-25T13:35:45.310640+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\fund_adj\\2026\\09\\0000f9fe84984f36a300990fe6c2a896.json",
+        "E:\\QuantData\\00_raw\\tushare\\fund_adj\\2026\\09\\0000f9fe84984f36a300990fe6c2a896.parquet"
+      ]
+    },
+    "00_raw/tushare/fund_basic": {
+      "files": 14,
+      "bytes": 374534,
+      "extensions": {
+        ".json": 7,
+        ".parquet": 7
+      },
+      "earliest_mtime_utc": "2026-09-23T04:38:49.225513+00:00",
+      "latest_mtime_utc": "2026-09-23T05:22:31.240008+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\fund_basic\\2026\\09\\58dac5c180124b2182c4e164c0c60e5e.json",
+        "E:\\QuantData\\00_raw\\tushare\\fund_basic\\2026\\09\\58dac5c180124b2182c4e164c0c60e5e.parquet"
+      ]
+    },
+    "00_raw/tushare/fund_daily": {
+      "files": 5756,
+      "bytes": 139857722,
+      "extensions": {
+        ".json": 2878,
+        ".parquet": 2878
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:00.504757+00:00",
+      "latest_mtime_utc": "2026-09-25T01:45:00.910596+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\fund_daily\\2026\\09\\0018562f8dd447df9a5f63d0c3a8e52c.json",
+        "E:\\QuantData\\00_raw\\tushare\\fund_daily\\2026\\09\\0018562f8dd447df9a5f63d0c3a8e52c.parquet"
+      ]
+    },
+    "00_raw/tushare/fund_div": {
+      "files": 5830,
+      "bytes": 25084305,
+      "extensions": {
+        ".json": 2915,
+        ".parquet": 2915
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:01.976208+00:00",
+      "latest_mtime_utc": "2026-09-25T06:10:50.705227+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\fund_div\\2026\\09\\002f2aadfd9e4b42a730c8af61e05c1c.json",
+        "E:\\QuantData\\00_raw\\tushare\\fund_div\\2026\\09\\002f2aadfd9e4b42a730c8af61e05c1c.parquet"
+      ]
+    },
+    "00_raw/tushare/fund_nav": {
+      "files": 5830,
+      "bytes": 83382123,
+      "extensions": {
+        ".json": 2915,
+        ".parquet": 2915
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:01.262947+00:00",
+      "latest_mtime_utc": "2026-09-25T04:41:09.895082+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\fund_nav\\2026\\09\\0008b07f9749444686db3dcf0ba70f70.json",
+        "E:\\QuantData\\00_raw\\tushare\\fund_nav\\2026\\09\\0008b07f9749444686db3dcf0ba70f70.parquet"
+      ]
+    },
+    "00_raw/tushare/fund_share": {
+      "files": 6130,
+      "bytes": 20332964,
+      "extensions": {
+        ".json": 3065,
+        ".parquet": 3065
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:06.479179+00:00",
+      "latest_mtime_utc": "2026-09-25T15:43:59.704456+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\fund_share\\2026\\09\\0039e487fdfe4c1fb5edcebe8890e70f.json",
+        "E:\\QuantData\\00_raw\\tushare\\fund_share\\2026\\09\\0039e487fdfe4c1fb5edcebe8890e70f.parquet"
+      ]
+    },
+    "00_raw/tushare/gz_index": {
+      "files": 288,
+      "bytes": 674873,
+      "extensions": {
+        ".json": 144,
+        ".parquet": 144
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:50.805010+00:00",
+      "latest_mtime_utc": "2026-10-01T18:28:09.546738+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\gz_index\\2026\\10\\012dcec0656c4ac58843ef9a905e2e46.json",
+        "E:\\QuantData\\00_raw\\tushare\\gz_index\\2026\\10\\012dcec0656c4ac58843ef9a905e2e46.parquet"
+      ]
+    },
+    "00_raw/tushare/hsgt_top10": {
+      "files": 5756,
+      "bytes": 24343503,
+      "extensions": {
+        ".json": 2878,
+        ".parquet": 2878
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:23.785104+00:00",
+      "latest_mtime_utc": "2026-09-30T18:23:35.496250+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\hsgt_top10\\2026\\09\\0021c80c5dac4e8c9186c1791056f70f.json",
+        "E:\\QuantData\\00_raw\\tushare\\hsgt_top10\\2026\\09\\0021c80c5dac4e8c9186c1791056f70f.parquet"
+      ]
+    },
+    "00_raw/tushare/income": {
+      "files": 11826,
+      "bytes": 386546997,
+      "extensions": {
+        ".json": 5913,
+        ".parquet": 5913
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:13.249892+00:00",
+      "latest_mtime_utc": "2026-09-29T07:32:41.745795+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\income\\2026\\09\\0004d9e16d424b36a31a0402c003a948.json",
+        "E:\\QuantData\\00_raw\\tushare\\income\\2026\\09\\0004d9e16d424b36a31a0402c003a948.parquet"
+      ]
+    },
+    "00_raw/tushare/index_basic": {
+      "files": 30,
+      "bytes": 868376,
+      "extensions": {
+        ".json": 15,
+        ".parquet": 15
+      },
+      "earliest_mtime_utc": "2026-09-23T04:38:49.994436+00:00",
+      "latest_mtime_utc": "2026-09-23T05:22:40.935464+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\index_basic\\2026\\09\\01ee8d28d5724d6aad37ae86f1e13ec7.json",
+        "E:\\QuantData\\00_raw\\tushare\\index_basic\\2026\\09\\01ee8d28d5724d6aad37ae86f1e13ec7.parquet"
+      ]
+    },
+    "00_raw/tushare/index_classify": {
+      "files": 26,
+      "bytes": 96829,
+      "extensions": {
+        ".json": 13,
+        ".parquet": 13
+      },
+      "earliest_mtime_utc": "2026-09-23T04:38:50.724381+00:00",
+      "latest_mtime_utc": "2026-09-23T05:22:49.193068+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\index_classify\\2026\\09\\2d258f76c55f4e0ea08d6ae90d271722.json",
+        "E:\\QuantData\\00_raw\\tushare\\index_classify\\2026\\09\\2d258f76c55f4e0ea08d6ae90d271722.parquet"
+      ]
+    },
+    "00_raw/tushare/index_daily": {
+      "files": 39788,
+      "bytes": 1094227634,
+      "extensions": {
+        ".json": 19894,
+        ".parquet": 19894
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:07.991515+00:00",
+      "latest_mtime_utc": "2026-10-04T02:48:36.787535+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\index_daily\\2026\\10\\000047117d494943a78071851f656242.json",
+        "E:\\QuantData\\00_raw\\tushare\\index_daily\\2026\\10\\000047117d494943a78071851f656242.parquet"
+      ]
+    },
+    "00_raw/tushare/index_dailybasic": {
+      "files": 5756,
+      "bytes": 26989537,
+      "extensions": {
+        ".json": 2878,
+        ".parquet": 2878
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:09.511944+00:00",
+      "latest_mtime_utc": "2026-09-26T03:15:20.886117+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\index_dailybasic\\2026\\09\\000393e05d004fbb874ffd6c2721c08b.json",
+        "E:\\QuantData\\00_raw\\tushare\\index_dailybasic\\2026\\09\\000393e05d004fbb874ffd6c2721c08b.parquet"
+      ]
+    },
+    "00_raw/tushare/index_member_all": {
+      "files": 1770,
+      "bytes": 6198665,
+      "extensions": {
+        ".json": 885,
+        ".parquet": 885
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:10.266620+00:00",
+      "latest_mtime_utc": "2026-09-28T06:45:16.684755+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\index_member_all\\2026\\09\\0041bff4c2b742d88b827b404c66c8cb.json",
+        "E:\\QuantData\\00_raw\\tushare\\index_member_all\\2026\\09\\0041bff4c2b742d88b827b404c66c8cb.parquet"
+      ]
+    },
+    "00_raw/tushare/index_weight": {
+      "files": 3112,
+      "bytes": 11750815,
+      "extensions": {
+        ".json": 1556,
+        ".parquet": 1556
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:08.780578+00:00",
+      "latest_mtime_utc": "2026-09-26T01:59:58.851980+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\index_weight\\2026\\09\\001e0a3188934f769a2c55b9d1e17045.json",
+        "E:\\QuantData\\00_raw\\tushare\\index_weight\\2026\\09\\001e0a3188934f769a2c55b9d1e17045.parquet"
+      ]
+    },
+    "00_raw/tushare/margin": {
+      "files": 5756,
+      "bytes": 18384615,
+      "extensions": {
+        ".json": 2878,
+        ".parquet": 2878
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:21.537969+00:00",
+      "latest_mtime_utc": "2026-09-30T14:11:13.410758+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\margin\\2026\\09\\00092378424d4595876ae00638910dca.json",
+        "E:\\QuantData\\00_raw\\tushare\\margin\\2026\\09\\00092378424d4595876ae00638910dca.parquet"
+      ]
+    },
+    "00_raw/tushare/margin_detail": {
+      "files": 5756,
+      "bytes": 343487299,
+      "extensions": {
+        ".json": 2878,
+        ".parquet": 2878
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:22.298964+00:00",
+      "latest_mtime_utc": "2026-09-30T15:32:44.366879+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\margin_detail\\2026\\09\\0002aa8d1b37429abcc10bce9b5c6ade.json",
+        "E:\\QuantData\\00_raw\\tushare\\margin_detail\\2026\\09\\0002aa8d1b37429abcc10bce9b5c6ade.parquet"
+      ]
+    },
+    "00_raw/tushare/margin_secs": {
+      "files": 5756,
+      "bytes": 111469311,
+      "extensions": {
+        ".json": 2878,
+        ".parquet": 2878
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:23.035309+00:00",
+      "latest_mtime_utc": "2026-09-30T16:59:51.240828+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\margin_secs\\2026\\09\\00098eb1f87d48398af61e0d86a646e2.json",
+        "E:\\QuantData\\00_raw\\tushare\\margin_secs\\2026\\09\\00098eb1f87d48398af61e0d86a646e2.parquet"
+      ]
+    },
+    "00_raw/tushare/moneyflow": {
+      "files": 5756,
+      "bytes": 1057413055,
+      "extensions": {
+        ".json": 2878,
+        ".parquet": 2878
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:20.775270+00:00",
+      "latest_mtime_utc": "2026-09-30T12:16:54.781476+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\moneyflow\\2026\\09\\0001c0868270404b805a58b6dfeced31.json",
+        "E:\\QuantData\\00_raw\\tushare\\moneyflow\\2026\\09\\0001c0868270404b805a58b6dfeced31.parquet"
+      ]
+    },
+    "00_raw/tushare/namechange": {
+      "files": 11816,
+      "bytes": 27533791,
+      "extensions": {
+        ".json": 5908,
+        ".parquet": 5908
+      },
+      "earliest_mtime_utc": "2026-09-23T04:38:51.481367+00:00",
+      "latest_mtime_utc": "2026-10-01T18:07:15.139011+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\namechange\\2026\\10\\000115c171564604ab6da4c5a8bf9b15.json",
+        "E:\\QuantData\\00_raw\\tushare\\namechange\\2026\\10\\000115c171564604ab6da4c5a8bf9b15.parquet"
+      ]
+    },
+    "00_raw/tushare/new_share": {
+      "files": 288,
+      "bytes": 1367385,
+      "extensions": {
+        ".json": 144,
+        ".parquet": 144
+      },
+      "earliest_mtime_utc": "2026-09-23T04:38:52.968061+00:00",
+      "latest_mtime_utc": "2026-10-01T18:09:43.129166+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\new_share\\2026\\10\\009e3832568645709904618f86826f43.json",
+        "E:\\QuantData\\00_raw\\tushare\\new_share\\2026\\10\\009e3832568645709904618f86826f43.parquet"
+      ]
+    },
+    "00_raw/tushare/pledge_detail": {
+      "files": 11816,
+      "bytes": 56688347,
+      "extensions": {
+        ".json": 5908,
+        ".parquet": 5908
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:32.805522+00:00",
+      "latest_mtime_utc": "2026-09-30T23:23:15.271730+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\pledge_detail\\2026\\09\\0010d152926d466cb021947c4b520ff4.json",
+        "E:\\QuantData\\00_raw\\tushare\\pledge_detail\\2026\\09\\0010d152926d466cb021947c4b520ff4.parquet"
+      ]
+    },
+    "00_raw/tushare/pledge_stat": {
+      "files": 11816,
+      "bytes": 44688256,
+      "extensions": {
+        ".json": 5908,
+        ".parquet": 5908
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:32.042309+00:00",
+      "latest_mtime_utc": "2026-09-30T22:15:15.176224+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\pledge_stat\\2026\\09\\000c2acf58c640618e78c929646303b5.json",
+        "E:\\QuantData\\00_raw\\tushare\\pledge_stat\\2026\\09\\000c2acf58c640618e78c929646303b5.parquet"
+      ]
+    },
+    "00_raw/tushare/repurchase": {
+      "files": 306,
+      "bytes": 2493080,
+      "extensions": {
+        ".json": 153,
+        ".parquet": 153
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:31.307792+00:00",
+      "latest_mtime_utc": "2026-10-03T13:56:36.300564+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\repurchase\\2026\\10\\03f10450ac9b4baa873830fa9b98f6eb.json",
+        "E:\\QuantData\\00_raw\\tushare\\repurchase\\2026\\10\\03f10450ac9b4baa873830fa9b98f6eb.parquet"
+      ]
+    },
+    "00_raw/tushare/sf_month": {
+      "files": 6,
+      "bytes": 13646,
+      "extensions": {
+        ".json": 3,
+        ".parquet": 3
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:48.546485+00:00",
+      "latest_mtime_utc": "2026-10-01T18:18:53.645641+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\sf_month\\2026\\10\\bbb7d36f7dfa4c10833deca8c844e154.json",
+        "E:\\QuantData\\00_raw\\tushare\\sf_month\\2026\\10\\bbb7d36f7dfa4c10833deca8c844e154.parquet"
+      ]
+    },
+    "00_raw/tushare/share_float": {
+      "files": 15664,
+      "bytes": 153634532,
+      "extensions": {
+        ".json": 7832,
+        ".parquet": 7832
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:36.543912+00:00",
+      "latest_mtime_utc": "2026-10-04T04:44:09.031427+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\share_float\\2026\\10\\0008e1058f414a76923dc3edad4396fa.json",
+        "E:\\QuantData\\00_raw\\tushare\\share_float\\2026\\10\\0008e1058f414a76923dc3edad4396fa.parquet"
+      ]
+    },
+    "00_raw/tushare/shibor": {
+      "files": 288,
+      "bytes": 385201,
+      "extensions": {
+        ".json": 144,
+        ".parquet": 144
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:42.643675+00:00",
+      "latest_mtime_utc": "2026-10-01T18:12:08.045436+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\shibor\\2026\\10\\00ea2c4af0564d3b9963f3e4f21ef3fa.json",
+        "E:\\QuantData\\00_raw\\tushare\\shibor\\2026\\10\\00ea2c4af0564d3b9963f3e4f21ef3fa.parquet"
+      ]
+    },
+    "00_raw/tushare/shibor_lpr": {
+      "files": 36,
+      "bytes": 35674,
+      "extensions": {
+        ".json": 18,
+        ".parquet": 18
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:44.053612+00:00",
+      "latest_mtime_utc": "2026-10-20T03:25:18.975974+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\shibor_lpr\\2026\\10\\0898fc93dcd646419401a1bb8409f1b4.json",
+        "E:\\QuantData\\00_raw\\tushare\\shibor_lpr\\2026\\10\\0898fc93dcd646419401a1bb8409f1b4.parquet"
+      ]
+    },
+    "00_raw/tushare/shibor_quote": {
+      "files": 34,
+      "bytes": 82301,
+      "extensions": {
+        ".json": 17,
+        ".parquet": 17
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:43.338867+00:00",
+      "latest_mtime_utc": "2026-10-20T03:22:04.526699+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\shibor_quote\\2026\\10\\037de66f45664df284a2d64c8d14f823.json",
+        "E:\\QuantData\\00_raw\\tushare\\shibor_quote\\2026\\10\\037de66f45664df284a2d64c8d14f823.parquet"
+      ]
+    },
+    "00_raw/tushare/stk_holdernumber": {
+      "files": 11816,
+      "bytes": 26245910,
+      "extensions": {
+        ".json": 5908,
+        ".parquet": 5908
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:33.540780+00:00",
+      "latest_mtime_utc": "2026-10-01T00:59:26.145634+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\stk_holdernumber\\2026\\10\\002046df9761437e937f606ede2c8651.json",
+        "E:\\QuantData\\00_raw\\tushare\\stk_holdernumber\\2026\\10\\002046df9761437e937f606ede2c8651.parquet"
+      ]
+    },
+    "00_raw/tushare/stk_holdertrade": {
+      "files": 310,
+      "bytes": 8407834,
+      "extensions": {
+        ".json": 155,
+        ".parquet": 155
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:34.302035+00:00",
+      "latest_mtime_utc": "2026-10-01T01:01:35.369224+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\stk_holdertrade\\2026\\10\\028aa437e007412e8a62fc964e94fb3e.json",
+        "E:\\QuantData\\00_raw\\tushare\\stk_holdertrade\\2026\\10\\028aa437e007412e8a62fc964e94fb3e.parquet"
+      ]
+    },
+    "00_raw/tushare/stk_limit": {
+      "files": 5756,
+      "bytes": 172870281,
+      "extensions": {
+        ".json": 2878,
+        ".parquet": 2878
+      },
+      "earliest_mtime_utc": "2026-09-23T04:38:58.990116+00:00",
+      "latest_mtime_utc": "2026-09-24T22:35:02.310606+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\stk_limit\\2026\\09\\00014fc00ae14eaeb23121ead6ce9e2b.json",
+        "E:\\QuantData\\00_raw\\tushare\\stk_limit\\2026\\09\\00014fc00ae14eaeb23121ead6ce9e2b.parquet"
+      ]
+    },
+    "00_raw/tushare/stk_managers": {
+      "files": 11816,
+      "bytes": 94355962,
+      "extensions": {
+        ".json": 5908,
+        ".parquet": 5908
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:38.046033+00:00",
+      "latest_mtime_utc": "2026-10-01T16:23:01.706877+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\stk_managers\\2026\\10\\00057e3bbe614d70b76aa3c19c064806.json",
+        "E:\\QuantData\\00_raw\\tushare\\stk_managers\\2026\\10\\00057e3bbe614d70b76aa3c19c064806.parquet"
+      ]
+    },
+    "00_raw/tushare/stk_rewards": {
+      "files": 11818,
+      "bytes": 44345298,
+      "extensions": {
+        ".json": 5909,
+        ".parquet": 5909
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:37.326673+00:00",
+      "latest_mtime_utc": "2026-10-01T14:56:51.884735+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\stk_rewards\\2026\\10\\000f3489668c4bf4823d46ceb2774dc2.json",
+        "E:\\QuantData\\00_raw\\tushare\\stk_rewards\\2026\\10\\000f3489668c4bf4823d46ceb2774dc2.parquet"
+      ]
+    },
+    "00_raw/tushare/stk_seasoned": {
+      "files": 288,
+      "bytes": 7695121,
+      "extensions": {
+        ".json": 144,
+        ".parquet": 144
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:38.819759+00:00",
+      "latest_mtime_utc": "2026-10-01T16:25:18.520144+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\stk_seasoned\\2026\\10\\00bf87417ac845f2b4dfb7e42296ca7a.json",
+        "E:\\QuantData\\00_raw\\tushare\\stk_seasoned\\2026\\10\\00bf87417ac845f2b4dfb7e42296ca7a.parquet"
+      ]
+    },
+    "00_raw/tushare/stock_basic": {
+      "files": 14,
+      "bytes": 809056,
+      "extensions": {
+        ".json": 7,
+        ".parquet": 7
+      },
+      "earliest_mtime_utc": "2026-09-23T04:38:48.478427+00:00",
+      "latest_mtime_utc": "2026-09-23T05:22:27.438555+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\stock_basic\\2026\\09\\3494c3d1d3c748c68d0af7a8a2b65be8.json",
+        "E:\\QuantData\\00_raw\\tushare\\stock_basic\\2026\\09\\3494c3d1d3c748c68d0af7a8a2b65be8.parquet"
+      ]
+    },
+    "00_raw/tushare/stock_company": {
+      "files": 14,
+      "bytes": 11736752,
+      "extensions": {
+        ".json": 7,
+        ".parquet": 7
+      },
+      "earliest_mtime_utc": "2026-09-23T04:38:52.225719+00:00",
+      "latest_mtime_utc": "2026-10-01T18:07:20.718777+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\stock_company\\2026\\10\\20c222ebcc6d424a9a5a8d58447d7679.json",
+        "E:\\QuantData\\00_raw\\tushare\\stock_company\\2026\\10\\20c222ebcc6d424a9a5a8d58447d7679.parquet"
+      ]
+    },
+    "00_raw/tushare/suspend_d": {
+      "files": 5756,
+      "bytes": 11507406,
+      "extensions": {
+        ".json": 2878,
+        ".parquet": 2878
+      },
+      "earliest_mtime_utc": "2026-09-23T04:38:59.739745+00:00",
+      "latest_mtime_utc": "2026-09-24T23:48:29.553528+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\suspend_d\\2026\\09\\0017affca3f04362b4b302acb6a6f408.json",
+        "E:\\QuantData\\00_raw\\tushare\\suspend_d\\2026\\09\\0017affca3f04362b4b302acb6a6f408.parquet"
+      ]
+    },
+    "00_raw/tushare/sz_daily_info": {
+      "files": 5756,
+      "bytes": 20343470,
+      "extensions": {
+        ".json": 2878,
+        ".parquet": 2878
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:52.299562+00:00",
+      "latest_mtime_utc": "2026-10-01T20:11:19.994939+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\sz_daily_info\\2026\\10\\0001dc88e1a34a74b7ac43ceb965e80d.json",
+        "E:\\QuantData\\00_raw\\tushare\\sz_daily_info\\2026\\10\\0001dc88e1a34a74b7ac43ceb965e80d.parquet"
+      ]
+    },
+    "00_raw/tushare/top10_floatholders": {
+      "files": 11816,
+      "bytes": 86218308,
+      "extensions": {
+        ".json": 5908,
+        ".parquet": 5908
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:35.827770+00:00",
+      "latest_mtime_utc": "2026-10-01T04:38:42.736673+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\top10_floatholders\\2026\\10\\00032a7186e749d1b77dde866e6561c8.json",
+        "E:\\QuantData\\00_raw\\tushare\\top10_floatholders\\2026\\10\\00032a7186e749d1b77dde866e6561c8.parquet"
+      ]
+    },
+    "00_raw/tushare/top10_holders": {
+      "files": 11816,
+      "bytes": 82133591,
+      "extensions": {
+        ".json": 5908,
+        ".parquet": 5908
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:35.056300+00:00",
+      "latest_mtime_utc": "2026-10-01T02:42:10.320661+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\top10_holders\\2026\\10\\00038aee0efc48cfb0f13db9881aa5b7.json",
+        "E:\\QuantData\\00_raw\\tushare\\top10_holders\\2026\\10\\00038aee0efc48cfb0f13db9881aa5b7.parquet"
+      ]
+    },
+    "00_raw/tushare/top_inst": {
+      "files": 5756,
+      "bytes": 80497942,
+      "extensions": {
+        ".json": 2878,
+        ".parquet": 2878
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:29.797423+00:00",
+      "latest_mtime_utc": "2026-09-30T20:23:22.883396+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\top_inst\\2026\\09\\0011898d68c64048b017addecd6a9434.json",
+        "E:\\QuantData\\00_raw\\tushare\\top_inst\\2026\\09\\0011898d68c64048b017addecd6a9434.parquet"
+      ]
+    },
+    "00_raw/tushare/top_list": {
+      "files": 5756,
+      "bytes": 48381488,
+      "extensions": {
+        ".json": 2878,
+        ".parquet": 2878
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:29.058160+00:00",
+      "latest_mtime_utc": "2026-09-30T19:49:50.821008+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\top_list\\2026\\09\\000d498f99f04442b5452abcf4da6759.json",
+        "E:\\QuantData\\00_raw\\tushare\\top_list\\2026\\09\\000d498f99f04442b5452abcf4da6759.parquet"
+      ]
+    },
+    "00_raw/tushare/trade_cal": {
+      "files": 98,
+      "bytes": 211722,
+      "extensions": {
+        ".json": 49,
+        ".parquet": 49
+      },
+      "earliest_mtime_utc": "2026-09-23T04:38:48.175320+00:00",
+      "latest_mtime_utc": "2026-09-23T05:22:23.719977+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\trade_cal\\2026\\09\\0344d2a811c24d8397f24516a3df8f37.json",
+        "E:\\QuantData\\00_raw\\tushare\\trade_cal\\2026\\09\\0344d2a811c24d8397f24516a3df8f37.parquet"
+      ]
+    },
+    "00_raw/tushare/wz_index": {
+      "files": 288,
+      "bytes": 1423438,
+      "extensions": {
+        ".json": 144,
+        ".parquet": 144
+      },
+      "earliest_mtime_utc": "2026-09-23T04:39:50.051727+00:00",
+      "latest_mtime_utc": "2026-10-01T18:25:58.274107+00:00",
+      "examples": [
+        "E:\\QuantData\\00_raw\\tushare\\wz_index\\2026\\10\\012624af062c416587cf2d061c25870e.json",
+        "E:\\QuantData\\00_raw\\tushare\\wz_index\\2026\\10\\012624af062c416587cf2d061c25870e.parquet"
+      ]
+    },
+    "10_canonical/adj_factor": {
+      "files": 272,
+      "bytes": 889069622,
+      "extensions": {
+        ".parquet": 272
+      },
+      "earliest_mtime_utc": "2026-09-23T04:47:33.593764+00:00",
+      "latest_mtime_utc": "2026-09-24T06:32:02.541752+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\adj_factor\\2026\\09\\325122e0aeb1406ab4bc71209524d88b.parquet",
+        "E:\\QuantData\\10_canonical\\adj_factor\\2026\\09\\32daabc432304e96ae4fac3c530a2b3a.parquet"
+      ]
+    },
+    "10_canonical/balancesheet": {
+      "files": 56539,
+      "bytes": 7310407693,
+      "extensions": {
+        ".parquet": 56539
+      },
+      "earliest_mtime_utc": "2026-09-23T05:05:25.173398+00:00",
+      "latest_mtime_utc": "2026-09-29T09:59:43.650799+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\balancesheet\\2026\\0001b8f8ff604345817b24679c29a187.parquet",
+        "E:\\QuantData\\10_canonical\\balancesheet\\2026\\0005006e167e4faabf539a386b2e06ed.parquet"
+      ]
+    },
+    "10_canonical/block_trade": {
+      "files": 3052,
+      "bytes": 151152930,
+      "extensions": {
+        ".parquet": 3052
+      },
+      "earliest_mtime_utc": "2026-09-23T04:59:00.410234+00:00",
+      "latest_mtime_utc": "2026-09-30T21:00:25.798854+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\block_trade\\2026\\09\\01d044b18251474588bb9296e5c69962.parquet",
+        "E:\\QuantData\\10_canonical\\block_trade\\2026\\09\\1bd350a953374391a109eae6ea792e5d.parquet"
+      ]
+    },
+    "10_canonical/bse_mapping": {
+      "files": 2,
+      "bytes": 66382,
+      "extensions": {
+        ".parquet": 2
+      },
+      "earliest_mtime_utc": "2026-09-23T05:13:31.836013+00:00",
+      "latest_mtime_utc": "2026-09-23T05:22:50.072360+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\bse_mapping\\snapshot\\278567865c3a45a9b7a77404f96e4e35.parquet",
+        "E:\\QuantData\\10_canonical\\bse_mapping\\snapshot\\7faee5bbb2a545c8b6025375f85eaede.parquet"
+      ]
+    },
+    "10_canonical/cashflow": {
+      "files": 61308,
+      "bytes": 6075980128,
+      "extensions": {
+        ".parquet": 61308
+      },
+      "earliest_mtime_utc": "2026-09-23T05:05:25.364612+00:00",
+      "latest_mtime_utc": "2026-09-29T12:37:32.623915+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\cashflow\\2026\\0004643428cb44618c810f4484a3cd3e.parquet",
+        "E:\\QuantData\\10_canonical\\cashflow\\2026\\0036af9caf8a401684fc66d71977e6b0.parquet"
+      ]
+    },
+    "10_canonical/cn_cpi": {
+      "files": 14,
+      "bytes": 244303,
+      "extensions": {
+        ".parquet": 14
+      },
+      "earliest_mtime_utc": "2026-09-23T05:06:59.165313+00:00",
+      "latest_mtime_utc": "2026-10-01T18:18:45.039278+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\cn_cpi\\unknown\\4381523895d649f1902d1e7d3311c2db.parquet",
+        "E:\\QuantData\\10_canonical\\cn_cpi\\2026\\57905521e88a48359fde0dbd1699e582.parquet"
+      ]
+    },
+    "10_canonical/cn_gdp": {
+      "files": 12,
+      "bytes": 170555,
+      "extensions": {
+        ".parquet": 12
+      },
+      "earliest_mtime_utc": "2026-10-01T18:18:42.479262+00:00",
+      "latest_mtime_utc": "2026-10-01T18:18:42.578971+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\cn_gdp\\2026\\aff9016371224237af4303969bf3ae5d.parquet",
+        "E:\\QuantData\\10_canonical\\cn_gdp\\2025\\d3e695b4719f4d29a55065d1de5078ae.parquet"
+      ]
+    },
+    "10_canonical/cn_m": {
+      "files": 14,
+      "bytes": 218653,
+      "extensions": {
+        ".parquet": 14
+      },
+      "earliest_mtime_utc": "2026-09-23T05:07:00.718065+00:00",
+      "latest_mtime_utc": "2026-10-01T18:18:49.909003+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\cn_m\\unknown\\f8f142087c5d497db016a07d074c33bf.parquet",
+        "E:\\QuantData\\10_canonical\\cn_m\\2026\\e32d84e99cfa4bb390011d70a89a2f26.parquet"
+      ]
+    },
+    "10_canonical/cn_pmi": {
+      "files": 14,
+      "bytes": 662934,
+      "extensions": {
+        ".parquet": 14
+      },
+      "earliest_mtime_utc": "2026-09-23T05:07:01.463940+00:00",
+      "latest_mtime_utc": "2026-10-01T18:18:52.199438+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\cn_pmi\\unknown\\50ed3e4c4a4049648996e3c49e4effef.parquet",
+        "E:\\QuantData\\10_canonical\\cn_pmi\\2026\\b314d2d18ff9412db90a8d0ba636cc0f.parquet"
+      ]
+    },
+    "10_canonical/cn_ppi": {
+      "files": 14,
+      "bytes": 415471,
+      "extensions": {
+        ".parquet": 14
+      },
+      "earliest_mtime_utc": "2026-09-23T05:06:59.916680+00:00",
+      "latest_mtime_utc": "2026-10-01T18:18:47.675480+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\cn_ppi\\unknown\\1cf2a7d080224db7807cff029082a6c9.parquet",
+        "E:\\QuantData\\10_canonical\\cn_ppi\\2026\\1c52c5b5a3914ef1a2a37be7e2e74944.parquet"
+      ]
+    },
+    "10_canonical/cn_schedule": {
+      "files": 12,
+      "bytes": 159872,
+      "extensions": {
+        ".parquet": 12
+      },
+      "earliest_mtime_utc": "2026-09-23T05:07:02.918946+00:00",
+      "latest_mtime_utc": "2026-10-01T18:23:19.895359+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\cn_schedule\\2026\\08cc18c24e474c5886e76ba5328a671c.parquet",
+        "E:\\QuantData\\10_canonical\\cn_schedule\\2026\\0db06673f64c4d9080b5d27887efac31.parquet"
+      ]
+    },
+    "10_canonical/daily": {
+      "files": 348,
+      "bytes": 1260706354,
+      "extensions": {
+        ".parquet": 348
+      },
+      "earliest_mtime_utc": "2026-09-23T04:46:53.779723+00:00",
+      "latest_mtime_utc": "2026-09-23T14:11:44.074774+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\daily\\2026\\09\\1333938eee3a4f7889d5c9b244206d72.parquet",
+        "E:\\QuantData\\10_canonical\\daily\\2026\\09\\7862adbc99f249cfb71a5b8f8a8a657f.parquet"
+      ]
+    },
+    "10_canonical/daily_basic": {
+      "files": 316,
+      "bytes": 1722147857,
+      "extensions": {
+        ".parquet": 316
+      },
+      "earliest_mtime_utc": "2026-09-23T04:48:14.064233+00:00",
+      "latest_mtime_utc": "2026-09-24T15:21:20.991653+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\daily_basic\\2026\\09\\4a611c305932425ebbe3c0ea3f8c1a3e.parquet",
+        "E:\\QuantData\\10_canonical\\daily_basic\\2026\\09\\5ae0b87b75734a73a328c26849c9fc06.parquet"
+      ]
+    },
+    "10_canonical/daily_info": {
+      "files": 3048,
+      "bytes": 64492867,
+      "extensions": {
+        ".parquet": 3048
+      },
+      "earliest_mtime_utc": "2026-09-23T05:07:38.355785+00:00",
+      "latest_mtime_utc": "2026-10-01T19:18:35.120299+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\daily_info\\2026\\09\\002c2ffb168846618c90865aa52a1702.parquet",
+        "E:\\QuantData\\10_canonical\\daily_info\\2026\\09\\03c8a7b819d84e9799c03a6e25b3d996.parquet"
+      ]
+    },
+    "10_canonical/disclosure_date": {
+      "files": 89937,
+      "bytes": 3611650747,
+      "extensions": {
+        ".parquet": 89937
+      },
+      "earliest_mtime_utc": "2026-09-23T04:53:43.466919+00:00",
+      "latest_mtime_utc": "2026-09-29T20:52:08.506431+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\disclosure_date\\unknown\\001a995ed03e47ebb2625d679b86e66b.parquet",
+        "E:\\QuantData\\10_canonical\\disclosure_date\\unknown\\00274372aff14835868105c09d0ff488.parquet"
+      ]
+    },
+    "10_canonical/dividend": {
+      "files": 55293,
+      "bytes": 2516882405,
+      "extensions": {
+        ".parquet": 55293
+      },
+      "earliest_mtime_utc": "2026-09-23T04:53:39.696665+00:00",
+      "latest_mtime_utc": "2026-10-03T13:48:35.026979+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\dividend\\unknown\\00c7e8a0456a4bab8b47317075e680e2.parquet",
+        "E:\\QuantData\\10_canonical\\dividend\\unknown\\00d3835f770548f4932b57fad0bc0908.parquet"
+      ]
+    },
+    "10_canonical/etf_limit": {
+      "files": 203,
+      "bytes": 174332151,
+      "extensions": {
+        ".parquet": 203
+      },
+      "earliest_mtime_utc": "2026-09-23T04:50:58.701732+00:00",
+      "latest_mtime_utc": "2026-09-25T07:38:50.936870+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\etf_limit\\2026\\09\\5966737de20a4c288bfaa948b0d6ecb6.parquet",
+        "E:\\QuantData\\10_canonical\\etf_limit\\2026\\09\\84e42417a6f9465d9673cfba0c0e8794.parquet"
+      ]
+    },
+    "10_canonical/express": {
+      "files": 20727,
+      "bytes": 845838217,
+      "extensions": {
+        ".parquet": 20727
+      },
+      "earliest_mtime_utc": "2026-09-29T14:23:15.435105+00:00",
+      "latest_mtime_utc": "2026-09-29T17:01:12.739632+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\express\\2026\\00231cdfb31b40e7b171844ec29b4605.parquet",
+        "E:\\QuantData\\10_canonical\\express\\2026\\0033123c5adb4117bc6974ade8836482.parquet"
+      ]
+    },
+    "10_canonical/fina_audit": {
+      "files": 57987,
+      "bytes": 1881027418,
+      "extensions": {
+        ".parquet": 57987
+      },
+      "earliest_mtime_utc": "2026-09-29T20:55:34.323195+00:00",
+      "latest_mtime_utc": "2026-09-29T23:26:14.943005+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\fina_audit\\2026\\0019996e6a6f4821ac5038d94af449af.parquet",
+        "E:\\QuantData\\10_canonical\\fina_audit\\2026\\0037d42390b14b53b0d6b2b5f494d79e.parquet"
+      ]
+    },
+    "10_canonical/fina_indicator": {
+      "files": 63061,
+      "bytes": 9373312518,
+      "extensions": {
+        ".parquet": 63061
+      },
+      "earliest_mtime_utc": "2026-09-28T05:55:35.749299+00:00",
+      "latest_mtime_utc": "2026-10-04T01:58:20.873009+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\fina_indicator\\2026\\000681a4de674b8ebf4d24aa3d2e8184.parquet",
+        "E:\\QuantData\\10_canonical\\fina_indicator\\2026\\000a5d7fa7c344788aae466a94cbbd46.parquet"
+      ]
+    },
+    "10_canonical/fina_mainbz": {
+      "files": 69295,
+      "bytes": 3151906006,
+      "extensions": {
+        ".parquet": 69295
+      },
+      "earliest_mtime_utc": "2026-09-29T23:29:57.780229+00:00",
+      "latest_mtime_utc": "2026-09-30T10:41:35.131945+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\fina_mainbz\\2026\\000b35cdb6c746e3a7920486fbc692c8.parquet",
+        "E:\\QuantData\\10_canonical\\fina_mainbz\\2026\\000d588f22c54e8c80f96fcbe7a1df32.parquet"
+      ]
+    },
+    "10_canonical/forecast": {
+      "files": 15972,
+      "bytes": 967435159,
+      "extensions": {
+        ".parquet": 15972
+      },
+      "earliest_mtime_utc": "2026-09-26T06:39:50.856504+00:00",
+      "latest_mtime_utc": "2026-09-29T14:19:21.020870+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\forecast\\2026\\00294fbed82b4da696e686f9a1aec5eb.parquet",
+        "E:\\QuantData\\10_canonical\\forecast\\2026\\007312c73b324f40802c92470e8c3de2.parquet"
+      ]
+    },
+    "10_canonical/fund_adj": {
+      "files": 320,
+      "bytes": 222713534,
+      "extensions": {
+        ".parquet": 320
+      },
+      "earliest_mtime_utc": "2026-09-23T04:52:08.855961+00:00",
+      "latest_mtime_utc": "2026-09-25T13:35:50.095960+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\fund_adj\\2026\\09\\316f08308a13490aa5122c226d3eb908.parquet",
+        "E:\\QuantData\\10_canonical\\fund_adj\\2026\\09\\b52f66072624414491fe0b7333fff4b4.parquet"
+      ]
+    },
+    "10_canonical/fund_basic": {
+      "files": 4,
+      "bytes": 696943,
+      "extensions": {
+        ".parquet": 4
+      },
+      "earliest_mtime_utc": "2026-09-23T04:45:54.262706+00:00",
+      "latest_mtime_utc": "2026-09-23T05:22:31.383464+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\fund_basic\\snapshot\\25b1beccc91047b49b3714f4a355c493.parquet",
+        "E:\\QuantData\\10_canonical\\fund_basic\\snapshot\\2892935e694a4ef2bb43f78a7a8768eb.parquet"
+      ]
+    },
+    "10_canonical/fund_daily": {
+      "files": 407,
+      "bytes": 324523028,
+      "extensions": {
+        ".parquet": 407
+      },
+      "earliest_mtime_utc": "2026-09-23T04:49:45.788858+00:00",
+      "latest_mtime_utc": "2026-09-25T01:45:05.909281+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\fund_daily\\2026\\09\\0792d03ca93b4eabb2cd085f25417a10.parquet",
+        "E:\\QuantData\\10_canonical\\fund_daily\\2026\\09\\0d04922747fb428394bb8d55b917ef78.parquet"
+      ]
+    },
+    "10_canonical/fund_div": {
+      "files": 36,
+      "bytes": 1123024,
+      "extensions": {
+        ".parquet": 36
+      },
+      "earliest_mtime_utc": "2026-09-25T04:59:42.865351+00:00",
+      "latest_mtime_utc": "2026-09-25T06:10:36.026664+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\fund_div\\unknown\\92abadd720c94945ba8ca22482fb4434.parquet",
+        "E:\\QuantData\\10_canonical\\fund_div\\unknown\\e8445603dd3d43efbc2f3712b9a9daf5.parquet"
+      ]
+    },
+    "10_canonical/fund_nav": {
+      "files": 18,
+      "bytes": 243907940,
+      "extensions": {
+        ".parquet": 18
+      },
+      "earliest_mtime_utc": "2026-09-25T04:38:17.569589+00:00",
+      "latest_mtime_utc": "2026-09-25T04:41:27.374927+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\fund_nav\\2026\\compact-8bbd9973c6134bf984a0c39ba66a3aff.parquet",
+        "E:\\QuantData\\10_canonical\\fund_nav\\2025\\compact-bd33fbedfacc4055835999a8f4f66ca1.parquet"
+      ]
+    },
+    "10_canonical/fund_share": {
+      "files": 42,
+      "bytes": 149761685,
+      "extensions": {
+        ".parquet": 42
+      },
+      "earliest_mtime_utc": "2026-09-25T15:43:11.379557+00:00",
+      "latest_mtime_utc": "2026-09-25T15:44:07.790731+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\fund_share\\2026\\compact-9063ceb160274258bdd7a98bb6a70c7d.parquet",
+        "E:\\QuantData\\10_canonical\\fund_share\\2025\\compact-344dfe4e9105475ca0c403b86c772f53.parquet"
+      ]
+    },
+    "10_canonical/gz_index": {
+      "files": 41,
+      "bytes": 637880,
+      "extensions": {
+        ".parquet": 41
+      },
+      "earliest_mtime_utc": "2026-10-01T18:26:01.679499+00:00",
+      "latest_mtime_utc": "2026-10-01T18:26:49.634505+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\gz_index\\2019\\06c0ff3654034ba5a4ee934cfbbcfc9f.parquet",
+        "E:\\QuantData\\10_canonical\\gz_index\\2019\\3b2133e94b1b4e1baad644cf867660c0.parquet"
+      ]
+    },
+    "10_canonical/hsgt_top10": {
+      "files": 2923,
+      "bytes": 56040993,
+      "extensions": {
+        ".parquet": 2923
+      },
+      "earliest_mtime_utc": "2026-09-23T04:56:59.968445+00:00",
+      "latest_mtime_utc": "2026-09-30T18:23:37.287837+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\hsgt_top10\\2026\\09\\00e3238aa413495eabad97570637cb5e.parquet",
+        "E:\\QuantData\\10_canonical\\hsgt_top10\\2026\\09\\0da3483cf8b84b01a982dc7263ec7073.parquet"
+      ]
+    },
+    "10_canonical/income": {
+      "files": 62286,
+      "bytes": 7469305809,
+      "extensions": {
+        ".parquet": 62286
+      },
+      "earliest_mtime_utc": "2026-09-23T05:05:24.681501+00:00",
+      "latest_mtime_utc": "2026-09-29T07:32:46.235291+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\income\\2026\\00113f048a904721a0f02d4b7facf9c0.parquet",
+        "E:\\QuantData\\10_canonical\\income\\2026\\00130af0661241a0b7b6cb779cedce28.parquet"
+      ]
+    },
+    "10_canonical/index_basic": {
+      "files": 9,
+      "bytes": 3160834,
+      "extensions": {
+        ".parquet": 9
+      },
+      "earliest_mtime_utc": "2026-09-23T04:45:58.016098+00:00",
+      "latest_mtime_utc": "2026-09-23T05:22:41.289395+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\index_basic\\snapshot\\11b4956e016e480cab230e57669b4eb1.parquet",
+        "E:\\QuantData\\10_canonical\\index_basic\\snapshot\\31b59278c8834711a976b0785c34dc6d.parquet"
+      ]
+    },
+    "10_canonical/index_classify": {
+      "files": 13,
+      "bytes": 345269,
+      "extensions": {
+        ".parquet": 13
+      },
+      "earliest_mtime_utc": "2026-09-23T04:46:07.747899+00:00",
+      "latest_mtime_utc": "2026-09-23T05:22:49.462430+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\index_classify\\snapshot\\288102effcec44e9a3f128018940bd93.parquet",
+        "E:\\QuantData\\10_canonical\\index_classify\\snapshot\\3a9b471a38f54b958ae90daef05b4eff.parquet"
+      ]
+    },
+    "10_canonical/index_daily": {
+      "files": 108091,
+      "bytes": 18443730227,
+      "extensions": {
+        ".parquet": 108091
+      },
+      "earliest_mtime_utc": "2026-09-23T04:52:33.206690+00:00",
+      "latest_mtime_utc": "2026-10-04T04:48:38.548558+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\index_daily\\2026\\00083911c4554321a3b34adc4c130c5d.parquet",
+        "E:\\QuantData\\10_canonical\\index_daily\\2026\\00171fc92a0b488cb25e1859977631b1.parquet"
+      ]
+    },
+    "10_canonical/index_dailybasic": {
+      "files": 3072,
+      "bytes": 59966026,
+      "extensions": {
+        ".parquet": 3072
+      },
+      "earliest_mtime_utc": "2026-09-23T04:52:40.872158+00:00",
+      "latest_mtime_utc": "2026-09-26T03:15:22.123279+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\index_dailybasic\\2026\\09\\0c8c5d490e104c0c9fa314b3bbbe746c.parquet",
+        "E:\\QuantData\\10_canonical\\index_dailybasic\\2026\\09\\10f1ebd58bea49fb8117d18ba94783e4.parquet"
+      ]
+    },
+    "10_canonical/index_member_all": {
+      "files": 4533,
+      "bytes": 76633942,
+      "extensions": {
+        ".parquet": 4532,
+        ".partial": 1
+      },
+      "earliest_mtime_utc": "2026-09-23T04:53:20.586426+00:00",
+      "latest_mtime_utc": "2026-09-28T06:45:18.046398+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\index_member_all\\2026\\025f54460a414c9cb7fea40e17abcedf.parquet",
+        "E:\\QuantData\\10_canonical\\index_member_all\\2026\\052c322041ae4ec286e85912b726438e.parquet"
+      ]
+    },
+    "10_canonical/index_weight": {
+      "files": 1345,
+      "bytes": 320788779,
+      "extensions": {
+        ".parquet": 1345
+      },
+      "earliest_mtime_utc": "2026-09-23T04:52:35.455422+00:00",
+      "latest_mtime_utc": "2026-09-26T01:59:43.386904+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\index_weight\\2026\\01133903254642b2b4a8d04923a67197.parquet",
+        "E:\\QuantData\\10_canonical\\index_weight\\2026\\079d1fbe4f7f497b9192415601b8fabd.parquet"
+      ]
+    },
+    "10_canonical/margin": {
+      "files": 3072,
+      "bytes": 43630285,
+      "extensions": {
+        ".parquet": 3072
+      },
+      "earliest_mtime_utc": "2026-09-23T04:54:31.820424+00:00",
+      "latest_mtime_utc": "2026-09-30T14:11:15.068047+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\margin\\2026\\09\\10364b72c3d9461c891012a623bdb47d.parquet",
+        "E:\\QuantData\\10_canonical\\margin\\2026\\09\\1103cbd8f015419f952b11a6aa945f67.parquet"
+      ]
+    },
+    "10_canonical/margin_detail": {
+      "files": 3064,
+      "bytes": 1499531720,
+      "extensions": {
+        ".parquet": 3064
+      },
+      "earliest_mtime_utc": "2026-09-23T04:55:11.755938+00:00",
+      "latest_mtime_utc": "2026-09-30T15:32:46.288467+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\margin_detail\\2026\\09\\0ca42465d0204d2380d66f9caca2dac1.parquet",
+        "E:\\QuantData\\10_canonical\\margin_detail\\2026\\09\\0d2664f418d041e8a0857dbb1a87653c.parquet"
+      ]
+    },
+    "10_canonical/margin_secs": {
+      "files": 3064,
+      "bytes": 1222140800,
+      "extensions": {
+        ".parquet": 3064
+      },
+      "earliest_mtime_utc": "2026-09-23T04:55:51.562257+00:00",
+      "latest_mtime_utc": "2026-09-30T16:59:52.990391+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\margin_secs\\2026\\09\\0026f0d74fd54b71b6b8c027f52ca93e.parquet",
+        "E:\\QuantData\\10_canonical\\margin_secs\\2026\\09\\03ce86f35ab048e7befe1c9d0a790e48.parquet"
+      ]
+    },
+    "10_canonical/moneyflow": {
+      "files": 3064,
+      "bytes": 3641106542,
+      "extensions": {
+        ".parquet": 3064
+      },
+      "earliest_mtime_utc": "2026-09-23T04:53:52.151304+00:00",
+      "latest_mtime_utc": "2026-09-30T12:16:56.904902+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\moneyflow\\2026\\09\\016bd1b319bf4e58817f7643c8f2198f.parquet",
+        "E:\\QuantData\\10_canonical\\moneyflow\\2026\\09\\0397bf73e8614fd1b65f8a30419e6b17.parquet"
+      ]
+    },
+    "10_canonical/namechange": {
+      "files": 6202,
+      "bytes": 207048713,
+      "extensions": {
+        ".parquet": 6202
+      },
+      "earliest_mtime_utc": "2026-09-23T04:46:15.954514+00:00",
+      "latest_mtime_utc": "2026-10-01T18:07:15.758730+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\namechange\\snapshot\\001379f7e41c4d3abfe13accb1b38276.parquet",
+        "E:\\QuantData\\10_canonical\\namechange\\snapshot\\001647f2f43d435cbc79c45a0070bd47.parquet"
+      ]
+    },
+    "10_canonical/new_share": {
+      "files": 146,
+      "bytes": 4293447,
+      "extensions": {
+        ".parquet": 146
+      },
+      "earliest_mtime_utc": "2026-09-23T04:46:22.469700+00:00",
+      "latest_mtime_utc": "2026-10-01T18:09:43.776457+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\new_share\\snapshot\\070bd23e273944ff95ae39938fedf029.parquet",
+        "E:\\QuantData\\10_canonical\\new_share\\snapshot\\07d8f50bd5db42aeb14b43d79e01b93b.parquet"
+      ]
+    },
+    "10_canonical/pledge_detail": {
+      "files": 20633,
+      "bytes": 1278054928,
+      "extensions": {
+        ".parquet": 20633
+      },
+      "earliest_mtime_utc": "2026-09-30T22:19:43.318642+00:00",
+      "latest_mtime_utc": "2026-09-30T23:23:14.416948+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\pledge_detail\\2026\\0025a29bcf1643ed9e9ec2984d1234d3.parquet",
+        "E:\\QuantData\\10_canonical\\pledge_detail\\2026\\00291c91234a41e7b8380cc1010fe8dd.parquet"
+      ]
+    },
+    "10_canonical/pledge_stat": {
+      "files": 39088,
+      "bytes": 2522158431,
+      "extensions": {
+        ".parquet": 39088
+      },
+      "earliest_mtime_utc": "2026-09-23T04:59:13.813401+00:00",
+      "latest_mtime_utc": "2026-09-30T22:15:15.483252+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\pledge_stat\\2026\\003152716d524a72bdaa76632077e7d5.parquet",
+        "E:\\QuantData\\10_canonical\\pledge_stat\\2026\\005d98763b574044ba3241de507e92c1.parquet"
+      ]
+    },
+    "10_canonical/repurchase": {
+      "files": 155,
+      "bytes": 13355218,
+      "extensions": {
+        ".parquet": 155
+      },
+      "earliest_mtime_utc": "2026-09-23T04:59:11.703199+00:00",
+      "latest_mtime_utc": "2026-10-03T13:56:37.518365+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\repurchase\\2026\\00395b1ede3c4fd18f964fba58099047.parquet",
+        "E:\\QuantData\\10_canonical\\repurchase\\2026\\0b814e3a23754d6fb4a39dbaffda987f.parquet"
+      ]
+    },
+    "10_canonical/sf_month": {
+      "files": 14,
+      "bytes": 168387,
+      "extensions": {
+        ".parquet": 14
+      },
+      "earliest_mtime_utc": "2026-09-23T05:07:02.180570+00:00",
+      "latest_mtime_utc": "2026-10-01T18:18:54.363005+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\sf_month\\unknown\\938707d231394de0ba883f6905bf7cb4.parquet",
+        "E:\\QuantData\\10_canonical\\sf_month\\2026\\884693fb7177474f85c2b7426895f2b2.parquet"
+      ]
+    },
+    "10_canonical/share_float": {
+      "files": 1009,
+      "bytes": 515719549,
+      "extensions": {
+        ".parquet": 1009
+      },
+      "earliest_mtime_utc": "2026-09-23T04:59:27.343654+00:00",
+      "latest_mtime_utc": "2026-10-04T04:44:24.663496+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\share_float\\2026\\215cea6a35944512bef8939e0839e963.parquet",
+        "E:\\QuantData\\10_canonical\\share_float\\2026\\790c3cd9df5d4a94b54998156d2245be.parquet"
+      ]
+    },
+    "10_canonical/shibor": {
+      "files": 155,
+      "bytes": 2015407,
+      "extensions": {
+        ".parquet": 155
+      },
+      "earliest_mtime_utc": "2026-09-23T04:59:45.336715+00:00",
+      "latest_mtime_utc": "2026-10-01T18:12:08.729218+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\shibor\\2026\\198da7963a2344f6a158139da94534c7.parquet",
+        "E:\\QuantData\\10_canonical\\shibor\\2026\\25e96b5fd00649e7a12c99033bd34605.parquet"
+      ]
+    },
+    "10_canonical/shibor_lpr": {
+      "files": 17,
+      "bytes": 187328,
+      "extensions": {
+        ".parquet": 17
+      },
+      "earliest_mtime_utc": "2026-10-01T18:15:27.129116+00:00",
+      "latest_mtime_utc": "2026-10-20T03:25:19.701791+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\shibor_lpr\\2019\\2259dd1707b441ff88675e0b277d106d.parquet",
+        "E:\\QuantData\\10_canonical\\shibor_lpr\\2018\\4e9f5d1c8a42425497a0f7cfed94f2c1.parquet"
+      ]
+    },
+    "10_canonical/shibor_quote": {
+      "files": 15,
+      "bytes": 601095,
+      "extensions": {
+        ".parquet": 15
+      },
+      "earliest_mtime_utc": "2026-10-01T18:12:11.590786+00:00",
+      "latest_mtime_utc": "2026-10-20T03:22:05.485883+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\shibor_quote\\2019\\c4b88dad6ecf4fa09c832dc988fb4fea.parquet",
+        "E:\\QuantData\\10_canonical\\shibor_quote\\2018\\5869637b25bd40b88fb26a5a8e2b9efc.parquet"
+      ]
+    },
+    "10_canonical/stk_holdernumber": {
+      "files": 57871,
+      "bytes": 2433179197,
+      "extensions": {
+        ".parquet": 57871
+      },
+      "earliest_mtime_utc": "2026-09-23T04:59:19.784831+00:00",
+      "latest_mtime_utc": "2026-10-01T00:59:26.916733+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\stk_holdernumber\\unknown\\3d98f78b237e41e89592241384d7d484.parquet",
+        "E:\\QuantData\\10_canonical\\stk_holdernumber\\2026\\001d1ed3568443e092c72000ad942b99.parquet"
+      ]
+    },
+    "10_canonical/stk_holdertrade": {
+      "files": 155,
+      "bytes": 36952027,
+      "extensions": {
+        ".parquet": 155
+      },
+      "earliest_mtime_utc": "2026-09-23T04:59:20.659770+00:00",
+      "latest_mtime_utc": "2026-10-01T01:01:35.801309+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\stk_holdertrade\\2026\\0b967526a6744b1bb8657f3ec7ca21a0.parquet",
+        "E:\\QuantData\\10_canonical\\stk_holdertrade\\2026\\0bb44928f6c8496d82a26b11b24014f2.parquet"
+      ]
+    },
+    "10_canonical/stk_limit": {
+      "files": 3072,
+      "bytes": 2148215108,
+      "extensions": {
+        ".parquet": 3072
+      },
+      "earliest_mtime_utc": "2026-09-23T04:48:25.343561+00:00",
+      "latest_mtime_utc": "2026-09-24T22:35:24.304471+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\stk_limit\\2026\\09\\078978b9e9f647c889b1ddbdee25e3cf.parquet",
+        "E:\\QuantData\\10_canonical\\stk_limit\\2026\\09\\13d074dec4cc4e0ab35517314c422886.parquet"
+      ]
+    },
+    "10_canonical/stk_managers": {
+      "files": 45604,
+      "bytes": 2589665417,
+      "extensions": {
+        ".parquet": 45604
+      },
+      "earliest_mtime_utc": "2026-10-01T07:29:33.366334+00:00",
+      "latest_mtime_utc": "2026-10-01T16:23:02.336898+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\stk_managers\\2026\\0021e28a55984ebab8790752d3b31d32.parquet",
+        "E:\\QuantData\\10_canonical\\stk_managers\\2026\\0025deff68c44cb28c89764ec5d039cf.parquet"
+      ]
+    },
+    "10_canonical/stk_rewards": {
+      "files": 82617,
+      "bytes": 4303676654,
+      "extensions": {
+        ".parquet": 82617
+      },
+      "earliest_mtime_utc": "2026-09-23T04:59:37.810725+00:00",
+      "latest_mtime_utc": "2026-10-01T14:56:53.306262+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\stk_rewards\\unknown\\00cdc33ff3a44f7f9a482643b3695e47.parquet",
+        "E:\\QuantData\\10_canonical\\stk_rewards\\unknown\\121ab840d1c24cbc93a3fed1ebceda07.parquet"
+      ]
+    },
+    "10_canonical/stk_seasoned": {
+      "files": 155,
+      "bytes": 11983804,
+      "extensions": {
+        ".parquet": 155
+      },
+      "earliest_mtime_utc": "2026-09-23T04:59:42.513331+00:00",
+      "latest_mtime_utc": "2026-10-01T16:25:19.156745+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\stk_seasoned\\2026\\1678ace9968a4ecebda86adafea32052.parquet",
+        "E:\\QuantData\\10_canonical\\stk_seasoned\\2026\\1a65ea3e40554492a8d3c7498ee8ecc8.parquet"
+      ]
+    },
+    "10_canonical/stock_basic": {
+      "files": 4,
+      "bytes": 1507145,
+      "extensions": {
+        ".parquet": 4
+      },
+      "earliest_mtime_utc": "2026-09-23T04:45:52.439014+00:00",
+      "latest_mtime_utc": "2026-09-23T05:22:27.567722+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\stock_basic\\snapshot\\0b252dc7ee0e4e34b2cb93392da8ec18.parquet",
+        "E:\\QuantData\\10_canonical\\stock_basic\\snapshot\\227b760cdab84f579d4b984f3266eafa.parquet"
+      ]
+    },
+    "10_canonical/stock_company": {
+      "files": 6,
+      "bytes": 12418059,
+      "extensions": {
+        ".parquet": 6
+      },
+      "earliest_mtime_utc": "2026-09-23T04:46:18.693240+00:00",
+      "latest_mtime_utc": "2026-10-01T18:07:21.434956+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\stock_company\\snapshot\\426a37da47034e5f9f719dbbbd4fca6a.parquet",
+        "E:\\QuantData\\10_canonical\\stock_company\\snapshot\\c39d80bddf2c4f67a652b7b2e0c04927.parquet"
+      ]
+    },
+    "10_canonical/suspend_d": {
+      "files": 3072,
+      "bytes": 85198613,
+      "extensions": {
+        ".parquet": 3072
+      },
+      "earliest_mtime_utc": "2026-09-23T04:49:05.992471+00:00",
+      "latest_mtime_utc": "2026-09-24T23:48:30.491320+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\suspend_d\\2026\\09\\01317559ee3d4d358fcbd89b7d3e0a89.parquet",
+        "E:\\QuantData\\10_canonical\\suspend_d\\2026\\09\\11100170d75844698e2e8a0ce07a6df1.parquet"
+      ]
+    },
+    "10_canonical/sz_daily_info": {
+      "files": 3066,
+      "bytes": 52158141,
+      "extensions": {
+        ".parquet": 3066
+      },
+      "earliest_mtime_utc": "2026-09-23T05:07:49.566311+00:00",
+      "latest_mtime_utc": "2026-10-01T20:11:21.144755+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\sz_daily_info\\2026\\09\\0a25952369cd4b789b208e3179491298.parquet",
+        "E:\\QuantData\\10_canonical\\sz_daily_info\\2026\\09\\0c48719e7e4e4d06a8d2224279b5e745.parquet"
+      ]
+    },
+    "10_canonical/top10_floatholders": {
+      "files": 55249,
+      "bytes": 3089664518,
+      "extensions": {
+        ".parquet": 55249
+      },
+      "earliest_mtime_utc": "2026-10-01T02:46:43.746461+00:00",
+      "latest_mtime_utc": "2026-10-01T04:38:44.772227+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\top10_floatholders\\2026\\0015e8cd1cf84d4aa3d2ac2488a149f5.parquet",
+        "E:\\QuantData\\10_canonical\\top10_floatholders\\2026\\00165da5bf12441b8be3143af7c497ec.parquet"
+      ]
+    },
+    "10_canonical/top10_holders": {
+      "files": 59726,
+      "bytes": 3179042819,
+      "extensions": {
+        ".parquet": 59726
+      },
+      "earliest_mtime_utc": "2026-10-01T01:06:03.375559+00:00",
+      "latest_mtime_utc": "2026-10-01T02:42:10.817362+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\top10_holders\\2026\\000bdd5bf5984badbe965afc1b5a0d26.parquet",
+        "E:\\QuantData\\10_canonical\\top10_holders\\2026\\0014e2f5217d4af7a1fb6bd201894995.parquet"
+      ]
+    },
+    "10_canonical/top_inst": {
+      "files": 3070,
+      "bytes": 512523536,
+      "extensions": {
+        ".parquet": 3070
+      },
+      "earliest_mtime_utc": "2026-09-23T04:57:51.970413+00:00",
+      "latest_mtime_utc": "2026-09-30T20:23:23.727529+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\top_inst\\2026\\09\\0425b2c41fe048cab64d93bdce645eee.parquet",
+        "E:\\QuantData\\10_canonical\\top_inst\\2026\\09\\0f64a0b2424d4bd2b18fe0115f8456a4.parquet"
+      ]
+    },
+    "10_canonical/top_list": {
+      "files": 3072,
+      "bytes": 119770433,
+      "extensions": {
+        ".parquet": 3072
+      },
+      "earliest_mtime_utc": "2026-09-23T04:57:12.179003+00:00",
+      "latest_mtime_utc": "2026-09-30T19:49:52.957803+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\top_list\\2026\\09\\037bfe104e0a4660bf86792c26c78849.parquet",
+        "E:\\QuantData\\10_canonical\\top_list\\2026\\09\\0d3041e725f84f4fabcc07fb1c58f32a.parquet"
+      ]
+    },
+    "10_canonical/trade_cal": {
+      "files": 34,
+      "bytes": 2288564,
+      "extensions": {
+        ".parquet": 34
+      },
+      "earliest_mtime_utc": "2026-09-23T04:45:42.711876+00:00",
+      "latest_mtime_utc": "2026-09-23T05:22:22.301085+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\trade_cal\\snapshot\\12967d23f9c148e4aec6733630aaf52a.parquet",
+        "E:\\QuantData\\10_canonical\\trade_cal\\snapshot\\1410d2734b314a27af56d9e889a454a4.parquet"
+      ]
+    },
+    "10_canonical/wz_index": {
+      "files": 154,
+      "bytes": 3155994,
+      "extensions": {
+        ".parquet": 154
+      },
+      "earliest_mtime_utc": "2026-09-23T05:07:05.174826+00:00",
+      "latest_mtime_utc": "2026-10-01T18:25:58.901024+00:00",
+      "examples": [
+        "E:\\QuantData\\10_canonical\\wz_index\\2026\\01ce7e3f0e864d068415e46af3af3deb.parquet",
+        "E:\\QuantData\\10_canonical\\wz_index\\2026\\12f5a7fc154c4ded9ad1a84010634bed.parquet"
+      ]
+    },
+    "40_qlib": {
+      "files": 1,
+      "bytes": 188,
+      "extensions": {
+        ".json": 1
+      },
+      "earliest_mtime_utc": "2026-09-23T05:33:45.833635+00:00",
+      "latest_mtime_utc": "2026-09-23T05:33:45.833635+00:00",
+      "examples": [
+        "E:\\QuantData\\40_qlib\\latest.json"
+      ]
+    },
+    "40_qlib/0e4a03a042a75d520cbc52d82fa57e9f0097b4669b58ed0e3c842a4f6050f179": {
+      "files": 54134,
+      "bytes": 11945378,
+      "extensions": {
+        ".json": 1,
+        ".txt": 2,
+        ".bin": 54131
+      },
+      "earliest_mtime_utc": "2026-09-23T05:08:58.773597+00:00",
+      "latest_mtime_utc": "2026-09-23T05:15:44.174181+00:00",
+      "examples": [
+        "E:\\QuantData\\40_qlib\\0e4a03a042a75d520cbc52d82fa57e9f0097b4669b58ed0e3c842a4f6050f179\\manifest.json",
+        "E:\\QuantData\\40_qlib\\0e4a03a042a75d520cbc52d82fa57e9f0097b4669b58ed0e3c842a4f6050f179\\instruments\\all.txt"
+      ]
+    },
+    "40_qlib/1be752ccd0c3447847521c799e8461d39526f31c5c160812af64e52a1f0662d2": {
+      "files": 51719,
+      "bytes": 11429842,
+      "extensions": {
+        ".json": 1,
+        ".txt": 2,
+        ".bin": 51716
+      },
+      "earliest_mtime_utc": "2026-09-23T05:26:54.337656+00:00",
+      "latest_mtime_utc": "2026-09-23T05:33:45.759910+00:00",
+      "examples": [
+        "E:\\QuantData\\40_qlib\\1be752ccd0c3447847521c799e8461d39526f31c5c160812af64e52a1f0662d2\\manifest.json",
+        "E:\\QuantData\\40_qlib\\1be752ccd0c3447847521c799e8461d39526f31c5c160812af64e52a1f0662d2\\instruments\\all.txt"
+      ]
+    },
+    "80_quarantine/balancesheet": {
+      "files": 2,
+      "bytes": 8227,
+      "extensions": {
+        ".json": 2
+      },
+      "earliest_mtime_utc": "2026-09-23T04:53:29.920806+00:00",
+      "latest_mtime_utc": "2026-09-26T04:11:08.379715+00:00",
+      "examples": [
+        "E:\\QuantData\\80_quarantine\\balancesheet\\393ba3513a9d44a08e3b30fbe46d2331.json",
+        "E:\\QuantData\\80_quarantine\\balancesheet\\69eba23a8fe14eaa9ad2ff41fefcfa75.json"
+      ]
+    },
+    "80_quarantine/cashflow": {
+      "files": 2,
+      "bytes": 6242,
+      "extensions": {
+        ".json": 2
+      },
+      "earliest_mtime_utc": "2026-09-23T04:53:30.654569+00:00",
+      "latest_mtime_utc": "2026-09-26T04:19:04.676017+00:00",
+      "examples": [
+        "E:\\QuantData\\80_quarantine\\cashflow\\21ecad6cea044df08fb8cbdd132f562b.json",
+        "E:\\QuantData\\80_quarantine\\cashflow\\e6c37f798bb34e988e3226c01aa07ff5.json"
+      ]
+    },
+    "80_quarantine/dividend": {
+      "files": 22,
+      "bytes": 16288,
+      "extensions": {
+        ".json": 22
+      },
+      "earliest_mtime_utc": "2026-09-23T04:53:41.131467+00:00",
+      "latest_mtime_utc": "2026-10-01T14:14:52.994423+00:00",
+      "examples": [
+        "E:\\QuantData\\80_quarantine\\dividend\\21b888dace1b4cd793839e5775932115.json",
+        "E:\\QuantData\\80_quarantine\\dividend\\2b50c83f663b4dd7885b61a733b74e8c.json"
+      ]
+    },
+    "80_quarantine/fina_indicator": {
+      "files": 3,
+      "bytes": 9774,
+      "extensions": {
+        ".json": 3
+      },
+      "earliest_mtime_utc": "2026-09-26T04:25:00.052802+00:00",
+      "latest_mtime_utc": "2026-10-04T01:58:20.125525+00:00",
+      "examples": [
+        "E:\\QuantData\\80_quarantine\\fina_indicator\\76ee0aa45a914de0a0ea1d1ff98ebeff.json",
+        "E:\\QuantData\\80_quarantine\\fina_indicator\\c17a03849cee48d1948001d395a8e83a-rows.json"
+      ]
+    },
+    "80_quarantine/fund_daily": {
+      "files": 36,
+      "bytes": 5472,
+      "extensions": {
+        ".json": 36
+      },
+      "earliest_mtime_utc": "2026-09-23T05:12:28.917216+00:00",
+      "latest_mtime_utc": "2026-09-25T01:45:01.113393+00:00",
+      "examples": [
+        "E:\\QuantData\\80_quarantine\\fund_daily\\00c197936f154aa7b6d7837806c98da2-rows.json",
+        "E:\\QuantData\\80_quarantine\\fund_daily\\01967d06b0fe49b287c48588ed81d9ff-rows.json"
+      ]
+    },
+    "80_quarantine/income": {
+      "files": 2,
+      "bytes": 5483,
+      "extensions": {
+        ".json": 2
+      },
+      "earliest_mtime_utc": "2026-09-23T04:53:26.138545+00:00",
+      "latest_mtime_utc": "2026-09-26T03:45:18.432582+00:00",
+      "examples": [
+        "E:\\QuantData\\80_quarantine\\income\\c131c1499a394c4fab88d539a5cc99b9.json",
+        "E:\\QuantData\\80_quarantine\\income\\c329036983a94f98933ffb15773351ff.json"
+      ]
+    },
+    "80_quarantine/index_daily": {
+      "files": 32,
+      "bytes": 32914,
+      "extensions": {
+        ".json": 32
+      },
+      "earliest_mtime_utc": "2026-09-25T23:02:54.724475+00:00",
+      "latest_mtime_utc": "2026-10-04T02:48:37.214517+00:00",
+      "examples": [
+        "E:\\QuantData\\80_quarantine\\index_daily\\03b29db4718140ab8031a67ce03739f7.json",
+        "E:\\QuantData\\80_quarantine\\index_daily\\0cb8c894325a4dd39a35a76dbe2863ce-rows.json"
+      ]
+    },
+    "80_quarantine/repurchase": {
+      "files": 14,
+      "bytes": 5011,
+      "extensions": {
+        ".json": 14
+      },
+      "earliest_mtime_utc": "2026-09-30T21:01:10.799842+00:00",
+      "latest_mtime_utc": "2026-10-03T13:56:36.779033+00:00",
+      "examples": [
+        "E:\\QuantData\\80_quarantine\\repurchase\\06bf18c7e3004efd8e70554ec3523641-rows.json",
+        "E:\\QuantData\\80_quarantine\\repurchase\\2319fe131b89483c8058c41b1f0e2f12-rows.json"
+      ]
+    },
+    "90_metadata": {
+      "files": 12,
+      "bytes": 34887,
+      "extensions": {
+        ".json": 9,
+        ".lock": 1,
+        ".partial": 2
+      },
+      "earliest_mtime_utc": "2026-09-23T05:12:44.367190+00:00",
+      "latest_mtime_utc": "2026-10-21T00:21:41.492812+00:00",
+      "examples": [
+        "E:\\QuantData\\90_metadata\\active_fetch.json",
+        "E:\\QuantData\\90_metadata\\benchmark-income-120.json"
+      ]
+    },
+    "90_metadata/gc": {
+      "files": 871,
+      "bytes": 162179616,
+      "extensions": {
+        ".json": 870,
+        ".duckdb": 1
+      },
+      "earliest_mtime_utc": "2026-09-29T05:48:23.483330+00:00",
+      "latest_mtime_utc": "2026-09-29T06:04:24.809674+00:00",
+      "examples": [
+        "E:\\QuantData\\90_metadata\\gc\\00271cebf5e37a1e05a3440824e93c35e5f314ec77cd108caa13f25871404679.json",
+        "E:\\QuantData\\90_metadata\\gc\\0176de36a373eabe5c543a3e1d1f327755688f6948f9c32a4f83f53ac25eb1f6.json"
+      ]
+    },
+    "90_metadata/logs": {
+      "files": 6,
+      "bytes": 52736392,
+      "extensions": {
+        ".jsonl": 1,
+        ".1": 1,
+        ".2": 1,
+        ".3": 1,
+        ".4": 1,
+        ".5": 1
+      },
+      "earliest_mtime_utc": "2026-09-30T05:48:42.979268+00:00",
+      "latest_mtime_utc": "2026-10-20T05:25:52.578532+00:00",
+      "examples": [
+        "E:\\QuantData\\90_metadata\\logs\\ingestion.jsonl",
+        "E:\\QuantData\\90_metadata\\logs\\ingestion.jsonl.1"
+      ]
+    },
+    "90_metadata/manifests": {
+      "files": 50,
+      "bytes": 350356961,
+      "extensions": {
+        ".json": 50
+      },
+      "earliest_mtime_utc": "2026-09-23T05:08:58.739902+00:00",
+      "latest_mtime_utc": "2026-10-20T04:04:41.144583+00:00",
+      "examples": [
+        "E:\\QuantData\\90_metadata\\manifests\\16628a66f06e7fa8c8e5d191519939a6de8abe9af14daf8a099a9a6668708700.json",
+        "E:\\QuantData\\90_metadata\\manifests\\1a4434dbcc0d0ade31806efb4b1c924cef8280e6412eeaa553f8f8265a711f9a.json"
+      ]
+    },
+    "reports/data_audit": {
+      "files": 53,
+      "bytes": 9756147,
+      "extensions": {
+        ".csv": 51,
+        ".json": 1,
+        ".md": 1
+      },
+      "earliest_mtime_utc": "2026-10-20T23:21:50.220851+00:00",
+      "latest_mtime_utc": "2026-10-21T00:09:56.619021+00:00",
+      "examples": [
+        "E:\\QuantData\\reports\\data_audit\\adj_factor_instruments.csv",
+        "E:\\QuantData\\reports\\data_audit\\balancesheet_instruments.csv"
+      ]
+    },
+    "reports/data_integrity": {
+      "files": 160,
+      "bytes": 1884944367,
+      "extensions": {
+        ".json": 33,
+        ".duckdb": 1,
+        ".md": 2,
+        ".toml": 4,
+        ".lock": 2,
+        ".py": 115,
+        ".ps1": 2,
+        ".sqlite": 1
+      },
+      "earliest_mtime_utc": "2026-09-29T05:36:08.650750+00:00",
+      "latest_mtime_utc": "2026-10-17T15:52:37.677870+00:00",
+      "examples": [
+        "E:\\QuantData\\reports\\data_integrity\\v2-20261017\\acceptance.json",
+        "E:\\QuantData\\reports\\data_integrity\\v2-20261017\\metadata_restore_drill.json"
+      ]
+    },
+    "reports/data_quality": {
+      "files": 594,
+      "bytes": 8690526169,
+      "extensions": {
+        ".json": 280,
+        ".csv": 314
+      },
+      "earliest_mtime_utc": "2026-10-17T14:03:18.931524+00:00",
+      "latest_mtime_utc": "2026-10-17T15:34:23.981232+00:00",
+      "examples": [
+        "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\progress.json",
+        "E:\\QuantData\\reports\\data_quality\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\summary.json"
+      ]
+    },
+    "reports/pit_coverage": {
+      "files": 242,
+      "bytes": 125956523,
+      "extensions": {
+        ".json": 4,
+        ".duckdb": 136,
+        ".parquet": 102
+      },
+      "earliest_mtime_utc": "2026-10-17T14:09:22.784507+00:00",
+      "latest_mtime_utc": "2026-10-17T15:34:06.366122+00:00",
+      "examples": [
+        "E:\\QuantData\\reports\\pit_coverage\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\announcement_gate_review.json",
+        "E:\\QuantData\\reports\\pit_coverage\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\summary.json"
+      ]
+    },
+    "reports/research_readiness": {
+      "files": 109,
+      "bytes": 52101065,
+      "extensions": {
+        ".json": 98,
+        ".pdf": 2,
+        ".txt": 2,
+        ".jsonp": 7
+      },
+      "earliest_mtime_utc": "2026-10-17T14:07:49.204098+00:00",
+      "latest_mtime_utc": "2026-10-17T15:49:50.583895+00:00",
+      "examples": [
+        "E:\\QuantData\\reports\\research_readiness\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\cross_source.json",
+        "E:\\QuantData\\reports\\research_readiness\\885bb91b10d91a1f099a5b54ca2d21bf82c040d4a4988645b0bbf7acb605015b\\independent_observations.json"
+      ]
+    }
+  },
+  "errors": []
+}
