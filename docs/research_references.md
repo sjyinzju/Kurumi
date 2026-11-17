@@ -74,6 +74,6 @@ R13 的代码入口为 `SCRIPTS/prob_nn.ipynb` 和 `prob_nn_var_es.R`，适合�
 
 ## 检索记录
 
-机器可读的逐项链接、规模、复用点、限制和检查范围见 [research_catalog.json](../reference/research_catalog.json)。10个不同GitHub仓库的当前提交元数据见 [research_revisions.json](../reference/research_revisions.json)；FinBen与PIXIU共仓，StockNet代码与数据分仓，资源条目数不等于独立仓库数。
+机器可读的逐项链接、规模、复用点、限制和检查范围见 [research_catalog.json](references/research_catalog.json)。10个不同GitHub仓库的检索时提交元数据见 [research_revisions.json](references/research_revisions.json)；FinBen与PIXIU共仓，StockNet代码与数据分仓，资源条目数不等于独立仓库数。
 
-GitHub通过连接器读取，论文和HF通过网页读取；论文摘要、README和代码检查深度已逐项标注。未将检索到的同名非官方项目当作作者实现，也未将论文性能数字当作本项目实测结果。本轮只新增研究文档与索引，保留现有Karpo参考项目及全部数据。
+检索阶段GitHub通过连接器读取，论文和HF通过网页读取；论文摘要、README和代码检查深度已逐项标注。未将检索到的同名非官方项目当作作者实现，也未将论文性能数字当作本项目实测结果。随后按用户要求克隆仓库并保存论文，本地路径、版本、哈希与保存结果见 [本地资料索引](references/README.md)。`reference/`不再由本项目Git跟踪，目录中的现有Karpo参考项目保留。

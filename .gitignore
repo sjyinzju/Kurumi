@@ -11,6 +11,7 @@ artifacts/
 data/
 weights/
 checkpoints/
+/reference/
 *.duckdb*
 *.parquet
 *.safetensors

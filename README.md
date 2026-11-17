@@ -8,7 +8,7 @@
 
 - [真实数据报告](docs/data_report.md)、[完整字段字典](docs/field_dictionary.md)
 - `docs/inventory/`：数据集清单、每字段质量分母、有效文件清单、目录容量、Raw 抽样、Qlib 缓存和来源代码哈希
-- [参考实现索引](reference/README.md)：外部实现复用边界
+- [本地参考资料索引](docs/references/README.md)：仓库克隆位置、论文PDF与保存记录；`reference/`仅在本地保留并被Git忽略
 - [金融后训练研究参考](docs/research_references.md)：16项仓库/论文/数据资源、模型规模、适配价值与复用限制
 - `src/kurumi/paths.py`：外部只读源与输出路径配置检查
 - `scripts/`：只读、可复现盘点及报告生成；`tests/`：输出边界检查
