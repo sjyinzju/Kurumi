@@ -1,0 +1,67 @@
+{
+  "checked_date": "2026-11-17",
+  "timezone": "Asia/Shanghai",
+  "method": "GitHub connector GET commits?per_page=1; metadata only, no clones or execution",
+  "repositories": [
+    {
+      "repo": "AI4Finance-Foundation/FinGPT",
+      "sha": "ac5c5443fbeeafad801e7a3c188e4f24cfaad4d8",
+      "date": "2026-10-25T13:49:15Z",
+      "url": "https://github.com/AI4Finance-Foundation/FinGPT/commit/ac5c5443fbeeafad801e7a3c188e4f24cfaad4d8"
+    },
+    {
+      "repo": "The-FinAI/PIXIU",
+      "sha": "860d6a085378ee0bd2c21287d978f00393f17aaa",
+      "date": "2026-10-08T12:20:26Z",
+      "url": "https://github.com/The-FinAI/PIXIU/commit/860d6a085378ee0bd2c21287d978f00393f17aaa"
+    },
+    {
+      "repo": "UBC-NLP/fintral",
+      "sha": "18e7328b471680bc8b52bfb3fa7eca2fd8465fb5",
+      "date": "2024-06-05T21:07:32Z",
+      "url": "https://github.com/UBC-NLP/fintral/commit/18e7328b471680bc8b52bfb3fa7eca2fd8465fb5"
+    },
+    {
+      "repo": "SUFE-AIFLM-Lab/Fin-R1",
+      "sha": "06ead1e61ff77cad71dc409198b1a2575d748ecd",
+      "date": "2025-03-27T09:38:50Z",
+      "url": "https://github.com/SUFE-AIFLM-Lab/Fin-R1/commit/06ead1e61ff77cad71dc409198b1a2575d748ecd"
+    },
+    {
+      "repo": "shiyu-coder/Kronos",
+      "sha": "67b630e67f6a18c9e9be918d9b4337c960db1e9a",
+      "date": "2026-04-13T12:38:49Z",
+      "url": "https://github.com/shiyu-coder/Kronos/commit/67b630e67f6a18c9e9be918d9b4337c960db1e9a"
+    },
+    {
+      "repo": "Zdong104/FNSPID_Financial_News_Dataset",
+      "sha": "4054842ec476953b30ee874d4b7e8eea786a21fa",
+      "date": "2025-07-24T19:48:00Z",
+      "url": "https://github.com/Zdong104/FNSPID_Financial_News_Dataset/commit/4054842ec476953b30ee874d4b7e8eea786a21fa"
+    },
+    {
+      "repo": "yumoxu/stocknet-code",
+      "sha": "e32147c07c1e06033fcc8f76525a0c25e8babc16",
+      "date": "2018-11-02T09:45:34Z",
+      "url": "https://github.com/yumoxu/stocknet-code/commit/e32147c07c1e06033fcc8f76525a0c25e8babc16"
+    },
+    {
+      "repo": "yumoxu/stocknet-dataset",
+      "sha": "330708b5ddc359961078bef469f43f48992fd6e4",
+      "date": "2018-11-02T10:11:17Z",
+      "url": "https://github.com/yumoxu/stocknet-dataset/commit/330708b5ddc359961078bef469f43f48992fd6e4"
+    },
+    {
+      "repo": "jmichankow/deep_learning_probability",
+      "sha": "debecb2998201b426765f0f3a31e9f0eaf5971b3",
+      "date": "2025-08-27T07:26:12Z",
+      "url": "https://github.com/jmichankow/deep_learning_probability/commit/debecb2998201b426765f0f3a31e9f0eaf5971b3"
+    },
+    {
+      "repo": "gpleiss/temperature_scaling",
+      "sha": "ce1154ec7d5235eee046f28875c3dd8421f11d45",
+      "date": "2025-07-26T03:46:09Z",
+      "url": "https://github.com/gpleiss/temperature_scaling/commit/ce1154ec7d5235eee046f28875c3dd8421f11d45"
+    }
+  ]
+}

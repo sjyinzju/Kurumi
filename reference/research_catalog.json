@@ -1,0 +1,147 @@
+{
+  "checked_date": "2026-11-17",
+  "timezone": "Asia/Shanghai",
+  "scope": "Karpo financial post-training; heterogeneous input; future return direction, magnitude and probability quality",
+  "verification": "Primary paper/model-card/README inspection; selected source and directory checks. No model or dataset downloads, execution, or performance reproduction.",
+  "share_url": "https://chatgpt.com/share/6afb2a23-63a4-83e8-8eda-e33bc47ebb18",
+  "share_status": "web fetch cache miss; browser timeout; content not read",
+  "resources": [
+    {
+      "id": "R01", "name": "FinGPT-Forecaster", "priority": "A", "kind": "implementation_and_adapter",
+      "model_size": "Llama-2 7B + LoRA", "input": "news, company profile, historical movements, optional financials", "output": "generated next-week movement interval and explanation",
+      "github": "https://github.com/AI4Finance-Foundation/FinGPT/tree/master/fingpt/FinGPT_Forecaster",
+      "hf_model": "https://huggingface.co/FinGPT/fingpt-forecaster_dow30_llama2-7b_lora",
+      "hf_dataset": "https://huggingface.co/datasets/FinGPT/fingpt-forecaster-sz50-20230201-20240101",
+      "reuse": "prompt.py, data_pipeline.py, train_lora.py; numerical labels alongside free text",
+      "gap": "Generative output is not a calibrated return distribution. Some teacher explanations are conditioned on known future bin labels. Never feed answer/label into X_state. Llama adapter weights cannot attach to Karpo's different backbone.",
+      "verified": "README, directory, prompt.py and train_lora.py; HF model and Chinese dataset viewer",
+      "license_note": "Repository MIT and adapter card Apache-2.0; base Llama terms remain separate. No license equivalence assumed."
+    },
+    {
+      "id": "R02", "name": "Can Language Models Learn to Forecast Stock Prices (AURA-4B)", "year": 2026, "priority": "A", "kind": "paper",
+      "model_size": "Qwen3 4B", "input": "chronologically restricted market-tool observations", "output": "numerical forward return scored for direction and magnitude",
+      "paper": "https://arxiv.org/abs/2609.36914", "paper_version_read": "v1",
+      "reuse": "SFT followed by outcome-reward PPO; isolate direction and magnitude; separate label realization windows across splits",
+      "gap": "Outcome-selected benchmark, not random market opportunities; not a calibrated probability forecast. Official implementation and checkpoint not confirmed; a similarly named GitHub hit was not accepted as official.",
+      "verified": "Paper HTML sections 2 and 3, chronological split and benchmark limitations"
+    },
+    {
+      "id": "R03", "name": "Fine-Tuning Large Language Models for Stock Return Prediction Using Newsflow", "year": 2024, "priority": "A", "kind": "paper",
+      "model_size": "Mistral 7B / Llama3 8B / DeBERTa", "input": "company news in a lookback window", "output": "forward return regression",
+      "paper": "https://arxiv.org/abs/2407.18103", "paper_version_read": "v1",
+      "reuse": "LoRA plus forecasting head; compare pooled versus final-token representation; direct news-to-return training",
+      "gap": "MSE point forecast rather than distribution; vendor news data; official public training repository not confirmed. Monthly targets in experiments do not fix this project's horizon.",
+      "verified": "Paper methods, model sizes, data and training setup"
+    },
+    {
+      "id": "R04", "name": "PIXIU / FinMA", "year": 2023, "priority": "B", "kind": "financial_instruction_training",
+      "model_size": "Use FinMA 7B-full branch", "input": "financial instructions and text/numerical task data", "output": "task answers including stock movement classes",
+      "github": "https://github.com/The-FinAI/PIXIU", "paper": "https://arxiv.org/abs/2306.05443", "hf_model": "https://huggingface.co/TheFinAI/finma-7b-full",
+      "reuse": "FIT instruction design; financial NLP versus prediction-task distinction; label and evaluation conventions",
+      "gap": "Financial NLP success does not establish stock probability calibration. Do not merge benchmark test labels into training.",
+      "verified": "Official README, paper abstract and HF model page",
+      "license_note": "Repository/card labels do not replace underlying LLaMA weight terms."
+    },
+    {
+      "id": "R05", "name": "Open-FinLLMs / FinLLaMA / FinLLaVA", "year": 2024, "priority": "B", "kind": "multimodal_financial_adaptation",
+      "model_size": "8B family", "input": "financial text, serialized tables/time series; images for FinLLaVA", "output": "financial task answers",
+      "paper": "https://arxiv.org/abs/2408.11878", "paper_version_read": "v3",
+      "hf_model": "https://huggingface.co/TheFinAI/FinLLaMA-instruct", "hf_multimodal_model": "https://huggingface.co/TheFinAI/FinLLaVA",
+      "reuse": "Heterogeneous financial input representation and instruction mixture; use instruction-level ideas rather than reproducing large-scale continual pretraining",
+      "gap": "Does not directly supply calibrated forward-return probabilities. HF model is gated; official card documents a past incorrect checkpoint replacement, so pin revision and inspect config before later use. No official complete training repo confirmed.",
+      "verified": "Paper HTML and FinLLaMA-instruct model card; not weight access",
+      "license_note": "Llama 3 Community License shown on FinLLaMA-instruct."
+    },
+    {
+      "id": "R06", "name": "FinTral", "year": 2024, "priority": "C", "kind": "paper_with_incomplete_repository",
+      "model_size": "Mistral 7B", "input": "text, numerical, tabular and image data", "output": "financial analysis and task answers",
+      "paper": "https://arxiv.org/abs/2402.10986", "github": "https://github.com/UBC-NLP/fintral",
+      "reuse": "Multimodal task mix; DPO and retrieval/tool design as literature reference",
+      "gap": "Official repository root currently contains only README.md with a heading. No complete runnable implementation or verified checkpoint established. QA benchmark claims are not stock-return calibration results.",
+      "verified": "Paper abstract and GitHub root directory/README"
+    },
+    {
+      "id": "R07", "name": "Fin-R1", "year": 2025, "priority": "C", "kind": "reasoning_post_training",
+      "model_size": "Qwen2.5 7B", "input": "financial reasoning questions", "output": "reasoning and financial answers",
+      "paper": "https://arxiv.org/abs/2503.16252", "github": "https://github.com/SUFE-AIFLM-Lab/Fin-R1", "hf_model": "https://huggingface.co/SUFE-AIFLM-Lab/Fin-R1",
+      "reuse": "Financial data filtering and staged SFT/GRPO design",
+      "gap": "Primarily verifiable financial QA, not noisy stock-return probability learning. Inspected GitHub root contains documents/images/report, not a complete trainer. Karpo does not generate reasoning chains through its native decision API.",
+      "verified": "Official English README, root directory, paper abstract and HF card"
+    },
+    {
+      "id": "R08", "name": "FinBen", "year": 2024, "priority": "B", "kind": "evaluation_benchmark",
+      "model_size": "not applicable", "input": "financial benchmark tasks", "output": "task-specific metrics",
+      "paper": "https://arxiv.org/abs/2402.12659", "github": "https://github.com/The-FinAI/PIXIU",
+      "hf_collection": "https://huggingface.co/collections/TheFinAI/finben-and-pixiu-english-financial-evaluation-658f515911f68f12ea193194",
+      "reuse": "Separate language understanding, forecasting and decision-making evaluations",
+      "gap": "Aggregate financial benchmark score cannot replace local out-of-sample return-distribution evaluation. Shares repository with R04, not an independent implementation.",
+      "verified": "Paper abstract and official PIXIU README"
+    },
+    {
+      "id": "R09", "name": "FinMultiTime", "year": 2025, "priority": "B", "kind": "dataset_design",
+      "model_size": "not applicable", "input": "Chinese/English news, tables, charts, time series", "output": "aligned multimodal data",
+      "paper": "https://arxiv.org/abs/2506.05019", "paper_version_read": "v2",
+      "hf_dataset": "https://huggingface.co/datasets/Wenyan0110/Multimodal-Dataset-Image_Text_Table_TimeSeries-for-Financial-Time-Series-Forecasting",
+      "reuse": "Cross-modal temporal alignment and modality availability manifest; especially relevant to missing local text coverage",
+      "gap": "Paper claims 112.6GB; abstract, HTML and dataset-card stock counts differ. Viewer displays 9 image validation rows, which does not establish the full corpus contents. No full download, coverage or PIT validation performed.",
+      "verified": "Paper HTML and HF dataset card/viewer only"
+    },
+    {
+      "id": "R10", "name": "FNSPID", "year": 2024, "priority": "B", "kind": "news_price_dataset_and_pipeline",
+      "model_size": "not applicable", "input": "news and stock prices", "output": "time-aligned text and numerical data",
+      "paper": "https://arxiv.org/abs/2402.06698", "github": "https://github.com/Zdong104/FNSPID_Financial_News_Dataset", "hf_dataset": "https://huggingface.co/datasets/Zihan1004/FNSPID",
+      "reuse": "data_scraper, data_processor and dataset_test organization; alternative news-data design",
+      "gap": "README says maintenance stopped 2025-07-24; new permission statement conflicts with older commercial prohibition. HF viewer has an Arrow type parsing error; raw files not downloaded or validated. Historical universe and publication/revision times need audit.",
+      "verified": "README, paper abstract and HF viewer error",
+      "license_note": "Contradictory README permission statements; resolve before redistribution/commercial use."
+    },
+    {
+      "id": "R11", "name": "StockNet", "year": 2018, "priority": "B", "kind": "small_multimodal_baseline",
+      "model_size": "non-LLM variational recurrent model; parameter count not verified", "input": "tweets and historical prices", "output": "stock movement classification",
+      "paper": "https://aclanthology.org/P18-1183/", "github": "https://github.com/yumoxu/stocknet-code", "dataset_github": "https://github.com/yumoxu/stocknet-dataset",
+      "reuse": "Text-plus-price versus price-only comparison; stochastic movement modeling",
+      "gap": "Old ecosystem and selected historical universe; dataset labels and preprocessing need reevaluation; not a modern Karpo adapter or continuous-return distribution.",
+      "verified": "ACL paper page, dataset README and code directory"
+    },
+    {
+      "id": "R12", "name": "Kronos", "year": 2025, "priority": "B", "kind": "small_structured_market_baseline",
+      "model_size": "mini 4.1M / small 24.7M / base 102.3M", "input": "OHLCV-type K-line sequences", "output": "sampled future market sequences",
+      "paper": "https://arxiv.org/abs/2508.02739", "github": "https://github.com/shiyu-coder/Kronos", "hf_model": "https://huggingface.co/NeoQuasar/Kronos-small",
+      "reuse": "Lightweight market-only comparison; finetune/config.py and Qlib data path ideas",
+      "gap": "No free-text input; generated path frequencies are not automatically calibrated event probabilities. Released Qlib/demo conventions must be reconciled with local price units and calendars.",
+      "verified": "Official README model table/fine-tuning instructions, HF model card, paper abstract"
+    },
+    {
+      "id": "R13", "name": "Forecasting Probability Distributions of Financial Returns with Deep Neural Networks", "year": 2025, "priority": "A", "kind": "distributional_forecasting_baseline",
+      "model_size": "CNN/LSTM; exact parameter count not checked", "input": "return time series", "output": "Normal, Student-t or skewed Student-t distribution parameters",
+      "paper": "https://arxiv.org/abs/2508.18921", "github": "https://github.com/jmichankow/deep_learning_probability",
+      "reuse": "Negative log likelihood, CRPS, predictive density and PIT diagnostics; explicit distribution baseline",
+      "gap": "Index time-series task without free text or LLM post-training. Scores do not establish transfer to individual A-shares. PIT here means probability integral transform, not point-in-time data availability.",
+      "verified": "Paper abstract, repository README and SCRIPTS directory (prob_nn.ipynb, prob_nn_var_es.R)"
+    },
+    {
+      "id": "R14", "name": "Dutch Books for Language Models", "year": 2026, "priority": "A", "kind": "probability_coherence_evaluation",
+      "model_size": "method reference; no model reproduction required", "input": "stock-return-derived related event questions", "output": "logical-coherence diagnostic via linear programs",
+      "paper": "https://arxiv.org/abs/2609.02797",
+      "reuse": "Check coherence between up/down, tail thresholds and intervals",
+      "gap": "Coherence is distinct from calibration and forecast accuracy. No official implementation confirmed in this search.",
+      "verified": "Primary arXiv abstract"
+    },
+    {
+      "id": "R15", "name": "On Calibration of Modern Neural Networks", "year": 2017, "priority": "A", "kind": "probability_calibration_method",
+      "model_size": "single-temperature post-processing; no new large model", "input": "classification logits and held-out labels", "output": "temperature-scaled probabilities",
+      "paper": "https://arxiv.org/abs/1706.04599", "github": "https://github.com/gpleiss/temperature_scaling",
+      "reuse": "Validation-only temperature fitting after Karpo return-bin training",
+      "gap": "Original image/document results do not guarantee calibration under market regime change. Old implementation needs modern integration; do not fit temperature on test outcomes.",
+      "verified": "Paper abstract and repository directory"
+    },
+    {
+      "id": "R16", "name": "Assessing Look-Ahead Bias in Stock Return Predictions Generated By GPT Sentiment Analysis", "year": 2023, "priority": "A", "kind": "historical_evaluation_design",
+      "model_size": "method reference; no large model reproduction required", "input": "financial headlines with/without company identifiers", "output": "bias and distraction comparison",
+      "paper": "https://arxiv.org/abs/2309.17322",
+      "reuse": "Named versus anonymized controls; distinguish post-training split from pretraining knowledge contamination",
+      "gap": "Anonymization is a sensitivity check, not proof of no memorization; study uses sentiment rather than this project's full distribution target.",
+      "verified": "Primary arXiv abstract"
+    }
+  ]
+}
