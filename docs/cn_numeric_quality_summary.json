@@ -1,0 +1,4787 @@
+{
+  "status": "INCOMPLETE",
+  "exchange_coverage": [
+    {
+      "exchange": "BSE",
+      "security_days": 246184,
+      "actual_quotes": 245453,
+      "adjustment": 246183,
+      "valid_inputs": 224672,
+      "verified_suspensions": 0,
+      "reported_suspensions": 731,
+      "share_verified": 0,
+      "issuer_cap_verified": 0,
+      "unit_chain_verified": 0,
+      "finance_verified": 0,
+      "industry_verified": 0
+    },
+    {
+      "exchange": "SSE",
+      "security_days": 4887224,
+      "actual_quotes": 4800666,
+      "adjustment": 4887070,
+      "valid_inputs": 4427053,
+      "verified_suspensions": 3049,
+      "reported_suspensions": 86558,
+      "share_verified": 184,
+      "issuer_cap_verified": 184,
+      "unit_chain_verified": 183,
+      "finance_verified": 5647,
+      "industry_verified": 47500
+    },
+    {
+      "exchange": "SZSE",
+      "security_days": 6612365,
+      "actual_quotes": 6416740,
+      "adjustment": 6612359,
+      "valid_inputs": 5848131,
+      "verified_suspensions": 7631,
+      "reported_suspensions": 195611,
+      "share_verified": 293,
+      "issuer_cap_verified": 293,
+      "unit_chain_verified": 292,
+      "finance_verified": 22689,
+      "industry_verified": 55891
+    }
+  ],
+  "inputs": [
+    {
+      "split": "calibration",
+      "input_valid": false,
+      "input_invalid_reason": "history_suspended",
+      "candidates": 10830
+    },
+    {
+      "split": "calibration",
+      "input_valid": false,
+      "input_invalid_reason": "insufficient_history",
+      "candidates": 2869
+    },
+    {
+      "split": "calibration",
+      "input_valid": true,
+      "input_invalid_reason": null,
+      "candidates": 656282
+    },
+    {
+      "split": "test",
+      "input_valid": false,
+      "input_invalid_reason": "history_suspended",
+      "candidates": 51790
+    },
+    {
+      "split": "test",
+      "input_valid": false,
+      "input_invalid_reason": "insufficient_history",
+      "candidates": 11078
+    },
+    {
+      "split": "test",
+      "input_valid": true,
+      "input_invalid_reason": null,
+      "candidates": 1892027
+    },
+    {
+      "split": "train",
+      "input_valid": false,
+      "input_invalid_reason": "history_missing_quote",
+      "candidates": 166
+    },
+    {
+      "split": "train",
+      "input_valid": false,
+      "input_invalid_reason": "history_suspended",
+      "candidates": 822575
+    },
+    {
+      "split": "train",
+      "input_valid": false,
+      "input_invalid_reason": "insufficient_history",
+      "candidates": 327715
+    },
+    {
+      "split": "train",
+      "input_valid": true,
+      "input_invalid_reason": null,
+      "candidates": 7216758
+    },
+    {
+      "split": "validation",
+      "input_valid": false,
+      "input_invalid_reason": "history_suspended",
+      "candidates": 9182
+    },
+    {
+      "split": "validation",
+      "input_valid": false,
+      "input_invalid_reason": "insufficient_history",
+      "candidates": 3803
+    },
+    {
+      "split": "validation",
+      "input_valid": true,
+      "input_invalid_reason": null,
+      "candidates": 613535
+    }
+  ],
+  "supervision": [
+    {
+      "split": "calibration",
+      "horizon": 1,
+      "label_valid": false,
+      "invalid_reason": "cross_split",
+      "class_id": null,
+      "samples": 5251
+    },
+    {
+      "split": "calibration",
+      "horizon": 1,
+      "label_valid": false,
+      "invalid_reason": "input_invalid",
+      "class_id": null,
+      "samples": 13699
+    },
+    {
+      "split": "calibration",
+      "horizon": 1,
+      "label_valid": false,
+      "invalid_reason": "target_suspended",
+      "class_id": null,
+      "samples": 144
+    },
+    {
+      "split": "calibration",
+      "horizon": 1,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 0,
+      "samples": 30707
+    },
+    {
+      "split": "calibration",
+      "horizon": 1,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 1,
+      "samples": 143820
+    },
+    {
+      "split": "calibration",
+      "horizon": 1,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 2,
+      "samples": 139765
+    },
+    {
+      "split": "calibration",
+      "horizon": 1,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 3,
+      "samples": 15589
+    },
+    {
+      "split": "calibration",
+      "horizon": 1,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 4,
+      "samples": 144942
+    },
+    {
+      "split": "calibration",
+      "horizon": 1,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 5,
+      "samples": 126104
+    },
+    {
+      "split": "calibration",
+      "horizon": 1,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 6,
+      "samples": 49960
+    },
+    {
+      "split": "calibration",
+      "horizon": 5,
+      "label_valid": false,
+      "invalid_reason": "cross_split",
+      "class_id": null,
+      "samples": 26269
+    },
+    {
+      "split": "calibration",
+      "horizon": 5,
+      "label_valid": false,
+      "invalid_reason": "input_invalid",
+      "class_id": null,
+      "samples": 13699
+    },
+    {
+      "split": "calibration",
+      "horizon": 5,
+      "label_valid": false,
+      "invalid_reason": "target_suspended",
+      "class_id": null,
+      "samples": 496
+    },
+    {
+      "split": "calibration",
+      "horizon": 5,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 0,
+      "samples": 22236
+    },
+    {
+      "split": "calibration",
+      "horizon": 5,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 1,
+      "samples": 141139
+    },
+    {
+      "split": "calibration",
+      "horizon": 5,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 2,
+      "samples": 148199
+    },
+    {
+      "split": "calibration",
+      "horizon": 5,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 3,
+      "samples": 6315
+    },
+    {
+      "split": "calibration",
+      "horizon": 5,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 4,
+      "samples": 129623
+    },
+    {
+      "split": "calibration",
+      "horizon": 5,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 5,
+      "samples": 122312
+    },
+    {
+      "split": "calibration",
+      "horizon": 5,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 6,
+      "samples": 59693
+    },
+    {
+      "split": "calibration",
+      "horizon": 20,
+      "label_valid": false,
+      "invalid_reason": "cross_split",
+      "class_id": null,
+      "samples": 105065
+    },
+    {
+      "split": "calibration",
+      "horizon": 20,
+      "label_valid": false,
+      "invalid_reason": "input_invalid",
+      "class_id": null,
+      "samples": 13699
+    },
+    {
+      "split": "calibration",
+      "horizon": 20,
+      "label_valid": false,
+      "invalid_reason": "target_suspended",
+      "class_id": null,
+      "samples": 785
+    },
+    {
+      "split": "calibration",
+      "horizon": 20,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 0,
+      "samples": 9546
+    },
+    {
+      "split": "calibration",
+      "horizon": 20,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 1,
+      "samples": 83027
+    },
+    {
+      "split": "calibration",
+      "horizon": 20,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 2,
+      "samples": 123321
+    },
+    {
+      "split": "calibration",
+      "horizon": 20,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 3,
+      "samples": 2560
+    },
+    {
+      "split": "calibration",
+      "horizon": 20,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 4,
+      "samples": 116848
+    },
+    {
+      "split": "calibration",
+      "horizon": 20,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 5,
+      "samples": 121470
+    },
+    {
+      "split": "calibration",
+      "horizon": 20,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 6,
+      "samples": 93660
+    },
+    {
+      "split": "test",
+      "horizon": 1,
+      "label_valid": false,
+      "invalid_reason": "input_invalid",
+      "class_id": null,
+      "samples": 62868
+    },
+    {
+      "split": "test",
+      "horizon": 1,
+      "label_valid": false,
+      "invalid_reason": "target_suspended",
+      "class_id": null,
+      "samples": 846
+    },
+    {
+      "split": "test",
+      "horizon": 1,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 0,
+      "samples": 101238
+    },
+    {
+      "split": "test",
+      "horizon": 1,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 1,
+      "samples": 402164
+    },
+    {
+      "split": "test",
+      "horizon": 1,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 2,
+      "samples": 423212
+    },
+    {
+      "split": "test",
+      "horizon": 1,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 3,
+      "samples": 44049
+    },
+    {
+      "split": "test",
+      "horizon": 1,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 4,
+      "samples": 430361
+    },
+    {
+      "split": "test",
+      "horizon": 1,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 5,
+      "samples": 362963
+    },
+    {
+      "split": "test",
+      "horizon": 1,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 6,
+      "samples": 127194
+    },
+    {
+      "split": "test",
+      "horizon": 5,
+      "label_valid": false,
+      "invalid_reason": "input_invalid",
+      "class_id": null,
+      "samples": 62868
+    },
+    {
+      "split": "test",
+      "horizon": 5,
+      "label_valid": false,
+      "invalid_reason": "target_suspended",
+      "class_id": null,
+      "samples": 2363
+    },
+    {
+      "split": "test",
+      "horizon": 5,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 0,
+      "samples": 106464
+    },
+    {
+      "split": "test",
+      "horizon": 5,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 1,
+      "samples": 387394
+    },
+    {
+      "split": "test",
+      "horizon": 5,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 2,
+      "samples": 428570
+    },
+    {
+      "split": "test",
+      "horizon": 5,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 3,
+      "samples": 18166
+    },
+    {
+      "split": "test",
+      "horizon": 5,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 4,
+      "samples": 426494
+    },
+    {
+      "split": "test",
+      "horizon": 5,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 5,
+      "samples": 385873
+    },
+    {
+      "split": "test",
+      "horizon": 5,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 6,
+      "samples": 136703
+    },
+    {
+      "split": "test",
+      "horizon": 20,
+      "label_valid": false,
+      "invalid_reason": "input_invalid",
+      "class_id": null,
+      "samples": 62868
+    },
+    {
+      "split": "test",
+      "horizon": 20,
+      "label_valid": false,
+      "invalid_reason": "target_delisted_no_quote",
+      "class_id": null,
+      "samples": 26
+    },
+    {
+      "split": "test",
+      "horizon": 20,
+      "label_valid": false,
+      "invalid_reason": "target_suspended",
+      "class_id": null,
+      "samples": 3812
+    },
+    {
+      "split": "test",
+      "horizon": 20,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 0,
+      "samples": 107398
+    },
+    {
+      "split": "test",
+      "horizon": 20,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 1,
+      "samples": 415639
+    },
+    {
+      "split": "test",
+      "horizon": 20,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 2,
+      "samples": 385047
+    },
+    {
+      "split": "test",
+      "horizon": 20,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 3,
+      "samples": 7983
+    },
+    {
+      "split": "test",
+      "horizon": 20,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 4,
+      "samples": 412829
+    },
+    {
+      "split": "test",
+      "horizon": 20,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 5,
+      "samples": 407899
+    },
+    {
+      "split": "test",
+      "horizon": 20,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 6,
+      "samples": 151394
+    },
+    {
+      "split": "train",
+      "horizon": 1,
+      "label_valid": false,
+      "invalid_reason": "cross_split",
+      "class_id": null,
+      "samples": 5220
+    },
+    {
+      "split": "train",
+      "horizon": 1,
+      "label_valid": false,
+      "invalid_reason": "input_invalid",
+      "class_id": null,
+      "samples": 1150456
+    },
+    {
+      "split": "train",
+      "horizon": 1,
+      "label_valid": false,
+      "invalid_reason": "target_missing_quote",
+      "class_id": null,
+      "samples": 10
+    },
+    {
+      "split": "train",
+      "horizon": 1,
+      "label_valid": false,
+      "invalid_reason": "target_suspended",
+      "class_id": null,
+      "samples": 7665
+    },
+    {
+      "split": "train",
+      "horizon": 1,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 0,
+      "samples": 431903
+    },
+    {
+      "split": "train",
+      "horizon": 1,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 1,
+      "samples": 1548950
+    },
+    {
+      "split": "train",
+      "horizon": 1,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 2,
+      "samples": 1553559
+    },
+    {
+      "split": "train",
+      "horizon": 1,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 3,
+      "samples": 213780
+    },
+    {
+      "split": "train",
+      "horizon": 1,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 4,
+      "samples": 1607892
+    },
+    {
+      "split": "train",
+      "horizon": 1,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 5,
+      "samples": 1391169
+    },
+    {
+      "split": "train",
+      "horizon": 1,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 6,
+      "samples": 456610
+    },
+    {
+      "split": "train",
+      "horizon": 5,
+      "label_valid": false,
+      "invalid_reason": "cross_split",
+      "class_id": null,
+      "samples": 26101
+    },
+    {
+      "split": "train",
+      "horizon": 5,
+      "label_valid": false,
+      "invalid_reason": "input_invalid",
+      "class_id": null,
+      "samples": 1150456
+    },
+    {
+      "split": "train",
+      "horizon": 5,
+      "label_valid": false,
+      "invalid_reason": "target_missing_quote",
+      "class_id": null,
+      "samples": 10
+    },
+    {
+      "split": "train",
+      "horizon": 5,
+      "label_valid": false,
+      "invalid_reason": "target_suspended",
+      "class_id": null,
+      "samples": 28404
+    },
+    {
+      "split": "train",
+      "horizon": 5,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 0,
+      "samples": 464264
+    },
+    {
+      "split": "train",
+      "horizon": 5,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 1,
+      "samples": 1598994
+    },
+    {
+      "split": "train",
+      "horizon": 5,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 2,
+      "samples": 1574968
+    },
+    {
+      "split": "train",
+      "horizon": 5,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 3,
+      "samples": 81371
+    },
+    {
+      "split": "train",
+      "horizon": 5,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 4,
+      "samples": 1510381
+    },
+    {
+      "split": "train",
+      "horizon": 5,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 5,
+      "samples": 1454387
+    },
+    {
+      "split": "train",
+      "horizon": 5,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 6,
+      "samples": 477878
+    },
+    {
+      "split": "train",
+      "horizon": 20,
+      "label_valid": false,
+      "invalid_reason": "cross_split",
+      "class_id": null,
+      "samples": 104452
+    },
+    {
+      "split": "train",
+      "horizon": 20,
+      "label_valid": false,
+      "invalid_reason": "input_invalid",
+      "class_id": null,
+      "samples": 1150456
+    },
+    {
+      "split": "train",
+      "horizon": 20,
+      "label_valid": false,
+      "invalid_reason": "target_delisted_no_quote",
+      "class_id": null,
+      "samples": 24
+    },
+    {
+      "split": "train",
+      "horizon": 20,
+      "label_valid": false,
+      "invalid_reason": "target_missing_quote",
+      "class_id": null,
+      "samples": 9
+    },
+    {
+      "split": "train",
+      "horizon": 20,
+      "label_valid": false,
+      "invalid_reason": "target_suspended",
+      "class_id": null,
+      "samples": 62751
+    },
+    {
+      "split": "train",
+      "horizon": 20,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 0,
+      "samples": 453074
+    },
+    {
+      "split": "train",
+      "horizon": 20,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 1,
+      "samples": 1699106
+    },
+    {
+      "split": "train",
+      "horizon": 20,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 2,
+      "samples": 1537841
+    },
+    {
+      "split": "train",
+      "horizon": 20,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 3,
+      "samples": 34495
+    },
+    {
+      "split": "train",
+      "horizon": 20,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 4,
+      "samples": 1419404
+    },
+    {
+      "split": "train",
+      "horizon": 20,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 5,
+      "samples": 1419249
+    },
+    {
+      "split": "train",
+      "horizon": 20,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 6,
+      "samples": 486353
+    },
+    {
+      "split": "validation",
+      "horizon": 1,
+      "label_valid": false,
+      "invalid_reason": "cross_split",
+      "class_id": null,
+      "samples": 5194
+    },
+    {
+      "split": "validation",
+      "horizon": 1,
+      "label_valid": false,
+      "invalid_reason": "input_invalid",
+      "class_id": null,
+      "samples": 12985
+    },
+    {
+      "split": "validation",
+      "horizon": 1,
+      "label_valid": false,
+      "invalid_reason": "target_suspended",
+      "class_id": null,
+      "samples": 181
+    },
+    {
+      "split": "validation",
+      "horizon": 1,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 0,
+      "samples": 53065
+    },
+    {
+      "split": "validation",
+      "horizon": 1,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 1,
+      "samples": 136405
+    },
+    {
+      "split": "validation",
+      "horizon": 1,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 2,
+      "samples": 125680
+    },
+    {
+      "split": "validation",
+      "horizon": 1,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 3,
+      "samples": 13515
+    },
+    {
+      "split": "validation",
+      "horizon": 1,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 4,
+      "samples": 129857
+    },
+    {
+      "split": "validation",
+      "horizon": 1,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 5,
+      "samples": 112418
+    },
+    {
+      "split": "validation",
+      "horizon": 1,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 6,
+      "samples": 37220
+    },
+    {
+      "split": "validation",
+      "horizon": 5,
+      "label_valid": false,
+      "invalid_reason": "cross_split",
+      "class_id": null,
+      "samples": 25967
+    },
+    {
+      "split": "validation",
+      "horizon": 5,
+      "label_valid": false,
+      "invalid_reason": "input_invalid",
+      "class_id": null,
+      "samples": 12985
+    },
+    {
+      "split": "validation",
+      "horizon": 5,
+      "label_valid": false,
+      "invalid_reason": "target_suspended",
+      "class_id": null,
+      "samples": 360
+    },
+    {
+      "split": "validation",
+      "horizon": 5,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 0,
+      "samples": 62560
+    },
+    {
+      "split": "validation",
+      "horizon": 5,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 1,
+      "samples": 143202
+    },
+    {
+      "split": "validation",
+      "horizon": 5,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 2,
+      "samples": 126817
+    },
+    {
+      "split": "validation",
+      "horizon": 5,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 3,
+      "samples": 4971
+    },
+    {
+      "split": "validation",
+      "horizon": 5,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 4,
+      "samples": 111238
+    },
+    {
+      "split": "validation",
+      "horizon": 5,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 5,
+      "samples": 99944
+    },
+    {
+      "split": "validation",
+      "horizon": 5,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 6,
+      "samples": 38476
+    },
+    {
+      "split": "validation",
+      "horizon": 20,
+      "label_valid": false,
+      "invalid_reason": "cross_split",
+      "class_id": null,
+      "samples": 103962
+    },
+    {
+      "split": "validation",
+      "horizon": 20,
+      "label_valid": false,
+      "invalid_reason": "input_invalid",
+      "class_id": null,
+      "samples": 12985
+    },
+    {
+      "split": "validation",
+      "horizon": 20,
+      "label_valid": false,
+      "invalid_reason": "target_delisted_no_quote",
+      "class_id": null,
+      "samples": 7
+    },
+    {
+      "split": "validation",
+      "horizon": 20,
+      "label_valid": false,
+      "invalid_reason": "target_suspended",
+      "class_id": null,
+      "samples": 730
+    },
+    {
+      "split": "validation",
+      "horizon": 20,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 0,
+      "samples": 64195
+    },
+    {
+      "split": "validation",
+      "horizon": 20,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 1,
+      "samples": 125177
+    },
+    {
+      "split": "validation",
+      "horizon": 20,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 2,
+      "samples": 107426
+    },
+    {
+      "split": "validation",
+      "horizon": 20,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 3,
+      "samples": 1819
+    },
+    {
+      "split": "validation",
+      "horizon": 20,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 4,
+      "samples": 91114
+    },
+    {
+      "split": "validation",
+      "horizon": 20,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 5,
+      "samples": 88027
+    },
+    {
+      "split": "validation",
+      "horizon": 20,
+      "label_valid": true,
+      "invalid_reason": null,
+      "class_id": 6,
+      "samples": 31078
+    }
+  ],
+  "source_dependencies": [
+    {
+      "dependency": "share_verified",
+      "missing_security_days": 11745296
+    },
+    {
+      "dependency": "unit_chain_verified",
+      "missing_security_days": 11745298
+    },
+    {
+      "dependency": "finance_verified",
+      "missing_security_days": 11717437
+    },
+    {
+      "dependency": "industry_verified",
+      "missing_security_days": 11642382
+    }
+  ],
+  "training_sample_counts": [
+    {
+      "split": "calibration",
+      "samples": 651003
+    },
+    {
+      "split": "test",
+      "samples": 1891977
+    },
+    {
+      "split": "train",
+      "samples": 7209524
+    },
+    {
+      "split": "validation",
+      "samples": 608311
+    }
+  ],
+  "sigma_quantiles": [
+    {
+      "split": "calibration",
+      "valid": 656282,
+      "quantiles": [
+        0.005518731350199057,
+        0.012593807433140574,
+        0.030173140911016333,
+        0.07774327719688569,
+        0.2275382712724734
+      ]
+    },
+    {
+      "split": "test",
+      "valid": 1892027,
+      "quantiles": [
+        0.0037647572532960106,
+        0.009101934284110765,
+        0.026527798116735467,
+        0.06396543751500042,
+        0.11500391095141634
+      ]
+    },
+    {
+      "split": "train",
+      "valid": 7216758,
+      "quantiles": [
+        0.0025382448470179166,
+        0.00924253728521115,
+        0.0254423876141252,
+        0.062059575030355696,
+        0.132437024656135
+      ]
+    },
+    {
+      "split": "validation",
+      "valid": 613535,
+      "quantiles": [
+        0.005272028242363223,
+        0.010770989856722552,
+        0.03142368496370804,
+        0.07078406633900688,
+        0.12211778149215477
+      ]
+    }
+  ],
+  "quote_gaps": [
+    {
+      "exchange": "BSE",
+      "affected_instruments": 1,
+      "open_without_quote": 0,
+      "factor_missing": 1,
+      "earliest": "2026-02-03",
+      "latest": "2026-02-03"
+    },
+    {
+      "exchange": "SSE",
+      "affected_instruments": 8,
+      "open_without_quote": 0,
+      "factor_missing": 154,
+      "earliest": "2015-01-05",
+      "latest": "2026-02-03"
+    },
+    {
+      "exchange": "SZSE",
+      "affected_instruments": 20,
+      "open_without_quote": 14,
+      "factor_missing": 6,
+      "earliest": "2015-03-20",
+      "latest": "2026-02-03"
+    }
+  ],
+  "dataset_version": "cn-8dfdd9db8a90fd88e132e3675fd31e311e02b5a50ad437cca7f8bdff7198e03b",
+  "storage_before": {
+    "observed_at": "2026-11-19T06:31:02.588045+00:00",
+    "files": {
+      "quant.duckdb": 1,
+      "reports": 1158,
+      "90_metadata": 939,
+      "80_quarantine": 113,
+      "40_qlib": 105854,
+      "10_canonical": 1077205,
+      "00_raw": 434934
+    },
+    "bytes": {
+      "quant.duckdb": 1207971840,
+      "reports": 10763284271,
+      "90_metadata": 565307856,
+      "80_quarantine": 89411,
+      "40_qlib": 23375408,
+      "10_canonical": 96903028034,
+      "00_raw": 8885555477
+    },
+    "free_bytes": 45736673280,
+    "errors": []
+  },
+  "storage_after": {
+    "files": {
+      "quant.duckdb": 1,
+      "reports": 1159,
+      "numeric": 1208,
+      "90_metadata": 949,
+      "80_quarantine": 113,
+      "40_qlib": 105854,
+      "10_canonical": 1074079,
+      "00_raw": 434934
+    },
+    "bytes": {
+      "quant.duckdb": 1207971840,
+      "reports": 10763285293,
+      "numeric": 24414073967,
+      "90_metadata": 565919855,
+      "80_quarantine": 89411,
+      "40_qlib": 23375408,
+      "10_canonical": 96055124032,
+      "00_raw": 8885555477
+    },
+    "errors": [],
+    "free_bytes": 19722608640
+  },
+  "validation": {
+    "full_sql_violation_counts": {
+      "primary_key_stock_daily": 0,
+      "primary_key_stock_fundamental_asof": 0,
+      "primary_key_market_daily": 0,
+      "primary_key_industry_daily": 0,
+      "primary_key_samples": 0,
+      "primary_key_labels": 0,
+      "valid_window": 0,
+      "candidate_horizons": 0,
+      "target_calendar_and_label_formula": 0,
+      "fundamental_time": 0,
+      "split_and_buffer": 0,
+      "calendar_bse_vs_trading_dates": 0,
+      "features_finite_and_domain": 0,
+      "features_explained_nulls": 0,
+      "features_sparse_reasons": 0,
+      "features_coverage_gates": 0
+    },
+    "pending": [
+      "full source-time verification",
+      "source mutation prefix checks",
+      "real sample Karpo encoding"
+    ],
+    "status": "INCOMPLETE"
+  },
+  "observations": {
+    "backfill": {
+      "daily": {
+        "scopes": 296,
+        "requested_keys": 11235,
+        "filled_keys": 14,
+        "completed_scopes": 296,
+        "errors": {}
+      },
+      "adj_factor": {
+        "scopes": 211,
+        "requested_keys": 358,
+        "filled_keys": 0,
+        "completed_scopes": 211,
+        "errors": {}
+      },
+      "suspend_d": {
+        "scopes": 296,
+        "requested_keys": 11235,
+        "filled_keys": 2291,
+        "completed_scopes": 296,
+        "errors": {}
+      }
+    },
+    "cleanup": {
+      "kind": "quant_legacy_scratch",
+      "status": "COMPLETE",
+      "root": "E:\\QuantData",
+      "deleted_files": [
+        {
+          "path": "E:\\QuantData\\90_metadata\\progress.json.0cfdc732d0e547b0897fce42aa7def7f.partial",
+          "hash": "b949434cd38943b09ffa77edead1a0aa7cd96c41fc05d0f21f978fd2606392fe",
+          "bytes": 9441
+        },
+        {
+          "path": "E:\\QuantData\\90_metadata\\progress.json.5b8238dc194f448dbed7d31d0eabca14.partial",
+          "hash": "c9ef2f07b4b9698331bf166f48a0d68a7fa454ebdfec2dd0bf23d58f67d4c9f5",
+          "bytes": 9439
+        }
+      ],
+      "deleted_directories": [
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\02d00e957cc3448a950635f8dc744324",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\037e9a1054974e98bda2546fad34194c",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\0efd21390a6e4c15b445f142425b2517",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\1b7b6873d30d4ba6b2e7c0e6eae8b355",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\223fee6b1b7d484e8251961cd5331dd6",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\2b06e6c69ffd48ae9dc3f9b9e0bbff04",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\2bff8e232589438eb26f438e697f9c74",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\329f38a73ef34f7c9a6217106b1c1057",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\3338997fdff742ba8e2f5b81b127c317",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\3545baa9f32c4444823f8eff9da95958",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\362c9748bdb847468306ab260b6cb39f",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\3a2f0ecd11ca4c92943eed7c228453be",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\400da615346b4a29a904dfefcd7177d3",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\4a0c1ec1c3014f699f8711af61f3e355",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\50f310d4b7b44ae8b5dbc689b8b1c8db",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\5340b23d99fe488fab5ff596df737459",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\53d2147c8e3a4adf911952ebdf9324c7",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\5aa0e3efbb2e476ea42c134da2e8123d",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\5d749d9671c745e79cde18d6c82415b1",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\623470c96f3b4fdf9036bf67e7880784",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\62c500a9d8ff4c8bbe382d21b53343d2",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\640e5183c2934731a729ca438d339904",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\64f6c9f726614ddd9c7551a1518eb23f",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\67988dbe71364e26bc35435dca7c5aa6",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\6932b6a94a7e4ae89d8e21df4486bc69",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\6cf53450eaa04f8ca2e1dbb90850f398",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\7033980d4642452faf242a9b4f7b50f2",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\7c48d87f332f428580d8427df93d8d4c",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\7f101a38f07d46168814e49ecf463555",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\7f5cc16214a7442bb728de7307ecaa43",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\7f86b6ddec944efab4a869fb7b5c3243",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\88314312a886431595afac03e9288ac5",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\926fe838d39c42b2a910f0a1303d922e",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\963c9bbc3fad4d8693e51c49e8ae05d8",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\97aae8521a9044838b0145f28121f142",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\9857fe583dcd4d429eb2eebdd0e93ca5",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\a48da893f01c458e9fbebb7455b8846d",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\ab5954587d354c26b90cc5439516dc9b",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\af85355236fe481ebe118058b01d41ee",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\afc22b94d91f4be1aac54e08031f9a84",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\b0be4ba088a44ee8bf4391eec89620a9",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\b1d38a26487f41e5a34f5fdda3464948",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\b1e34f2be13d49bf92227d0bcd49a676",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\b5556481ea05493091833b73cf9d277b",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\c0a165f22ff24dd2a3319c1006e70466",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\c1aa93bdcd6e4aa2aaa0cadc3f4af914",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\c2bfcc62d9cd48a99d9d63047f53acc1",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\c31b8a6be56c435588565b0846b265bf",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\cb7a0b44d1d941c4a77630dd73e09b8c",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\cf05917902154e6a8282d557804183cf",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\cf29d58fab6743fc84b9148527c6db5f",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\d6dea679b98b4cb09fb23871c361863f",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\db175091b14644c99bd374fd642e942d",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\dc627eafa5f0481aa8a3531f5d2fb443",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\e1482e1869a64b9792cab827bdc199db",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\e25268b533bd4cf2bd57b5c02de50270",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\e2b6551f6f6c47efa1f756beb9d8e7f4",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\e4aeb93f3d1945879b8043806972907f",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\e9b1ab64a2c64f5d9c8d821b18418989",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\eb81cd61d54b4e48a0089c438b300fc6",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\ed8ba73bf74a443492a7ee6c41f7aa11",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\f6032ba574ea4633a02ae5cc9c59bf8e",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\fa917ac70a66414ca193a152703f61e3",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\ff3d602ef268476ca6e02de1c45fda91"
+      ],
+      "held_paths": [],
+      "deleted_bytes": 18880,
+      "published_progress_sha256": "9ba74182117e470eaa745d77d7038336bbac5c75362c26cec711d8048bd7ea6c",
+      "plan_path": "E:\\Kurumi\\artifacts\\cn_numeric\\legacy-scratch.gc-plan",
+      "approved_files": [
+        {
+          "path": "E:\\QuantData\\90_metadata\\progress.json.0cfdc732d0e547b0897fce42aa7def7f.partial",
+          "hash": "b949434cd38943b09ffa77edead1a0aa7cd96c41fc05d0f21f978fd2606392fe",
+          "bytes": 9441
+        },
+        {
+          "path": "E:\\QuantData\\90_metadata\\progress.json.5b8238dc194f448dbed7d31d0eabca14.partial",
+          "hash": "c9ef2f07b4b9698331bf166f48a0d68a7fa454ebdfec2dd0bf23d58f67d4c9f5",
+          "bytes": 9439
+        }
+      ],
+      "approved_directories": [
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\02d00e957cc3448a950635f8dc744324",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\037e9a1054974e98bda2546fad34194c",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\0efd21390a6e4c15b445f142425b2517",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\1b7b6873d30d4ba6b2e7c0e6eae8b355",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\223fee6b1b7d484e8251961cd5331dd6",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\2b06e6c69ffd48ae9dc3f9b9e0bbff04",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\2bff8e232589438eb26f438e697f9c74",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\329f38a73ef34f7c9a6217106b1c1057",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\3338997fdff742ba8e2f5b81b127c317",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\3545baa9f32c4444823f8eff9da95958",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\362c9748bdb847468306ab260b6cb39f",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\3a2f0ecd11ca4c92943eed7c228453be",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\400da615346b4a29a904dfefcd7177d3",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\4a0c1ec1c3014f699f8711af61f3e355",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\50f310d4b7b44ae8b5dbc689b8b1c8db",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\5340b23d99fe488fab5ff596df737459",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\53d2147c8e3a4adf911952ebdf9324c7",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\5aa0e3efbb2e476ea42c134da2e8123d",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\5d749d9671c745e79cde18d6c82415b1",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\623470c96f3b4fdf9036bf67e7880784",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\62c500a9d8ff4c8bbe382d21b53343d2",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\640e5183c2934731a729ca438d339904",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\64f6c9f726614ddd9c7551a1518eb23f",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\67988dbe71364e26bc35435dca7c5aa6",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\6932b6a94a7e4ae89d8e21df4486bc69",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\6cf53450eaa04f8ca2e1dbb90850f398",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\7033980d4642452faf242a9b4f7b50f2",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\7c48d87f332f428580d8427df93d8d4c",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\7f101a38f07d46168814e49ecf463555",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\7f5cc16214a7442bb728de7307ecaa43",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\7f86b6ddec944efab4a869fb7b5c3243",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\88314312a886431595afac03e9288ac5",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\926fe838d39c42b2a910f0a1303d922e",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\963c9bbc3fad4d8693e51c49e8ae05d8",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\97aae8521a9044838b0145f28121f142",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\9857fe583dcd4d429eb2eebdd0e93ca5",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\a48da893f01c458e9fbebb7455b8846d",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\ab5954587d354c26b90cc5439516dc9b",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\af85355236fe481ebe118058b01d41ee",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\afc22b94d91f4be1aac54e08031f9a84",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\b0be4ba088a44ee8bf4391eec89620a9",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\b1d38a26487f41e5a34f5fdda3464948",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\b1e34f2be13d49bf92227d0bcd49a676",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\b5556481ea05493091833b73cf9d277b",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\c0a165f22ff24dd2a3319c1006e70466",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\c1aa93bdcd6e4aa2aaa0cadc3f4af914",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\c2bfcc62d9cd48a99d9d63047f53acc1",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\c31b8a6be56c435588565b0846b265bf",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\cb7a0b44d1d941c4a77630dd73e09b8c",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\cf05917902154e6a8282d557804183cf",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\cf29d58fab6743fc84b9148527c6db5f",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\d6dea679b98b4cb09fb23871c361863f",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\db175091b14644c99bd374fd642e942d",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\dc627eafa5f0481aa8a3531f5d2fb443",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\e1482e1869a64b9792cab827bdc199db",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\e25268b533bd4cf2bd57b5c02de50270",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\e2b6551f6f6c47efa1f756beb9d8e7f4",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\e4aeb93f3d1945879b8043806972907f",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\e9b1ab64a2c64f5d9c8d821b18418989",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\eb81cd61d54b4e48a0089c438b300fc6",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\ed8ba73bf74a443492a7ee6c41f7aa11",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\f6032ba574ea4633a02ae5cc9c59bf8e",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\fa917ac70a66414ca193a152703f61e3",
+        "E:\\QuantData\\90_metadata\\snapshot_spill\\ff3d602ef268476ca6e02de1c45fda91"
+      ]
+    },
+    "canonical_gc": {
+      "apply": true,
+      "deleted_files": 3126,
+      "finished_at": "2026-11-19T08:20:02.824385+00:00",
+      "groups": 13,
+      "held_files": 0,
+      "reclaimed_bytes": 847904002,
+      "started_at": "2026-11-19T08:17:34.752329+00:00",
+      "state": "COMPLETE",
+      "updated_at": "2026-11-19T08:20:02.817813+00:00",
+      "verified_bytes": 847904002,
+      "verified_files": 3126
+    },
+    "abandoned_staging": [
+      {
+        "staging": "publish-21234ae4ca0b4cc4194cd2d1",
+        "files": 3,
+        "bytes": 62703550
+      },
+      {
+        "staging": "publish-61730e8288dbd0b73249fa21",
+        "files": 0,
+        "bytes": 0
+      }
+    ],
+    "release_storage": {
+      "path": "E:\\QuantData\\numeric\\cn-8dfdd9db8a90fd88e132e3675fd31e311e02b5a50ad437cca7f8bdff7198e03b",
+      "file_bytes": 3274293051,
+      "hardlinked_unchanged_parquets": 39,
+      "free_bytes_at_publish": 19722756096
+    },
+    "independent": {
+      "dataset_version": "cn-8dfdd9db8a90fd88e132e3675fd31e311e02b5a50ad437cca7f8bdff7198e03b",
+      "files_verified": 86,
+      "build_time_violation_counts": {
+        "primary_key_stock_daily": 0,
+        "primary_key_stock_fundamental_asof": 0,
+        "primary_key_market_daily": 0,
+        "primary_key_industry_daily": 0,
+        "primary_key_samples": 0,
+        "primary_key_labels": 0,
+        "valid_window": 0,
+        "candidate_horizons": 0,
+        "target_calendar_and_label_formula": 0,
+        "fundamental_time": 0,
+        "split_and_buffer": 0,
+        "calendar_bse_vs_trading_dates": 0,
+        "features_finite_and_domain": 0,
+        "features_explained_nulls": 0,
+        "features_sparse_reasons": 0,
+        "features_coverage_gates": 0
+      },
+      "independent_training_mask_by_year": {
+        "2015": {
+          "rows": 269269,
+          "compared": 269269
+        },
+        "2016": {
+          "rows": 513488,
+          "compared": 513488
+        },
+        "2017": {
+          "rows": 625952,
+          "compared": 625952
+        },
+        "2018": {
+          "rows": 734412,
+          "compared": 734412
+        },
+        "2019": {
+          "rows": 840652,
+          "compared": 840652
+        },
+        "2020": {
+          "rows": 891212,
+          "compared": 891212
+        },
+        "2021": {
+          "rows": 1000246,
+          "compared": 1000246
+        },
+        "2022": {
+          "rows": 1119877,
+          "compared": 1119877
+        },
+        "2023": {
+          "rows": 1214416,
+          "compared": 1214416
+        },
+        "2024": {
+          "rows": 1259314,
+          "compared": 1259314
+        },
+        "2025": {
+          "rows": 1277242,
+          "compared": 1277242
+        },
+        "2026": {
+          "rows": 614735,
+          "compared": 614735
+        }
+      },
+      "window_and_label_recalculation": [
+        {
+          "sample_id": "CN|CN-873001.BJ|2024-12-19",
+          "exchange": "BSE",
+          "split": "calibration",
+          "valid_horizons": [
+            1,
+            5
+          ]
+        },
+        {
+          "sample_id": "CN|CN-835237.BJ|2025-05-13",
+          "exchange": "BSE",
+          "split": "test",
+          "valid_horizons": [
+            1,
+            5,
+            20
+          ]
+        },
+        {
+          "sample_id": "CN|CN-835640.BJ|2023-06-27",
+          "exchange": "BSE",
+          "split": "train",
+          "valid_horizons": [
+            1,
+            5,
+            20
+          ]
+        },
+        {
+          "sample_id": "CN|CN-831641.BJ|2024-01-11",
+          "exchange": "BSE",
+          "split": "validation",
+          "valid_horizons": [
+            1,
+            5,
+            20
+          ]
+        },
+        {
+          "sample_id": "CN|CN-600368.SH|2024-08-06",
+          "exchange": "SSE",
+          "split": "calibration",
+          "valid_horizons": [
+            1,
+            5,
+            20
+          ]
+        },
+        {
+          "sample_id": "CN|CN-603316.SH|2026-05-18",
+          "exchange": "SSE",
+          "split": "test",
+          "valid_horizons": [
+            1,
+            5,
+            20
+          ]
+        },
+        {
+          "sample_id": "CN|CN-600967.SH|2021-06-10",
+          "exchange": "SSE",
+          "split": "train",
+          "valid_horizons": [
+            1,
+            5,
+            20
+          ]
+        },
+        {
+          "sample_id": "CN|CN-601717.SH|2024-03-04",
+          "exchange": "SSE",
+          "split": "validation",
+          "valid_horizons": [
+            1,
+            5,
+            20
+          ]
+        },
+        {
+          "sample_id": "CN|CN-300055.SZ|2024-09-03",
+          "exchange": "SZSE",
+          "split": "calibration",
+          "valid_horizons": [
+            1,
+            5,
+            20
+          ]
+        },
+        {
+          "sample_id": "CN|CN-301257.SZ|2025-08-15",
+          "exchange": "SZSE",
+          "split": "test",
+          "valid_horizons": [
+            1,
+            5,
+            20
+          ]
+        },
+        {
+          "sample_id": "CN|CN-300725.SZ|2020-06-17",
+          "exchange": "SZSE",
+          "split": "train",
+          "valid_horizons": [
+            1,
+            5,
+            20
+          ]
+        },
+        {
+          "sample_id": "CN|CN-300279.SZ|2024-02-07",
+          "exchange": "SZSE",
+          "split": "validation",
+          "valid_horizons": [
+            1,
+            5,
+            20
+          ]
+        }
+      ],
+      "audit_only_suspensions": [
+        {
+          "ts_code": "603159.SH",
+          "date": "2026-06-16",
+          "label_reasons": {
+            "input_invalid": 1,
+            "target_suspended": 2
+          },
+          "model_status": "unknown"
+        },
+        {
+          "ts_code": "603616.SH",
+          "date": "2026-01-22",
+          "label_reasons": {
+            "input_invalid": 1,
+            "target_suspended": 2
+          },
+          "model_status": "unknown"
+        },
+        {
+          "ts_code": "688005.SH",
+          "date": "2026-01-15",
+          "label_reasons": {
+            "input_invalid": 1,
+            "target_suspended": 2
+          },
+          "model_status": "unknown"
+        },
+        {
+          "ts_code": "605028.SH",
+          "date": "2026-01-13",
+          "label_reasons": {
+            "input_invalid": 1,
+            "target_suspended": 2
+          },
+          "model_status": "unknown"
+        },
+        {
+          "ts_code": "688766.SH",
+          "date": "2025-11-26",
+          "label_reasons": {
+            "input_invalid": 1,
+            "target_suspended": 2
+          },
+          "model_status": "unknown"
+        },
+        {
+          "ts_code": "002731.SZ",
+          "date": "2026-07-06",
+          "label_reasons": {
+            "input_invalid": 2
+          },
+          "model_status": "unknown"
+        }
+      ]
+    },
+    "native": {
+      "dataset_version": "cn-8dfdd9db8a90fd88e132e3675fd31e311e02b5a50ad437cca7f8bdff7198e03b",
+      "dataset_status": "INCOMPLETE",
+      "scope": "sampled",
+      "samples": [
+        "CN|CN-000001.SZ|2015-04-07",
+        "CN|CN-000001.SZ|2024-01-02",
+        "CN|CN-000001.SZ|2024-07-01",
+        "CN|CN-000001.SZ|2025-01-02",
+        "CN|CN-430017.BJ|2024-01-02",
+        "CN|CN-430017.BJ|2024-07-01",
+        "CN|CN-430017.BJ|2025-01-02",
+        "CN|CN-430047.BJ|2022-02-15",
+        "CN|CN-600000.SH|2015-04-07",
+        "CN|CN-600000.SH|2024-01-02",
+        "CN|CN-600000.SH|2024-07-01",
+        "CN|CN-600000.SH|2025-01-02",
+        "CN|CN-688277.SH|2026-06-30",
+        "CN|CN-873665.BJ|2023-12-28",
+        "CN|CN-873833.BJ|2024-06-27",
+        "CN|CN-920118.BJ|2024-12-30",
+        "CN|CN-002142.SZ|2026-04-27",
+        "CN|CN-300059.SZ|2026-04-27"
+      ],
+      "native_check": "passed",
+      "load_check": "passed",
+      "price_prefix_check": {
+        "scope": "model assembly from cutoff price windows",
+        "feature_inputs": "published factor columns and as-of snapshots held fixed",
+        "sample_count": 18,
+        "evidence": [
+          {
+            "sample_id": "CN|CN-000001.SZ|2015-04-07",
+            "first_retained_trade_date": "2015-01-05",
+            "last_retained_trade_date": "2015-04-07",
+            "retained_rows": 61,
+            "later_rows_physically_excluded": 24,
+            "model_input_equal": true,
+            "native_request_equal": true
+          },
+          {
+            "sample_id": "CN|CN-000001.SZ|2024-01-02",
+            "first_retained_trade_date": "2023-10-09",
+            "last_retained_trade_date": "2024-01-02",
+            "retained_rows": 61,
+            "later_rows_physically_excluded": 25,
+            "model_input_equal": true,
+            "native_request_equal": true
+          },
+          {
+            "sample_id": "CN|CN-000001.SZ|2024-07-01",
+            "first_retained_trade_date": "2024-03-29",
+            "last_retained_trade_date": "2024-07-01",
+            "retained_rows": 61,
+            "later_rows_physically_excluded": 25,
+            "model_input_equal": true,
+            "native_request_equal": true
+          },
+          {
+            "sample_id": "CN|CN-000001.SZ|2025-01-02",
+            "first_retained_trade_date": "2024-10-09",
+            "last_retained_trade_date": "2025-01-02",
+            "retained_rows": 61,
+            "later_rows_physically_excluded": 19,
+            "model_input_equal": true,
+            "native_request_equal": true
+          },
+          {
+            "sample_id": "CN|CN-430017.BJ|2024-01-02",
+            "first_retained_trade_date": "2023-10-09",
+            "last_retained_trade_date": "2024-01-02",
+            "retained_rows": 61,
+            "later_rows_physically_excluded": 25,
+            "model_input_equal": true,
+            "native_request_equal": true
+          },
+          {
+            "sample_id": "CN|CN-430017.BJ|2024-07-01",
+            "first_retained_trade_date": "2024-03-29",
+            "last_retained_trade_date": "2024-07-01",
+            "retained_rows": 61,
+            "later_rows_physically_excluded": 25,
+            "model_input_equal": true,
+            "native_request_equal": true
+          },
+          {
+            "sample_id": "CN|CN-430017.BJ|2025-01-02",
+            "first_retained_trade_date": "2024-10-09",
+            "last_retained_trade_date": "2025-01-02",
+            "retained_rows": 61,
+            "later_rows_physically_excluded": 19,
+            "model_input_equal": true,
+            "native_request_equal": true
+          },
+          {
+            "sample_id": "CN|CN-430047.BJ|2022-02-15",
+            "first_retained_trade_date": "2021-11-15",
+            "last_retained_trade_date": "2022-02-15",
+            "retained_rows": 61,
+            "later_rows_physically_excluded": 25,
+            "model_input_equal": true,
+            "native_request_equal": true
+          },
+          {
+            "sample_id": "CN|CN-600000.SH|2015-04-07",
+            "first_retained_trade_date": "2015-01-05",
+            "last_retained_trade_date": "2015-04-07",
+            "retained_rows": 61,
+            "later_rows_physically_excluded": 24,
+            "model_input_equal": true,
+            "native_request_equal": true
+          },
+          {
+            "sample_id": "CN|CN-600000.SH|2024-01-02",
+            "first_retained_trade_date": "2023-10-09",
+            "last_retained_trade_date": "2024-01-02",
+            "retained_rows": 61,
+            "later_rows_physically_excluded": 25,
+            "model_input_equal": true,
+            "native_request_equal": true
+          },
+          {
+            "sample_id": "CN|CN-600000.SH|2024-07-01",
+            "first_retained_trade_date": "2024-03-29",
+            "last_retained_trade_date": "2024-07-01",
+            "retained_rows": 61,
+            "later_rows_physically_excluded": 25,
+            "model_input_equal": true,
+            "native_request_equal": true
+          },
+          {
+            "sample_id": "CN|CN-600000.SH|2025-01-02",
+            "first_retained_trade_date": "2024-10-09",
+            "last_retained_trade_date": "2025-01-02",
+            "retained_rows": 61,
+            "later_rows_physically_excluded": 19,
+            "model_input_equal": true,
+            "native_request_equal": true
+          },
+          {
+            "sample_id": "CN|CN-688277.SH|2026-06-30",
+            "first_retained_trade_date": "2026-03-31",
+            "last_retained_trade_date": "2026-06-30",
+            "retained_rows": 61,
+            "later_rows_physically_excluded": 23,
+            "model_input_equal": true,
+            "native_request_equal": true
+          },
+          {
+            "sample_id": "CN|CN-873665.BJ|2023-12-28",
+            "first_retained_trade_date": "2023-09-27",
+            "last_retained_trade_date": "2023-12-28",
+            "retained_rows": 61,
+            "later_rows_physically_excluded": 24,
+            "model_input_equal": true,
+            "native_request_equal": true
+          },
+          {
+            "sample_id": "CN|CN-873833.BJ|2024-06-27",
+            "first_retained_trade_date": "2024-03-27",
+            "last_retained_trade_date": "2024-06-27",
+            "retained_rows": 61,
+            "later_rows_physically_excluded": 25,
+            "model_input_equal": true,
+            "native_request_equal": true
+          },
+          {
+            "sample_id": "CN|CN-920118.BJ|2024-12-30",
+            "first_retained_trade_date": "2024-09-30",
+            "last_retained_trade_date": "2024-12-30",
+            "retained_rows": 61,
+            "later_rows_physically_excluded": 19,
+            "model_input_equal": true,
+            "native_request_equal": true
+          },
+          {
+            "sample_id": "CN|CN-002142.SZ|2026-04-27",
+            "first_retained_trade_date": "2026-01-22",
+            "last_retained_trade_date": "2026-04-27",
+            "retained_rows": 61,
+            "later_rows_physically_excluded": 22,
+            "model_input_equal": true,
+            "native_request_equal": true
+          },
+          {
+            "sample_id": "CN|CN-300059.SZ|2026-04-27",
+            "first_retained_trade_date": "2026-01-22",
+            "last_retained_trade_date": "2026-04-27",
+            "retained_rows": 61,
+            "later_rows_physically_excluded": 22,
+            "model_input_equal": true,
+            "native_request_equal": true
+          }
+        ]
+      },
+      "recovered_ttm_evidence": {
+        "CN|CN-002142.SZ|2026-04-27": {
+          "ts_code": "002142.SZ",
+          "fundamental_snapshot_id": "fund-b76bc4c1092aacac0ea3c553",
+          "snapshot_available_at": "2026-04-26T00:00:00+08:00",
+          "source_refs": [
+            "financial_versions-5cc332c62a932c0835e3e389",
+            "financial_versions-698afb0ed23c97b4c703e673",
+            "financial_versions-800357878ed8cc5fc2c86bcc",
+            "financial_versions-87cd8ad76dae203e5badc2b6",
+            "financial_versions-971fab73ab2289f3567ed4ba",
+            "financial_versions-9b2330e183b4cfe331047a0b",
+            "financial_versions-ad839bc4e821e460a32144b9",
+            "financial_versions-beb60dcde34c252f796f925c",
+            "financial_versions-c2f30a31bad38a493bf7564d"
+          ],
+          "original_reports": [
+            {
+              "provenance_id": "financial_versions-5cc332c62a932c0835e3e389",
+              "source_version_id": "1224746398",
+              "source_sha256": "08bf46ba96a0a05d9a9da4f372f1618f1bcb7e683cf4eaf366c7d7ec95a6fb4f"
+            },
+            {
+              "provenance_id": "financial_versions-698afb0ed23c97b4c703e673",
+              "source_version_id": "1219903740",
+              "source_sha256": "5d539a5b5ea2042a2ad30204d7f6688f3d16fe0c4b8c84ebdc26364845f07454"
+            },
+            {
+              "provenance_id": "financial_versions-800357878ed8cc5fc2c86bcc",
+              "source_version_id": "1223363635",
+              "source_sha256": "38e065c558e5f1c399053fd0784dafdd4b2717afd1c1ce9522c7a576519a3ca7"
+            },
+            {
+              "provenance_id": "financial_versions-87cd8ad76dae203e5badc2b6",
+              "source_version_id": "1223045151",
+              "source_sha256": "4534164c8bbb0f99ab16582589dc43b9d46bfd3e2337ab9690401c8b5c4ea2c8"
+            },
+            {
+              "provenance_id": "financial_versions-971fab73ab2289f3567ed4ba",
+              "source_version_id": "1225189419",
+              "source_sha256": "6610078eb1d109465781dbd47d3256d4abbbe2f4ff1f8017e1724b3fadb35558"
+            },
+            {
+              "provenance_id": "financial_versions-9b2330e183b4cfe331047a0b",
+              "source_version_id": "1221540163",
+              "source_sha256": "37cde094e0abba690e096f7706d2233c2f96ed28c5a83638687b547c0d38afb3"
+            },
+            {
+              "provenance_id": "financial_versions-ad839bc4e821e460a32144b9",
+              "source_version_id": "1221032452",
+              "source_sha256": "0336e9d595bd13728e45a3a94f8413054ac68d5cfe4009ea01ecf219324cd935"
+            },
+            {
+              "provenance_id": "financial_versions-beb60dcde34c252f796f925c",
+              "source_version_id": "1225189427",
+              "source_sha256": "d9b90238562e5d598d1f82bc5a62999a305eeb6ae0afd03d3caefb0edda2b8a7"
+            },
+            {
+              "provenance_id": "financial_versions-c2f30a31bad38a493bf7564d",
+              "source_version_id": "1224606434",
+              "source_sha256": "9a61d9c5daef3686d18bc22206f4b97ed34ef1d9717e2c65b020d0229baad55f"
+            }
+          ],
+          "published_amount_cny": {
+            "revenue_ttm": 73858000000.0,
+            "net_income_total_ttm": 30343000000.0,
+            "net_income_parent_ttm": 30097000000.0,
+            "operating_cashflow_ttm": 202281000000.0,
+            "assets": 3859225000000.0,
+            "liabilities": 3600513000000.0,
+            "parent_equity": 257318000000.0
+          },
+          "independent_ttm_amount_cny": {
+            "revenue_ttm": 73858000000.0,
+            "net_income_total_ttm": 30343000000.0,
+            "net_income_parent_ttm": 30097000000.0,
+            "operating_cashflow_ttm": 202281000000.0,
+            "revenue_ttm_4q_ago": 67617000000.0
+          },
+          "expected_revenue_factors": {
+            "net_margin_ttm": 0.4108288878659048,
+            "revenue_growth_yoy_ttm": 0.09229927385125047
+          },
+          "rendered_financial_lines": {
+            "revenue_ttm": "revenue_ttm[million_CNY]=73858",
+            "net_income_total_ttm": "net_income_total_ttm[million_CNY]=30343",
+            "net_income_parent_ttm": "net_income_parent_ttm[million_CNY]=30097",
+            "operating_cashflow_ttm": "operating_cashflow_ttm[million_CNY]=202281",
+            "assets": "assets[million_CNY]=3859225",
+            "liabilities": "liabilities[million_CNY]=3600513",
+            "parent_equity": "parent_equity[million_CNY]=257318"
+          },
+          "rendered_revenue_factor_lines": {
+            "net_margin_ttm": "net_margin_ttm=0.41082889",
+            "revenue_growth_yoy_ttm": "revenue_growth_yoy_ttm=0.092299275"
+          }
+        },
+        "CN|CN-300059.SZ|2026-04-27": {
+          "ts_code": "300059.SZ",
+          "fundamental_snapshot_id": "fund-12ef18e6b4c09b879cb21154",
+          "snapshot_available_at": "2026-04-26T00:00:00+08:00",
+          "source_refs": [
+            "financial_versions-3835ed710f05442d29bec9c6",
+            "financial_versions-42088313336d99418fedea0a",
+            "financial_versions-53f940c2d85e3992db4dd68f",
+            "financial_versions-5c4eee6b0a56a800f6686ca4",
+            "financial_versions-79d2ead5d79fc88c597cc19a",
+            "financial_versions-808dd10ea2acd674da74d20d",
+            "financial_versions-8b7bc966d5a357bd034bd9ef",
+            "financial_versions-a9f8167f14fc9ffbdad32a2c",
+            "financial_versions-fa32bc42ccff6a8043893be5"
+          ],
+          "original_reports": [
+            {
+              "provenance_id": "financial_versions-3835ed710f05442d29bec9c6",
+              "source_version_id": "1224736179",
+              "source_sha256": "766e31d9e4b835bcbf258c9f490a6c9ae8d901e565b34528b42190f839ed6a12"
+            },
+            {
+              "provenance_id": "financial_versions-42088313336d99418fedea0a",
+              "source_version_id": "1224499196",
+              "source_sha256": "cdd16bccdb7e75ccfddf3ad6fff70525ace4fcec356093c0426268946ce18696"
+            },
+            {
+              "provenance_id": "financial_versions-53f940c2d85e3992db4dd68f",
+              "source_version_id": "1220834724",
+              "source_sha256": "70f2716a42b50f7a58a77c80106ed6ae98129f414093bc5586798599e094a1fb"
+            },
+            {
+              "provenance_id": "financial_versions-5c4eee6b0a56a800f6686ca4",
+              "source_version_id": "1225019509",
+              "source_sha256": "a5edb3304600d7ff7faeefa65fea3846f4326743cc72d9ade14cf93af20c1737"
+            },
+            {
+              "provenance_id": "financial_versions-79d2ead5d79fc88c597cc19a",
+              "source_version_id": "1223314764",
+              "source_sha256": "c8526dce0f65d94a8fd2bf060eab53a712ce8a93c1b592ac4896441ef624a8b0"
+            },
+            {
+              "provenance_id": "financial_versions-808dd10ea2acd674da74d20d",
+              "source_version_id": "1219792160",
+              "source_sha256": "b67a3bc8d2d0c43de051db850514ccc74331137c067c4e75a4bb95f9bf59ad0a"
+            },
+            {
+              "provenance_id": "financial_versions-8b7bc966d5a357bd034bd9ef",
+              "source_version_id": "1222806709",
+              "source_sha256": "a803c2d1d188f4e88d208566adff32a32d7fdabe3b361e01e110ffae0c4cdeda"
+            },
+            {
+              "provenance_id": "financial_versions-a9f8167f14fc9ffbdad32a2c",
+              "source_version_id": "1225185763",
+              "source_sha256": "7afb2fe339864cff84d729473f87fcb1d5a94f53b9dab2e57e0c7e2a111b81b1"
+            },
+            {
+              "provenance_id": "financial_versions-fa32bc42ccff6a8043893be5",
+              "source_version_id": "1221523945",
+              "source_sha256": "8cb30a4c4d96871f876d7109bfb4e4dc47b7cec50a426543aae43874f8221dae"
+            }
+          ],
+          "published_amount_cny": {
+            "revenue_ttm": 17613181150.97,
+            "net_income_total_ttm": 13107344087.009998,
+            "net_income_parent_ttm": 13107344087.009998,
+            "operating_cashflow_ttm": 24777114954.26,
+            "assets": 439896942606.42,
+            "liabilities": 344285528215.99,
+            "parent_equity": 95611414390.43
+          },
+          "independent_ttm_amount_cny": {
+            "revenue_ttm": 17613181150.97,
+            "net_income_total_ttm": 13107344087.009998,
+            "net_income_parent_ttm": 13107344087.009998,
+            "operating_cashflow_ttm": 24777114954.260002,
+            "revenue_ttm_4q_ago": 12633994348.89
+          },
+          "expected_revenue_factors": {
+            "net_margin_ttm": 0.744178122887707,
+            "revenue_growth_yoy_ttm": 0.3941102603483011
+          },
+          "rendered_financial_lines": {
+            "revenue_ttm": "revenue_ttm[million_CNY]=17613.181",
+            "net_income_total_ttm": "net_income_total_ttm[million_CNY]=13107.344",
+            "net_income_parent_ttm": "net_income_parent_ttm[million_CNY]=13107.344",
+            "operating_cashflow_ttm": "operating_cashflow_ttm[million_CNY]=24777.115",
+            "assets": "assets[million_CNY]=439896.94",
+            "liabilities": "liabilities[million_CNY]=344285.53",
+            "parent_equity": "parent_equity[million_CNY]=95611.414"
+          },
+          "rendered_revenue_factor_lines": {
+            "net_margin_ttm": "net_margin_ttm=0.74417812",
+            "revenue_growth_yoy_ttm": "revenue_growth_yoy_ttm=0.39411026"
+          }
+        }
+      },
+      "recovered_ttm_audit_sha256": "2a91ab1ae1f634b212519fd1407493d45ddf8805e226898690cc483d624eb6bb",
+      "code_revision": "6600011eb5cf46232d056ec0717dc726146d29de",
+      "tokenizer_revision": "b36640b5450552ac96f908c71664932e4fa79485a9a5422436a779230eeb1bff",
+      "checkpoint_revision": "b8e6fd7463cea8662c556d6257955d7ef9c10d19",
+      "encoding_runtime": {
+        "transformers": "5.23.0",
+        "tokenizers": "0.23.3",
+        "jinja2": "3.1.6",
+        "torch": "2.15.0"
+      },
+      "native_evidence": [
+        {
+          "sample_id": "CN|CN-000001.SZ|2015-04-07",
+          "split": "train",
+          "exchange": "SZSE",
+          "questions": [
+            "return_1d",
+            "return_5d",
+            "return_20d"
+          ],
+          "options_per_question": [
+            7,
+            7,
+            7
+          ],
+          "numeric_sessions": 60,
+          "sequence_channel_order": [
+            "open_relative",
+            "high_relative",
+            "low_relative",
+            "close_relative",
+            "log_return_1d",
+            "volume_relative"
+          ],
+          "finite_observations_by_channel": {
+            "open_relative": 60,
+            "high_relative": 60,
+            "low_relative": 60,
+            "close_relative": 60,
+            "log_return_1d": 60,
+            "volume_relative": 0
+          },
+          "non_null_factors": 12,
+          "non_null_financial_fields": 4,
+          "native_tokens": 6336,
+          "shared_tokens": 5438,
+          "split_sequences": 3,
+          "masks": [
+            true,
+            true,
+            true
+          ],
+          "class_ids": [
+            6,
+            6,
+            5
+          ],
+          "request_sha256": "15a97fb7ac56b671159e324e579fc2ddc3fad4544174ea4ce0ebb795d2b16c2e"
+        },
+        {
+          "sample_id": "CN|CN-000001.SZ|2024-01-02",
+          "split": "validation",
+          "exchange": "SZSE",
+          "questions": [
+            "return_1d",
+            "return_5d",
+            "return_20d"
+          ],
+          "options_per_question": [
+            7,
+            7,
+            7
+          ],
+          "numeric_sessions": 60,
+          "sequence_channel_order": [
+            "open_relative",
+            "high_relative",
+            "low_relative",
+            "close_relative",
+            "log_return_1d",
+            "volume_relative"
+          ],
+          "finite_observations_by_channel": {
+            "open_relative": 60,
+            "high_relative": 60,
+            "low_relative": 60,
+            "close_relative": 60,
+            "log_return_1d": 60,
+            "volume_relative": 0
+          },
+          "non_null_factors": 12,
+          "non_null_financial_fields": 4,
+          "native_tokens": 6128,
+          "shared_tokens": 5223,
+          "split_sequences": 3,
+          "masks": [
+            true,
+            true,
+            true
+          ],
+          "class_ids": [
+            2,
+            2,
+            5
+          ],
+          "request_sha256": "b57192878e3031241edbbf5b3233aab564f04d13c7fbd4e225569b6144a4f035"
+        },
+        {
+          "sample_id": "CN|CN-000001.SZ|2024-07-01",
+          "split": "calibration",
+          "exchange": "SZSE",
+          "questions": [
+            "return_1d",
+            "return_5d",
+            "return_20d"
+          ],
+          "options_per_question": [
+            7,
+            7,
+            7
+          ],
+          "numeric_sessions": 60,
+          "sequence_channel_order": [
+            "open_relative",
+            "high_relative",
+            "low_relative",
+            "close_relative",
+            "log_return_1d",
+            "volume_relative"
+          ],
+          "finite_observations_by_channel": {
+            "open_relative": 60,
+            "high_relative": 60,
+            "low_relative": 60,
+            "close_relative": 60,
+            "log_return_1d": 60,
+            "volume_relative": 0
+          },
+          "non_null_factors": 12,
+          "non_null_financial_fields": 4,
+          "native_tokens": 6332,
+          "shared_tokens": 5429,
+          "split_sequences": 3,
+          "masks": [
+            true,
+            true,
+            true
+          ],
+          "class_ids": [
+            4,
+            0,
+            2
+          ],
+          "request_sha256": "ba1e79abeaa17a9183ee4c4babbfdf786cd8b57faed68d7233b1fba6ccbe096c"
+        },
+        {
+          "sample_id": "CN|CN-000001.SZ|2025-01-02",
+          "split": "test",
+          "exchange": "SZSE",
+          "questions": [
+            "return_1d",
+            "return_5d",
+            "return_20d"
+          ],
+          "options_per_question": [
+            7,
+            7,
+            7
+          ],
+          "numeric_sessions": 60,
+          "sequence_channel_order": [
+            "open_relative",
+            "high_relative",
+            "low_relative",
+            "close_relative",
+            "log_return_1d",
+            "volume_relative"
+          ],
+          "finite_observations_by_channel": {
+            "open_relative": 60,
+            "high_relative": 60,
+            "low_relative": 60,
+            "close_relative": 60,
+            "log_return_1d": 60,
+            "volume_relative": 0
+          },
+          "non_null_factors": 12,
+          "non_null_financial_fields": 4,
+          "native_tokens": 6171,
+          "shared_tokens": 5270,
+          "split_sequences": 3,
+          "masks": [
+            true,
+            true,
+            true
+          ],
+          "class_ids": [
+            2,
+            2,
+            2
+          ],
+          "request_sha256": "8e499091902249b71bf57062c919b1523bed1bc4b8d744fce2305986389b4c44"
+        },
+        {
+          "sample_id": "CN|CN-430017.BJ|2024-01-02",
+          "split": "validation",
+          "exchange": "BSE",
+          "questions": [
+            "return_1d",
+            "return_5d",
+            "return_20d"
+          ],
+          "options_per_question": [
+            7,
+            7,
+            7
+          ],
+          "numeric_sessions": 60,
+          "sequence_channel_order": [
+            "open_relative",
+            "high_relative",
+            "low_relative",
+            "close_relative",
+            "log_return_1d",
+            "volume_relative"
+          ],
+          "finite_observations_by_channel": {
+            "open_relative": 60,
+            "high_relative": 60,
+            "low_relative": 60,
+            "close_relative": 60,
+            "log_return_1d": 60,
+            "volume_relative": 0
+          },
+          "non_null_factors": 10,
+          "non_null_financial_fields": 0,
+          "native_tokens": 6252,
+          "shared_tokens": 5353,
+          "split_sequences": 3,
+          "masks": [
+            true,
+            true,
+            true
+          ],
+          "class_ids": [
+            4,
+            1,
+            1
+          ],
+          "request_sha256": "e0f2731b1f595ddadb77cbe37e380c8768cbbc337d3bd53babff1fb3464165b2"
+        },
+        {
+          "sample_id": "CN|CN-430017.BJ|2024-07-01",
+          "split": "calibration",
+          "exchange": "BSE",
+          "questions": [
+            "return_1d",
+            "return_5d",
+            "return_20d"
+          ],
+          "options_per_question": [
+            7,
+            7,
+            7
+          ],
+          "numeric_sessions": 60,
+          "sequence_channel_order": [
+            "open_relative",
+            "high_relative",
+            "low_relative",
+            "close_relative",
+            "log_return_1d",
+            "volume_relative"
+          ],
+          "finite_observations_by_channel": {
+            "open_relative": 60,
+            "high_relative": 60,
+            "low_relative": 60,
+            "close_relative": 60,
+            "log_return_1d": 60,
+            "volume_relative": 0
+          },
+          "non_null_factors": 10,
+          "non_null_financial_fields": 0,
+          "native_tokens": 6145,
+          "shared_tokens": 5242,
+          "split_sequences": 3,
+          "masks": [
+            true,
+            true,
+            true
+          ],
+          "class_ids": [
+            2,
+            1,
+            2
+          ],
+          "request_sha256": "8e020a37c947f0fd9f70367f2f3a75634d30af525da012acc90b261c79b94f11"
+        },
+        {
+          "sample_id": "CN|CN-430017.BJ|2025-01-02",
+          "split": "test",
+          "exchange": "BSE",
+          "questions": [
+            "return_1d",
+            "return_5d",
+            "return_20d"
+          ],
+          "options_per_question": [
+            7,
+            7,
+            7
+          ],
+          "numeric_sessions": 60,
+          "sequence_channel_order": [
+            "open_relative",
+            "high_relative",
+            "low_relative",
+            "close_relative",
+            "log_return_1d",
+            "volume_relative"
+          ],
+          "finite_observations_by_channel": {
+            "open_relative": 60,
+            "high_relative": 60,
+            "low_relative": 60,
+            "close_relative": 60,
+            "log_return_1d": 60,
+            "volume_relative": 0
+          },
+          "non_null_factors": 10,
+          "non_null_financial_fields": 0,
+          "native_tokens": 6074,
+          "shared_tokens": 5176,
+          "split_sequences": 3,
+          "masks": [
+            true,
+            true,
+            true
+          ],
+          "class_ids": [
+            2,
+            5,
+            5
+          ],
+          "request_sha256": "d8eda3538a5b1f3563a9ee2a9e64a569b74cddaf1f0b559a80eb85ee1126693b"
+        },
+        {
+          "sample_id": "CN|CN-430047.BJ|2022-02-15",
+          "split": "train",
+          "exchange": "BSE",
+          "questions": [
+            "return_1d",
+            "return_5d",
+            "return_20d"
+          ],
+          "options_per_question": [
+            7,
+            7,
+            7
+          ],
+          "numeric_sessions": 60,
+          "sequence_channel_order": [
+            "open_relative",
+            "high_relative",
+            "low_relative",
+            "close_relative",
+            "log_return_1d",
+            "volume_relative"
+          ],
+          "finite_observations_by_channel": {
+            "open_relative": 60,
+            "high_relative": 60,
+            "low_relative": 60,
+            "close_relative": 60,
+            "log_return_1d": 60,
+            "volume_relative": 0
+          },
+          "non_null_factors": 10,
+          "non_null_financial_fields": 0,
+          "native_tokens": 6036,
+          "shared_tokens": 5145,
+          "split_sequences": 3,
+          "masks": [
+            true,
+            true,
+            true
+          ],
+          "class_ids": [
+            4,
+            0,
+            1
+          ],
+          "request_sha256": "48794b4ff7cc6e1e7cecfc259fe8ad5734287ba57aceffab88ca1e822fb433ca"
+        },
+        {
+          "sample_id": "CN|CN-600000.SH|2015-04-07",
+          "split": "train",
+          "exchange": "SSE",
+          "questions": [
+            "return_1d",
+            "return_5d",
+            "return_20d"
+          ],
+          "options_per_question": [
+            7,
+            7,
+            7
+          ],
+          "numeric_sessions": 60,
+          "sequence_channel_order": [
+            "open_relative",
+            "high_relative",
+            "low_relative",
+            "close_relative",
+            "log_return_1d",
+            "volume_relative"
+          ],
+          "finite_observations_by_channel": {
+            "open_relative": 60,
+            "high_relative": 60,
+            "low_relative": 60,
+            "close_relative": 60,
+            "log_return_1d": 60,
+            "volume_relative": 0
+          },
+          "non_null_factors": 10,
+          "non_null_financial_fields": 1,
+          "native_tokens": 6284,
+          "shared_tokens": 5388,
+          "split_sequences": 3,
+          "masks": [
+            true,
+            true,
+            true
+          ],
+          "class_ids": [
+            5,
+            5,
+            4
+          ],
+          "request_sha256": "22aa7d8a8574f473b8b72b57057e4b3ff26c4b7afd60276889eb2f505e03f4ee"
+        },
+        {
+          "sample_id": "CN|CN-600000.SH|2024-01-02",
+          "split": "validation",
+          "exchange": "SSE",
+          "questions": [
+            "return_1d",
+            "return_5d",
+            "return_20d"
+          ],
+          "options_per_question": [
+            7,
+            7,
+            7
+          ],
+          "numeric_sessions": 60,
+          "sequence_channel_order": [
+            "open_relative",
+            "high_relative",
+            "low_relative",
+            "close_relative",
+            "log_return_1d",
+            "volume_relative"
+          ],
+          "finite_observations_by_channel": {
+            "open_relative": 60,
+            "high_relative": 60,
+            "low_relative": 60,
+            "close_relative": 60,
+            "log_return_1d": 60,
+            "volume_relative": 0
+          },
+          "non_null_factors": 10,
+          "non_null_financial_fields": 1,
+          "native_tokens": 6014,
+          "shared_tokens": 5105,
+          "split_sequences": 3,
+          "masks": [
+            true,
+            true,
+            true
+          ],
+          "class_ids": [
+            5,
+            4,
+            5
+          ],
+          "request_sha256": "f489be74dd5eadbbf6cbe152b1cd8d8106b8000307ca92b0bb17eee346537f32"
+        },
+        {
+          "sample_id": "CN|CN-600000.SH|2024-07-01",
+          "split": "calibration",
+          "exchange": "SSE",
+          "questions": [
+            "return_1d",
+            "return_5d",
+            "return_20d"
+          ],
+          "options_per_question": [
+            7,
+            7,
+            7
+          ],
+          "numeric_sessions": 60,
+          "sequence_channel_order": [
+            "open_relative",
+            "high_relative",
+            "low_relative",
+            "close_relative",
+            "log_return_1d",
+            "volume_relative"
+          ],
+          "finite_observations_by_channel": {
+            "open_relative": 60,
+            "high_relative": 60,
+            "low_relative": 60,
+            "close_relative": 60,
+            "log_return_1d": 60,
+            "volume_relative": 0
+          },
+          "non_null_factors": 10,
+          "non_null_financial_fields": 1,
+          "native_tokens": 6269,
+          "shared_tokens": 5364,
+          "split_sequences": 3,
+          "masks": [
+            true,
+            true,
+            true
+          ],
+          "class_ids": [
+            6,
+            5,
+            5
+          ],
+          "request_sha256": "f14a314e6eb04750670147fc75b29851bf83f80e3acf8bbce11af528af11b2fe"
+        },
+        {
+          "sample_id": "CN|CN-600000.SH|2025-01-02",
+          "split": "test",
+          "exchange": "SSE",
+          "questions": [
+            "return_1d",
+            "return_5d",
+            "return_20d"
+          ],
+          "options_per_question": [
+            7,
+            7,
+            7
+          ],
+          "numeric_sessions": 60,
+          "sequence_channel_order": [
+            "open_relative",
+            "high_relative",
+            "low_relative",
+            "close_relative",
+            "log_return_1d",
+            "volume_relative"
+          ],
+          "finite_observations_by_channel": {
+            "open_relative": 60,
+            "high_relative": 60,
+            "low_relative": 60,
+            "close_relative": 60,
+            "log_return_1d": 60,
+            "volume_relative": 0
+          },
+          "non_null_factors": 10,
+          "non_null_financial_fields": 1,
+          "native_tokens": 6217,
+          "shared_tokens": 5316,
+          "split_sequences": 3,
+          "masks": [
+            true,
+            true,
+            true
+          ],
+          "class_ids": [
+            2,
+            4,
+            4
+          ],
+          "request_sha256": "916afbfa51cafc05d942a87926805458896250105a9fdbfb537d8e784425d908"
+        },
+        {
+          "sample_id": "CN|CN-688277.SH|2026-06-30",
+          "split": "test",
+          "exchange": "SSE",
+          "questions": [
+            "return_1d",
+            "return_5d",
+            "return_20d"
+          ],
+          "options_per_question": [
+            7,
+            7,
+            7
+          ],
+          "numeric_sessions": 60,
+          "sequence_channel_order": [
+            "open_relative",
+            "high_relative",
+            "low_relative",
+            "close_relative",
+            "log_return_1d",
+            "volume_relative"
+          ],
+          "finite_observations_by_channel": {
+            "open_relative": 60,
+            "high_relative": 60,
+            "low_relative": 60,
+            "close_relative": 60,
+            "log_return_1d": 60,
+            "volume_relative": 0
+          },
+          "non_null_factors": 10,
+          "non_null_financial_fields": 0,
+          "native_tokens": 6116,
+          "shared_tokens": 5216,
+          "split_sequences": 3,
+          "masks": [
+            true,
+            true,
+            false
+          ],
+          "class_ids": [
+            5,
+            2,
+            0
+          ],
+          "request_sha256": "36df7a3bb2b6ac578c60e27f757daeb356cd677b5c59c64be537bf5a0c0c5db7"
+        },
+        {
+          "sample_id": "CN|CN-873665.BJ|2023-12-28",
+          "split": "train",
+          "exchange": "BSE",
+          "questions": [
+            "return_1d",
+            "return_5d",
+            "return_20d"
+          ],
+          "options_per_question": [
+            7,
+            7,
+            7
+          ],
+          "numeric_sessions": 60,
+          "sequence_channel_order": [
+            "open_relative",
+            "high_relative",
+            "low_relative",
+            "close_relative",
+            "log_return_1d",
+            "volume_relative"
+          ],
+          "finite_observations_by_channel": {
+            "open_relative": 60,
+            "high_relative": 60,
+            "low_relative": 60,
+            "close_relative": 60,
+            "log_return_1d": 60,
+            "volume_relative": 0
+          },
+          "non_null_factors": 10,
+          "non_null_financial_fields": 0,
+          "native_tokens": 6249,
+          "shared_tokens": 5356,
+          "split_sequences": 3,
+          "masks": [
+            true,
+            false,
+            false
+          ],
+          "class_ids": [
+            5,
+            0,
+            0
+          ],
+          "request_sha256": "394e7d4b803ed13677fc026658922fdaa36ceb3cf8c7db67bc8e36495b1603cc"
+        },
+        {
+          "sample_id": "CN|CN-873833.BJ|2024-06-27",
+          "split": "validation",
+          "exchange": "BSE",
+          "questions": [
+            "return_1d",
+            "return_5d",
+            "return_20d"
+          ],
+          "options_per_question": [
+            7,
+            7,
+            7
+          ],
+          "numeric_sessions": 60,
+          "sequence_channel_order": [
+            "open_relative",
+            "high_relative",
+            "low_relative",
+            "close_relative",
+            "log_return_1d",
+            "volume_relative"
+          ],
+          "finite_observations_by_channel": {
+            "open_relative": 60,
+            "high_relative": 60,
+            "low_relative": 60,
+            "close_relative": 60,
+            "log_return_1d": 60,
+            "volume_relative": 0
+          },
+          "non_null_factors": 10,
+          "non_null_financial_fields": 0,
+          "native_tokens": 6080,
+          "shared_tokens": 5185,
+          "split_sequences": 3,
+          "masks": [
+            true,
+            false,
+            false
+          ],
+          "class_ids": [
+            4,
+            0,
+            0
+          ],
+          "request_sha256": "2d7d5f994dc77551d88fbc61085564cd6267bef80e955e1ae62b528626208247"
+        },
+        {
+          "sample_id": "CN|CN-920118.BJ|2024-12-30",
+          "split": "calibration",
+          "exchange": "BSE",
+          "questions": [
+            "return_1d",
+            "return_5d",
+            "return_20d"
+          ],
+          "options_per_question": [
+            7,
+            7,
+            7
+          ],
+          "numeric_sessions": 60,
+          "sequence_channel_order": [
+            "open_relative",
+            "high_relative",
+            "low_relative",
+            "close_relative",
+            "log_return_1d",
+            "volume_relative"
+          ],
+          "finite_observations_by_channel": {
+            "open_relative": 60,
+            "high_relative": 60,
+            "low_relative": 60,
+            "close_relative": 60,
+            "log_return_1d": 60,
+            "volume_relative": 0
+          },
+          "non_null_factors": 10,
+          "non_null_financial_fields": 0,
+          "native_tokens": 6053,
+          "shared_tokens": 5154,
+          "split_sequences": 3,
+          "masks": [
+            true,
+            false,
+            false
+          ],
+          "class_ids": [
+            4,
+            0,
+            0
+          ],
+          "request_sha256": "f56f525466432ad8c2222e4db286292f285d80a867992648d2e819171fa5082a"
+        },
+        {
+          "sample_id": "CN|CN-002142.SZ|2026-04-27",
+          "split": "test",
+          "exchange": "SZSE",
+          "questions": [
+            "return_1d",
+            "return_5d",
+            "return_20d"
+          ],
+          "options_per_question": [
+            7,
+            7,
+            7
+          ],
+          "numeric_sessions": 60,
+          "sequence_channel_order": [
+            "open_relative",
+            "high_relative",
+            "low_relative",
+            "close_relative",
+            "log_return_1d",
+            "volume_relative"
+          ],
+          "finite_observations_by_channel": {
+            "open_relative": 60,
+            "high_relative": 60,
+            "low_relative": 60,
+            "close_relative": 60,
+            "log_return_1d": 60,
+            "volume_relative": 0
+          },
+          "non_null_factors": 17,
+          "non_null_financial_fields": 7,
+          "native_tokens": 6429,
+          "shared_tokens": 5530,
+          "split_sequences": 3,
+          "masks": [
+            true,
+            true,
+            true
+          ],
+          "class_ids": [
+            5,
+            2,
+            1
+          ],
+          "request_sha256": "219c35978aad74e235e2aa9c2d3cf2c4fc1bc78fbd8169e7cf01064279baf456"
+        },
+        {
+          "sample_id": "CN|CN-300059.SZ|2026-04-27",
+          "split": "test",
+          "exchange": "SZSE",
+          "questions": [
+            "return_1d",
+            "return_5d",
+            "return_20d"
+          ],
+          "options_per_question": [
+            7,
+            7,
+            7
+          ],
+          "numeric_sessions": 60,
+          "sequence_channel_order": [
+            "open_relative",
+            "high_relative",
+            "low_relative",
+            "close_relative",
+            "log_return_1d",
+            "volume_relative"
+          ],
+          "finite_observations_by_channel": {
+            "open_relative": 60,
+            "high_relative": 60,
+            "low_relative": 60,
+            "close_relative": 60,
+            "log_return_1d": 60,
+            "volume_relative": 0
+          },
+          "non_null_factors": 23,
+          "non_null_financial_fields": 7,
+          "native_tokens": 6358,
+          "shared_tokens": 5455,
+          "split_sequences": 3,
+          "masks": [
+            true,
+            true,
+            true
+          ],
+          "class_ids": [
+            5,
+            5,
+            1
+          ],
+          "request_sha256": "2fdf87f3b80d43acf61c26b4aeae8f1535e0f7e69db4a1baaaef00fb804dccc8"
+        }
+      ]
+    },
+    "native_cache_check": {
+      "dataset_version": "cn-aaae5d69ac9bd3a95467d255e931713933080ca47a4df24b6bae194186870c63",
+      "sample_ids": [
+        "CN|CN-000001.SZ|2015-04-07",
+        "CN|CN-000001.SZ|2024-01-02"
+      ],
+      "native_cache_exact_hit": true,
+      "namespaces": 4,
+      "entries": 5,
+      "cache_file_bytes": 118784,
+      "limit_bytes": 1048576
+    },
+    "independent_features": {
+      "dataset_version": "cn-8dfdd9db8a90fd88e132e3675fd31e311e02b5a50ad437cca7f8bdff7198e03b",
+      "sampled_stock_days": 61,
+      "independently_recalculated_fields": {
+        "return_1d": {
+          "observed_values": 61,
+          "expected_and_observed_nulls": 0
+        },
+        "return_5d": {
+          "observed_values": 61,
+          "expected_and_observed_nulls": 0
+        },
+        "return_20d": {
+          "observed_values": 61,
+          "expected_and_observed_nulls": 0
+        },
+        "return_60d": {
+          "observed_values": 61,
+          "expected_and_observed_nulls": 0
+        },
+        "price_ma20_gap": {
+          "observed_values": 61,
+          "expected_and_observed_nulls": 0
+        },
+        "price_ma60_gap": {
+          "observed_values": 61,
+          "expected_and_observed_nulls": 0
+        },
+        "volatility_20d_daily": {
+          "observed_values": 61,
+          "expected_and_observed_nulls": 0
+        },
+        "volatility_60d_daily": {
+          "observed_values": 61,
+          "expected_and_observed_nulls": 0
+        },
+        "drawdown_from_peak_60d": {
+          "observed_values": 61,
+          "expected_and_observed_nulls": 0
+        },
+        "turnover_total_1d": {
+          "observed_values": 7,
+          "expected_and_observed_nulls": 54
+        },
+        "turnover_total_mean_20d": {
+          "observed_values": 5,
+          "expected_and_observed_nulls": 56
+        },
+        "volume_ratio_1_20": {
+          "observed_values": 4,
+          "expected_and_observed_nulls": 57
+        },
+        "earnings_yield_ttm": {
+          "observed_values": 4,
+          "expected_and_observed_nulls": 57
+        },
+        "book_to_market": {
+          "observed_values": 7,
+          "expected_and_observed_nulls": 54
+        },
+        "sales_to_market_ttm": {
+          "observed_values": 4,
+          "expected_and_observed_nulls": 57
+        },
+        "roe_ttm": {
+          "observed_values": 17,
+          "expected_and_observed_nulls": 44
+        },
+        "roa_ttm": {
+          "observed_values": 5,
+          "expected_and_observed_nulls": 56
+        },
+        "net_margin_ttm": {
+          "observed_values": 5,
+          "expected_and_observed_nulls": 56
+        },
+        "revenue_growth_yoy_ttm": {
+          "observed_values": 3,
+          "expected_and_observed_nulls": 58
+        },
+        "profit_change_to_assets": {
+          "observed_values": 3,
+          "expected_and_observed_nulls": 58
+        },
+        "liabilities_to_assets": {
+          "observed_values": 17,
+          "expected_and_observed_nulls": 44
+        },
+        "operating_cashflow_to_assets_ttm": {
+          "observed_values": 5,
+          "expected_and_observed_nulls": 56
+        }
+      },
+      "targeted_2026_q1_rows": [
+        {
+          "ts_code": "300059.SZ",
+          "instrument_id": "CN-300059.SZ",
+          "date": "2026-06-30",
+          "snapshot_id": "fund-12ef18e6b4c09b879cb21154",
+          "available_at": "2026-04-26T00:00:00+08:00",
+          "fiscal_period_end": "2026-03-31",
+          "revenue_ttm": 17613181150.97,
+          "net_income_parent_ttm": 13107344087.009998,
+          "net_income_total_ttm": 13107344087.009998,
+          "operating_cashflow_ttm": 24777114954.26,
+          "published_financial_factors": {
+            "earnings_yield_ttm": 0.04064841940999031,
+            "book_to_market": 0.2965095639228821,
+            "sales_to_market_ttm": 0.05462189391255379,
+            "roe_ttm": 0.14654183387756348,
+            "roa_ttm": 0.03398454189300537,
+            "net_margin_ttm": 0.7441781163215637,
+            "revenue_growth_yoy_ttm": 0.3941102623939514,
+            "profit_change_to_assets": 0.00709381140768528,
+            "liabilities_to_assets": 0.7826504111289978,
+            "operating_cashflow_to_assets_ttm": 0.06424175947904587
+          },
+          "independently_recalculated_factors": {
+            "earnings_yield_ttm": 0.040648418599285904,
+            "book_to_market": 0.29650955748263647,
+            "sales_to_market_ttm": 0.054621894072287264,
+            "roe_ttm": 0.14654183047115063,
+            "roa_ttm": 0.03398454085687712,
+            "net_margin_ttm": 0.744178122887707,
+            "revenue_growth_yoy_ttm": 0.3941102603483011,
+            "profit_change_to_assets": 0.007093811349418114,
+            "liabilities_to_assets": 0.7826504230197061,
+            "operating_cashflow_to_assets_ttm": 0.06424176170923068
+          },
+          "original_filing_reconciliation": {
+            "scope": "consolidated",
+            "currency": "CNY",
+            "revenue_label": "营业总收入",
+            "net_income_label": "净利润",
+            "components": [
+              {
+                "period_end": "2025-12-31",
+                "sign": 1,
+                "revenue_ytd": "16067741039.51",
+                "net_income_total_ytd": "12084594947.22",
+                "source_url": "https://static.cninfo.com.cn/finalpage/2026-03-20/1225019509.PDF",
+                "source_sha256": "a5edb3304600d7ff7faeefa65fea3846f4326743cc72d9ade14cf93af20c1737",
+                "pdf_pages": [
+                  74,
+                  75
+                ]
+              },
+              {
+                "period_end": "2026-03-31",
+                "sign": 1,
+                "revenue_ytd": "5031027125.40",
+                "net_income_total_ytd": "3737779855.92",
+                "source_url": "https://static.cninfo.com.cn/finalpage/2026-04-25/1225185763.PDF",
+                "source_sha256": "7afb2fe339864cff84d729473f87fcb1d5a94f53b9dab2e57e0c7e2a111b81b1",
+                "pdf_pages": [
+                  8,
+                  9
+                ]
+              },
+              {
+                "period_end": "2025-03-31",
+                "sign": -1,
+                "revenue_ytd": "3485587013.94",
+                "net_income_total_ytd": "2715030716.13",
+                "source_url": "https://static.cninfo.com.cn/finalpage/2025-04-26/1223314764.PDF",
+                "source_sha256": "c8526dce0f65d94a8fd2bf060eab53a712ce8a93c1b592ac4896441ef624a8b0",
+                "pdf_pages": [
+                  8,
+                  9
+                ]
+              }
+            ],
+            "expected": {
+              "revenue_ttm": 17613181150.97,
+              "net_income_total_ttm": 13107344087.01,
+              "net_margin_ttm": 0.7441781228877071
+            }
+          }
+        },
+        {
+          "ts_code": "002142.SZ",
+          "instrument_id": "CN-002142.SZ",
+          "date": "2026-06-30",
+          "snapshot_id": "fund-b76bc4c1092aacac0ea3c553",
+          "available_at": "2026-04-26T00:00:00+08:00",
+          "fiscal_period_end": "2026-03-31",
+          "revenue_ttm": 73858000000.0,
+          "net_income_parent_ttm": 30097000000.0,
+          "net_income_total_ttm": 30343000000.0,
+          "operating_cashflow_ttm": 202281000000.0,
+          "published_financial_factors": {
+            "earnings_yield_ttm": null,
+            "book_to_market": null,
+            "sales_to_market_ttm": null,
+            "roe_ttm": 0.12227196991443634,
+            "roa_ttm": 0.008364413864910603,
+            "net_margin_ttm": 0.4108288884162903,
+            "revenue_growth_yoy_ttm": 0.09229927510023117,
+            "profit_change_to_assets": 0.000707348866853863,
+            "liabilities_to_assets": 0.9329627156257629,
+            "operating_cashflow_to_assets_ttm": 0.055761199444532394
+          },
+          "independently_recalculated_factors": {
+            "earnings_yield_ttm": null,
+            "book_to_market": null,
+            "sales_to_market_ttm": null,
+            "roe_ttm": 0.12227196645920341,
+            "roa_ttm": 0.008364414231881421,
+            "net_margin_ttm": 0.4108288878659048,
+            "revenue_growth_yoy_ttm": 0.09229927385125047,
+            "profit_change_to_assets": 0.0007073488751609177,
+            "liabilities_to_assets": 0.9329627062428337,
+            "operating_cashflow_to_assets_ttm": 0.05576119946080499
+          }
+        }
+      ],
+      "targeted_codes_without_eligible_test_row": [],
+      "strata": [
+        [
+          "BSE",
+          2022
+        ],
+        [
+          "BSE",
+          2023
+        ],
+        [
+          "BSE",
+          2024
+        ],
+        [
+          "BSE",
+          2025
+        ],
+        [
+          "BSE",
+          2026
+        ],
+        [
+          "SSE",
+          2015
+        ],
+        [
+          "SSE",
+          2016
+        ],
+        [
+          "SSE",
+          2017
+        ],
+        [
+          "SSE",
+          2018
+        ],
+        [
+          "SSE",
+          2019
+        ],
+        [
+          "SSE",
+          2020
+        ],
+        [
+          "SSE",
+          2021
+        ],
+        [
+          "SSE",
+          2022
+        ],
+        [
+          "SSE",
+          2023
+        ],
+        [
+          "SSE",
+          2024
+        ],
+        [
+          "SSE",
+          2025
+        ],
+        [
+          "SSE",
+          2026
+        ],
+        [
+          "SZSE",
+          2015
+        ],
+        [
+          "SZSE",
+          2016
+        ],
+        [
+          "SZSE",
+          2017
+        ],
+        [
+          "SZSE",
+          2018
+        ],
+        [
+          "SZSE",
+          2019
+        ],
+        [
+          "SZSE",
+          2020
+        ],
+        [
+          "SZSE",
+          2021
+        ],
+        [
+          "SZSE",
+          2022
+        ],
+        [
+          "SZSE",
+          2023
+        ],
+        [
+          "SZSE",
+          2024
+        ],
+        [
+          "SZSE",
+          2025
+        ],
+        [
+          "SZSE",
+          2026
+        ]
+      ],
+      "violations": []
+    },
+    "independent_field_coverage": {
+      "groups": 2325,
+      "reason_entries": 315096919,
+      "published_only": 0,
+      "independent_only": 0,
+      "dataset_version": "cn-8dfdd9db8a90fd88e132e3675fd31e311e02b5a50ad437cca7f8bdff7198e03b"
+    },
+    "pit_prefix": {
+      "status": "PASS",
+      "frozen_source_sha256": {
+        "financial_versions": "a597423df70558badb4756199defef7413e489143c064379370d1869a11f0a03",
+        "share_versions": "1956537d8916c76d0d9905dacc96be851b281cc567e5a5749738162eae87b6a0",
+        "industry_versions": "ef098ee08c5fbc4dea8c8ef43446c86e327b06305cda8de209cd350e8acce883",
+        "split_events": "0a75745d4513ecb71ccd5e9a37f426cc30a9986c71c2297c0779e13c0ba49be1",
+        "split_coverage": "49e78b32539d9c52ef75ce358ccb6c6edf4475c4f50812dc18921a15dda1b577"
+      },
+      "source_manifest_sha256": "b0395905848f3988b447bb179bb3e3f06b281bc52abb54ccbd4fe3c7ba0b2ff3",
+      "source_rows": {
+        "financial_versions": 194,
+        "share_versions": 3,
+        "industry_versions": 2056,
+        "split_events": 7,
+        "split_coverage": 5
+      },
+      "financial_helper": {
+        "issuers": 11,
+        "probes": 147,
+        "full_snapshot_comparisons": 4058,
+        "future_row_interventions": 1899,
+        "same_period_future_probes": 0
+      },
+      "share_segment_helper": {
+        "probes": 3,
+        "active_prior_selection": 1,
+        "future_row_interventions": 4,
+        "securities": 2
+      },
+      "industry_segment_helper": {
+        "probes": 2056,
+        "active_prior_selection": 1334,
+        "future_row_interventions": 4003,
+        "securities": 722
+      },
+      "split_coverage_segment_helper": {
+        "probes": 3,
+        "active_prior_selection": 1,
+        "future_row_interventions": 6,
+        "securities": 2
+      },
+      "real_quote_production_join": {
+        "probes": [
+          {
+            "date": "2016-04-11",
+            "security_days": 6,
+            "nonnull": {
+              "share": 0,
+              "industry": 0,
+              "financial": 4,
+              "split_chain": 0
+            },
+            "future_split_event_versions": 6
+          },
+          {
+            "date": "2018-04-10",
+            "security_days": 6,
+            "nonnull": {
+              "share": 0,
+              "industry": 0,
+              "financial": 4,
+              "split_chain": 0
+            },
+            "future_split_event_versions": 4
+          },
+          {
+            "date": "2020-01-02",
+            "security_days": 6,
+            "nonnull": {
+              "share": 0,
+              "industry": 0,
+              "financial": 4,
+              "split_chain": 0
+            },
+            "future_split_event_versions": 2
+          },
+          {
+            "date": "2022-04-12",
+            "security_days": 6,
+            "nonnull": {
+              "share": 0,
+              "industry": 0,
+              "financial": 4,
+              "split_chain": 0
+            },
+            "future_split_event_versions": 2
+          },
+          {
+            "date": "2023-04-10",
+            "security_days": 6,
+            "nonnull": {
+              "share": 0,
+              "industry": 0,
+              "financial": 4,
+              "split_chain": 0
+            },
+            "future_split_event_versions": 1
+          },
+          {
+            "date": "2025-05-20",
+            "security_days": 6,
+            "nonnull": {
+              "share": 0,
+              "industry": 0,
+              "financial": 4,
+              "split_chain": 0
+            },
+            "future_split_event_versions": 0
+          },
+          {
+            "date": "2025-05-22",
+            "security_days": 6,
+            "nonnull": {
+              "share": 1,
+              "industry": 0,
+              "financial": 4,
+              "split_chain": 1
+            },
+            "future_split_event_versions": 0
+          },
+          {
+            "date": "2025-12-15",
+            "security_days": 6,
+            "nonnull": {
+              "share": 2,
+              "industry": 2,
+              "financial": 4,
+              "split_chain": 2
+            },
+            "future_split_event_versions": 0
+          },
+          {
+            "date": "2026-01-15",
+            "security_days": 6,
+            "nonnull": {
+              "share": 2,
+              "industry": 2,
+              "financial": 4,
+              "split_chain": 2
+            },
+            "future_split_event_versions": 0
+          },
+          {
+            "date": "2026-05-28",
+            "security_days": 6,
+            "nonnull": {
+              "share": 2,
+              "industry": 1,
+              "financial": 4,
+              "split_chain": 2
+            },
+            "future_split_event_versions": 0
+          }
+        ],
+        "independent_quote_partitions": {
+          "daily": 19,
+          "daily_basic": 19
+        },
+        "variants": {
+          "truncated": {
+            "financial_versions": 520,
+            "share_versions": 22,
+            "industry_versions": 16345,
+            "split_events": 15,
+            "split_coverage": 34
+          },
+          "mutated": {
+            "financial_versions": 520,
+            "share_versions": 22,
+            "industry_versions": 16345,
+            "split_events": 15,
+            "split_coverage": 34
+          }
+        },
+        "float64_rtol": 1e-10,
+        "float64_atol": 1e-12,
+        "float64_nonidentical": {
+          "split_unit_factor": {
+            "count": 4,
+            "max_abs_diff": 8.881784197001252e-16
+          }
+        },
+        "security_days": 60
+      },
+      "limits": [
+        "Original source values are unchanged outside temporary variants.",
+        "Helper dates are source-clock probes; production join probes have real exchange price rows.",
+        "Frozen evidence has no non-null U window with a later actual split event for that security.",
+        "Raw market features, future-label masking and Karpo encoding are checked separately."
+      ]
+    },
+    "sampled_peak": {
+      "numeric_peak_bytes": 24580587458,
+      "minimum_drive_free_bytes": 15975591936,
+      "observations": 1424,
+      "frequency_seconds": 8,
+      "last_at": "2026-11-19T11:10:24.894046+00:00"
+    },
+    "sources": {
+      "scope": "CN contract v1",
+      "tushare": {
+        "daily_backfill_requested_keys": 11235,
+        "daily_response_matching_keys": 14,
+        "factor_backfill_requested_keys": 358,
+        "factor_response_matching_keys": 0,
+        "suspension_backfill_requested_keys": 11235,
+        "suspension_response_matching_keys": 2291,
+        "trade_cal_BSE": "Successful requests returned zero rows",
+        "bak_basic": "permission_denied",
+        "daily_basic": "Source available; historical share versions require originals",
+        "index_member_all": "Source available; observed snapshot is insufficient for complete historical SW_L1 classification"
+      },
+      "calendar": {
+        "bse_open_sessions_verified": 1143,
+        "bse_actual_traded_date_discrepancies": 0,
+        "sse_prehistory_sessions": 5633,
+        "szse_prehistory_sessions": 5497,
+        "szse_trial_listing_age_unresolved": [
+          "000004.SZ",
+          "000005.SZ",
+          "000002.SZ",
+          "000001.SZ",
+          "000009.SZ"
+        ]
+      },
+      "financial_originals": {
+        "verified_archive_records": 183,
+        "issuers": 13,
+        "original_numeric_facts_matching_independent_local_vendor_amount": 711,
+        "original_numeric_facts_without_matching_vendor_key": 95,
+        "amounts_corrected_from_original": 20,
+        "unresolved_facts_quarantined": 7,
+        "remaining_issuer_queries_denied_403_after_retry": 36
+      },
+      "share_and_actions": {
+        "eastmoney_verified_query_candidate_rows": 137567,
+        "candidate_instruments": 5753,
+        "reconstructed_response_hashes": 289,
+        "verified_original_share_notices": 3,
+        "verified_original_split_events": 7,
+        "verified_split_free_intervals": 2
+      },
+      "industry_originals": {
+        "historical_vintages": 3,
+        "audited_membership_records": 2056,
+        "securities": 722,
+        "level_one_sectors": 3,
+        "complete_population_verified": false
+      }
+    },
+    "feature_counts": [
+      [
+        "industry_daily",
+        "above_ma20_ratio",
+        363,
+        0
+      ],
+      [
+        "industry_daily",
+        "activity_proxy_ratio_20d",
+        363,
+        0
+      ],
+      [
+        "industry_daily",
+        "advance_ratio",
+        363,
+        0
+      ],
+      [
+        "industry_daily",
+        "excess_market_20d",
+        363,
+        0
+      ],
+      [
+        "industry_daily",
+        "return_1d",
+        363,
+        0
+      ],
+      [
+        "industry_daily",
+        "return_20d",
+        363,
+        0
+      ],
+      [
+        "industry_daily",
+        "return_5d",
+        363,
+        0
+      ],
+      [
+        "industry_daily",
+        "return_60d",
+        363,
+        0
+      ],
+      [
+        "industry_daily",
+        "volatility_20d_daily",
+        363,
+        0
+      ],
+      [
+        "industry_daily",
+        "volatility_60d_daily",
+        363,
+        0
+      ],
+      [
+        "market_daily",
+        "above_ma20_ratio",
+        2813,
+        0
+      ],
+      [
+        "market_daily",
+        "above_ma60_ratio",
+        2813,
+        0
+      ],
+      [
+        "market_daily",
+        "activity_proxy_ratio_20d",
+        2813,
+        0
+      ],
+      [
+        "market_daily",
+        "advance_ratio",
+        2813,
+        0
+      ],
+      [
+        "market_daily",
+        "drawdown_from_peak_60d",
+        2813,
+        0
+      ],
+      [
+        "market_daily",
+        "return_1d",
+        2813,
+        0
+      ],
+      [
+        "market_daily",
+        "return_20d",
+        2813,
+        0
+      ],
+      [
+        "market_daily",
+        "return_5d",
+        2813,
+        0
+      ],
+      [
+        "market_daily",
+        "return_60d",
+        2813,
+        0
+      ],
+      [
+        "market_daily",
+        "return_dispersion_1d",
+        2813,
+        0
+      ],
+      [
+        "market_daily",
+        "suspension_ratio",
+        2813,
+        0
+      ],
+      [
+        "market_daily",
+        "turnover_total_median",
+        2813,
+        0
+      ],
+      [
+        "market_daily",
+        "volatility_20d_daily",
+        2813,
+        0
+      ],
+      [
+        "market_daily",
+        "volatility_60d_daily",
+        2813,
+        0
+      ],
+      [
+        "stock_daily",
+        "beta_market_60d",
+        11745773,
+        0
+      ],
+      [
+        "stock_daily",
+        "book_to_market",
+        11745773,
+        477
+      ],
+      [
+        "stock_daily",
+        "drawdown_from_peak_60d",
+        11745773,
+        10514180
+      ],
+      [
+        "stock_daily",
+        "earnings_yield_ttm",
+        11745773,
+        293
+      ],
+      [
+        "stock_daily",
+        "excess_industry_20d",
+        11745773,
+        0
+      ],
+      [
+        "stock_daily",
+        "excess_industry_5d",
+        11745773,
+        0
+      ],
+      [
+        "stock_daily",
+        "excess_market_20d",
+        11745773,
+        0
+      ],
+      [
+        "stock_daily",
+        "excess_market_5d",
+        11745773,
+        0
+      ],
+      [
+        "stock_daily",
+        "liabilities_to_assets",
+        11745773,
+        18465
+      ],
+      [
+        "stock_daily",
+        "liquidity_proxy_percentile_20d",
+        11745773,
+        11132961
+      ],
+      [
+        "stock_daily",
+        "market_cap_percentile",
+        11745773,
+        477
+      ],
+      [
+        "stock_daily",
+        "net_margin_ttm",
+        11745773,
+        654
+      ],
+      [
+        "stock_daily",
+        "operating_cashflow_to_assets_ttm",
+        11745773,
+        625
+      ],
+      [
+        "stock_daily",
+        "price_ma20_gap",
+        11745773,
+        11132961
+      ],
+      [
+        "stock_daily",
+        "price_ma60_gap",
+        11745773,
+        10514180
+      ],
+      [
+        "stock_daily",
+        "profit_change_to_assets",
+        11745773,
+        156
+      ],
+      [
+        "stock_daily",
+        "residual_volatility_60d",
+        11745773,
+        0
+      ],
+      [
+        "stock_daily",
+        "return_1d",
+        11745773,
+        11444894
+      ],
+      [
+        "stock_daily",
+        "return_20d",
+        11745773,
+        11116311
+      ],
+      [
+        "stock_daily",
+        "return_5d",
+        11745773,
+        11373623
+      ],
+      [
+        "stock_daily",
+        "return_60d",
+        11745773,
+        10499856
+      ],
+      [
+        "stock_daily",
+        "revenue_growth_yoy_ttm",
+        11745773,
+        156
+      ],
+      [
+        "stock_daily",
+        "roa_ttm",
+        11745773,
+        625
+      ],
+      [
+        "stock_daily",
+        "roe_ttm",
+        11745773,
+        3438
+      ],
+      [
+        "stock_daily",
+        "sales_to_market_ttm",
+        11745773,
+        293
+      ],
+      [
+        "stock_daily",
+        "turnover_total_1d",
+        11745773,
+        477
+      ],
+      [
+        "stock_daily",
+        "turnover_total_mean_20d",
+        11745773,
+        439
+      ],
+      [
+        "stock_daily",
+        "volatility_20d_daily",
+        11745773,
+        11116311
+      ],
+      [
+        "stock_daily",
+        "volatility_60d_daily",
+        11745773,
+        10499856
+      ],
+      [
+        "stock_daily",
+        "volume_ratio_1_20",
+        11745773,
+        407
+      ]
+    ],
+    "source_impact": {
+      "by_split": {
+        "train": {
+          "candidates": 8367214,
+          "input_valid": 7216758,
+          "security_shares_missing": 8367214,
+          "issuer_cap_missing": 8367214,
+          "split_chain_missing": 8367214,
+          "fundamentals_missing": 8346929,
+          "industry_missing": 8367214
+        },
+        "validation": {
+          "candidates": 626520,
+          "input_valid": 613535,
+          "security_shares_missing": 626520,
+          "issuer_cap_missing": 626520,
+          "split_chain_missing": 626520,
+          "fundamentals_missing": 625060,
+          "industry_missing": 626520
+        },
+        "calibration": {
+          "candidates": 669981,
+          "input_valid": 656282,
+          "security_shares_missing": 669981,
+          "issuer_cap_missing": 669981,
+          "split_chain_missing": 669981,
+          "fundamentals_missing": 668356,
+          "industry_missing": 669981
+        },
+        "test": {
+          "candidates": 1954895,
+          "input_valid": 1892027,
+          "security_shares_missing": 1954464,
+          "issuer_cap_missing": 1954464,
+          "split_chain_missing": 1954465,
+          "fundamentals_missing": 1950228,
+          "industry_missing": 1865569
+        }
+      },
+      "aggregate_return_coverage": {
+        "market_daily": [
+          {
+            "status": "insufficient_history",
+            "rows": 1,
+            "return_1d_valid": 0,
+            "membership_complete": 1,
+            "cap_coverage_at_least_99pct": 0,
+            "cap_coverage_unavailable": 1
+          },
+          {
+            "status": "missing_source",
+            "rows": 2812,
+            "return_1d_valid": 0,
+            "membership_complete": 2812,
+            "cap_coverage_at_least_99pct": 0,
+            "cap_coverage_unavailable": 2812
+          }
+        ],
+        "industry_daily": [
+          {
+            "status": "unverified_version",
+            "rows": 363,
+            "return_1d_valid": 0,
+            "membership_complete": 0,
+            "cap_coverage_at_least_99pct": 0,
+            "cap_coverage_unavailable": 363
+          }
+        ]
+      },
+      "fundamental_snapshots": {
+        "rows": 186,
+        "fields_available": {
+          "revenue_ttm": 11,
+          "net_income_total_ttm": 11,
+          "net_income_parent_ttm": 12,
+          "operating_cashflow_ttm": 11,
+          "assets": 135,
+          "liabilities": 131,
+          "parent_equity": 159,
+          "assets_4q_ago": 85,
+          "parent_equity_4q_ago": 98,
+          "revenue_ttm_4q_ago": 3,
+          "net_income_parent_ttm_4q_ago": 3
+        }
+      }
+    },
+    "cninfo_retry": {
+      "endpoint": "https://www.cninfo.com.cn/new/hisAnnouncement/query",
+      "scope": "exact public issuer metadata, first page, one request per code",
+      "period_start": "2025-01-01",
+      "period_end": "2025-06-30",
+      "attempts": [
+        {
+          "ts_code": "000858.SZ",
+          "column": "szse",
+          "attempted_at_utc": "2026-11-19T08:30:41.007370+00:00",
+          "http_status": 200,
+          "content_type": "application/json;charset=UTF-8",
+          "reported_announcements": 5,
+          "issuer_matches_first_page": 5
+        },
+        {
+          "ts_code": "300059.SZ",
+          "column": "szse",
+          "attempted_at_utc": "2026-11-19T08:30:41.669246+00:00",
+          "http_status": 200,
+          "content_type": "application/json;charset=UTF-8",
+          "reported_announcements": 3,
+          "issuer_matches_first_page": 3
+        },
+        {
+          "ts_code": "920819.BJ",
+          "column": "bse",
+          "attempted_at_utc": "2026-11-19T08:30:41.796429+00:00",
+          "http_status": 200,
+          "content_type": "application/json;charset=UTF-8",
+          "reported_announcements": 0,
+          "issuer_matches_first_page": 0
+        }
+      ]
+    },
+    "ttm_recovery": {
+      "reports": 18,
+      "verified_amounts": 126,
+      "added_report_versions": 11,
+      "added_report_field_values": 88,
+      "scoped_reports": [
+        {
+          "ts_code": "002142.SZ",
+          "period_end": "2024-03-31",
+          "source_version_id": "1219903740",
+          "verified_fields": [
+            "revenue_ytd",
+            "net_income_total_ytd",
+            "net_income_parent_ytd",
+            "operating_cashflow_ytd",
+            "assets",
+            "liabilities",
+            "parent_equity"
+          ],
+          "field_limits": {}
+        },
+        {
+          "ts_code": "002142.SZ",
+          "period_end": "2024-06-30",
+          "source_version_id": "1221032452",
+          "verified_fields": [
+            "revenue_ytd",
+            "net_income_total_ytd",
+            "net_income_parent_ytd",
+            "operating_cashflow_ytd",
+            "assets",
+            "liabilities",
+            "parent_equity"
+          ],
+          "field_limits": {}
+        },
+        {
+          "ts_code": "002142.SZ",
+          "period_end": "2024-09-30",
+          "source_version_id": "1221540163",
+          "verified_fields": [
+            "revenue_ytd",
+            "net_income_total_ytd",
+            "net_income_parent_ytd",
+            "operating_cashflow_ytd",
+            "assets",
+            "liabilities",
+            "parent_equity"
+          ],
+          "field_limits": {}
+        },
+        {
+          "ts_code": "002142.SZ",
+          "period_end": "2024-12-31",
+          "source_version_id": "1223045151",
+          "verified_fields": [
+            "revenue_ytd",
+            "net_income_total_ytd",
+            "net_income_parent_ytd",
+            "operating_cashflow_ytd",
+            "assets",
+            "liabilities",
+            "parent_equity"
+          ],
+          "field_limits": {}
+        },
+        {
+          "ts_code": "002142.SZ",
+          "period_end": "2025-03-31",
+          "source_version_id": "1223363635",
+          "verified_fields": [
+            "revenue_ytd",
+            "net_income_total_ytd",
+            "net_income_parent_ytd",
+            "operating_cashflow_ytd",
+            "assets",
+            "liabilities",
+            "parent_equity"
+          ],
+          "field_limits": {}
+        },
+        {
+          "ts_code": "002142.SZ",
+          "period_end": "2025-06-30",
+          "source_version_id": "1224606434",
+          "verified_fields": [
+            "revenue_ytd",
+            "net_income_total_ytd",
+            "net_income_parent_ytd",
+            "operating_cashflow_ytd",
+            "assets",
+            "liabilities",
+            "parent_equity"
+          ],
+          "field_limits": {}
+        },
+        {
+          "ts_code": "002142.SZ",
+          "period_end": "2025-09-30",
+          "source_version_id": "1224746398",
+          "verified_fields": [
+            "revenue_ytd",
+            "net_income_total_ytd",
+            "net_income_parent_ytd",
+            "operating_cashflow_ytd",
+            "assets",
+            "liabilities",
+            "parent_equity"
+          ],
+          "field_limits": {}
+        },
+        {
+          "ts_code": "002142.SZ",
+          "period_end": "2025-12-31",
+          "source_version_id": "1225189419",
+          "verified_fields": [
+            "revenue_ytd",
+            "net_income_total_ytd",
+            "net_income_parent_ytd",
+            "operating_cashflow_ytd",
+            "assets",
+            "liabilities",
+            "parent_equity"
+          ],
+          "field_limits": {}
+        },
+        {
+          "ts_code": "002142.SZ",
+          "period_end": "2026-03-31",
+          "source_version_id": "1225189427",
+          "verified_fields": [
+            "revenue_ytd",
+            "net_income_total_ytd",
+            "net_income_parent_ytd",
+            "operating_cashflow_ytd",
+            "assets",
+            "liabilities",
+            "parent_equity"
+          ],
+          "field_limits": {}
+        },
+        {
+          "ts_code": "300059.SZ",
+          "period_end": "2024-03-31",
+          "source_version_id": "1219792160",
+          "verified_fields": [
+            "revenue_ytd",
+            "net_income_total_ytd",
+            "net_income_parent_ytd",
+            "operating_cashflow_ytd",
+            "assets",
+            "liabilities",
+            "parent_equity"
+          ],
+          "field_limits": {}
+        },
+        {
+          "ts_code": "300059.SZ",
+          "period_end": "2024-06-30",
+          "source_version_id": "1220834724",
+          "verified_fields": [
+            "revenue_ytd",
+            "net_income_total_ytd",
+            "net_income_parent_ytd",
+            "operating_cashflow_ytd",
+            "assets",
+            "liabilities",
+            "parent_equity"
+          ],
+          "field_limits": {}
+        },
+        {
+          "ts_code": "300059.SZ",
+          "period_end": "2024-09-30",
+          "source_version_id": "1221523945",
+          "verified_fields": [
+            "revenue_ytd",
+            "net_income_total_ytd",
+            "net_income_parent_ytd",
+            "operating_cashflow_ytd",
+            "assets",
+            "liabilities",
+            "parent_equity"
+          ],
+          "field_limits": {}
+        },
+        {
+          "ts_code": "300059.SZ",
+          "period_end": "2024-12-31",
+          "source_version_id": "1222806709",
+          "verified_fields": [
+            "revenue_ytd",
+            "net_income_total_ytd",
+            "net_income_parent_ytd",
+            "operating_cashflow_ytd",
+            "assets",
+            "liabilities",
+            "parent_equity"
+          ],
+          "field_limits": {}
+        },
+        {
+          "ts_code": "300059.SZ",
+          "period_end": "2025-03-31",
+          "source_version_id": "1223314764",
+          "verified_fields": [
+            "revenue_ytd",
+            "net_income_total_ytd",
+            "net_income_parent_ytd",
+            "operating_cashflow_ytd",
+            "assets",
+            "liabilities",
+            "parent_equity"
+          ],
+          "field_limits": {}
+        },
+        {
+          "ts_code": "300059.SZ",
+          "period_end": "2025-06-30",
+          "source_version_id": "1224499196",
+          "verified_fields": [
+            "revenue_ytd",
+            "net_income_total_ytd",
+            "net_income_parent_ytd",
+            "operating_cashflow_ytd",
+            "assets",
+            "liabilities",
+            "parent_equity"
+          ],
+          "field_limits": {}
+        },
+        {
+          "ts_code": "300059.SZ",
+          "period_end": "2025-09-30",
+          "source_version_id": "1224736179",
+          "verified_fields": [
+            "revenue_ytd",
+            "net_income_total_ytd",
+            "net_income_parent_ytd",
+            "operating_cashflow_ytd",
+            "assets",
+            "liabilities",
+            "parent_equity"
+          ],
+          "field_limits": {}
+        },
+        {
+          "ts_code": "300059.SZ",
+          "period_end": "2025-12-31",
+          "source_version_id": "1225019509",
+          "verified_fields": [
+            "revenue_ytd",
+            "net_income_total_ytd",
+            "net_income_parent_ytd",
+            "operating_cashflow_ytd",
+            "assets",
+            "liabilities",
+            "parent_equity"
+          ],
+          "field_limits": {}
+        },
+        {
+          "ts_code": "300059.SZ",
+          "period_end": "2026-03-31",
+          "source_version_id": "1225185763",
+          "verified_fields": [
+            "revenue_ytd",
+            "net_income_total_ytd",
+            "net_income_parent_ytd",
+            "operating_cashflow_ytd",
+            "assets",
+            "liabilities",
+            "parent_equity"
+          ],
+          "field_limits": {}
+        }
+      ],
+      "snapshots": {
+        "300059.SZ": {
+          "frozen": {
+            "snapshots": 2,
+            "nonnull_counts": {
+              "assets": 2,
+              "liabilities": 2,
+              "parent_equity": 2,
+              "assets_4q_ago": 1,
+              "parent_equity_4q_ago": 1
+            },
+            "chronology": [
+              {
+                "as_of": "2025-03-16",
+                "fiscal_period_end": "2024-12-31",
+                "nonnull_fields": [
+                  "assets",
+                  "liabilities",
+                  "parent_equity"
+                ]
+              },
+              {
+                "as_of": "2025-08-17",
+                "fiscal_period_end": "2025-06-30",
+                "nonnull_fields": [
+                  "assets",
+                  "liabilities",
+                  "parent_equity",
+                  "assets_4q_ago",
+                  "parent_equity_4q_ago"
+                ]
+              }
+            ]
+          },
+          "with_recovery": {
+            "snapshots": 6,
+            "nonnull_counts": {
+              "revenue_ttm": 6,
+              "net_income_total_ttm": 6,
+              "net_income_parent_ttm": 6,
+              "operating_cashflow_ttm": 6,
+              "assets": 6,
+              "liabilities": 6,
+              "parent_equity": 6,
+              "assets_4q_ago": 5,
+              "parent_equity_4q_ago": 5,
+              "revenue_ttm_4q_ago": 2,
+              "net_income_parent_ttm_4q_ago": 2
+            },
+            "chronology": [
+              {
+                "as_of": "2025-03-16",
+                "fiscal_period_end": "2024-12-31",
+                "nonnull_fields": [
+                  "revenue_ttm",
+                  "net_income_total_ttm",
+                  "net_income_parent_ttm",
+                  "operating_cashflow_ttm",
+                  "assets",
+                  "liabilities",
+                  "parent_equity"
+                ]
+              },
+              {
+                "as_of": "2025-04-27",
+                "fiscal_period_end": "2025-03-31",
+                "nonnull_fields": [
+                  "revenue_ttm",
+                  "net_income_total_ttm",
+                  "net_income_parent_ttm",
+                  "operating_cashflow_ttm",
+                  "assets",
+                  "liabilities",
+                  "parent_equity",
+                  "assets_4q_ago",
+                  "parent_equity_4q_ago"
+                ]
+              },
+              {
+                "as_of": "2025-08-17",
+                "fiscal_period_end": "2025-06-30",
+                "nonnull_fields": [
+                  "revenue_ttm",
+                  "net_income_total_ttm",
+                  "net_income_parent_ttm",
+                  "operating_cashflow_ttm",
+                  "assets",
+                  "liabilities",
+                  "parent_equity",
+                  "assets_4q_ago",
+                  "parent_equity_4q_ago"
+                ]
+              },
+              {
+                "as_of": "2025-10-26",
+                "fiscal_period_end": "2025-09-30",
+                "nonnull_fields": [
+                  "revenue_ttm",
+                  "net_income_total_ttm",
+                  "net_income_parent_ttm",
+                  "operating_cashflow_ttm",
+                  "assets",
+                  "liabilities",
+                  "parent_equity",
+                  "assets_4q_ago",
+                  "parent_equity_4q_ago"
+                ]
+              },
+              {
+                "as_of": "2026-03-21",
+                "fiscal_period_end": "2025-12-31",
+                "nonnull_fields": [
+                  "revenue_ttm",
+                  "net_income_total_ttm",
+                  "net_income_parent_ttm",
+                  "operating_cashflow_ttm",
+                  "assets",
+                  "liabilities",
+                  "parent_equity",
+                  "assets_4q_ago",
+                  "parent_equity_4q_ago",
+                  "revenue_ttm_4q_ago",
+                  "net_income_parent_ttm_4q_ago"
+                ]
+              },
+              {
+                "as_of": "2026-04-26",
+                "fiscal_period_end": "2026-03-31",
+                "nonnull_fields": [
+                  "revenue_ttm",
+                  "net_income_total_ttm",
+                  "net_income_parent_ttm",
+                  "operating_cashflow_ttm",
+                  "assets",
+                  "liabilities",
+                  "parent_equity",
+                  "assets_4q_ago",
+                  "parent_equity_4q_ago",
+                  "revenue_ttm_4q_ago",
+                  "net_income_parent_ttm_4q_ago"
+                ]
+              }
+            ]
+          },
+          "independent_q1_2026_ttm_calculations": {
+            "revenue_ttm": 17613181150.97,
+            "revenue_ttm_4q_ago": 12633994348.89,
+            "net_income_total_ttm": 13107344087.009998,
+            "net_income_parent_ttm": 13107344087.009998,
+            "net_income_parent_ttm_4q_ago": 10371364023.699999,
+            "operating_cashflow_ttm": 24777114954.260002
+          }
+        },
+        "002142.SZ": {
+          "frozen": {
+            "snapshots": 3,
+            "nonnull_counts": {
+              "assets": 3,
+              "liabilities": 3,
+              "parent_equity": 3,
+              "assets_4q_ago": 3,
+              "parent_equity_4q_ago": 3
+            },
+            "chronology": [
+              {
+                "as_of": "2025-04-11",
+                "fiscal_period_end": "2024-12-31",
+                "nonnull_fields": [
+                  "assets",
+                  "liabilities",
+                  "parent_equity",
+                  "assets_4q_ago",
+                  "parent_equity_4q_ago"
+                ]
+              },
+              {
+                "as_of": "2025-08-30",
+                "fiscal_period_end": "2025-06-30",
+                "nonnull_fields": [
+                  "assets",
+                  "liabilities",
+                  "parent_equity",
+                  "assets_4q_ago",
+                  "parent_equity_4q_ago"
+                ]
+              },
+              {
+                "as_of": "2026-04-26",
+                "fiscal_period_end": "2025-12-31",
+                "nonnull_fields": [
+                  "assets",
+                  "liabilities",
+                  "parent_equity",
+                  "assets_4q_ago",
+                  "parent_equity_4q_ago"
+                ]
+              }
+            ]
+          },
+          "with_recovery": {
+            "snapshots": 5,
+            "nonnull_counts": {
+              "revenue_ttm": 5,
+              "net_income_total_ttm": 5,
+              "net_income_parent_ttm": 5,
+              "operating_cashflow_ttm": 5,
+              "assets": 5,
+              "liabilities": 5,
+              "parent_equity": 5,
+              "assets_4q_ago": 5,
+              "parent_equity_4q_ago": 5,
+              "revenue_ttm_4q_ago": 1,
+              "net_income_parent_ttm_4q_ago": 1
+            },
+            "chronology": [
+              {
+                "as_of": "2025-04-11",
+                "fiscal_period_end": "2024-12-31",
+                "nonnull_fields": [
+                  "revenue_ttm",
+                  "net_income_total_ttm",
+                  "net_income_parent_ttm",
+                  "operating_cashflow_ttm",
+                  "assets",
+                  "liabilities",
+                  "parent_equity",
+                  "assets_4q_ago",
+                  "parent_equity_4q_ago"
+                ]
+              },
+              {
+                "as_of": "2025-04-30",
+                "fiscal_period_end": "2025-03-31",
+                "nonnull_fields": [
+                  "revenue_ttm",
+                  "net_income_total_ttm",
+                  "net_income_parent_ttm",
+                  "operating_cashflow_ttm",
+                  "assets",
+                  "liabilities",
+                  "parent_equity",
+                  "assets_4q_ago",
+                  "parent_equity_4q_ago"
+                ]
+              },
+              {
+                "as_of": "2025-08-30",
+                "fiscal_period_end": "2025-06-30",
+                "nonnull_fields": [
+                  "revenue_ttm",
+                  "net_income_total_ttm",
+                  "net_income_parent_ttm",
+                  "operating_cashflow_ttm",
+                  "assets",
+                  "liabilities",
+                  "parent_equity",
+                  "assets_4q_ago",
+                  "parent_equity_4q_ago"
+                ]
+              },
+              {
+                "as_of": "2025-10-29",
+                "fiscal_period_end": "2025-09-30",
+                "nonnull_fields": [
+                  "revenue_ttm",
+                  "net_income_total_ttm",
+                  "net_income_parent_ttm",
+                  "operating_cashflow_ttm",
+                  "assets",
+                  "liabilities",
+                  "parent_equity",
+                  "assets_4q_ago",
+                  "parent_equity_4q_ago"
+                ]
+              },
+              {
+                "as_of": "2026-04-26",
+                "fiscal_period_end": "2026-03-31",
+                "nonnull_fields": [
+                  "revenue_ttm",
+                  "net_income_total_ttm",
+                  "net_income_parent_ttm",
+                  "operating_cashflow_ttm",
+                  "assets",
+                  "liabilities",
+                  "parent_equity",
+                  "assets_4q_ago",
+                  "parent_equity_4q_ago",
+                  "revenue_ttm_4q_ago",
+                  "net_income_parent_ttm_4q_ago"
+                ]
+              }
+            ]
+          },
+          "independent_q1_2026_ttm_calculations": {
+            "revenue_ttm": 73858000000.0,
+            "revenue_ttm_4q_ago": 67617000000.0,
+            "net_income_total_ttm": 30343000000.0,
+            "net_income_parent_ttm": 30097000000.0,
+            "net_income_parent_ttm_4q_ago": 27531000000.0,
+            "operating_cashflow_ttm": 202281000000.0
+          }
+        }
+      },
+      "financial_revenue_correction": {
+        "input_financial_sha256": "84876ed2084708aaee39308f6745a74e9aef21e5909d107c2d29a30161b5f9fb",
+        "output_financial_sha256": "a597423df70558badb4756199defef7413e489143c064379370d1869a11f0a03",
+        "financial_versions": 194,
+        "issuers": 13,
+        "actions": {
+          "corrected_legacy_quarter_to_ytd": 7,
+          "remapped_consolidated_operating_total": 9,
+          "aggregate_scope_unverified": 27
+        },
+        "retained_nonnull_consolidated_revenue_by_issuer": {
+          "000001.SZ": 1,
+          "002142.SZ": 27,
+          "300059.SZ": 9,
+          "600000.SH": 4
+        },
+        "eastmoney_target_q1_2026": {
+          "asof_date": "2026-04-26",
+          "revenue_ttm": 17613181150.97,
+          "revenue_ttm_4q_ago": 12633994348.89,
+          "net_income_total_ttm": 13107344087.009998,
+          "net_margin_ttm": 0.744178122887707,
+          "revenue_growth_yoy_ttm": 0.3941102603483011
+        }
+      }
+    },
+    "financial_semantics": {
+      "input_financial_sha256": "84876ed2084708aaee39308f6745a74e9aef21e5909d107c2d29a30161b5f9fb",
+      "output_financial_sha256": "a597423df70558badb4756199defef7413e489143c064379370d1869a11f0a03",
+      "financial_versions": 194,
+      "issuers": 13,
+      "actions": {
+        "corrected_legacy_quarter_to_ytd": 7,
+        "remapped_consolidated_operating_total": 9,
+        "aggregate_scope_unverified": 27
+      },
+      "retained_nonnull_consolidated_revenue_by_issuer": {
+        "000001.SZ": 1,
+        "002142.SZ": 27,
+        "300059.SZ": 9,
+        "600000.SH": 4
+      },
+      "eastmoney_target_q1_2026": {
+        "asof_date": "2026-04-26",
+        "revenue_ttm": 17613181150.97,
+        "revenue_ttm_4q_ago": 12633994348.89,
+        "net_income_total_ttm": 13107344087.009998,
+        "net_margin_ttm": 0.744178122887707,
+        "revenue_growth_yoy_ttm": 0.3941102603483011
+      }
+    },
+    "xbrl_source_probe": {
+      "observed_utc": "2026-11-19T10:41:40.547493+00:00",
+      "requests": {
+        "sse_legacy_instance": {
+          "url": "https://listxbrl.sse.com.cn/ssexbrl",
+          "final_url": "https://www.sse.com.cn/disclosure/listedinfo/listedcompanies/",
+          "http_status": 200,
+          "bytes": 26483,
+          "sha256": "a98deb20336970a7c47f0ea06e05225c9d283f024bb259921a2623e7f3cb5d9c",
+          "xbrl_links": [],
+          "related_script_urls": []
+        },
+        "szse_legacy_instance": {
+          "url": "https://xbrl.cninfo.com.cn/XBRL/index.jsp",
+          "error_class": "ConnectionError",
+          "dns_failure": false
+        },
+        "sse_sitemap": {
+          "url": "https://www.sse.com.cn/home/map/",
+          "final_url": "https://www.sse.com.cn/home/map/",
+          "http_status": 200,
+          "bytes": 24443,
+          "sha256": "00b46b8e7f247a352d4b9f9731b83f22af1ed2236e33760cdc3db42695e9ed9d",
+          "xbrl_links": [],
+          "related_script_urls": []
+        },
+        "sse_overview": {
+          "url": "https://www.sse.com.cn/disclosure/listedinfo/listedcompanies/index_detail.shtml?COMPANY_CODE=600000",
+          "final_url": "https://www.sse.com.cn/disclosure/listedinfo/listedcompanies/index_detail.shtml?COMPANY_CODE=600000",
+          "http_status": 200,
+          "bytes": 27579,
+          "sha256": "9efb9c83b0cc0a3b311bb3f063a3ec107087c7bfb5f83f30b8723000d15b9fb7",
+          "xbrl_links": [],
+          "related_script_urls": []
+        },
+        "sseinfo_catalog": {
+          "url": "https://www.sseinfo.com/services/other/announcement/",
+          "final_url": "https://www.sseinfo.com/services/other/announcement/",
+          "http_status": 200,
+          "bytes": 18285,
+          "sha256": "8cf1a2e69ca4c6f51aea265eafead447be3fd8ee43a67e3ab3fd127fb550aacc",
+          "xbrl_links": [],
+          "related_script_urls": []
+        },
+        "szse_historical_statement": {
+          "url": "https://www.szse.cn/aboutus/trends/news/t20090213_517801.html",
+          "final_url": "https://www.szse.cn/aboutus/trends/news/t20090213_517801.html",
+          "http_status": 200,
+          "bytes": 15627,
+          "sha256": "945049044b24b68bd301f1761fe49ca4da3486368383e5d49cc57a6bd23cd9e3",
+          "xbrl_links": [],
+          "related_script_urls": []
+        },
+        "bse_issuers_guide": {
+          "url": "https://www.bse.cn/cxjg_list/200025675.html",
+          "final_url": "https://www.bse.cn/cxjg_list/200025675.html",
+          "http_status": 200,
+          "bytes": 20504,
+          "sha256": "31660e0db010e8d1dabe6e65f956be6afe52bd9b3fb97ec6ec2f866a636be493",
+          "xbrl_links": [],
+          "related_script_urls": []
+        }
+      }
+    },
+    "legacy_reference_check": {
+      "active_paths": 8540,
+      "registered_versions": 46,
+      "historically_pinned_paths": 9435,
+      "inactive_registry_rows": 1065522,
+      "missing": []
+    }
+  }
+}

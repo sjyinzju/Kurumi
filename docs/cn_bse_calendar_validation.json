@@ -1,0 +1,209 @@
+{
+  "scope": [
+    "2021-11-15",
+    "2026-07-31"
+  ],
+  "expected_sessions": 1143,
+  "vendor_scheduled_sessions": 1143,
+  "positive_quote_sessions": 1143,
+  "exact_match": true,
+  "notice_expected_missing_quote": [],
+  "quote_outside_notices": [],
+  "vendor_calendar_only": [],
+  "notice_calendar_only": [],
+  "source_rule": "https://www.bse.cn/jygl_list/200010919.html",
+  "closure_sources": [
+    {
+      "published_date": "2021-12-20",
+      "source": "https://finance.sina.com.cn/jjxw/2021-12-20/doc-ikyakumx5340384.shtml",
+      "date_ranges": [
+        [
+          "2022-01-01",
+          "2022-01-03"
+        ],
+        [
+          "2022-01-31",
+          "2022-02-06"
+        ],
+        [
+          "2022-04-03",
+          "2022-04-05"
+        ],
+        [
+          "2022-04-30",
+          "2022-05-04"
+        ],
+        [
+          "2022-06-03",
+          "2022-06-05"
+        ],
+        [
+          "2022-09-10",
+          "2022-09-12"
+        ],
+        [
+          "2022-10-01",
+          "2022-10-07"
+        ]
+      ]
+    },
+    {
+      "published_date": "2022-12-27",
+      "source": "https://xinwen.bjd.com.cn/content/s63aadd56e4b0450519f6b446.html",
+      "date_ranges": [
+        [
+          "2022-12-31",
+          "2023-01-02"
+        ],
+        [
+          "2023-01-21",
+          "2023-01-27"
+        ],
+        [
+          "2023-04-05",
+          "2023-04-05"
+        ],
+        [
+          "2023-04-29",
+          "2023-05-03"
+        ],
+        [
+          "2023-06-22",
+          "2023-06-24"
+        ],
+        [
+          "2023-09-29",
+          "2023-10-06"
+        ]
+      ]
+    },
+    {
+      "published_date": "2023-12-26",
+      "source": "https://finance.sina.com.cn/stock/roll/2023-12-26/doc-imzzixct1818304.shtml",
+      "date_ranges": [
+        [
+          "2023-12-30",
+          "2024-01-01"
+        ],
+        [
+          "2024-02-09",
+          "2024-02-17"
+        ],
+        [
+          "2024-04-04",
+          "2024-04-06"
+        ],
+        [
+          "2024-05-01",
+          "2024-05-05"
+        ],
+        [
+          "2024-06-10",
+          "2024-06-10"
+        ],
+        [
+          "2024-09-15",
+          "2024-09-17"
+        ],
+        [
+          "2024-10-01",
+          "2024-10-07"
+        ]
+      ]
+    },
+    {
+      "published_date": "2024-12-23",
+      "source": "https://www.bse.cn/important_news/200024437.html",
+      "date_ranges": [
+        [
+          "2025-01-01",
+          "2025-01-01"
+        ],
+        [
+          "2025-01-28",
+          "2025-02-04"
+        ],
+        [
+          "2025-04-04",
+          "2025-04-06"
+        ],
+        [
+          "2025-05-01",
+          "2025-05-05"
+        ],
+        [
+          "2025-05-31",
+          "2025-06-02"
+        ],
+        [
+          "2025-10-01",
+          "2025-10-08"
+        ]
+      ]
+    },
+    {
+      "published_date": "2025-12-22",
+      "source": "https://www.bse.cn/important_news/200027428.html",
+      "date_ranges": [
+        [
+          "2026-01-01",
+          "2026-01-03"
+        ],
+        [
+          "2026-02-15",
+          "2026-02-23"
+        ],
+        [
+          "2026-04-04",
+          "2026-04-06"
+        ],
+        [
+          "2026-05-01",
+          "2026-05-05"
+        ],
+        [
+          "2026-06-19",
+          "2026-06-21"
+        ]
+      ]
+    }
+  ],
+  "originals": [
+    {
+      "source": "https://www.bse.cn/jygl_list/200010919.html",
+      "local_archive": "rules.html",
+      "bytes": 120221,
+      "sha256": "b7987347e2bfa9a9236577785eda21a188fb260add97e3feb202fea2db7fb696"
+    },
+    {
+      "source": "https://finance.sina.com.cn/jjxw/2021-12-20/doc-ikyakumx5340384.shtml",
+      "local_archive": "2021-12-20.html",
+      "bytes": 99206,
+      "sha256": "71c04acaf184ca0becff262ebd3d121564c0b0b16aaf417a4666d52e6632c809"
+    },
+    {
+      "source": "https://xinwen.bjd.com.cn/content/s63aadd56e4b0450519f6b446.html",
+      "local_archive": "2022-12-27.html",
+      "bytes": 68483,
+      "sha256": "69a61336c2e332ec9b528f7fd03d00e909fd1aa0d8a15923a7819b94b56d479e"
+    },
+    {
+      "source": "https://finance.sina.com.cn/stock/roll/2023-12-26/doc-imzzixct1818304.shtml",
+      "local_archive": "2023-12-26.html",
+      "bytes": 109207,
+      "sha256": "e83d80e4c84d6f1e77dd12d7069be97a586a8dec32d21c24b6ff06fec9aa4cee"
+    },
+    {
+      "source": "https://www.bse.cn/important_news/200024437.html",
+      "local_archive": "2024-12-23.html",
+      "bytes": 21685,
+      "sha256": "575d0b7807b464ec3899311a389d883fc51f9111d52c6bf7efe4c0207eb70ac9"
+    },
+    {
+      "source": "https://www.bse.cn/important_news/200027428.html",
+      "local_archive": "2025-12-22.html",
+      "bytes": 21770,
+      "sha256": "1ec3c1ff6e73d2a80d2fe43a261d94350d943f5014f29e2585699adf2c277097"
+    }
+  ]
+}

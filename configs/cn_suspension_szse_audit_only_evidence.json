@@ -1,0 +1,16 @@
+[
+  {
+    "ts_code": "002731.SZ",
+    "start_source_id": "002731-1225410169",
+    "start_source_url": "https://static.cninfo.com.cn/finalpage/2026-07-06/1225410169.PDF",
+    "start_published_date": "2026-07-06",
+    "start_source_sha256": "ac25307c061923f16bfc4e5aa63fc06bd995fc25813592ce869b0689aee0106c",
+    "effective_from": "2026-07-06",
+    "effective_to_exclusive": "2026-07-07",
+    "state": "reported_suspension",
+    "observed_at": "2026-11-19T08:56:46+00:00",
+    "historical_publication_time": null,
+    "usage": "label_reason_and_audit_only",
+    "source_note": "The issuer states that its stock remained suspended for this full trading day from market open and resumed the next session."
+  }
+]

@@ -1,0 +1,813 @@
+{
+  "baseline_version": "cn-3a8881cc6c19ff9db8b842ffeffa43892be1901562c306150a3680abd612e247",
+  "scope": "missing_close with suspension_verified=false and quote_conflict=false, after excluding 41 dated official intervals",
+  "cninfo_targeted_dates": 25,
+  "historical_singletons_with_prior_pit_evidence": 5,
+  "residual_dates_without_accepted_pit_full_session_proof": 20,
+  "rows": [
+    {
+      "ts_code": "002731.SZ",
+      "local_trade_date": "2026-07-06",
+      "disposition": "notice_exists_same_day_or_later_or_scope_unconfirmed",
+      "cninfo_search_window_days_before": 5,
+      "cninfo_search_window_days_after": 4,
+      "cninfo_notices": [
+        {
+          "title": "关于股票交易被实施退市风险警示暨停复牌安排的公告",
+          "display_time": "2026-07-06T00:00:00+08:00",
+          "url": "https://static.cninfo.com.cn/finalpage/2026-07-06/1225410169.PDF",
+          "id": "1225410169"
+        }
+      ],
+      "cninfo_errors": [],
+      "cninfo_original_checked": {
+        "url": "https://static.cninfo.com.cn/finalpage/2026-07-06/1225410169.PDF",
+        "original_sha256": "ac25307c061923f16bfc4e5aa63fc06bd995fc25813592ce869b0689aee0106c"
+      },
+      "evidence_note": "Issuer confirms this full day from market opening. The original carries only the target date and is available for outcome audit."
+    },
+    {
+      "ts_code": "603159.SH",
+      "local_trade_date": "2026-06-16",
+      "disposition": "whole_day_or_public_time_not_proven_at_cutoff",
+      "cninfo_search_window_days_before": 5,
+      "cninfo_search_window_days_after": 4,
+      "cninfo_notices": [
+        {
+          "title": "上海亚虹模具股份有限公司关于筹划控制权变更事项继续停牌的公告",
+          "display_time": "2026-06-17T00:00:00+08:00",
+          "url": "https://static.cninfo.com.cn/finalpage/2026-06-17/1225372862.PDF",
+          "id": "1225372862"
+        },
+        {
+          "title": "上海亚虹模具股份有限公司关于筹划控制权变更事项继续停牌的公告",
+          "display_time": "2026-06-16T00:00:00+08:00",
+          "url": "https://static.cninfo.com.cn/finalpage/2026-06-16/1225371448.PDF",
+          "id": "1225371448"
+        }
+      ],
+      "cninfo_errors": [],
+      "evidence_note": "SSE archive confirms continuous full-session halt. Original issuer notice carries only the target date.",
+      "sse_query": {
+        "web_page": "https://www.sse.com.cn/disclosure/dealinstruc/suspension/stock/",
+        "request_url": "https://query.sse.com.cn/commonSoaQuery.do?isPagination=true&sqlId=GW_PL_JYTS_TFPXX&pageHelp.pageSize=25&pageHelp.pageNo=1&productCode=603159&keyWords=&startStopDate=20260614&endStopDate=20260617&jsonCallBack=jsoncallback",
+        "response_sha256": "4912f4ef19bcc3bad495914e006ade8e70698dacc122228fe3760e0052f5841b",
+        "observed_date": "2026-11-19",
+        "records": [
+          {
+            "startStopDate": "20260616",
+            "stopReason": "重要公告",
+            "productCode": "603159",
+            "endStopReason": "重要公告",
+            "controlType": "TR",
+            "endStopDate": "20260622",
+            "stopTime": "",
+            "type": "LXTP",
+            "productName": "上海亚虹"
+          },
+          {
+            "startStopDate": "20260615",
+            "stopReason": "重要事项未公告",
+            "productCode": "603159",
+            "endStopReason": "重要事项未公告",
+            "controlType": "TR",
+            "endStopDate": "20260615",
+            "stopTime": "WH",
+            "type": "LSTP",
+            "productName": "上海亚虹"
+          }
+        ],
+        "publication_time_precision": "unproven"
+      }
+    },
+    {
+      "ts_code": "603616.SH",
+      "local_trade_date": "2026-01-22",
+      "disposition": "whole_day_or_public_time_not_proven_at_cutoff",
+      "cninfo_search_window_days_before": 5,
+      "cninfo_search_window_days_after": 4,
+      "cninfo_notices": [
+        {
+          "title": "韩建河山关于筹划重大资产重组的停牌公告",
+          "display_time": "2026-01-22T00:00:00+08:00",
+          "url": "https://static.cninfo.com.cn/finalpage/2026-01-22/1224943450.PDF",
+          "id": "1224943450"
+        }
+      ],
+      "cninfo_errors": [],
+      "evidence_note": "SSE archive confirms continuous full-session halt. Original issuer notice carries only the target date.",
+      "sse_query": {
+        "web_page": "https://www.sse.com.cn/disclosure/dealinstruc/suspension/stock/",
+        "request_url": "https://query.sse.com.cn/commonSoaQuery.do?isPagination=true&sqlId=GW_PL_JYTS_TFPXX&pageHelp.pageSize=25&pageHelp.pageNo=1&productCode=603616&keyWords=&startStopDate=20260120&endStopDate=20260123&jsonCallBack=jsoncallback",
+        "response_sha256": "dc1f67cdee97a392c3e74dd443d6a968de973a21df163ffe75f79e2be23afb4f",
+        "observed_date": "2026-11-19",
+        "records": [
+          {
+            "startStopDate": "20260122",
+            "stopReason": "拟筹划重大资产重组",
+            "productCode": "603616",
+            "endStopReason": "拟筹划重大资产重组",
+            "controlType": "TR",
+            "endStopDate": "20260203",
+            "stopTime": "",
+            "type": "LXTP",
+            "productName": "韩建河山"
+          },
+          {
+            "startStopDate": "20260121",
+            "stopReason": "重要事项未公告",
+            "productCode": "603616",
+            "endStopReason": "重要事项未公告",
+            "controlType": "TR",
+            "endStopDate": "20260121",
+            "stopTime": "WH",
+            "type": "LSTP",
+            "productName": "韩建河山"
+          }
+        ],
+        "publication_time_precision": "unproven"
+      }
+    },
+    {
+      "ts_code": "688005.SH",
+      "local_trade_date": "2026-01-15",
+      "disposition": "whole_day_or_public_time_not_proven_at_cutoff",
+      "cninfo_search_window_days_before": 5,
+      "cninfo_search_window_days_after": 4,
+      "cninfo_notices": [
+        {
+          "title": "关于再次延期回复上海证券交易所《问询函》暨公司股票继续停牌的公告",
+          "display_time": "2026-01-16T00:00:00+08:00",
+          "url": "https://static.cninfo.com.cn/finalpage/2026-01-16/1224936821.PDF",
+          "id": "1224936821"
+        },
+        {
+          "title": "关于延期回复上海证券交易所《问询函》暨公司股票继续停牌的公告",
+          "display_time": "2026-01-15T00:00:00+08:00",
+          "url": "https://static.cninfo.com.cn/finalpage/2026-01-15/1224934817.PDF",
+          "id": "1224934817"
+        }
+      ],
+      "cninfo_errors": [],
+      "evidence_note": "SSE archive explicitly marks the target date as all-day. Original issuer notice carries only the target date.",
+      "sse_query": {
+        "web_page": "https://www.sse.com.cn/disclosure/dealinstruc/suspension/stock/",
+        "request_url": "https://query.sse.com.cn/commonSoaQuery.do?isPagination=true&sqlId=GW_PL_JYTS_TFPXX&pageHelp.pageSize=25&pageHelp.pageNo=1&productCode=688005&keyWords=&startStopDate=20260113&endStopDate=20260116&jsonCallBack=jsoncallback",
+        "response_sha256": "3bd857fef53d507748595df1ea0d4e06f1968e7730f0a7f5bd9889b210b7eead",
+        "observed_date": "2026-11-19",
+        "records": [
+          {
+            "startStopDate": "20260116",
+            "stopReason": "重要事项未公告",
+            "productCode": "688005",
+            "endStopReason": "重要事项未公告",
+            "controlType": "TR",
+            "endStopDate": "20260116",
+            "stopTime": "WH",
+            "type": "LSTP",
+            "productName": "容百科技"
+          },
+          {
+            "startStopDate": "20260115",
+            "stopReason": "重要事项未公告",
+            "productCode": "688005",
+            "endStopReason": "重要事项未公告",
+            "controlType": "TR",
+            "endStopDate": "20260115",
+            "stopTime": "WH",
+            "type": "LSTP",
+            "productName": "容百科技"
+          },
+          {
+            "startStopDate": "20260114",
+            "stopReason": "重要事项未公告",
+            "productCode": "688005",
+            "endStopReason": "重要事项未公告",
+            "controlType": "TR",
+            "endStopDate": "20260114",
+            "stopTime": "WH",
+            "type": "LSTP",
+            "productName": "容百科技"
+          }
+        ],
+        "publication_time_precision": "unproven"
+      }
+    },
+    {
+      "ts_code": "605028.SH",
+      "local_trade_date": "2026-01-13",
+      "disposition": "whole_day_or_public_time_not_proven_at_cutoff",
+      "cninfo_search_window_days_before": 5,
+      "cninfo_search_window_days_after": 4,
+      "cninfo_notices": [
+        {
+          "title": "宁波世茂能源股份有限公司关于终止筹划控制权变更事项暨复牌的公告",
+          "display_time": "2026-01-17T00:00:00+08:00",
+          "url": "https://static.cninfo.com.cn/finalpage/2026-01-17/1224937921.PDF",
+          "id": "1224937921"
+        },
+        {
+          "title": "宁波世茂能源股份有限公司关于筹划控制权变更事项继续停牌的公告",
+          "display_time": "2026-01-14T00:00:00+08:00",
+          "url": "https://static.cninfo.com.cn/finalpage/2026-01-14/1224931593.PDF",
+          "id": "1224931593"
+        },
+        {
+          "title": "宁波世茂能源股份有限公司关于筹划控制权变更的停牌公告",
+          "display_time": "2026-01-13T00:00:00+08:00",
+          "url": "https://static.cninfo.com.cn/finalpage/2026-01-13/1224929951.PDF",
+          "id": "1224929951"
+        }
+      ],
+      "cninfo_errors": [],
+      "evidence_note": "SSE archive explicitly marks the target date as all-day. Original issuer notice carries only the target date.",
+      "sse_query": {
+        "web_page": "https://www.sse.com.cn/disclosure/dealinstruc/suspension/stock/",
+        "request_url": "https://query.sse.com.cn/commonSoaQuery.do?isPagination=true&sqlId=GW_PL_JYTS_TFPXX&pageHelp.pageSize=25&pageHelp.pageNo=1&productCode=605028&keyWords=&startStopDate=20260111&endStopDate=20260114&jsonCallBack=jsoncallback",
+        "response_sha256": "41c4b68c5c2b21df82b348db8b8a86b6e0c6d965d89d454c8764839439bddee0",
+        "observed_date": "2026-11-19",
+        "records": [
+          {
+            "startStopDate": "20260114",
+            "stopReason": "重要公告",
+            "productCode": "605028",
+            "endStopReason": "重要公告",
+            "controlType": "TR",
+            "endStopDate": "20260116",
+            "stopTime": "",
+            "type": "LXTP",
+            "productName": "世茂能源"
+          },
+          {
+            "startStopDate": "20260113",
+            "stopReason": "重要公告",
+            "productCode": "605028",
+            "endStopReason": "重要公告",
+            "controlType": "TR",
+            "endStopDate": "20260113",
+            "stopTime": "WH",
+            "type": "LSTP",
+            "productName": "世茂能源"
+          },
+          {
+            "startStopDate": "20260112",
+            "stopReason": "重要事项未公告",
+            "productCode": "605028",
+            "endStopReason": "重要事项未公告",
+            "controlType": "TR",
+            "endStopDate": "20260112",
+            "stopTime": "WH",
+            "type": "LSTP",
+            "productName": "世茂能源"
+          }
+        ],
+        "publication_time_precision": "unproven"
+      }
+    },
+    {
+      "ts_code": "603056.SH",
+      "local_trade_date": "2026-01-12",
+      "disposition": "covered_by_previously_public_halt",
+      "cninfo_search_window_days_before": 5,
+      "cninfo_search_window_days_after": 4,
+      "cninfo_notices": [
+        {
+          "title": "德邦物流股份有限公司关于本次终止上市事项暨距离公司股票停牌尚余3个交易日的提示性公告",
+          "display_time": "2026-01-16T00:00:00+08:00",
+          "url": "https://static.cninfo.com.cn/finalpage/2026-01-16/1224935685.PDF",
+          "id": "1224935685"
+        },
+        {
+          "title": "德邦物流股份有限公司关于本次终止上市事项暨距离公司股票停牌尚余4个交易日的提示性公告",
+          "display_time": "2026-01-15T00:00:00+08:00",
+          "url": "https://static.cninfo.com.cn/finalpage/2026-01-15/1224933483.PDF",
+          "id": "1224933483"
+        },
+        {
+          "title": "德邦物流股份有限公司关于公司股票复牌的公告",
+          "display_time": "2026-01-14T00:00:00+08:00",
+          "url": "https://static.cninfo.com.cn/finalpage/2026-01-14/1224932970.PDF",
+          "id": "1224932970"
+        },
+        {
+          "title": "德邦物流股份有限公司关于本次终止上市涉及融资融券信用证券账户等现金选择权申报的提示性公告",
+          "display_time": "2026-01-14T00:00:00+08:00",
+          "url": "https://static.cninfo.com.cn/finalpage/2026-01-14/1224932969.PDF",
+          "id": "1224932969"
+        },
+        {
+          "title": "北京世辉律师事务所关于德邦物流股份有限公司以股东会决议方式主动终止上市事项的法律意见书",
+          "display_time": "2026-01-14T00:00:00+08:00",
+          "url": "https://static.cninfo.com.cn/finalpage/2026-01-14/1224932967.PDF",
+          "id": "1224932967"
+        },
+        {
+          "title": "中信证券股份有限公司关于德邦物流股份有限公司主动终止上市的财务顾问意见",
+          "display_time": "2026-01-14T00:00:00+08:00",
+          "url": "https://static.cninfo.com.cn/finalpage/2026-01-14/1224932963.PDF",
+          "id": "1224932963"
+        },
+        {
+          "title": "德邦物流股份有限公司关于筹划重大事项继续停牌的公告",
+          "display_time": "2026-01-10T00:00:00+08:00",
+          "url": "https://static.cninfo.com.cn/finalpage/2026-01-10/1224927474.PDF",
+          "id": "1224927474"
+        },
+        {
+          "title": "德邦物流股份有限公司关于筹划重大事项紧急停牌的公告",
+          "display_time": "2026-01-09T00:00:00+08:00",
+          "url": "https://static.cninfo.com.cn/finalpage/2026-01-09/1224926625.PDF",
+          "id": "1224926625"
+        }
+      ],
+      "cninfo_errors": [],
+      "sse_query": {
+        "web_page": "https://www.sse.com.cn/disclosure/dealinstruc/suspension/stock/",
+        "request_url": "https://query.sse.com.cn/commonSoaQuery.do?isPagination=true&sqlId=GW_PL_JYTS_TFPXX&pageHelp.pageSize=25&pageHelp.pageNo=1&productCode=603056&keyWords=&startStopDate=20260110&endStopDate=20260113&jsonCallBack=jsoncallback",
+        "response_sha256": "207fafd674dc59534947f96013a24a6798616bda42f9bdc09ca51b67cc234b75",
+        "observed_date": "2026-11-19",
+        "records": [
+          {
+            "startStopDate": "20260112",
+            "stopReason": "重要公告",
+            "productCode": "603056",
+            "endStopReason": "重要公告",
+            "controlType": "TR",
+            "endStopDate": "20260113",
+            "stopTime": "",
+            "type": "LXTP",
+            "productName": "德邦股份"
+          }
+        ],
+        "publication_time_precision": "unproven"
+      }
+    },
+    {
+      "ts_code": "688766.SH",
+      "local_trade_date": "2025-11-26",
+      "disposition": "whole_day_or_public_time_not_proven_at_cutoff",
+      "cninfo_search_window_days_before": 5,
+      "cninfo_search_window_days_after": 4,
+      "cninfo_notices": [
+        {
+          "title": "普冉半导体（上海）股份有限公司关于筹划发行股份等方式购买资产事项的停牌公告",
+          "display_time": "2025-11-26T00:00:00+08:00",
+          "url": "https://static.cninfo.com.cn/finalpage/2025-11-26/1224826077.PDF",
+          "id": "1224826077"
+        }
+      ],
+      "cninfo_errors": [],
+      "evidence_note": "SSE archive confirms continuous full-session halt. Original issuer notice carries only the target date.",
+      "sse_query": {
+        "web_page": "https://www.sse.com.cn/disclosure/dealinstruc/suspension/stock/",
+        "request_url": "https://query.sse.com.cn/commonSoaQuery.do?isPagination=true&sqlId=GW_PL_JYTS_TFPXX&pageHelp.pageSize=25&pageHelp.pageNo=1&productCode=688766&keyWords=&startStopDate=20251124&endStopDate=20251127&jsonCallBack=jsoncallback",
+        "response_sha256": "8fd708c84d9c8016f2c166c86b54ba3c1965d22322258ae807231404ad141cca",
+        "observed_date": "2026-11-19",
+        "records": [
+          {
+            "startStopDate": "20251126",
+            "stopReason": "拟筹划重大资产重组",
+            "productCode": "688766",
+            "endStopReason": "拟筹划重大资产重组",
+            "controlType": "TR",
+            "endStopDate": "20251208",
+            "stopTime": "",
+            "type": "LXTP",
+            "productName": "普冉股份"
+          },
+          {
+            "startStopDate": "20251125",
+            "stopReason": "拟筹划重大资产重组",
+            "productCode": "688766",
+            "endStopReason": "拟筹划重大资产重组",
+            "controlType": "TR",
+            "endStopDate": "20251125",
+            "stopTime": "WH",
+            "type": "LSTP",
+            "productName": "普冉股份"
+          }
+        ],
+        "publication_time_precision": "unproven"
+      }
+    },
+    {
+      "ts_code": "603897.SH",
+      "local_trade_date": "2025-11-04",
+      "disposition": "covered_by_previously_public_halt",
+      "cninfo_search_window_days_before": 5,
+      "cninfo_search_window_days_after": 4,
+      "cninfo_notices": [
+        {
+          "title": "长城科技关于终止筹划控制权变更事项暨复牌的公告",
+          "display_time": "2025-11-08T00:00:00+08:00",
+          "url": "https://static.cninfo.com.cn/finalpage/2025-11-08/1224792149.PDF",
+          "id": "1224792149"
+        },
+        {
+          "title": "长城科技关于筹划控制权变更事项继续停牌的公告",
+          "display_time": "2025-11-05T00:00:00+08:00",
+          "url": "https://static.cninfo.com.cn/finalpage/2025-11-05/1224786232.PDF",
+          "id": "1224786232"
+        },
+        {
+          "title": "长城科技关于筹划控制权变更事项的停牌公告",
+          "display_time": "2025-11-03T00:00:00+08:00",
+          "url": "https://static.cninfo.com.cn/finalpage/2025-11-03/1224782056.PDF",
+          "id": "1224782056"
+        }
+      ],
+      "cninfo_errors": [],
+      "sse_query": {
+        "web_page": "https://www.sse.com.cn/disclosure/dealinstruc/suspension/stock/",
+        "request_url": "https://query.sse.com.cn/commonSoaQuery.do?isPagination=true&sqlId=GW_PL_JYTS_TFPXX&pageHelp.pageSize=25&pageHelp.pageNo=1&productCode=603897&keyWords=&startStopDate=20251102&endStopDate=20251105&jsonCallBack=jsoncallback",
+        "response_sha256": "dd5bf0e2de019acc1f324baa896e21cfb14c5fed613ce287191409fd395674bc",
+        "observed_date": "2026-11-19",
+        "records": [
+          {
+            "startStopDate": "20251105",
+            "stopReason": "重要事项未公告",
+            "productCode": "603897",
+            "endStopReason": "重要事项未公告",
+            "controlType": "TR",
+            "endStopDate": "20251107",
+            "stopTime": "",
+            "type": "LXTP",
+            "productName": "长城科技"
+          },
+          {
+            "startStopDate": "20251104",
+            "stopReason": "重要事项未公告",
+            "productCode": "603897",
+            "endStopReason": "重要事项未公告",
+            "controlType": "TR",
+            "endStopDate": "20251104",
+            "stopTime": "WH",
+            "type": "LSTP",
+            "productName": "长城科技"
+          },
+          {
+            "startStopDate": "20251103",
+            "stopReason": "重要公告",
+            "productCode": "603897",
+            "endStopReason": "重要公告",
+            "controlType": "TR",
+            "endStopDate": "20251103",
+            "stopTime": "WH",
+            "type": "LSTP",
+            "productName": "长城科技"
+          }
+        ],
+        "publication_time_precision": "unproven"
+      }
+    },
+    {
+      "ts_code": "000760.SZ",
+      "local_trade_date": "2020-07-06",
+      "disposition": "covered_by_previously_public_halt",
+      "cninfo_search_window_days_before": 5,
+      "cninfo_search_window_days_after": 4,
+      "cninfo_notices": [
+        {
+          "title": "关于公司股票暂停上市公告",
+          "display_time": "2020-07-06T00:00:00+08:00",
+          "url": "https://static.cninfo.com.cn/finalpage/2020-07-06/1208002924.PDF",
+          "id": "1208002924"
+        },
+        {
+          "title": "关于公司股票可能被暂停上市及终止上市的风险提示公告",
+          "display_time": "2020-07-03T00:00:00+08:00",
+          "url": "https://static.cninfo.com.cn/finalpage/2020-07-03/1207995124.PDF",
+          "id": "1207995124"
+        }
+      ],
+      "cninfo_errors": []
+    },
+    {
+      "ts_code": "000939.SZ",
+      "local_trade_date": "2019-05-13",
+      "disposition": "covered_by_previously_public_halt",
+      "cninfo_search_window_days_before": 5,
+      "cninfo_search_window_days_after": 4,
+      "cninfo_notices": [
+        {
+          "title": "关于公司债券暂停上市的公告",
+          "display_time": "2019-05-14T17:04:17+08:00",
+          "url": "https://static.cninfo.com.cn/finalpage/2019-05-14/1206266535.PDF",
+          "id": "1206266535"
+        },
+        {
+          "title": "关于公司股票暂停上市的公告",
+          "display_time": "2019-05-13T00:00:00+08:00",
+          "url": "https://static.cninfo.com.cn/finalpage/2019-05-13/1206257692.PDF",
+          "id": "1206257692"
+        },
+        {
+          "title": "关于公司股票可能被暂停上市或终止上市的风险提示暨停牌进展公告",
+          "display_time": "2019-05-09T00:00:00+08:00",
+          "url": "https://static.cninfo.com.cn/finalpage/2019-05-09/1206243506.PDF",
+          "id": "1206243506"
+        }
+      ],
+      "cninfo_errors": []
+    },
+    {
+      "ts_code": "000979.SZ",
+      "local_trade_date": "2018-08-28",
+      "disposition": "notice_exists_same_day_or_later_or_scope_unconfirmed",
+      "cninfo_search_window_days_before": 5,
+      "cninfo_search_window_days_after": 4,
+      "cninfo_notices": [
+        {
+          "title": "关于公司股票可能将被终止上市的第四次风险提示性公告",
+          "display_time": "2018-09-01T00:00:00+08:00",
+          "url": "https://static.cninfo.com.cn/finalpage/2018-09-01/1205366354.PDF",
+          "id": "1205366354"
+        },
+        {
+          "title": "关于公司股票可能将被终止上市的第三次风险提示性公告",
+          "display_time": "2018-08-31T00:00:00+08:00",
+          "url": "https://static.cninfo.com.cn/finalpage/2018-08-31/1205362891.PDF",
+          "id": "1205362891"
+        },
+        {
+          "title": "关于公司股票可能将被终止上市的第二次风险提示性公告",
+          "display_time": "2018-08-30T00:00:00+08:00",
+          "url": "https://static.cninfo.com.cn/finalpage/2018-08-30/1205355926.PDF",
+          "id": "1205355926"
+        },
+        {
+          "title": "关于媒体报道事项的澄清说明暨公司股票复牌公告",
+          "display_time": "2018-08-29T00:00:00+08:00",
+          "url": "https://static.cninfo.com.cn/finalpage/2018-08-29/1205350915.PDF",
+          "id": "1205350915"
+        },
+        {
+          "title": "关于公司股票可能将被终止上市的第一次风险提示性公告",
+          "display_time": "2018-08-29T00:00:00+08:00",
+          "url": "https://static.cninfo.com.cn/finalpage/2018-08-29/1205349048.PDF",
+          "id": "1205349048"
+        }
+      ],
+      "cninfo_errors": [],
+      "cninfo_original_checked": {
+        "url": "https://static.cninfo.com.cn/finalpage/2018-08-29/1205350915.PDF",
+        "original_sha256": "3bc53d717cbed324b0143ddb24545b03e38edfeaa0e1957b6d95dc3b55df8b3e"
+      },
+      "evidence_note": "Issuer confirms an intraday halt or only the afternoon session. Whole-day halt remains unproven."
+    },
+    {
+      "ts_code": "000693.SZ",
+      "local_trade_date": "2018-07-13",
+      "disposition": "covered_by_previously_public_halt",
+      "cninfo_search_window_days_before": 5,
+      "cninfo_search_window_days_after": 4,
+      "cninfo_notices": [
+        {
+          "title": "关于公司股票暂停上市的公告",
+          "display_time": "2018-07-13T00:00:00+08:00",
+          "url": "https://static.cninfo.com.cn/finalpage/2018-07-13/1205147031.PDF",
+          "id": "1205147031"
+        }
+      ],
+      "cninfo_errors": []
+    },
+    {
+      "ts_code": "300731.SZ",
+      "local_trade_date": "2017-12-08",
+      "disposition": "no_matching_notice_in_targeted_cninfo_window",
+      "cninfo_search_window_days_before": 5,
+      "cninfo_search_window_days_after": 4,
+      "cninfo_notices": [],
+      "cninfo_errors": []
+    },
+    {
+      "ts_code": "000498.SZ",
+      "local_trade_date": "2017-08-16",
+      "disposition": "no_matching_notice_in_targeted_cninfo_window",
+      "cninfo_search_window_days_before": 5,
+      "cninfo_search_window_days_after": 4,
+      "cninfo_notices": [],
+      "cninfo_errors": []
+    },
+    {
+      "ts_code": "300272.SZ",
+      "local_trade_date": "2017-08-14",
+      "disposition": "whole_day_or_public_time_not_proven_at_cutoff",
+      "cninfo_search_window_days_before": 5,
+      "cninfo_search_window_days_after": 4,
+      "cninfo_notices": [
+        {
+          "title": "关于筹划重大事项停牌公告",
+          "display_time": "2017-08-14T11:43:18+08:00",
+          "url": "https://static.cninfo.com.cn/finalpage/2017-08-14/1203795291.PDF",
+          "id": "1203795291"
+        }
+      ],
+      "cninfo_errors": [],
+      "evidence_note": "Issuer confirms intraday halt, insufficient for whole-session suspension."
+    },
+    {
+      "ts_code": "000711.SZ",
+      "local_trade_date": "2016-10-19",
+      "disposition": "notice_exists_same_day_or_later_or_scope_unconfirmed",
+      "cninfo_search_window_days_before": 5,
+      "cninfo_search_window_days_after": 4,
+      "cninfo_notices": [
+        {
+          "title": "重大事项停牌公告",
+          "display_time": "2016-10-20T00:00:00+08:00",
+          "url": "https://static.cninfo.com.cn/finalpage/2016-10-20/1202770688.PDF",
+          "id": "1202770688"
+        }
+      ],
+      "cninfo_errors": [],
+      "cninfo_original_checked": {
+        "url": "https://static.cninfo.com.cn/finalpage/2016-10-20/1202770688.PDF",
+        "original_sha256": "dcd318808b73a27d965a7a9c08347b0b78608f7489b6e43a6f09519bc3d6dbb9"
+      },
+      "evidence_note": "Issuer confirms an intraday halt or only the afternoon session. Whole-day halt remains unproven."
+    },
+    {
+      "ts_code": "000659.SZ",
+      "local_trade_date": "2016-08-18",
+      "disposition": "notice_exists_same_day_or_later_or_scope_unconfirmed",
+      "cninfo_search_window_days_before": 5,
+      "cninfo_search_window_days_after": 4,
+      "cninfo_notices": [
+        {
+          "title": "关于筹划非公开发行股票事项的停牌公告",
+          "display_time": "2016-08-19T00:00:00+08:00",
+          "url": "https://static.cninfo.com.cn/finalpage/2016-08-19/1202581775.PDF",
+          "id": "1202581775"
+        }
+      ],
+      "cninfo_errors": [],
+      "cninfo_original_checked": {
+        "url": "https://static.cninfo.com.cn/finalpage/2016-08-19/1202581775.PDF",
+        "original_sha256": "60830bdd6bda645d6f475efd5f6ffa00eb67beb1c727823c21d9739db6de544e"
+      },
+      "evidence_note": "Issuer confirms an intraday halt or only the afternoon session. Whole-day halt remains unproven."
+    },
+    {
+      "ts_code": "000533.SZ",
+      "local_trade_date": "2016-03-25",
+      "disposition": "notice_exists_same_day_or_later_or_scope_unconfirmed",
+      "cninfo_search_window_days_before": 5,
+      "cninfo_search_window_days_after": 4,
+      "cninfo_notices": [
+        {
+          "title": "董事会关于重大资产重组停牌公告",
+          "display_time": "2016-03-28T00:00:00+08:00",
+          "url": "https://static.cninfo.com.cn/finalpage/2016-03-28/1202083670.PDF",
+          "id": "1202083670"
+        }
+      ],
+      "cninfo_errors": [],
+      "cninfo_original_checked": {
+        "url": "https://static.cninfo.com.cn/finalpage/2016-03-28/1202083670.PDF",
+        "original_sha256": "0ed3627bf1cb33147f83f7e4aff4027facfc504f7109e8ee89c83dbad2a45909"
+      },
+      "evidence_note": "Issuer confirms an intraday halt or only the afternoon session. Whole-day halt remains unproven."
+    },
+    {
+      "ts_code": "000510.SZ",
+      "local_trade_date": "2016-03-16",
+      "disposition": "no_matching_notice_in_targeted_cninfo_window",
+      "cninfo_search_window_days_before": 5,
+      "cninfo_search_window_days_after": 4,
+      "cninfo_notices": [],
+      "cninfo_errors": []
+    },
+    {
+      "ts_code": "000159.SZ",
+      "local_trade_date": "2016-02-22",
+      "disposition": "notice_exists_same_day_or_later_or_scope_unconfirmed",
+      "cninfo_search_window_days_before": 5,
+      "cninfo_search_window_days_after": 4,
+      "cninfo_notices": [
+        {
+          "title": "关于重大事项停牌公告",
+          "display_time": "2016-02-23T00:00:00+08:00",
+          "url": "https://static.cninfo.com.cn/finalpage/2016-02-23/1201990713.PDF",
+          "id": "1201990713"
+        }
+      ],
+      "cninfo_errors": [],
+      "cninfo_original_checked": {
+        "url": "https://static.cninfo.com.cn/finalpage/2016-02-23/1201990713.PDF",
+        "original_sha256": "3081cf64eeb85f3b0c82aac20ce2b819ae89827381bda3079d2b45c080de439c"
+      },
+      "evidence_note": "Issuer confirms an intraday halt or only the afternoon session. Whole-day halt remains unproven."
+    },
+    {
+      "ts_code": "000157.SZ",
+      "local_trade_date": "2016-01-27",
+      "disposition": "notice_exists_same_day_or_later_or_scope_unconfirmed",
+      "cninfo_search_window_days_before": 5,
+      "cninfo_search_window_days_after": 4,
+      "cninfo_notices": [
+        {
+          "title": "复牌公告",
+          "display_time": "2016-01-28T00:00:00+08:00",
+          "url": "https://static.cninfo.com.cn/finalpage/2016-01-28/1201949799.PDF",
+          "id": "1201949799"
+        }
+      ],
+      "cninfo_errors": [],
+      "cninfo_original_checked": {
+        "url": "https://static.cninfo.com.cn/finalpage/2016-01-28/1201949799.PDF",
+        "original_sha256": "cdaeae6008c2e3f262fa9ce68bde24c6f44f9c96027e353f0641bac3a758dea7"
+      },
+      "evidence_note": "Next-day notice confirms halt from 09:30. No source was found for the preceding opening call auction."
+    },
+    {
+      "ts_code": "000055.SZ",
+      "local_trade_date": "2015-07-06",
+      "disposition": "notice_exists_same_day_or_later_or_scope_unconfirmed",
+      "cninfo_search_window_days_before": 5,
+      "cninfo_search_window_days_after": 4,
+      "cninfo_notices": [
+        {
+          "title": "重大事项停牌公告",
+          "display_time": "2015-07-07T00:00:00+08:00",
+          "url": "https://static.cninfo.com.cn/finalpage/2015-07-07/1201247779.PDF",
+          "id": "1201247779"
+        }
+      ],
+      "cninfo_errors": [],
+      "cninfo_original_checked": {
+        "url": "https://static.cninfo.com.cn/finalpage/2015-07-07/1201247779.PDF",
+        "original_sha256": "3c75609f53efe0a4e56398ca5f8a0f4933cb7fc8e30336d08af79536424eac2d"
+      },
+      "evidence_note": "Issuer confirms an intraday halt or only the afternoon session. Whole-day halt remains unproven."
+    },
+    {
+      "ts_code": "000655.SZ",
+      "local_trade_date": "2015-05-21",
+      "disposition": "notice_exists_same_day_or_later_or_scope_unconfirmed",
+      "cninfo_search_window_days_before": 5,
+      "cninfo_search_window_days_after": 4,
+      "cninfo_notices": [
+        {
+          "title": "重大事项停牌公告",
+          "display_time": "2015-05-22T00:00:00+08:00",
+          "url": "https://static.cninfo.com.cn/finalpage/2015-05-22/1201045184.PDF",
+          "id": "1201045184"
+        }
+      ],
+      "cninfo_errors": [],
+      "cninfo_original_checked": {
+        "url": "https://static.cninfo.com.cn/finalpage/2015-05-22/1201045184.PDF",
+        "original_sha256": "f941c1b4f23a4e943255a4c5b5a067b8c5e307199c7cf97234a1c91e9a2efbe2"
+      }
+    },
+    {
+      "ts_code": "000609.SZ",
+      "local_trade_date": "2015-04-27",
+      "disposition": "whole_day_or_public_time_not_proven_at_cutoff",
+      "cninfo_search_window_days_before": 5,
+      "cninfo_search_window_days_after": 4,
+      "cninfo_notices": [
+        {
+          "title": "复牌公告",
+          "display_time": "2015-04-30T00:00:00+08:00",
+          "url": "https://static.cninfo.com.cn/finalpage/2015-04-30/1200947417.PDF",
+          "id": "1200947417"
+        },
+        {
+          "title": "关于公司股票临时停牌的公告",
+          "display_time": "2015-04-27T11:47:39+08:00",
+          "url": "https://static.cninfo.com.cn/finalpage/2015-04-27/1200917563.PDF",
+          "id": "1200917563"
+        }
+      ],
+      "cninfo_errors": [],
+      "evidence_note": "Time-stamped issuer bulletin confirms a temporary halt but omits the session start time.",
+      "cninfo_original_checked": {
+        "url": "https://static.cninfo.com.cn/finalpage/2015-04-27/1200917563.PDF",
+        "original_sha256": "b94418065f16acf5208d7ecd7c21fa279de46713f2e20d2b3e847ed166ddaa04"
+      }
+    },
+    {
+      "ts_code": "000078.SZ",
+      "local_trade_date": "2015-03-20",
+      "disposition": "notice_exists_same_day_or_later_or_scope_unconfirmed",
+      "cninfo_search_window_days_before": 5,
+      "cninfo_search_window_days_after": 4,
+      "cninfo_notices": [
+        {
+          "title": "关于筹划重大事项申请停牌的公告",
+          "display_time": "2015-03-21T00:00:00+08:00",
+          "url": "https://static.cninfo.com.cn/finalpage/2015-03-21/1200724253.PDF",
+          "id": "1200724253"
+        }
+      ],
+      "cninfo_errors": [],
+      "cninfo_original_checked": {
+        "url": "https://static.cninfo.com.cn/finalpage/2015-03-21/1200724253.PDF",
+        "original_sha256": "28c28f7230dea795ffcf6d8cc1841f43cb5f643c17cd0014973dab246df0295f"
+      },
+      "evidence_note": "Issuer confirms an intraday halt or only the afternoon session. Whole-day halt remains unproven."
+    }
+  ]
+}

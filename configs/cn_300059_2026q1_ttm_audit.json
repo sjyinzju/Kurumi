@@ -1,0 +1,39 @@
+[
+  {
+    "ts_code": "300059.SZ",
+    "fiscal_period_end": "2026-03-31",
+    "report_scope": "consolidated",
+    "currency": "CNY",
+    "revenue_label": "营业总收入",
+    "net_income_label": "净利润",
+    "components": [
+      {
+        "period_end": "2025-12-31",
+        "sign": 1,
+        "revenue_ytd": "16067741039.51",
+        "net_income_total_ytd": "12084594947.22",
+        "source_url": "https://static.cninfo.com.cn/finalpage/2026-03-20/1225019509.PDF",
+        "source_sha256": "a5edb3304600d7ff7faeefa65fea3846f4326743cc72d9ade14cf93af20c1737",
+        "pdf_pages": [74, 75]
+      },
+      {
+        "period_end": "2026-03-31",
+        "sign": 1,
+        "revenue_ytd": "5031027125.40",
+        "net_income_total_ytd": "3737779855.92",
+        "source_url": "https://static.cninfo.com.cn/finalpage/2026-04-25/1225185763.PDF",
+        "source_sha256": "7afb2fe339864cff84d729473f87fcb1d5a94f53b9dab2e57e0c7e2a111b81b1",
+        "pdf_pages": [8, 9]
+      },
+      {
+        "period_end": "2025-03-31",
+        "sign": -1,
+        "revenue_ytd": "3485587013.94",
+        "net_income_total_ytd": "2715030716.13",
+        "source_url": "https://static.cninfo.com.cn/finalpage/2025-04-26/1223314764.PDF",
+        "source_sha256": "c8526dce0f65d94a8fd2bf060eab53a712ce8a93c1b592ac4896441ef624a8b0",
+        "pdf_pages": [8, 9]
+      }
+    ]
+  }
+]

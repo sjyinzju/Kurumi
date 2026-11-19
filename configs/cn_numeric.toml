@@ -1,0 +1,4 @@
+numeric_root = 'E:\QuantData\numeric'
+
+# Omit dataset_version to read the validated latest_cn.json pointer.
+# Set dataset_version to the release directory name to pin training to an immutable version.

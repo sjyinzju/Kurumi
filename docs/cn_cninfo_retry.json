@@ -1,0 +1,35 @@
+{
+  "endpoint": "https://www.cninfo.com.cn/new/hisAnnouncement/query",
+  "scope": "exact public issuer metadata, first page, one request per code",
+  "period_start": "2025-01-01",
+  "period_end": "2025-06-30",
+  "attempts": [
+    {
+      "ts_code": "000858.SZ",
+      "column": "szse",
+      "attempted_at_utc": "2026-11-19T08:30:41.007370+00:00",
+      "http_status": 200,
+      "content_type": "application/json;charset=UTF-8",
+      "reported_announcements": 5,
+      "issuer_matches_first_page": 5
+    },
+    {
+      "ts_code": "300059.SZ",
+      "column": "szse",
+      "attempted_at_utc": "2026-11-19T08:30:41.669246+00:00",
+      "http_status": 200,
+      "content_type": "application/json;charset=UTF-8",
+      "reported_announcements": 3,
+      "issuer_matches_first_page": 3
+    },
+    {
+      "ts_code": "920819.BJ",
+      "column": "bse",
+      "attempted_at_utc": "2026-11-19T08:30:41.796429+00:00",
+      "http_status": 200,
+      "content_type": "application/json;charset=UTF-8",
+      "reported_announcements": 0,
+      "issuer_matches_first_page": 0
+    }
+  ]
+}

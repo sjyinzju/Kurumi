@@ -1,0 +1,192 @@
+{
+  "status": "PASS",
+  "frozen_source_sha256": {
+    "financial_versions": "a597423df70558badb4756199defef7413e489143c064379370d1869a11f0a03",
+    "share_versions": "1956537d8916c76d0d9905dacc96be851b281cc567e5a5749738162eae87b6a0",
+    "industry_versions": "ef098ee08c5fbc4dea8c8ef43446c86e327b06305cda8de209cd350e8acce883",
+    "split_events": "0a75745d4513ecb71ccd5e9a37f426cc30a9986c71c2297c0779e13c0ba49be1",
+    "split_coverage": "49e78b32539d9c52ef75ce358ccb6c6edf4475c4f50812dc18921a15dda1b577"
+  },
+  "source_manifest_sha256": "b0395905848f3988b447bb179bb3e3f06b281bc52abb54ccbd4fe3c7ba0b2ff3",
+  "source_rows": {
+    "financial_versions": 194,
+    "share_versions": 3,
+    "industry_versions": 2056,
+    "split_events": 7,
+    "split_coverage": 5
+  },
+  "financial_helper": {
+    "issuers": 11,
+    "probes": 147,
+    "full_snapshot_comparisons": 4058,
+    "future_row_interventions": 1899,
+    "same_period_future_probes": 0
+  },
+  "share_segment_helper": {
+    "probes": 3,
+    "active_prior_selection": 1,
+    "future_row_interventions": 4,
+    "securities": 2
+  },
+  "industry_segment_helper": {
+    "probes": 2056,
+    "active_prior_selection": 1334,
+    "future_row_interventions": 4003,
+    "securities": 722
+  },
+  "split_coverage_segment_helper": {
+    "probes": 3,
+    "active_prior_selection": 1,
+    "future_row_interventions": 6,
+    "securities": 2
+  },
+  "real_quote_production_join": {
+    "probes": [
+      {
+        "date": "2016-04-11",
+        "security_days": 6,
+        "nonnull": {
+          "share": 0,
+          "industry": 0,
+          "financial": 4,
+          "split_chain": 0
+        },
+        "future_split_event_versions": 6
+      },
+      {
+        "date": "2018-04-10",
+        "security_days": 6,
+        "nonnull": {
+          "share": 0,
+          "industry": 0,
+          "financial": 4,
+          "split_chain": 0
+        },
+        "future_split_event_versions": 4
+      },
+      {
+        "date": "2020-01-02",
+        "security_days": 6,
+        "nonnull": {
+          "share": 0,
+          "industry": 0,
+          "financial": 4,
+          "split_chain": 0
+        },
+        "future_split_event_versions": 2
+      },
+      {
+        "date": "2022-04-12",
+        "security_days": 6,
+        "nonnull": {
+          "share": 0,
+          "industry": 0,
+          "financial": 4,
+          "split_chain": 0
+        },
+        "future_split_event_versions": 2
+      },
+      {
+        "date": "2023-04-10",
+        "security_days": 6,
+        "nonnull": {
+          "share": 0,
+          "industry": 0,
+          "financial": 4,
+          "split_chain": 0
+        },
+        "future_split_event_versions": 1
+      },
+      {
+        "date": "2025-05-20",
+        "security_days": 6,
+        "nonnull": {
+          "share": 0,
+          "industry": 0,
+          "financial": 4,
+          "split_chain": 0
+        },
+        "future_split_event_versions": 0
+      },
+      {
+        "date": "2025-05-22",
+        "security_days": 6,
+        "nonnull": {
+          "share": 1,
+          "industry": 0,
+          "financial": 4,
+          "split_chain": 1
+        },
+        "future_split_event_versions": 0
+      },
+      {
+        "date": "2025-12-15",
+        "security_days": 6,
+        "nonnull": {
+          "share": 2,
+          "industry": 2,
+          "financial": 4,
+          "split_chain": 2
+        },
+        "future_split_event_versions": 0
+      },
+      {
+        "date": "2026-01-15",
+        "security_days": 6,
+        "nonnull": {
+          "share": 2,
+          "industry": 2,
+          "financial": 4,
+          "split_chain": 2
+        },
+        "future_split_event_versions": 0
+      },
+      {
+        "date": "2026-05-28",
+        "security_days": 6,
+        "nonnull": {
+          "share": 2,
+          "industry": 1,
+          "financial": 4,
+          "split_chain": 2
+        },
+        "future_split_event_versions": 0
+      }
+    ],
+    "independent_quote_partitions": {
+      "daily": 19,
+      "daily_basic": 19
+    },
+    "variants": {
+      "truncated": {
+        "financial_versions": 520,
+        "share_versions": 22,
+        "industry_versions": 16345,
+        "split_events": 15,
+        "split_coverage": 34
+      },
+      "mutated": {
+        "financial_versions": 520,
+        "share_versions": 22,
+        "industry_versions": 16345,
+        "split_events": 15,
+        "split_coverage": 34
+      }
+    },
+    "float64_rtol": 1e-10,
+    "float64_atol": 1e-12,
+    "float64_nonidentical": {
+      "split_unit_factor": {
+        "count": 4,
+        "max_abs_diff": 8.881784197001252e-16
+      }
+    },
+    "security_days": 60
+  },
+  "limits": [
+    "Original source values are unchanged outside temporary variants.",
+    "Helper dates are source-clock probes; production join probes have real exchange price rows.",
+    "Frozen evidence has no non-null U window with a later actual split event for that security.",
+    "Raw market features, future-label masking and Karpo encoding are checked separately."
+  ]
+}

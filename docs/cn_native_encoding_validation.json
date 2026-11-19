@@ -1,0 +1,1266 @@
+{
+  "dataset_version": "cn-8dfdd9db8a90fd88e132e3675fd31e311e02b5a50ad437cca7f8bdff7198e03b",
+  "dataset_status": "INCOMPLETE",
+  "scope": "sampled",
+  "samples": [
+    "CN|CN-000001.SZ|2015-04-07",
+    "CN|CN-000001.SZ|2024-01-02",
+    "CN|CN-000001.SZ|2024-07-01",
+    "CN|CN-000001.SZ|2025-01-02",
+    "CN|CN-430017.BJ|2024-01-02",
+    "CN|CN-430017.BJ|2024-07-01",
+    "CN|CN-430017.BJ|2025-01-02",
+    "CN|CN-430047.BJ|2022-02-15",
+    "CN|CN-600000.SH|2015-04-07",
+    "CN|CN-600000.SH|2024-01-02",
+    "CN|CN-600000.SH|2024-07-01",
+    "CN|CN-600000.SH|2025-01-02",
+    "CN|CN-688277.SH|2026-06-30",
+    "CN|CN-873665.BJ|2023-12-28",
+    "CN|CN-873833.BJ|2024-06-27",
+    "CN|CN-920118.BJ|2024-12-30",
+    "CN|CN-002142.SZ|2026-04-27",
+    "CN|CN-300059.SZ|2026-04-27"
+  ],
+  "native_check": "passed",
+  "load_check": "passed",
+  "price_prefix_check": {
+    "scope": "model assembly from cutoff price windows",
+    "feature_inputs": "published factor columns and as-of snapshots held fixed",
+    "sample_count": 18,
+    "evidence": [
+      {
+        "sample_id": "CN|CN-000001.SZ|2015-04-07",
+        "first_retained_trade_date": "2015-01-05",
+        "last_retained_trade_date": "2015-04-07",
+        "retained_rows": 61,
+        "later_rows_physically_excluded": 24,
+        "model_input_equal": true,
+        "native_request_equal": true
+      },
+      {
+        "sample_id": "CN|CN-000001.SZ|2024-01-02",
+        "first_retained_trade_date": "2023-10-09",
+        "last_retained_trade_date": "2024-01-02",
+        "retained_rows": 61,
+        "later_rows_physically_excluded": 25,
+        "model_input_equal": true,
+        "native_request_equal": true
+      },
+      {
+        "sample_id": "CN|CN-000001.SZ|2024-07-01",
+        "first_retained_trade_date": "2024-03-29",
+        "last_retained_trade_date": "2024-07-01",
+        "retained_rows": 61,
+        "later_rows_physically_excluded": 25,
+        "model_input_equal": true,
+        "native_request_equal": true
+      },
+      {
+        "sample_id": "CN|CN-000001.SZ|2025-01-02",
+        "first_retained_trade_date": "2024-10-09",
+        "last_retained_trade_date": "2025-01-02",
+        "retained_rows": 61,
+        "later_rows_physically_excluded": 19,
+        "model_input_equal": true,
+        "native_request_equal": true
+      },
+      {
+        "sample_id": "CN|CN-430017.BJ|2024-01-02",
+        "first_retained_trade_date": "2023-10-09",
+        "last_retained_trade_date": "2024-01-02",
+        "retained_rows": 61,
+        "later_rows_physically_excluded": 25,
+        "model_input_equal": true,
+        "native_request_equal": true
+      },
+      {
+        "sample_id": "CN|CN-430017.BJ|2024-07-01",
+        "first_retained_trade_date": "2024-03-29",
+        "last_retained_trade_date": "2024-07-01",
+        "retained_rows": 61,
+        "later_rows_physically_excluded": 25,
+        "model_input_equal": true,
+        "native_request_equal": true
+      },
+      {
+        "sample_id": "CN|CN-430017.BJ|2025-01-02",
+        "first_retained_trade_date": "2024-10-09",
+        "last_retained_trade_date": "2025-01-02",
+        "retained_rows": 61,
+        "later_rows_physically_excluded": 19,
+        "model_input_equal": true,
+        "native_request_equal": true
+      },
+      {
+        "sample_id": "CN|CN-430047.BJ|2022-02-15",
+        "first_retained_trade_date": "2021-11-15",
+        "last_retained_trade_date": "2022-02-15",
+        "retained_rows": 61,
+        "later_rows_physically_excluded": 25,
+        "model_input_equal": true,
+        "native_request_equal": true
+      },
+      {
+        "sample_id": "CN|CN-600000.SH|2015-04-07",
+        "first_retained_trade_date": "2015-01-05",
+        "last_retained_trade_date": "2015-04-07",
+        "retained_rows": 61,
+        "later_rows_physically_excluded": 24,
+        "model_input_equal": true,
+        "native_request_equal": true
+      },
+      {
+        "sample_id": "CN|CN-600000.SH|2024-01-02",
+        "first_retained_trade_date": "2023-10-09",
+        "last_retained_trade_date": "2024-01-02",
+        "retained_rows": 61,
+        "later_rows_physically_excluded": 25,
+        "model_input_equal": true,
+        "native_request_equal": true
+      },
+      {
+        "sample_id": "CN|CN-600000.SH|2024-07-01",
+        "first_retained_trade_date": "2024-03-29",
+        "last_retained_trade_date": "2024-07-01",
+        "retained_rows": 61,
+        "later_rows_physically_excluded": 25,
+        "model_input_equal": true,
+        "native_request_equal": true
+      },
+      {
+        "sample_id": "CN|CN-600000.SH|2025-01-02",
+        "first_retained_trade_date": "2024-10-09",
+        "last_retained_trade_date": "2025-01-02",
+        "retained_rows": 61,
+        "later_rows_physically_excluded": 19,
+        "model_input_equal": true,
+        "native_request_equal": true
+      },
+      {
+        "sample_id": "CN|CN-688277.SH|2026-06-30",
+        "first_retained_trade_date": "2026-03-31",
+        "last_retained_trade_date": "2026-06-30",
+        "retained_rows": 61,
+        "later_rows_physically_excluded": 23,
+        "model_input_equal": true,
+        "native_request_equal": true
+      },
+      {
+        "sample_id": "CN|CN-873665.BJ|2023-12-28",
+        "first_retained_trade_date": "2023-09-27",
+        "last_retained_trade_date": "2023-12-28",
+        "retained_rows": 61,
+        "later_rows_physically_excluded": 24,
+        "model_input_equal": true,
+        "native_request_equal": true
+      },
+      {
+        "sample_id": "CN|CN-873833.BJ|2024-06-27",
+        "first_retained_trade_date": "2024-03-27",
+        "last_retained_trade_date": "2024-06-27",
+        "retained_rows": 61,
+        "later_rows_physically_excluded": 25,
+        "model_input_equal": true,
+        "native_request_equal": true
+      },
+      {
+        "sample_id": "CN|CN-920118.BJ|2024-12-30",
+        "first_retained_trade_date": "2024-09-30",
+        "last_retained_trade_date": "2024-12-30",
+        "retained_rows": 61,
+        "later_rows_physically_excluded": 19,
+        "model_input_equal": true,
+        "native_request_equal": true
+      },
+      {
+        "sample_id": "CN|CN-002142.SZ|2026-04-27",
+        "first_retained_trade_date": "2026-01-22",
+        "last_retained_trade_date": "2026-04-27",
+        "retained_rows": 61,
+        "later_rows_physically_excluded": 22,
+        "model_input_equal": true,
+        "native_request_equal": true
+      },
+      {
+        "sample_id": "CN|CN-300059.SZ|2026-04-27",
+        "first_retained_trade_date": "2026-01-22",
+        "last_retained_trade_date": "2026-04-27",
+        "retained_rows": 61,
+        "later_rows_physically_excluded": 22,
+        "model_input_equal": true,
+        "native_request_equal": true
+      }
+    ]
+  },
+  "recovered_ttm_evidence": {
+    "CN|CN-002142.SZ|2026-04-27": {
+      "ts_code": "002142.SZ",
+      "fundamental_snapshot_id": "fund-b76bc4c1092aacac0ea3c553",
+      "snapshot_available_at": "2026-04-26T00:00:00+08:00",
+      "source_refs": [
+        "financial_versions-5cc332c62a932c0835e3e389",
+        "financial_versions-698afb0ed23c97b4c703e673",
+        "financial_versions-800357878ed8cc5fc2c86bcc",
+        "financial_versions-87cd8ad76dae203e5badc2b6",
+        "financial_versions-971fab73ab2289f3567ed4ba",
+        "financial_versions-9b2330e183b4cfe331047a0b",
+        "financial_versions-ad839bc4e821e460a32144b9",
+        "financial_versions-beb60dcde34c252f796f925c",
+        "financial_versions-c2f30a31bad38a493bf7564d"
+      ],
+      "original_reports": [
+        {
+          "provenance_id": "financial_versions-5cc332c62a932c0835e3e389",
+          "source_version_id": "1224746398",
+          "source_sha256": "08bf46ba96a0a05d9a9da4f372f1618f1bcb7e683cf4eaf366c7d7ec95a6fb4f"
+        },
+        {
+          "provenance_id": "financial_versions-698afb0ed23c97b4c703e673",
+          "source_version_id": "1219903740",
+          "source_sha256": "5d539a5b5ea2042a2ad30204d7f6688f3d16fe0c4b8c84ebdc26364845f07454"
+        },
+        {
+          "provenance_id": "financial_versions-800357878ed8cc5fc2c86bcc",
+          "source_version_id": "1223363635",
+          "source_sha256": "38e065c558e5f1c399053fd0784dafdd4b2717afd1c1ce9522c7a576519a3ca7"
+        },
+        {
+          "provenance_id": "financial_versions-87cd8ad76dae203e5badc2b6",
+          "source_version_id": "1223045151",
+          "source_sha256": "4534164c8bbb0f99ab16582589dc43b9d46bfd3e2337ab9690401c8b5c4ea2c8"
+        },
+        {
+          "provenance_id": "financial_versions-971fab73ab2289f3567ed4ba",
+          "source_version_id": "1225189419",
+          "source_sha256": "6610078eb1d109465781dbd47d3256d4abbbe2f4ff1f8017e1724b3fadb35558"
+        },
+        {
+          "provenance_id": "financial_versions-9b2330e183b4cfe331047a0b",
+          "source_version_id": "1221540163",
+          "source_sha256": "37cde094e0abba690e096f7706d2233c2f96ed28c5a83638687b547c0d38afb3"
+        },
+        {
+          "provenance_id": "financial_versions-ad839bc4e821e460a32144b9",
+          "source_version_id": "1221032452",
+          "source_sha256": "0336e9d595bd13728e45a3a94f8413054ac68d5cfe4009ea01ecf219324cd935"
+        },
+        {
+          "provenance_id": "financial_versions-beb60dcde34c252f796f925c",
+          "source_version_id": "1225189427",
+          "source_sha256": "d9b90238562e5d598d1f82bc5a62999a305eeb6ae0afd03d3caefb0edda2b8a7"
+        },
+        {
+          "provenance_id": "financial_versions-c2f30a31bad38a493bf7564d",
+          "source_version_id": "1224606434",
+          "source_sha256": "9a61d9c5daef3686d18bc22206f4b97ed34ef1d9717e2c65b020d0229baad55f"
+        }
+      ],
+      "published_amount_cny": {
+        "revenue_ttm": 73858000000.0,
+        "net_income_total_ttm": 30343000000.0,
+        "net_income_parent_ttm": 30097000000.0,
+        "operating_cashflow_ttm": 202281000000.0,
+        "assets": 3859225000000.0,
+        "liabilities": 3600513000000.0,
+        "parent_equity": 257318000000.0
+      },
+      "independent_ttm_amount_cny": {
+        "revenue_ttm": 73858000000.0,
+        "net_income_total_ttm": 30343000000.0,
+        "net_income_parent_ttm": 30097000000.0,
+        "operating_cashflow_ttm": 202281000000.0,
+        "revenue_ttm_4q_ago": 67617000000.0
+      },
+      "expected_revenue_factors": {
+        "net_margin_ttm": 0.4108288878659048,
+        "revenue_growth_yoy_ttm": 0.09229927385125047
+      },
+      "rendered_financial_lines": {
+        "revenue_ttm": "revenue_ttm[million_CNY]=73858",
+        "net_income_total_ttm": "net_income_total_ttm[million_CNY]=30343",
+        "net_income_parent_ttm": "net_income_parent_ttm[million_CNY]=30097",
+        "operating_cashflow_ttm": "operating_cashflow_ttm[million_CNY]=202281",
+        "assets": "assets[million_CNY]=3859225",
+        "liabilities": "liabilities[million_CNY]=3600513",
+        "parent_equity": "parent_equity[million_CNY]=257318"
+      },
+      "rendered_revenue_factor_lines": {
+        "net_margin_ttm": "net_margin_ttm=0.41082889",
+        "revenue_growth_yoy_ttm": "revenue_growth_yoy_ttm=0.092299275"
+      }
+    },
+    "CN|CN-300059.SZ|2026-04-27": {
+      "ts_code": "300059.SZ",
+      "fundamental_snapshot_id": "fund-12ef18e6b4c09b879cb21154",
+      "snapshot_available_at": "2026-04-26T00:00:00+08:00",
+      "source_refs": [
+        "financial_versions-3835ed710f05442d29bec9c6",
+        "financial_versions-42088313336d99418fedea0a",
+        "financial_versions-53f940c2d85e3992db4dd68f",
+        "financial_versions-5c4eee6b0a56a800f6686ca4",
+        "financial_versions-79d2ead5d79fc88c597cc19a",
+        "financial_versions-808dd10ea2acd674da74d20d",
+        "financial_versions-8b7bc966d5a357bd034bd9ef",
+        "financial_versions-a9f8167f14fc9ffbdad32a2c",
+        "financial_versions-fa32bc42ccff6a8043893be5"
+      ],
+      "original_reports": [
+        {
+          "provenance_id": "financial_versions-3835ed710f05442d29bec9c6",
+          "source_version_id": "1224736179",
+          "source_sha256": "766e31d9e4b835bcbf258c9f490a6c9ae8d901e565b34528b42190f839ed6a12"
+        },
+        {
+          "provenance_id": "financial_versions-42088313336d99418fedea0a",
+          "source_version_id": "1224499196",
+          "source_sha256": "cdd16bccdb7e75ccfddf3ad6fff70525ace4fcec356093c0426268946ce18696"
+        },
+        {
+          "provenance_id": "financial_versions-53f940c2d85e3992db4dd68f",
+          "source_version_id": "1220834724",
+          "source_sha256": "70f2716a42b50f7a58a77c80106ed6ae98129f414093bc5586798599e094a1fb"
+        },
+        {
+          "provenance_id": "financial_versions-5c4eee6b0a56a800f6686ca4",
+          "source_version_id": "1225019509",
+          "source_sha256": "a5edb3304600d7ff7faeefa65fea3846f4326743cc72d9ade14cf93af20c1737"
+        },
+        {
+          "provenance_id": "financial_versions-79d2ead5d79fc88c597cc19a",
+          "source_version_id": "1223314764",
+          "source_sha256": "c8526dce0f65d94a8fd2bf060eab53a712ce8a93c1b592ac4896441ef624a8b0"
+        },
+        {
+          "provenance_id": "financial_versions-808dd10ea2acd674da74d20d",
+          "source_version_id": "1219792160",
+          "source_sha256": "b67a3bc8d2d0c43de051db850514ccc74331137c067c4e75a4bb95f9bf59ad0a"
+        },
+        {
+          "provenance_id": "financial_versions-8b7bc966d5a357bd034bd9ef",
+          "source_version_id": "1222806709",
+          "source_sha256": "a803c2d1d188f4e88d208566adff32a32d7fdabe3b361e01e110ffae0c4cdeda"
+        },
+        {
+          "provenance_id": "financial_versions-a9f8167f14fc9ffbdad32a2c",
+          "source_version_id": "1225185763",
+          "source_sha256": "7afb2fe339864cff84d729473f87fcb1d5a94f53b9dab2e57e0c7e2a111b81b1"
+        },
+        {
+          "provenance_id": "financial_versions-fa32bc42ccff6a8043893be5",
+          "source_version_id": "1221523945",
+          "source_sha256": "8cb30a4c4d96871f876d7109bfb4e4dc47b7cec50a426543aae43874f8221dae"
+        }
+      ],
+      "published_amount_cny": {
+        "revenue_ttm": 17613181150.97,
+        "net_income_total_ttm": 13107344087.009998,
+        "net_income_parent_ttm": 13107344087.009998,
+        "operating_cashflow_ttm": 24777114954.26,
+        "assets": 439896942606.42,
+        "liabilities": 344285528215.99,
+        "parent_equity": 95611414390.43
+      },
+      "independent_ttm_amount_cny": {
+        "revenue_ttm": 17613181150.97,
+        "net_income_total_ttm": 13107344087.009998,
+        "net_income_parent_ttm": 13107344087.009998,
+        "operating_cashflow_ttm": 24777114954.260002,
+        "revenue_ttm_4q_ago": 12633994348.89
+      },
+      "expected_revenue_factors": {
+        "net_margin_ttm": 0.744178122887707,
+        "revenue_growth_yoy_ttm": 0.3941102603483011
+      },
+      "rendered_financial_lines": {
+        "revenue_ttm": "revenue_ttm[million_CNY]=17613.181",
+        "net_income_total_ttm": "net_income_total_ttm[million_CNY]=13107.344",
+        "net_income_parent_ttm": "net_income_parent_ttm[million_CNY]=13107.344",
+        "operating_cashflow_ttm": "operating_cashflow_ttm[million_CNY]=24777.115",
+        "assets": "assets[million_CNY]=439896.94",
+        "liabilities": "liabilities[million_CNY]=344285.53",
+        "parent_equity": "parent_equity[million_CNY]=95611.414"
+      },
+      "rendered_revenue_factor_lines": {
+        "net_margin_ttm": "net_margin_ttm=0.74417812",
+        "revenue_growth_yoy_ttm": "revenue_growth_yoy_ttm=0.39411026"
+      }
+    }
+  },
+  "recovered_ttm_audit_sha256": "2a91ab1ae1f634b212519fd1407493d45ddf8805e226898690cc483d624eb6bb",
+  "code_revision": "6600011eb5cf46232d056ec0717dc726146d29de",
+  "tokenizer_revision": "b36640b5450552ac96f908c71664932e4fa79485a9a5422436a779230eeb1bff",
+  "checkpoint_revision": "b8e6fd7463cea8662c556d6257955d7ef9c10d19",
+  "encoding_runtime": {
+    "transformers": "5.23.0",
+    "tokenizers": "0.23.3",
+    "jinja2": "3.1.6",
+    "torch": "2.15.0"
+  },
+  "native_evidence": [
+    {
+      "sample_id": "CN|CN-000001.SZ|2015-04-07",
+      "split": "train",
+      "exchange": "SZSE",
+      "questions": [
+        "return_1d",
+        "return_5d",
+        "return_20d"
+      ],
+      "options_per_question": [
+        7,
+        7,
+        7
+      ],
+      "numeric_sessions": 60,
+      "sequence_channel_order": [
+        "open_relative",
+        "high_relative",
+        "low_relative",
+        "close_relative",
+        "log_return_1d",
+        "volume_relative"
+      ],
+      "finite_observations_by_channel": {
+        "open_relative": 60,
+        "high_relative": 60,
+        "low_relative": 60,
+        "close_relative": 60,
+        "log_return_1d": 60,
+        "volume_relative": 0
+      },
+      "non_null_factors": 12,
+      "non_null_financial_fields": 4,
+      "native_tokens": 6336,
+      "shared_tokens": 5438,
+      "split_sequences": 3,
+      "masks": [
+        true,
+        true,
+        true
+      ],
+      "class_ids": [
+        6,
+        6,
+        5
+      ],
+      "request_sha256": "15a97fb7ac56b671159e324e579fc2ddc3fad4544174ea4ce0ebb795d2b16c2e"
+    },
+    {
+      "sample_id": "CN|CN-000001.SZ|2024-01-02",
+      "split": "validation",
+      "exchange": "SZSE",
+      "questions": [
+        "return_1d",
+        "return_5d",
+        "return_20d"
+      ],
+      "options_per_question": [
+        7,
+        7,
+        7
+      ],
+      "numeric_sessions": 60,
+      "sequence_channel_order": [
+        "open_relative",
+        "high_relative",
+        "low_relative",
+        "close_relative",
+        "log_return_1d",
+        "volume_relative"
+      ],
+      "finite_observations_by_channel": {
+        "open_relative": 60,
+        "high_relative": 60,
+        "low_relative": 60,
+        "close_relative": 60,
+        "log_return_1d": 60,
+        "volume_relative": 0
+      },
+      "non_null_factors": 12,
+      "non_null_financial_fields": 4,
+      "native_tokens": 6128,
+      "shared_tokens": 5223,
+      "split_sequences": 3,
+      "masks": [
+        true,
+        true,
+        true
+      ],
+      "class_ids": [
+        2,
+        2,
+        5
+      ],
+      "request_sha256": "b57192878e3031241edbbf5b3233aab564f04d13c7fbd4e225569b6144a4f035"
+    },
+    {
+      "sample_id": "CN|CN-000001.SZ|2024-07-01",
+      "split": "calibration",
+      "exchange": "SZSE",
+      "questions": [
+        "return_1d",
+        "return_5d",
+        "return_20d"
+      ],
+      "options_per_question": [
+        7,
+        7,
+        7
+      ],
+      "numeric_sessions": 60,
+      "sequence_channel_order": [
+        "open_relative",
+        "high_relative",
+        "low_relative",
+        "close_relative",
+        "log_return_1d",
+        "volume_relative"
+      ],
+      "finite_observations_by_channel": {
+        "open_relative": 60,
+        "high_relative": 60,
+        "low_relative": 60,
+        "close_relative": 60,
+        "log_return_1d": 60,
+        "volume_relative": 0
+      },
+      "non_null_factors": 12,
+      "non_null_financial_fields": 4,
+      "native_tokens": 6332,
+      "shared_tokens": 5429,
+      "split_sequences": 3,
+      "masks": [
+        true,
+        true,
+        true
+      ],
+      "class_ids": [
+        4,
+        0,
+        2
+      ],
+      "request_sha256": "ba1e79abeaa17a9183ee4c4babbfdf786cd8b57faed68d7233b1fba6ccbe096c"
+    },
+    {
+      "sample_id": "CN|CN-000001.SZ|2025-01-02",
+      "split": "test",
+      "exchange": "SZSE",
+      "questions": [
+        "return_1d",
+        "return_5d",
+        "return_20d"
+      ],
+      "options_per_question": [
+        7,
+        7,
+        7
+      ],
+      "numeric_sessions": 60,
+      "sequence_channel_order": [
+        "open_relative",
+        "high_relative",
+        "low_relative",
+        "close_relative",
+        "log_return_1d",
+        "volume_relative"
+      ],
+      "finite_observations_by_channel": {
+        "open_relative": 60,
+        "high_relative": 60,
+        "low_relative": 60,
+        "close_relative": 60,
+        "log_return_1d": 60,
+        "volume_relative": 0
+      },
+      "non_null_factors": 12,
+      "non_null_financial_fields": 4,
+      "native_tokens": 6171,
+      "shared_tokens": 5270,
+      "split_sequences": 3,
+      "masks": [
+        true,
+        true,
+        true
+      ],
+      "class_ids": [
+        2,
+        2,
+        2
+      ],
+      "request_sha256": "8e499091902249b71bf57062c919b1523bed1bc4b8d744fce2305986389b4c44"
+    },
+    {
+      "sample_id": "CN|CN-430017.BJ|2024-01-02",
+      "split": "validation",
+      "exchange": "BSE",
+      "questions": [
+        "return_1d",
+        "return_5d",
+        "return_20d"
+      ],
+      "options_per_question": [
+        7,
+        7,
+        7
+      ],
+      "numeric_sessions": 60,
+      "sequence_channel_order": [
+        "open_relative",
+        "high_relative",
+        "low_relative",
+        "close_relative",
+        "log_return_1d",
+        "volume_relative"
+      ],
+      "finite_observations_by_channel": {
+        "open_relative": 60,
+        "high_relative": 60,
+        "low_relative": 60,
+        "close_relative": 60,
+        "log_return_1d": 60,
+        "volume_relative": 0
+      },
+      "non_null_factors": 10,
+      "non_null_financial_fields": 0,
+      "native_tokens": 6252,
+      "shared_tokens": 5353,
+      "split_sequences": 3,
+      "masks": [
+        true,
+        true,
+        true
+      ],
+      "class_ids": [
+        4,
+        1,
+        1
+      ],
+      "request_sha256": "e0f2731b1f595ddadb77cbe37e380c8768cbbc337d3bd53babff1fb3464165b2"
+    },
+    {
+      "sample_id": "CN|CN-430017.BJ|2024-07-01",
+      "split": "calibration",
+      "exchange": "BSE",
+      "questions": [
+        "return_1d",
+        "return_5d",
+        "return_20d"
+      ],
+      "options_per_question": [
+        7,
+        7,
+        7
+      ],
+      "numeric_sessions": 60,
+      "sequence_channel_order": [
+        "open_relative",
+        "high_relative",
+        "low_relative",
+        "close_relative",
+        "log_return_1d",
+        "volume_relative"
+      ],
+      "finite_observations_by_channel": {
+        "open_relative": 60,
+        "high_relative": 60,
+        "low_relative": 60,
+        "close_relative": 60,
+        "log_return_1d": 60,
+        "volume_relative": 0
+      },
+      "non_null_factors": 10,
+      "non_null_financial_fields": 0,
+      "native_tokens": 6145,
+      "shared_tokens": 5242,
+      "split_sequences": 3,
+      "masks": [
+        true,
+        true,
+        true
+      ],
+      "class_ids": [
+        2,
+        1,
+        2
+      ],
+      "request_sha256": "8e020a37c947f0fd9f70367f2f3a75634d30af525da012acc90b261c79b94f11"
+    },
+    {
+      "sample_id": "CN|CN-430017.BJ|2025-01-02",
+      "split": "test",
+      "exchange": "BSE",
+      "questions": [
+        "return_1d",
+        "return_5d",
+        "return_20d"
+      ],
+      "options_per_question": [
+        7,
+        7,
+        7
+      ],
+      "numeric_sessions": 60,
+      "sequence_channel_order": [
+        "open_relative",
+        "high_relative",
+        "low_relative",
+        "close_relative",
+        "log_return_1d",
+        "volume_relative"
+      ],
+      "finite_observations_by_channel": {
+        "open_relative": 60,
+        "high_relative": 60,
+        "low_relative": 60,
+        "close_relative": 60,
+        "log_return_1d": 60,
+        "volume_relative": 0
+      },
+      "non_null_factors": 10,
+      "non_null_financial_fields": 0,
+      "native_tokens": 6074,
+      "shared_tokens": 5176,
+      "split_sequences": 3,
+      "masks": [
+        true,
+        true,
+        true
+      ],
+      "class_ids": [
+        2,
+        5,
+        5
+      ],
+      "request_sha256": "d8eda3538a5b1f3563a9ee2a9e64a569b74cddaf1f0b559a80eb85ee1126693b"
+    },
+    {
+      "sample_id": "CN|CN-430047.BJ|2022-02-15",
+      "split": "train",
+      "exchange": "BSE",
+      "questions": [
+        "return_1d",
+        "return_5d",
+        "return_20d"
+      ],
+      "options_per_question": [
+        7,
+        7,
+        7
+      ],
+      "numeric_sessions": 60,
+      "sequence_channel_order": [
+        "open_relative",
+        "high_relative",
+        "low_relative",
+        "close_relative",
+        "log_return_1d",
+        "volume_relative"
+      ],
+      "finite_observations_by_channel": {
+        "open_relative": 60,
+        "high_relative": 60,
+        "low_relative": 60,
+        "close_relative": 60,
+        "log_return_1d": 60,
+        "volume_relative": 0
+      },
+      "non_null_factors": 10,
+      "non_null_financial_fields": 0,
+      "native_tokens": 6036,
+      "shared_tokens": 5145,
+      "split_sequences": 3,
+      "masks": [
+        true,
+        true,
+        true
+      ],
+      "class_ids": [
+        4,
+        0,
+        1
+      ],
+      "request_sha256": "48794b4ff7cc6e1e7cecfc259fe8ad5734287ba57aceffab88ca1e822fb433ca"
+    },
+    {
+      "sample_id": "CN|CN-600000.SH|2015-04-07",
+      "split": "train",
+      "exchange": "SSE",
+      "questions": [
+        "return_1d",
+        "return_5d",
+        "return_20d"
+      ],
+      "options_per_question": [
+        7,
+        7,
+        7
+      ],
+      "numeric_sessions": 60,
+      "sequence_channel_order": [
+        "open_relative",
+        "high_relative",
+        "low_relative",
+        "close_relative",
+        "log_return_1d",
+        "volume_relative"
+      ],
+      "finite_observations_by_channel": {
+        "open_relative": 60,
+        "high_relative": 60,
+        "low_relative": 60,
+        "close_relative": 60,
+        "log_return_1d": 60,
+        "volume_relative": 0
+      },
+      "non_null_factors": 10,
+      "non_null_financial_fields": 1,
+      "native_tokens": 6284,
+      "shared_tokens": 5388,
+      "split_sequences": 3,
+      "masks": [
+        true,
+        true,
+        true
+      ],
+      "class_ids": [
+        5,
+        5,
+        4
+      ],
+      "request_sha256": "22aa7d8a8574f473b8b72b57057e4b3ff26c4b7afd60276889eb2f505e03f4ee"
+    },
+    {
+      "sample_id": "CN|CN-600000.SH|2024-01-02",
+      "split": "validation",
+      "exchange": "SSE",
+      "questions": [
+        "return_1d",
+        "return_5d",
+        "return_20d"
+      ],
+      "options_per_question": [
+        7,
+        7,
+        7
+      ],
+      "numeric_sessions": 60,
+      "sequence_channel_order": [
+        "open_relative",
+        "high_relative",
+        "low_relative",
+        "close_relative",
+        "log_return_1d",
+        "volume_relative"
+      ],
+      "finite_observations_by_channel": {
+        "open_relative": 60,
+        "high_relative": 60,
+        "low_relative": 60,
+        "close_relative": 60,
+        "log_return_1d": 60,
+        "volume_relative": 0
+      },
+      "non_null_factors": 10,
+      "non_null_financial_fields": 1,
+      "native_tokens": 6014,
+      "shared_tokens": 5105,
+      "split_sequences": 3,
+      "masks": [
+        true,
+        true,
+        true
+      ],
+      "class_ids": [
+        5,
+        4,
+        5
+      ],
+      "request_sha256": "f489be74dd5eadbbf6cbe152b1cd8d8106b8000307ca92b0bb17eee346537f32"
+    },
+    {
+      "sample_id": "CN|CN-600000.SH|2024-07-01",
+      "split": "calibration",
+      "exchange": "SSE",
+      "questions": [
+        "return_1d",
+        "return_5d",
+        "return_20d"
+      ],
+      "options_per_question": [
+        7,
+        7,
+        7
+      ],
+      "numeric_sessions": 60,
+      "sequence_channel_order": [
+        "open_relative",
+        "high_relative",
+        "low_relative",
+        "close_relative",
+        "log_return_1d",
+        "volume_relative"
+      ],
+      "finite_observations_by_channel": {
+        "open_relative": 60,
+        "high_relative": 60,
+        "low_relative": 60,
+        "close_relative": 60,
+        "log_return_1d": 60,
+        "volume_relative": 0
+      },
+      "non_null_factors": 10,
+      "non_null_financial_fields": 1,
+      "native_tokens": 6269,
+      "shared_tokens": 5364,
+      "split_sequences": 3,
+      "masks": [
+        true,
+        true,
+        true
+      ],
+      "class_ids": [
+        6,
+        5,
+        5
+      ],
+      "request_sha256": "f14a314e6eb04750670147fc75b29851bf83f80e3acf8bbce11af528af11b2fe"
+    },
+    {
+      "sample_id": "CN|CN-600000.SH|2025-01-02",
+      "split": "test",
+      "exchange": "SSE",
+      "questions": [
+        "return_1d",
+        "return_5d",
+        "return_20d"
+      ],
+      "options_per_question": [
+        7,
+        7,
+        7
+      ],
+      "numeric_sessions": 60,
+      "sequence_channel_order": [
+        "open_relative",
+        "high_relative",
+        "low_relative",
+        "close_relative",
+        "log_return_1d",
+        "volume_relative"
+      ],
+      "finite_observations_by_channel": {
+        "open_relative": 60,
+        "high_relative": 60,
+        "low_relative": 60,
+        "close_relative": 60,
+        "log_return_1d": 60,
+        "volume_relative": 0
+      },
+      "non_null_factors": 10,
+      "non_null_financial_fields": 1,
+      "native_tokens": 6217,
+      "shared_tokens": 5316,
+      "split_sequences": 3,
+      "masks": [
+        true,
+        true,
+        true
+      ],
+      "class_ids": [
+        2,
+        4,
+        4
+      ],
+      "request_sha256": "916afbfa51cafc05d942a87926805458896250105a9fdbfb537d8e784425d908"
+    },
+    {
+      "sample_id": "CN|CN-688277.SH|2026-06-30",
+      "split": "test",
+      "exchange": "SSE",
+      "questions": [
+        "return_1d",
+        "return_5d",
+        "return_20d"
+      ],
+      "options_per_question": [
+        7,
+        7,
+        7
+      ],
+      "numeric_sessions": 60,
+      "sequence_channel_order": [
+        "open_relative",
+        "high_relative",
+        "low_relative",
+        "close_relative",
+        "log_return_1d",
+        "volume_relative"
+      ],
+      "finite_observations_by_channel": {
+        "open_relative": 60,
+        "high_relative": 60,
+        "low_relative": 60,
+        "close_relative": 60,
+        "log_return_1d": 60,
+        "volume_relative": 0
+      },
+      "non_null_factors": 10,
+      "non_null_financial_fields": 0,
+      "native_tokens": 6116,
+      "shared_tokens": 5216,
+      "split_sequences": 3,
+      "masks": [
+        true,
+        true,
+        false
+      ],
+      "class_ids": [
+        5,
+        2,
+        0
+      ],
+      "request_sha256": "36df7a3bb2b6ac578c60e27f757daeb356cd677b5c59c64be537bf5a0c0c5db7"
+    },
+    {
+      "sample_id": "CN|CN-873665.BJ|2023-12-28",
+      "split": "train",
+      "exchange": "BSE",
+      "questions": [
+        "return_1d",
+        "return_5d",
+        "return_20d"
+      ],
+      "options_per_question": [
+        7,
+        7,
+        7
+      ],
+      "numeric_sessions": 60,
+      "sequence_channel_order": [
+        "open_relative",
+        "high_relative",
+        "low_relative",
+        "close_relative",
+        "log_return_1d",
+        "volume_relative"
+      ],
+      "finite_observations_by_channel": {
+        "open_relative": 60,
+        "high_relative": 60,
+        "low_relative": 60,
+        "close_relative": 60,
+        "log_return_1d": 60,
+        "volume_relative": 0
+      },
+      "non_null_factors": 10,
+      "non_null_financial_fields": 0,
+      "native_tokens": 6249,
+      "shared_tokens": 5356,
+      "split_sequences": 3,
+      "masks": [
+        true,
+        false,
+        false
+      ],
+      "class_ids": [
+        5,
+        0,
+        0
+      ],
+      "request_sha256": "394e7d4b803ed13677fc026658922fdaa36ceb3cf8c7db67bc8e36495b1603cc"
+    },
+    {
+      "sample_id": "CN|CN-873833.BJ|2024-06-27",
+      "split": "validation",
+      "exchange": "BSE",
+      "questions": [
+        "return_1d",
+        "return_5d",
+        "return_20d"
+      ],
+      "options_per_question": [
+        7,
+        7,
+        7
+      ],
+      "numeric_sessions": 60,
+      "sequence_channel_order": [
+        "open_relative",
+        "high_relative",
+        "low_relative",
+        "close_relative",
+        "log_return_1d",
+        "volume_relative"
+      ],
+      "finite_observations_by_channel": {
+        "open_relative": 60,
+        "high_relative": 60,
+        "low_relative": 60,
+        "close_relative": 60,
+        "log_return_1d": 60,
+        "volume_relative": 0
+      },
+      "non_null_factors": 10,
+      "non_null_financial_fields": 0,
+      "native_tokens": 6080,
+      "shared_tokens": 5185,
+      "split_sequences": 3,
+      "masks": [
+        true,
+        false,
+        false
+      ],
+      "class_ids": [
+        4,
+        0,
+        0
+      ],
+      "request_sha256": "2d7d5f994dc77551d88fbc61085564cd6267bef80e955e1ae62b528626208247"
+    },
+    {
+      "sample_id": "CN|CN-920118.BJ|2024-12-30",
+      "split": "calibration",
+      "exchange": "BSE",
+      "questions": [
+        "return_1d",
+        "return_5d",
+        "return_20d"
+      ],
+      "options_per_question": [
+        7,
+        7,
+        7
+      ],
+      "numeric_sessions": 60,
+      "sequence_channel_order": [
+        "open_relative",
+        "high_relative",
+        "low_relative",
+        "close_relative",
+        "log_return_1d",
+        "volume_relative"
+      ],
+      "finite_observations_by_channel": {
+        "open_relative": 60,
+        "high_relative": 60,
+        "low_relative": 60,
+        "close_relative": 60,
+        "log_return_1d": 60,
+        "volume_relative": 0
+      },
+      "non_null_factors": 10,
+      "non_null_financial_fields": 0,
+      "native_tokens": 6053,
+      "shared_tokens": 5154,
+      "split_sequences": 3,
+      "masks": [
+        true,
+        false,
+        false
+      ],
+      "class_ids": [
+        4,
+        0,
+        0
+      ],
+      "request_sha256": "f56f525466432ad8c2222e4db286292f285d80a867992648d2e819171fa5082a"
+    },
+    {
+      "sample_id": "CN|CN-002142.SZ|2026-04-27",
+      "split": "test",
+      "exchange": "SZSE",
+      "questions": [
+        "return_1d",
+        "return_5d",
+        "return_20d"
+      ],
+      "options_per_question": [
+        7,
+        7,
+        7
+      ],
+      "numeric_sessions": 60,
+      "sequence_channel_order": [
+        "open_relative",
+        "high_relative",
+        "low_relative",
+        "close_relative",
+        "log_return_1d",
+        "volume_relative"
+      ],
+      "finite_observations_by_channel": {
+        "open_relative": 60,
+        "high_relative": 60,
+        "low_relative": 60,
+        "close_relative": 60,
+        "log_return_1d": 60,
+        "volume_relative": 0
+      },
+      "non_null_factors": 17,
+      "non_null_financial_fields": 7,
+      "native_tokens": 6429,
+      "shared_tokens": 5530,
+      "split_sequences": 3,
+      "masks": [
+        true,
+        true,
+        true
+      ],
+      "class_ids": [
+        5,
+        2,
+        1
+      ],
+      "request_sha256": "219c35978aad74e235e2aa9c2d3cf2c4fc1bc78fbd8169e7cf01064279baf456"
+    },
+    {
+      "sample_id": "CN|CN-300059.SZ|2026-04-27",
+      "split": "test",
+      "exchange": "SZSE",
+      "questions": [
+        "return_1d",
+        "return_5d",
+        "return_20d"
+      ],
+      "options_per_question": [
+        7,
+        7,
+        7
+      ],
+      "numeric_sessions": 60,
+      "sequence_channel_order": [
+        "open_relative",
+        "high_relative",
+        "low_relative",
+        "close_relative",
+        "log_return_1d",
+        "volume_relative"
+      ],
+      "finite_observations_by_channel": {
+        "open_relative": 60,
+        "high_relative": 60,
+        "low_relative": 60,
+        "close_relative": 60,
+        "log_return_1d": 60,
+        "volume_relative": 0
+      },
+      "non_null_factors": 23,
+      "non_null_financial_fields": 7,
+      "native_tokens": 6358,
+      "shared_tokens": 5455,
+      "split_sequences": 3,
+      "masks": [
+        true,
+        true,
+        true
+      ],
+      "class_ids": [
+        5,
+        5,
+        1
+      ],
+      "request_sha256": "2fdf87f3b80d43acf61c26b4aeae8f1535e0f7e69db4a1baaaef00fb804dccc8"
+    }
+  ]
+}

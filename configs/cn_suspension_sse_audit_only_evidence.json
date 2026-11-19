@@ -1,0 +1,117 @@
+[
+  {
+    "ts_code": "603159.SH",
+    "effective_from": "2026-06-16",
+    "effective_to_exclusive": "2026-06-17",
+    "state": "reported_suspension",
+    "start_source_id": "sse-daily-suspension-603159.SH-2026-06-16-4912f4ef19bc",
+    "start_source_url": "https://query.sse.com.cn/commonSoaQuery.do?isPagination=true&sqlId=GW_PL_JYTS_TFPXX&pageHelp.pageSize=25&pageHelp.pageNo=1&productCode=603159&keyWords=&startStopDate=20260614&endStopDate=20260617&jsonCallBack=jsoncallback",
+    "start_source_sha256": "4912f4ef19bcc3bad495914e006ade8e70698dacc122228fe3760e0052f5841b",
+    "observed_at": "2026-11-19T08:54:03+00:00",
+    "historical_publication_time": null,
+    "usage": "label_reason_and_audit_only",
+    "source_record": {
+      "startStopDate": "20260616",
+      "stopReason": "重要公告",
+      "productCode": "603159",
+      "endStopReason": "重要公告",
+      "controlType": "TR",
+      "endStopDate": "20260622",
+      "stopTime": "",
+      "type": "LXTP",
+      "productName": "上海亚虹"
+    }
+  },
+  {
+    "ts_code": "603616.SH",
+    "effective_from": "2026-01-22",
+    "effective_to_exclusive": "2026-01-23",
+    "state": "reported_suspension",
+    "start_source_id": "sse-daily-suspension-603616.SH-2026-01-22-dc1f67cdee97",
+    "start_source_url": "https://query.sse.com.cn/commonSoaQuery.do?isPagination=true&sqlId=GW_PL_JYTS_TFPXX&pageHelp.pageSize=25&pageHelp.pageNo=1&productCode=603616&keyWords=&startStopDate=20260120&endStopDate=20260123&jsonCallBack=jsoncallback",
+    "start_source_sha256": "dc1f67cdee97a392c3e74dd443d6a968de973a21df163ffe75f79e2be23afb4f",
+    "observed_at": "2026-11-19T08:54:03+00:00",
+    "historical_publication_time": null,
+    "usage": "label_reason_and_audit_only",
+    "source_record": {
+      "startStopDate": "20260122",
+      "stopReason": "拟筹划重大资产重组",
+      "productCode": "603616",
+      "endStopReason": "拟筹划重大资产重组",
+      "controlType": "TR",
+      "endStopDate": "20260203",
+      "stopTime": "",
+      "type": "LXTP",
+      "productName": "韩建河山"
+    }
+  },
+  {
+    "ts_code": "688005.SH",
+    "effective_from": "2026-01-15",
+    "effective_to_exclusive": "2026-01-16",
+    "state": "reported_suspension",
+    "start_source_id": "sse-daily-suspension-688005.SH-2026-01-15-3bd857fef53d",
+    "start_source_url": "https://query.sse.com.cn/commonSoaQuery.do?isPagination=true&sqlId=GW_PL_JYTS_TFPXX&pageHelp.pageSize=25&pageHelp.pageNo=1&productCode=688005&keyWords=&startStopDate=20260113&endStopDate=20260116&jsonCallBack=jsoncallback",
+    "start_source_sha256": "3bd857fef53d507748595df1ea0d4e06f1968e7730f0a7f5bd9889b210b7eead",
+    "observed_at": "2026-11-19T08:54:03+00:00",
+    "historical_publication_time": null,
+    "usage": "label_reason_and_audit_only",
+    "source_record": {
+      "startStopDate": "20260115",
+      "stopReason": "重要事项未公告",
+      "productCode": "688005",
+      "endStopReason": "重要事项未公告",
+      "controlType": "TR",
+      "endStopDate": "20260115",
+      "stopTime": "WH",
+      "type": "LSTP",
+      "productName": "容百科技"
+    }
+  },
+  {
+    "ts_code": "605028.SH",
+    "effective_from": "2026-01-13",
+    "effective_to_exclusive": "2026-01-14",
+    "state": "reported_suspension",
+    "start_source_id": "sse-daily-suspension-605028.SH-2026-01-13-41c4b68c5c2b",
+    "start_source_url": "https://query.sse.com.cn/commonSoaQuery.do?isPagination=true&sqlId=GW_PL_JYTS_TFPXX&pageHelp.pageSize=25&pageHelp.pageNo=1&productCode=605028&keyWords=&startStopDate=20260111&endStopDate=20260114&jsonCallBack=jsoncallback",
+    "start_source_sha256": "41c4b68c5c2b21df82b348db8b8a86b6e0c6d965d89d454c8764839439bddee0",
+    "observed_at": "2026-11-19T08:54:03+00:00",
+    "historical_publication_time": null,
+    "usage": "label_reason_and_audit_only",
+    "source_record": {
+      "startStopDate": "20260113",
+      "stopReason": "重要公告",
+      "productCode": "605028",
+      "endStopReason": "重要公告",
+      "controlType": "TR",
+      "endStopDate": "20260113",
+      "stopTime": "WH",
+      "type": "LSTP",
+      "productName": "世茂能源"
+    }
+  },
+  {
+    "ts_code": "688766.SH",
+    "effective_from": "2025-11-26",
+    "effective_to_exclusive": "2025-11-27",
+    "state": "reported_suspension",
+    "start_source_id": "sse-daily-suspension-688766.SH-2025-11-26-8fd708c84d9c",
+    "start_source_url": "https://query.sse.com.cn/commonSoaQuery.do?isPagination=true&sqlId=GW_PL_JYTS_TFPXX&pageHelp.pageSize=25&pageHelp.pageNo=1&productCode=688766&keyWords=&startStopDate=20251124&endStopDate=20251127&jsonCallBack=jsoncallback",
+    "start_source_sha256": "8fd708c84d9c8016f2c166c86b54ba3c1965d22322258ae807231404ad141cca",
+    "observed_at": "2026-11-19T08:54:03+00:00",
+    "historical_publication_time": null,
+    "usage": "label_reason_and_audit_only",
+    "source_record": {
+      "startStopDate": "20251126",
+      "stopReason": "拟筹划重大资产重组",
+      "productCode": "688766",
+      "endStopReason": "拟筹划重大资产重组",
+      "controlType": "TR",
+      "endStopDate": "20251208",
+      "stopTime": "",
+      "type": "LXTP",
+      "productName": "普冉股份"
+    }
+  }
+]
