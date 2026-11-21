@@ -3,13 +3,50 @@ import json
 
 import duckdb
 
+from kurumi.cn_acceptance import REQUIRED_CHECKS, publication_status
 from kurumi.cn_price_refresh import apply_suspension_evidence, refresh_suspensions
 from kurumi.cn_prices import build_prices, prepare_prices
-from kurumi.cn_publish import CORE, complete_build
+from kurumi.cn_publish import CORE, complete_build, refresh_pit_sample_references
 from kurumi.numeric_loader import NumericDataset
 
 
-def test_release(tmp_path):
+def test_status_requires_contract_checks_and_built_dependencies():
+    passed = {check: {"result": "passed"} for check in REQUIRED_CHECKS}
+    assert publication_status({"window": 0}, [], passed) == "NUMERIC_READY"
+    assert publication_status({"window": 1}, [], passed) == "INCOMPLETE"
+    assert publication_status({"window": 0}, [{"dependency": "financial_pit"}], passed) == "INCOMPLETE"
+    assert publication_status({"window": 0}, [], {**passed, "native_karpo": {"result": "failed"}}) == "INCOMPLETE"
+    assert publication_status({"window": 0}, [], {}) == "INCOMPLETE"
+
+
+def test_refresh_pit_sample_references_keeps_sample_keys_and_input_validity():
+    with duckdb.connect() as con:
+        con.execute("""
+            CREATE TABLE samples AS SELECT * FROM (VALUES
+                ('one', 'old', DATE '2022-01-04', 'a', 'previous', NULL, NULL, NULL, true),
+                ('two', 'old', DATE '2022-01-05', 'b', 'unaffected', 'SW', '2021', 'sector', false)
+            ) t(sample_id, instrument_id, local_trade_date, issuer_id, fundamental_snapshot_id,
+                industry_system, classification_version, industry_code_asof, input_valid)
+        """)
+        con.execute("""
+            CREATE TABLE stock_base AS SELECT * FROM (VALUES
+                ('old', DATE '2022-01-04', 'canonical', 'restored', 'SW', '2014', 'membership'),
+                ('old', DATE '2022-01-05', 'b', 'unaffected', 'SW', '2021', 'sector')
+            ) t(instrument_id, local_trade_date, issuer_id, fundamental_snapshot_id,
+                industry_system, classification_version, industry_code_asof)
+        """)
+        refresh_pit_sample_references(con)
+        assert con.execute("""
+            SELECT sample_id, issuer_id, fundamental_snapshot_id, industry_system,
+                   classification_version, industry_code_asof, input_valid
+            FROM samples ORDER BY sample_id
+        """).fetchall() == [
+            ("one", "canonical", "restored", "SW", "2014", "membership", True),
+            ("two", "b", "unaffected", "SW", "2021", "sector", False),
+        ]
+
+
+def test_release(tmp_path, capsys):
     workspace = tmp_path / "w"
     workspace.mkdir(parents=True)
     proof = tmp_path / "first.json"
@@ -44,8 +81,8 @@ def test_release(tmp_path):
             SELECT '600001.SH' AS ts_code,'示例' AS name,'20150101' AS start_date,
                    NULL::VARCHAR AS end_date,'20141231' AS ann_date,'name' AS _batch_id;
             CREATE TABLE quant.canonical_suspend_d AS
-            SELECT ts_code,trade_date,NULL::VARCHAR AS suspend_type,NULL::VARCHAR AS suspend_timing,
-                   'halt' AS _batch_id FROM quant.canonical_daily WHERE false;
+            SELECT ts_code,trade_date,'S' AS suspend_type,NULL::VARCHAR AS suspend_timing,
+                   'halt' AS _batch_id FROM quant.canonical_daily WHERE trade_date='20150312';
             CREATE TABLE quant.canonical_stk_limit AS
             SELECT ts_code,trade_date,12.0::DOUBLE AS up_limit,8.0::DOUBLE AS down_limit,'limit' AS _batch_id FROM quant.canonical_daily;
             CREATE TABLE quant.raw_batches AS
@@ -60,11 +97,31 @@ def test_release(tmp_path):
         for endpoint in ("income", "balancesheet", "cashflow", "dividend", "daily_basic", "index_member_all"):
             con.execute(f"""CREATE TABLE quant.canonical_{endpoint} AS SELECT
                 NULL::VARCHAR AS ts_code,NULL::TIMESTAMPTZ AS _available_at WHERE false""")
+        daily = workspace / "sources/daily"
+        daily.mkdir(parents=True)
+        con.sql("""
+            SELECT * REPLACE(101.0 AS vol, 10.123 AS amount, 'baostock-daily-example' AS _batch_id)
+            FROM quant.canonical_daily WHERE trade_date='20150312'
+        """).write_parquet(str(daily / "baostock-daily-proven.parquet"))
         prepare_prices(con, workspace / "sources", suspension_evidence=proof)
         build_prices(con)
+        assert con.sql("""
+            SELECT quote_valid,daily_batch,volume_shares,suspension_verified
+            FROM stock_base WHERE local_trade_date=DATE '2015-03-12'
+        """).fetchone() == (True, "baostock-daily-example", 10100.0, False)
         con.execute("CREATE TABLE stock_prices AS FROM stock_base")
         complete_build(con, workspace, first_inputs, suspension_evidence=proof)
         release = json.loads((workspace.parent / "latest_cn.json").read_text())["path"]
+        evidence = tmp_path / "expanded-evidence"
+        evidence.mkdir()
+        (evidence / "scope.json").write_text("{}", encoding="utf-8")
+        complete_build(con, workspace, first_inputs, evidence_dir=evidence, suspension_evidence=proof)
+        rebuilt = json.loads((workspace.parent / "latest_cn.json").read_text())["path"]
+        assert rebuilt != release
+        relative = "labels/market_id=CN/year=2015/part-000.parquet"
+        assert (workspace.parent / rebuilt / relative).read_bytes() == (workspace.parent / release / relative).read_bytes()
+        assert "retain exact price-derived supervision" in capsys.readouterr().out
+        release = rebuilt
         newer = tmp_path / "next.json"
         extra = initial + [{
             "ts_code": "600001.SH", "state": "listing_suspended", "effective_from": "2015-03-10",
@@ -92,6 +149,9 @@ def test_release(tmp_path):
     release = json.loads((workspace.parent / "latest_cn.json").read_text())["path"]
     manifest = json.loads((workspace.parent / release / "manifest.json").read_text())
     assert manifest["status"] == "INCOMPLETE"
+    validation = json.loads((workspace.parent / release / "reports/validation_results.json").read_text())
+    assert validation["status"] == manifest["status"]
+    assert validation["independent"]["release_bytes_windows_labels_and_masks"]["result"] == "passed"
     assert all(any(name.startswith(table + "/") for name in manifest["files"]) for table in CORE)
     ds = NumericDataset(workspace.parent / release, allow_incomplete=True)
     sample_id = next(ds.iter_sample_ids("train"))

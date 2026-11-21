@@ -109,14 +109,17 @@ def segment_prefix(name, rows, fields):
     counts = Counter()
     for versions in groups.values():
         tested = 0
-        dates = {r["available_at"].astimezone(LOCAL).date() - timedelta(days=1) for r in versions}
+        dates = {(r["available_at"].astimezone(LOCAL).date() if r["available_at"] else
+                  date.fromisoformat(r["effective_from"])) - timedelta(days=1) for r in versions}
         for day in sorted(dates):
             clock = timestamp(day)
-            past = [r for r in versions if r["available_at"] <= clock]
-            future = [r for r in versions if r["available_at"] > clock]
+            past = [r for r in versions if (r["available_at"] <= clock if r["available_at"] else
+                    date.fromisoformat(r["effective_from"]) <= day)]
+            future = [r for r in versions if (r["available_at"] > clock if r["available_at"] else
+                      date.fromisoformat(r["effective_from"]) > day)]
             if not future:
                 continue
-            perturbed = past + [future_changes(name, r, day) for r in future]
+            perturbed = past + [future_changes(name, r, day) if r["available_at"] else r for r in future]
             baseline = segment_at(versions, fields, day)
             if baseline != segment_at(past, fields, day) or baseline != segment_at(perturbed, fields, day):
                 raise AssertionError(f"{name} prefix changed for {versions[0]['ts_code']} {day}")
@@ -195,7 +198,13 @@ def stage_variant(root, raw, day, variant, counts):
     for name, versions in raw.items():
         records = []
         for row in versions:
-            if _between_time(row["published_at"])[2] <= clock:
+            published = row.get("published_at")
+            if published is None:
+                if date.fromisoformat(row["effective_from"]) <= day or variant == "mutated":
+                    records.append(row)
+                else:
+                    counts[name] += 1
+            elif _between_time(published)[2] <= clock:
                 records.append(row)
             elif variant == "mutated":
                 records.append(future_changes(name, row, day))
@@ -257,29 +266,48 @@ def main():
     parser.add_argument("--evidence", type=Path, required=True)
     parser.add_argument("--legacy-manifest", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--production-probes-only", action="store_true",
+                        help="Run the real-quote probes with every version of their source securities")
     args = parser.parse_args()
     raw, source_bytes = {}, {}
-    for name in TYPES:
-        data = (args.evidence / f"{name}.jsonl").read_bytes()
-        source_bytes[name] = digest(data)
-        raw[name] = [json.loads(line) for line in data.splitlines()]
     ledger = {}
-    versions = {name: _with_provenance(args.evidence, name, ledger) for name in TYPES}
+    for name in TYPES:
+        source = args.evidence / f"{name}.jsonl"
+        if not source.is_file():
+            raw[name] = []
+            continue
+        with source.open("rb") as stream:
+            source_bytes[name] = hashlib.file_digest(stream, "sha256").hexdigest()
+        with source.open(encoding="utf-8-sig") as stream:
+            records = (json.loads(line) for line in stream if line.strip())
+            raw[name] = [r for r in records if not args.production_probes_only or r["ts_code"] in PROBE_CODES]
     manifest = args.legacy_manifest.read_bytes()
-    with TemporaryDirectory(prefix="cn-pit-prefix-", dir=args.evidence.parent) as scratch:
+    with TemporaryDirectory(prefix="cn-pit-prefix-", dir=args.output.parent) as scratch:
+        scratch = Path(scratch)
+        baseline = args.evidence
+        if args.production_probes_only:
+            baseline = scratch / "baseline"
+            baseline.mkdir()
+            for name, records in raw.items():
+                (baseline / f"{name}.jsonl").write_text(
+                    "".join(json.dumps(r, ensure_ascii=False) + "\n" for r in records), encoding="utf-8",
+                )
+        variants = scratch / "variants"
+        variants.mkdir()
+        versions = {name: _with_provenance(baseline, name, ledger) for name in TYPES}
         result = {
             "status": "PASS", "frozen_source_sha256": source_bytes, "source_manifest_sha256": digest(manifest),
-            "source_rows": {name: len(rows) for name, rows in raw.items()},
+            "scope": "production_probe_securities" if args.production_probes_only else "all_evidence_helpers",
+            "source_rows_tested": {name: len(rows) for name, rows in raw.items()},
             "financial_helper": financial_prefix(versions["financial_versions"]),
             "share_segment_helper": segment_prefix("share_versions", versions["share_versions"],
                                                    ("shares_outstanding_security", "single_share_class")),
             "industry_segment_helper": segment_prefix("industry_versions", versions["industry_versions"],
                                                       ("classification_version", "industry_code", "industry_name")),
             "split_coverage_segment_helper": segment_prefix("split_coverage", versions["split_coverage"], ()),
-            "real_quote_production_join": integrated(args.evidence, raw, json.loads(manifest), Path(scratch)),
+            "real_quote_production_join": integrated(baseline, raw, json.loads(manifest), variants),
             "limits": ["Original source values are unchanged outside temporary variants.",
                        "Helper dates are source-clock probes; production join probes have real exchange price rows.",
-                       "Frozen evidence has no non-null U window with a later actual split event for that security.",
                        "Raw market features, future-label masking and Karpo encoding are checked separately."],
         }
     args.output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

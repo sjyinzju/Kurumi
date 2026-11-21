@@ -1,0 +1,38 @@
+{
+  "stage": "artifacts/cn_sse_class_monthly/staged_effective_release",
+  "share_versions": {
+    "rows": 10,
+    "sha256": "a7204b746322039903f78802bb418ab69f2249345356b47204c410b887c8a57b"
+  },
+  "issuer_class_versions": {
+    "rows": 10,
+    "sha256": "ebf18d482072f82d9f1dbb2769835b014ceb57316193c6f3a9d1e77342e7ff22"
+  },
+  "issuers": {
+    "001236.SZ": {"intervals": 7, "monthly_flow_originals": 40, "actual_class_caps_recomputed": 775},
+    "601728.SH": {"intervals": 2, "monthly_flow_originals": 58, "actual_class_caps_recomputed": 1135},
+    "601988.SH": {"intervals": 1, "monthly_flow_originals": 13, "actual_class_caps_recomputed": 242}
+  },
+  "original_ipo_prefix": {
+    "source_publication_ceiling": "2021-08-19",
+    "byte_identical_share_and_issuer_files": true,
+    "receipt": "artifacts/cn_sse_class_monthly/staged_effective_v2/prefix_replay.json"
+  },
+  "market_runtime_check": {
+    "cn_dataset": "cn-20796d534b7d3ba59a8054c95d4341bac4e0212ee3b50219d4f78282d5910790",
+    "actual_a_price_sessions": 3291,
+    "issuer_capital_values_recomputed": 2152,
+    "only_same_date_h_prices": true,
+    "past_session_h_quote_unit_factor_evidence": 0,
+    "prefix_replays": {
+      "2021-09-21": {"later_versions_removed": 9, "earlier_runtime_values_unchanged": 21},
+      "2022-08-03": {"later_versions_removed": 8, "earlier_runtime_values_unchanged": 220},
+      "2025-06-18": {"later_versions_removed": 1, "earlier_runtime_values_unchanged": 1509}
+    },
+    "receipt": "artifacts/cn_sse_class_monthly/staged_effective_release/runtime_replay.json"
+  },
+  "excluded_001236_month_ends_without_continuous_original_coverage": [
+    "2022-08-31", "2024-05-31", "2024-09-30", "2025-09-30", "2025-12-31", "2026-01-31", "2026-03-31"
+  ],
+  "monthly_flow_audit_root": "artifacts/cn_sse_class_monthly"
+}

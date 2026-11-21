@@ -13,6 +13,8 @@ from zoneinfo import ZoneInfo
 
 import pyarrow as pa
 
+from .cn_issuer_caps import build_class_caps
+
 LOCAL = ZoneInfo("Asia/Shanghai")
 UTC = timezone.utc
 STAMP = pa.timestamp("us", tz="UTC")
@@ -56,11 +58,19 @@ def _with_provenance(root, name, ledger):
             digest = row["source_sha256"]
             if not re.fullmatch(r"[a-f0-9]{64}", digest) or not row["source_url"].startswith("https://"):
                 raise ValueError(f"Invalid {name} source identity")
-            if row["knowledge_quality"] != "historical_original_evidence":
+            coverage_audit = (name == "split_coverage" and
+                              row["knowledge_quality"] == "historical_action_archive_coverage")
+            if coverage_audit:
+                if row.get("published_at") is not None or not row.get("effective_to"):
+                    raise ValueError("Archival coverage needs an explicit interval and no claimed publication clock")
+                original_day = published = available = None
+                precision = "derived_coverage"
+            elif row["knowledge_quality"] != "historical_original_evidence":
                 raise ValueError(f"Ineligible {name} historical source")
-            original_day, published, available, precision = _between_time(row["published_at"])
+            else:
+                original_day, published, available, precision = _between_time(row["published_at"])
             observed = datetime.fromisoformat(row["observed_at"])
-            if observed.tzinfo is None or observed.astimezone(UTC) < published:
+            if observed.tzinfo is None or (published is not None and observed.astimezone(UTC) < published):
                 raise ValueError(f"Invalid {name} observation time")
             source_id = row["source_version_id"]
             ref = name + "-" + hashlib.sha256(
@@ -95,16 +105,25 @@ def _official_quarter(end):
     raise ValueError(f"Calendar fiscal-quarter end required for CN filings: {end}")
 
 
-def _choose(rows, semantic_fields):
+def _choose(rows, semantic_fields, *, check_revenue_basis=False):
     """Resolve only a proven source ordering; an ambiguous tie is never picked."""
-    latest = max(row["published_at"] for row in rows)
+    latest = max((row["published_at"] for row in rows if row["published_at"] is not None), default=None)
     candidates = [row for row in rows if row["published_at"] == latest]
     if all(row.get("revision_sequence") is not None for row in candidates):
         sequence = max(row["revision_sequence"] for row in candidates)
         candidates = [row for row in candidates if row["revision_sequence"] == sequence]
+    revenue_basis_conflict = (check_revenue_basis and len(candidates) > 1 and
+                              len({row.get("revenue_accounting_basis") for row in candidates}) > 1)
+    if revenue_basis_conflict:
+        semantic_fields = tuple(field for field in semantic_fields if field != "revenue_ytd")
     if len({tuple(row.get(f) for f in semantic_fields) for row in candidates}) > 1:
         return None
-    return min(candidates, key=lambda row: row["provenance_id"])
+    selected = min(candidates, key=lambda row: row["provenance_id"])
+    if revenue_basis_conflict:
+        # An unordered income-basis tie may leave the other consolidated facts unambiguous.
+        return selected | {"revenue_ytd": None, "revenue_accounting_basis": None,
+                           "missing_reasons": selected.get("missing_reasons", {}) | {"revenue_ytd": "version_conflict"}}
+    return selected
 
 
 def financial_snapshots(rows):
@@ -116,6 +135,9 @@ def financial_snapshots(rows):
             raise ValueError("Expected a publicly disclosed formal consolidated report")
         if row["period_start"] != f"{end.year:04}-01-01":
             raise ValueError("CN flow fact must cover the fiscal year-to-date")
+        revenue_basis = row.get("revenue_accounting_basis")
+        if revenue_basis is not None and (not isinstance(revenue_basis, str) or not revenue_basis.strip()):
+            raise ValueError("Revenue accounting basis must be a nonempty source identifier")
         events[row["issuer_id"]][row["available_at"]].append(
             row | {"fiscal_period_end": end, "quarter_index": _official_quarter(end)}
         )
@@ -130,7 +152,7 @@ def financial_snapshots(rows):
                 history[version["quarter_index"]].append(version)
             q = max(history)
             periods = {
-                index: _choose(history[index], semantic_fields)
+                index: _choose(history[index], semantic_fields, check_revenue_basis=True)
                 for index in range(q - 8, q + 1) if index in history
             }
             anchor = periods[q]
@@ -149,6 +171,9 @@ def financial_snapshots(rows):
                 if value is None:
                     reason = row.get("missing_reasons", {}).get(field, "missing_source")
                     return None, "missing_source" if reason == "SOURCE_MISSING" else reason
+                # This applies to both operands of a YTD difference and to the prior-year TTM.
+                if field == "revenue_ytd" and row.get("revenue_accounting_basis") != anchor.get("revenue_accounting_basis"):
+                    return None, "version_conflict"
                 if not math.isfinite(value):
                     raise ValueError(f"Non-finite amount {field} in {row['provenance_id']}")
                 return value, None
@@ -194,10 +219,11 @@ def financial_snapshots(rows):
 def _effective_segments(rows, identity, fields):
     events = defaultdict(list)
     for row in rows:
+        effective_from = date.fromisoformat(row["effective_from"])
         events[row[identity]].append(row | {
-            "effective_from": date.fromisoformat(row["effective_from"]),
+            "effective_from": effective_from,
             "effective_to": date.fromisoformat(row["effective_to"]) if row.get("effective_to") else None,
-            "known_date": _known_sample_day(row["available_at"]),
+            "known_date": _known_sample_day(row["available_at"]) if row["available_at"] else effective_from,
         })
     for key, timeline in sorted(events.items()):
         cutoffs = {d for r in timeline for d in (r["effective_from"], r["effective_to"], r["known_date"]) if d}
@@ -217,6 +243,28 @@ def _effective_segments(rows, identity, fields):
                 previous = version
 
 
+def _unit_segments(rows):
+    events = defaultdict(lambda: defaultdict(list))
+    for row in rows:
+        multiplier = row["split_multiplier"]
+        if not (math.isfinite(multiplier) and multiplier > 0):
+            raise ValueError("Split multiplier must be positive and finite")
+        effective = date.fromisoformat(row["effective_from"])
+        known = _known_sample_day(row["available_at"])
+        events[row["ts_code"]][max(effective, known)].append(row | {"event_date": effective})
+    for code, timeline in sorted(events.items()):
+        history = defaultdict(list)
+        for clock, updates in sorted(timeline.items()):
+            for row in updates:
+                history[row["event_date"]].append(row)
+            selected = [_choose(values, ("split_multiplier",)) for values in history.values()]
+            factor = None if None in selected else math.prod(r["split_multiplier"] for r in selected)
+            yield {
+                "ts_code": code, "start_date": clock, "factor": factor,
+                "latest_action_clock": max(r["available_at"] for r in selected) if factor else None,
+            }
+
+
 def build_pit(con, source_schema="quant", evidence_dir: Path | None = None):
     """Join eligible historical versions, with separate source-gap audit tables."""
     if not re.fullmatch(r"[A-Za-z_]\w*", source_schema):
@@ -225,11 +273,24 @@ def build_pit(con, source_schema="quant", evidence_dir: Path | None = None):
     ledger = {}
     financial = _with_provenance(root, "financial_versions", ledger)
     shares = _with_provenance(root, "share_versions", ledger)
+    issuer_classes = _with_provenance(root, "issuer_class_versions", ledger)
     industry = _with_provenance(root, "industry_versions", ledger)
     split_events = _with_provenance(root, "split_events", ledger)
     split_coverage = _with_provenance(root, "split_coverage", ledger)
-    aliases = dict(con.execute("SELECT DISTINCT ts_code, issuer_id FROM stock_base").fetchall())
-    financial = [r | {"issuer_id": aliases[r["ts_code"]]} for r in financial if r["ts_code"] in aliases]
+    alias_source = con.sql("""
+        SELECT count(*) FROM information_schema.tables
+        WHERE table_catalog=current_database() AND table_name='security_aliases'
+    """).fetchone()[0]
+    aliases = dict(con.sql("""
+        WITH quotes AS (SELECT DISTINCT instrument_id,ts_code FROM stock_base)
+        SELECT a.symbol, q.ts_code FROM security_aliases a JOIN quotes q USING(instrument_id)
+        QUALIFY count(DISTINCT q.ts_code) OVER(PARTITION BY a.symbol)=1
+    """).fetchall()) if alias_source else {}
+    for source in (financial, shares, issuer_classes, industry, split_events, split_coverage):
+        for row in source:
+            row["ts_code"] = aliases.get(row["ts_code"], row["ts_code"])
+    issuers = dict(con.execute("SELECT DISTINCT ts_code, issuer_id FROM stock_base").fetchall())
+    financial = [r | {"issuer_id": issuers[r["ts_code"]]} for r in financial if r["ts_code"] in issuers]
     missing = pa.map_(pa.string(), pa.string())
     _materialize(con, "stock_fundamental_asof", list(financial_snapshots(financial)), {
         "fundamental_snapshot_id": pa.string(), "issuer_id": pa.string(), "available_at": STAMP,
@@ -238,17 +299,22 @@ def build_pit(con, source_schema="quant", evidence_dir: Path | None = None):
         "report_scope": pa.string(), **dict.fromkeys(FIN_NUM, pa.float64()),
         "source_version_refs": pa.list_(pa.string()), "missing_reasons": missing,
     })
-    share_fields = ("shares_outstanding_security", "single_share_class")
+    share_fields = ("shares_outstanding_security", "single_share_class", "reporting_currency")
     share_segments = list(_effective_segments(shares, "ts_code", share_fields))
     _materialize(con, "_share_segments", share_segments, {
         "ts_code": pa.string(), "start_date": pa.date32(), "shares_outstanding_security": pa.float64(),
-        "single_share_class": pa.bool_(), "provenance_id": pa.string(),
+        "single_share_class": pa.bool_(), "reporting_currency": pa.string(),
+        "share_precision_shares": pa.float64(), "available_at": STAMP, "provenance_id": pa.string(),
+        "verification_rule": pa.string(),
     })
     if shares:
         con.execute(f"""
             CREATE OR REPLACE TEMP TABLE _daily_share_check AS
             SELECT ts_code, CAST(_event_date AS DATE) AS local_trade_date,
                    CASE WHEN count(DISTINCT total_share) = 1 THEN max(total_share) * 10000 END AS total_shares,
+                   count(DISTINCT total_share) > 1 AS provider_conflict,
+                   CASE WHEN count_if(abs(total_share * 10000 - round(total_share * 10000)) > 1e-4) = 0
+                        THEN 1.0 END AS share_precision_shares,
                    min(_batch_id) AS batch_id
             FROM {source_schema}.canonical_daily_basic
             WHERE ts_code IN (SELECT DISTINCT ts_code FROM _share_segments)
@@ -259,8 +325,16 @@ def build_pit(con, source_schema="quant", evidence_dir: Path | None = None):
     else:
         con.execute("""
             CREATE OR REPLACE TEMP TABLE _daily_share_check
-            (ts_code VARCHAR, local_trade_date DATE, total_shares DOUBLE, batch_id VARCHAR)
+            (ts_code VARCHAR, local_trade_date DATE, total_shares DOUBLE, provider_conflict BOOLEAN,
+             share_precision_shares DOUBLE, batch_id VARCHAR)
         """)
+    class_join = ""
+    class_values = "NULL::DOUBLE"
+    class_fields = "NULL::INTEGER AS issuer_quote_age_days, NULL::VARCHAR AS issuer_class_provenance_id"
+    if issuer_classes and build_class_caps(con, root, issuer_classes, _effective_segments):
+        class_join = "LEFT JOIN class_market_caps mc ON b.instrument_id=mc.instrument_id AND b.local_trade_date=mc.local_trade_date"
+        class_values = "mc.cap"
+        class_fields = "mc.issuer_quote_age_days,mc.issuer_class_provenance_id"
     industry_fields = ("classification_version", "industry_code", "industry_name")
     industry_segments = list(_effective_segments(industry, "ts_code", industry_fields))
     _materialize(con, "_industry_segments", industry_segments, {
@@ -277,18 +351,17 @@ def build_pit(con, source_schema="quant", evidence_dir: Path | None = None):
         JOIN (SELECT DISTINCT instrument_id, ts_code FROM stock_base) a USING (ts_code)
         WHERE s.provenance_id IS NOT NULL
     """)
-    for row in split_events:
-        if not (math.isfinite(row["split_multiplier"]) and row["split_multiplier"] > 0):
-            raise ValueError("Split multiplier must be positive and finite")
     split_segments = list(_effective_segments(split_coverage, "ts_code", ()))
     _materialize(con, "_split_coverage", split_segments, {
         "ts_code": pa.string(), "start_date": pa.date32(), "effective_from": pa.date32(),
-        "provenance_id": pa.string(),
+        "provenance_id": pa.string(), "available_at": STAMP,
     })
-    for row in split_events:
-        row["effective_from"] = date.fromisoformat(row["effective_from"])
-        row["known_date"] = _known_sample_day(row["available_at"])
-    _materialize(con, "_split_events", split_events, {
+    _materialize(con, "_split_unit_segments", list(_unit_segments(split_events)), {
+        "ts_code": pa.string(), "start_date": pa.date32(), "factor": pa.float64(), "latest_action_clock": STAMP,
+    })
+    _materialize(con, "_split_events", [r | {
+        "effective_from": date.fromisoformat(r["effective_from"]), "known_date": _known_sample_day(r["available_at"]),
+    } for r in split_events], {
         "ts_code": pa.string(), "effective_from": pa.date32(), "known_date": pa.date32(),
         "split_multiplier": pa.float64(), "provenance_id": pa.string(),
     })
@@ -306,33 +379,39 @@ def build_pit(con, source_schema="quant", evidence_dir: Path | None = None):
         con.execute("""
             CREATE OR REPLACE TEMP TABLE _unit_values AS
             SELECT b.ts_code, b.local_trade_date, u.provenance_id AS split_provenance_id,
-                   CASE WHEN x.conflicts = 0 THEN exp(coalesce(x.log_multiplier, 0)) END split_unit_factor,
-                   x.conflicts = 0 AS split_chain_known
-            FROM (SELECT DISTINCT ts_code, local_trade_date FROM stock_base
+                   CASE WHEN x.start_date IS NULL THEN 1.0 ELSE x.factor END AS split_unit_factor,
+                   split_unit_factor IS NOT NULL AS split_chain_known
+            FROM (SELECT DISTINCT ts_code, local_trade_date, asof_utc FROM stock_base
                   WHERE ts_code IN (SELECT DISTINCT ts_code FROM _split_coverage)) b
             ASOF JOIN _split_coverage u
               ON b.ts_code = u.ts_code AND b.local_trade_date >= u.start_date
-            LEFT JOIN LATERAL (
-                SELECT sum(ln(split_multiplier)) log_multiplier,
-                       count(*) FILTER (WHERE split_multiplier IS NULL) conflicts
-                FROM (
-                    SELECT effective_from,
-                           CASE WHEN count(DISTINCT split_multiplier) = 1 THEN max(split_multiplier) END
-                               split_multiplier
-                    FROM (
-                        SELECT effective_from, split_multiplier
-                        FROM _split_events x
-                        WHERE u.provenance_id IS NOT NULL AND x.ts_code = b.ts_code
-                          AND greatest(x.effective_from, x.known_date) <= b.local_trade_date
-                        QUALIFY rank() OVER(PARTITION BY effective_from ORDER BY known_date DESC) = 1
-                    )
-                    GROUP BY effective_from
-                )
-            ) x ON TRUE
-            WHERE u.provenance_id IS NOT NULL
+            ASOF LEFT JOIN _split_unit_segments x
+              ON b.ts_code = x.ts_code AND b.local_trade_date >= x.start_date
+            WHERE u.provenance_id IS NOT NULL AND (u.available_at IS NULL OR u.available_at <= b.asof_utc)
+              AND (x.latest_action_clock IS NULL OR x.latest_action_clock <= b.asof_utc)
         """)
-    verified_shares = """
-        h.shares_outstanding_security > 0 AND abs(h.shares_outstanding_security - c.total_shares) <= 0.51
+    eligible_shares = """
+        h.provenance_id IS NOT NULL AND isfinite(h.shares_outstanding_security)
+        AND h.shares_outstanding_security > 0 AND h.available_at <= b.asof_utc
+    """
+    comparison = f"""
+        CASE WHEN NOT coalesce(({eligible_shares}), false) THEN NULL
+             WHEN NOT h.single_share_class THEN 'provider_scope_unverified'
+             WHEN c.batch_id IS NULL THEN 'missing_provider_comparison'
+             WHEN c.provider_conflict THEN 'provider_version_conflict'
+             WHEN c.share_precision_shares IS NULL THEN 'provider_precision_unverified'
+             WHEN abs(h.shares_outstanding_security - c.total_shares) <=
+                  (coalesce(h.share_precision_shares, 0) + c.share_precision_shares) / 2 + 1e-4
+             THEN 'matched'
+             ELSE 'numeric_conflict'
+        END
+    """
+    verified_shares = f"""
+        ({eligible_shares}) AND NOT (
+            coalesce(h.verification_rule IN ('published_distribution_base','published_implemented_unit_terms',
+                                            'published_initial_report_capital'), false)
+            AND ({comparison}) IN ('numeric_conflict','provider_version_conflict')
+        )
     """
     con.execute(f"""
         CREATE OR REPLACE TABLE stock_pit AS
@@ -341,13 +420,15 @@ def build_pit(con, source_schema="quant", evidence_dir: Path | None = None):
                IF({verified_shares}, h.shares_outstanding_security * b.close_raw, NULL)
                    security_market_cap_local,
                IF(h.single_share_class AND ({verified_shares})
-                  AND f.reporting_currency = 'CNY', h.shares_outstanding_security * b.close_raw, NULL)
+                  AND coalesce(f.reporting_currency, h.reporting_currency) = 'CNY',
+                  h.shares_outstanding_security * b.close_raw, {class_values})
                    issuer_market_cap_reporting,
                ('SW_L1')::VARCHAR industry_system, i.classification_version,
                i.industry_code industry_code_asof, i.industry_name industry_name_asof,
                f.fundamental_snapshot_id, IF({verified_shares}, h.provenance_id, NULL) share_provenance_id,
-               IF({verified_shares}, c.batch_id, NULL) share_check_batch_id,
-               i.provenance_id industry_provenance_id, {split_columns}
+               IF(({eligible_shares}) AND h.single_share_class, c.batch_id, NULL) share_check_batch_id,
+               ({comparison}) AS share_check_status,
+               i.provenance_id industry_provenance_id, {split_columns}, {class_fields}
         FROM stock_base b
         ASOF LEFT JOIN _share_segments h
           ON b.ts_code = h.ts_code AND b.local_trade_date >= h.start_date
@@ -356,6 +437,7 @@ def build_pit(con, source_schema="quant", evidence_dir: Path | None = None):
         ASOF LEFT JOIN stock_fundamental_asof f
           ON b.issuer_id = f.issuer_id AND b.asof_utc >= f.available_at
         {split_join}
+        {class_join}
         LEFT JOIN _daily_share_check c ON b.ts_code = c.ts_code AND b.local_trade_date = c.local_trade_date
     """)
     _materialize(con, "pit_provenance", list(ledger.values()), {

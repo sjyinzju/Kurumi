@@ -1,0 +1,165 @@
+{
+  "dataset": "cn-20796d534b7d3ba59a8054c95d4341bac4e0212ee3b50219d4f78282d5910790",
+  "gap_fields": [
+    "exchange",
+    "null_names",
+    "ipo_first_day",
+    "renamed_code_null_names",
+    "valid_market_quotes",
+    "distinct_affected_securities"
+  ],
+  "gap_by_exchange": [
+    [
+      "BSE",
+      327,
+      327,
+      0,
+      324,
+      327
+    ],
+    [
+      "SSE",
+      1461,
+      1425,
+      0,
+      1458,
+      1438
+    ],
+    [
+      "SZSE",
+      4343,
+      1435,
+      2813,
+      4320,
+      1502
+    ]
+  ],
+  "sample_fields": [
+    "split",
+    "matching_candidates",
+    "input_valid",
+    "renamed_issuer_candidates",
+    "renamed_issuer_input_valid"
+  ],
+  "candidate_samples_intersecting_gap": [
+    [
+      "calibration",
+      185,
+      129,
+      125,
+      125
+    ],
+    [
+      "test",
+      574,
+      380,
+      359,
+      359
+    ],
+    [
+      "train",
+      5170,
+      2123,
+      2189,
+      2059
+    ],
+    [
+      "validation",
+      163,
+      119,
+      117,
+      117
+    ]
+  ],
+  "gap_rows_matching_same_day_vendor_effective_and_ann_date": [
+    [
+      "BSE",
+      327,
+      327
+    ],
+    [
+      "SSE",
+      1461,
+      1425
+    ],
+    [
+      "SZSE",
+      1530,
+      1435
+    ]
+  ],
+  "verified_scope_fields": [
+    "ts_code",
+    "expected_name",
+    "current_rows",
+    "prior_null",
+    "prior_wrong",
+    "first_matching_session",
+    "last_matching_session"
+  ],
+  "verified_scope": [
+    [
+      "001236.SZ",
+      "弘业期货",
+      966,
+      2,
+      566,
+      "2022-08-05",
+      "2026-07-31"
+    ],
+    [
+      "302132.SZ",
+      "中航电测",
+      2457,
+      2457,
+      0,
+      "2015-01-05",
+      "2025-02-14"
+    ],
+    [
+      "302132.SZ",
+      "中航成飞",
+      356,
+      356,
+      0,
+      "2025-02-17",
+      "2026-07-31"
+    ],
+    [
+      "688347.SH",
+      "华虹公司",
+      684,
+      3,
+      45,
+      "2023-08-07",
+      "2026-06-05"
+    ],
+    [
+      "688347.SH",
+      "华虹宏力",
+      39,
+      0,
+      0,
+      "2026-06-08",
+      "2026-07-31"
+    ]
+  ],
+  "model_name_join_prefix_only": {
+    "2024-03-28": {
+      "versions_removed": 2,
+      "unchanged_name_day_rows": 2801
+    },
+    "2025-02-14": {
+      "versions_removed": 2,
+      "unchanged_name_day_rows": 3434
+    },
+    "2026-06-03": {
+      "versions_removed": 1,
+      "unchanged_name_day_rows": 4379
+    }
+  },
+  "staged_name_versions": 5,
+  "staged_name_versions_sha256": "6a22279ec67c5f7e725d5660cd19b0e9b6cf761ec19a9d3e4bee3b052e4f9898",
+  "staged_name_versions_path": "artifacts\\cn_security_name_audit\\stage\\security_name_versions.jsonl",
+  "original_stage_replay_bytes_equal": true
+}

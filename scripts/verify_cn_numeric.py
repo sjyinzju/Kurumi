@@ -152,13 +152,18 @@ def check_later_observed_suspensions(con, root):
     return checked
 
 
-def verify(root):
+def verify(root, *, staged=False):
     root = root.resolve()
     manifest = json.loads((root / "manifest.json").read_text(encoding="utf-8"))
-    if root.name != manifest["dataset_version"]:
+    if root.name != manifest["dataset_version"] and not (
+        staged and root.parent.name == ".build-cn" and root.name.startswith("publish-")
+    ):
         raise ValueError("Release folder does not match manifest identity")
     load_file_inventory(root, manifest)
     validation = json.loads((root / "reports" / "validation_results.json").read_text(encoding="utf-8"))
+    quality = json.loads((root / "reports" / "quality_summary.json").read_text(encoding="utf-8"))
+    if len({manifest["status"], validation["status"], quality["status"]}) != 1:
+        raise ValueError("Manifest and report status differ")
     violations = validation["full_sql_violation_counts"]
     if not violations or any(count != 0 for count in violations.values()):
         raise ValueError(f"Build-time data violations: {violations}")
@@ -188,8 +193,9 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("dataset", type=Path)
     parser.add_argument("--report", type=Path)
+    parser.add_argument("--staged", action="store_true", help="Verify a candidate before atomic publication")
     args = parser.parse_args()
-    result = verify(args.dataset)
+    result = verify(args.dataset, staged=args.staged)
     output = json.dumps(result, ensure_ascii=False, indent=2) + "\n"
     if args.report:
         args.report.write_text(output, encoding="utf-8")

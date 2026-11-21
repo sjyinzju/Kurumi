@@ -1,0 +1,75 @@
+{
+  "source_scope": "independently published mainland-exchange issuer original A/H monthly returns",
+  "coverage_query_publication_dates": ["2014-01-01", "2026-07-31"],
+  "source_terms": {
+    "sse": "https://www.sse.com.cn/home/legal/",
+    "szse": "https://www.szse.cn/application/laws/"
+  },
+  "sse": {
+    "a_codes_queried": 145,
+    "nonempty_title_catalogs": 57,
+    "matched_monthly_attachments": 2328,
+    "first_and_last_catalog_release": ["2020-05-07", "2026-07-09"],
+    "http_200_catalog_receipts": 145,
+    "http_200_pdf_receipts": 112,
+    "verified_originals": 82,
+    "verified_a_h_pairs": 48,
+    "intake": "artifacts/cn_sse_class_monthly/controls/sse_intake_summary.json"
+  },
+  "szse": {
+    "a_codes_queried": 59,
+    "nonempty_title_catalogs": 35,
+    "matched_monthly_attachments": 1010,
+    "first_and_last_catalog_release": ["2015-02-05", "2026-07-09"],
+    "http_200_catalog_receipts": 70,
+    "http_200_pdf_receipts": 63,
+    "verified_originals": 58,
+    "verified_a_h_pairs": 33,
+    "intake": "artifacts/cn_sse_class_monthly/szse_cohort/szse_intake_summary.json"
+  },
+  "originals_checked": 175,
+  "verified_originals": 140,
+  "distinct_verified_a_h_pairs": 81,
+  "published_precision": "date",
+  "availability_rule": "next local calendar day 00:00",
+  "verified_month_end_range": ["2015-01-31", "2026-05-31"],
+  "verified_publication_date_range": ["2015-02-05", "2026-06-05"],
+  "verified_amount_bases": {
+    "issued_excluding_treasury": 105,
+    "legacy_issued_pre_treasury_rule": 35
+  },
+  "unverified_original_reasons": {
+    "unresolved_chinese_legacy_share_class_layout": 18,
+    "other_ordinary_class_has_balance": 8,
+    "unknown_month_end": 5,
+    "unresolved_chinese_legacy_issued_amounts": 2,
+    "original_pair_not_confirmed": 1,
+    "unresolved_chinese_month_or_issued_section": 1
+  },
+  "literal_a_code_conflict": {
+    "exchange_catalog_code": "601330",
+    "original_issued_section_a_code": "601300",
+    "publication_date": "2026-06-05"
+  },
+  "effective_scope": "month_end_balance_only",
+  "verified_daily_effective_intervals_from_month_end_statements": 0,
+  "sibling_quote_units_proven": 0,
+  "monthly_observations_admitted_to_training": 0,
+  "source_checks": "artifacts/cn_sse_class_monthly/verified_broad_v2/source_checks.json",
+  "observations": "artifacts/cn_sse_class_monthly/verified_broad_v2/month_end_share_observations.jsonl",
+  "observations_sha256": "627f2d643d22801068249c9c9cb4519f0e61a09b0bd26cdefdf411228f9dfc51",
+  "telecom_independent_event_originals": {
+    "a_code": "601728",
+    "h_code": "00728",
+    "effective_a_listing_date": "2021-08-20",
+    "initial_listing_publication_date": "2021-08-19",
+    "initial_listed_a_shares": 77451093588,
+    "initial_h_shares": 13877410000,
+    "initial_listing_sha256": "d1f6f4a682d43f82783c8acf8e127ca84cd85eff265e04fb76d9ca541d07e2b5",
+    "greenshoe_publication_date": "2021-09-25",
+    "greenshoe_exercise_window_end": "2021-09-22",
+    "greenshoe_additional_a_shares": 178635111,
+    "greenshoe_announcement_sha256": "573b27142309471bd13f3211fe7f3c2efee00d73c85827a9560016acf503b572",
+    "archive": "artifacts/cn_sse_class_monthly/telecom_event"
+  }
+}

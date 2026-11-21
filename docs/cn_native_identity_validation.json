@@ -1,0 +1,1691 @@
+{
+  "dataset_version": "cn-e22d9ca02b9d2602eb7e095e9b1e1330452ce6109437f673a08d924f50aced9c",
+  "dataset_status": "INCOMPLETE",
+  "scope": "sampled_targeted_issuer_and_security_joins",
+  "load_check": "passed",
+  "native_check": "passed",
+  "encoder_revision": "6600011eb5cf46232d056ec0717dc726146d29de",
+  "tokenizer_revision": "b36640b5450552ac96f908c71664932e4fa79485a9a5422436a779230eeb1bff",
+  "strict_loader_rejected": true,
+  "audit_cases": {
+    "CN-001872.SZ": {
+      "annual_alias_snapshot": {
+        "sample_id": "CN|CN-001872.SZ|2018-03-08",
+        "instrument_id": "CN-001872.SZ",
+        "issuer_id": "CN-001872.SZ",
+        "asof_utc": "2018-03-08 23:59:59+08:00",
+        "local_trade_date": "2018-03-08",
+        "input_invalid_reason": "history_suspended",
+        "input_valid": false,
+        "window_start_date": "2017-12-06",
+        "fundamental_snapshot_id": "fund-d167bfed4b7fef30356f88c9",
+        "symbol_asof": "000022",
+        "name_asof": "深赤湾A",
+        "exchange": "SZSE",
+        "ts_code": "001872.SZ",
+        "shares_outstanding_security": null,
+        "security_market_cap_local": null,
+        "issuer_market_cap_reporting": null,
+        "issuer_class_provenance_id": null,
+        "issuer_quote_age_days": null,
+        "share_provenance_id": null,
+        "close_raw": null,
+        "quote_valid": false,
+        "suspension_verified": false,
+        "snapshot_available_at": "2018-03-08 00:00:00+08:00",
+        "fiscal_period_end": "2017-12-31",
+        "source_version_refs": [
+          "financial_versions-1d4805348693cdbc3f4139ed",
+          "financial_versions-282f3b7d3e0f6c25b5dfd849",
+          "financial_versions-334d3eb2efc8441202e5b9eb",
+          "financial_versions-3de239ca7dd820baa300d0d3",
+          "financial_versions-49498dd8430a5a511465ba04",
+          "financial_versions-529fb0050820d343bd756476",
+          "financial_versions-6787b953e532402c0f121db9",
+          "financial_versions-c1b5072d530f5726bc3b4f99"
+        ],
+        "old_code_financial_original": {
+          "provenance_id": "financial_versions-529fb0050820d343bd756476",
+          "source_version_id": "1204455645",
+          "source_url": "https://disc.static.szse.cn/disc/disk01/finalpage/2018-03-07/c49df4ac-25c3-41dd-9974-599bac11f662.PDF",
+          "source_sha256": "2224578aa2ab96eb7a68c7a7f404ee94a20f8e7f7a7ac55587346d1092275da2",
+          "available_at": "2018-03-08 00:00:00+08:00"
+        }
+      },
+      "annual_alias_snapshot_scope": [
+        35,
+        0,
+        "2018-03-08",
+        "2018-04-27"
+      ]
+    },
+    "CN-301192.SZ": {
+      "old_security": {
+        "instrument_id": "CN-833874.BJ",
+        "issuer_id": "CN-833874.BJ",
+        "exchange": "BSE",
+        "listing_date": "2021-11-15",
+        "delisting_date": "2022-07-18"
+      },
+      "new_security": {
+        "instrument_id": "CN-301192.SZ",
+        "issuer_id": "CN-833874.BJ",
+        "exchange": "SZSE",
+        "listing_date": "2022-08-11",
+        "delisting_date": null
+      },
+      "wrong_venue_or_issuer_counts": [
+        0,
+        0,
+        0
+      ],
+      "audited_candidate_ids": [
+        "CN|CN-833874.BJ|2022-07-15",
+        "CN|CN-301192.SZ|2022-08-11"
+      ]
+    },
+    "CN-301321.SZ": {
+      "old_security": {
+        "instrument_id": "CN-833994.BJ",
+        "issuer_id": "CN-833994.BJ",
+        "exchange": "BSE",
+        "listing_date": "2021-11-15",
+        "delisting_date": "2022-07-25"
+      },
+      "new_security": {
+        "instrument_id": "CN-301321.SZ",
+        "issuer_id": "CN-833994.BJ",
+        "exchange": "SZSE",
+        "listing_date": "2022-08-18",
+        "delisting_date": null
+      },
+      "wrong_venue_or_issuer_counts": [
+        0,
+        0,
+        0
+      ],
+      "audited_candidate_ids": [
+        "CN|CN-833994.BJ|2022-07-22",
+        "CN|CN-301321.SZ|2022-08-18"
+      ]
+    },
+    "CN-688287.SH": {
+      "old_security": {
+        "instrument_id": "CN-832317.BJ",
+        "issuer_id": "CN-832317.BJ",
+        "exchange": "BSE",
+        "listing_date": "2021-11-15",
+        "delisting_date": "2022-04-26"
+      },
+      "new_security": {
+        "instrument_id": "CN-688287.SH",
+        "issuer_id": "CN-832317.BJ",
+        "exchange": "SSE",
+        "listing_date": "2022-05-25",
+        "delisting_date": "2026-06-10"
+      },
+      "wrong_venue_or_issuer_counts": [
+        0,
+        0,
+        0
+      ],
+      "audited_candidate_ids": [
+        "CN|CN-832317.BJ|2022-04-25",
+        "CN|CN-688287.SH|2022-05-25"
+      ]
+    },
+    "CN-600958.SH": {
+      "valuation_candidate": "CN|CN-600958.SH|2018-01-02",
+      "missing_valuation_candidate": "CN|CN-600958.SH|2018-03-30"
+    },
+    "CN-600999.SH": {
+      "valuation_candidate": "CN|CN-600999.SH|2017-03-30",
+      "missing_valuation_candidate": "CN|CN-600999.SH|2017-04-14"
+    }
+  },
+  "input_invalid_cases": {
+    "CN|CN-001872.SZ|2018-03-08": {
+      "sample_id": "CN|CN-001872.SZ|2018-03-08",
+      "instrument_id": "CN-001872.SZ",
+      "issuer_id": "CN-001872.SZ",
+      "asof_utc": "2018-03-08 23:59:59+08:00",
+      "local_trade_date": "2018-03-08",
+      "input_invalid_reason": "history_suspended",
+      "input_valid": false,
+      "window_start_date": "2017-12-06",
+      "fundamental_snapshot_id": "fund-d167bfed4b7fef30356f88c9",
+      "symbol_asof": "000022",
+      "name_asof": "深赤湾A",
+      "exchange": "SZSE",
+      "ts_code": "001872.SZ",
+      "shares_outstanding_security": null,
+      "security_market_cap_local": null,
+      "issuer_market_cap_reporting": null,
+      "issuer_class_provenance_id": null,
+      "issuer_quote_age_days": null,
+      "share_provenance_id": null,
+      "close_raw": null,
+      "quote_valid": false,
+      "suspension_verified": false,
+      "snapshot_available_at": "2018-03-08 00:00:00+08:00",
+      "fiscal_period_end": "2017-12-31",
+      "source_version_refs": [
+        "financial_versions-1d4805348693cdbc3f4139ed",
+        "financial_versions-282f3b7d3e0f6c25b5dfd849",
+        "financial_versions-334d3eb2efc8441202e5b9eb",
+        "financial_versions-3de239ca7dd820baa300d0d3",
+        "financial_versions-49498dd8430a5a511465ba04",
+        "financial_versions-529fb0050820d343bd756476",
+        "financial_versions-6787b953e532402c0f121db9",
+        "financial_versions-c1b5072d530f5726bc3b4f99"
+      ],
+      "old_code_financial_original": {
+        "provenance_id": "financial_versions-529fb0050820d343bd756476",
+        "source_version_id": "1204455645",
+        "source_url": "https://disc.static.szse.cn/disc/disk01/finalpage/2018-03-07/c49df4ac-25c3-41dd-9974-599bac11f662.PDF",
+        "source_sha256": "2224578aa2ab96eb7a68c7a7f404ee94a20f8e7f7a7ac55587346d1092275da2",
+        "available_at": "2018-03-08 00:00:00+08:00"
+      }
+    },
+    "CN|CN-833874.BJ|2022-07-15": {
+      "sample_id": "CN|CN-833874.BJ|2022-07-15",
+      "instrument_id": "CN-833874.BJ",
+      "issuer_id": "CN-833874.BJ",
+      "asof_utc": "2022-07-15 23:59:59+08:00",
+      "local_trade_date": "2022-07-15",
+      "input_invalid_reason": "history_suspended",
+      "input_valid": false,
+      "window_start_date": "2022-04-18",
+      "fundamental_snapshot_id": "fund-c38516c01842b73e692e2fc7",
+      "symbol_asof": "833874",
+      "name_asof": "泰祥股份",
+      "exchange": "BSE",
+      "ts_code": "833874.BJ",
+      "shares_outstanding_security": 99900000.0,
+      "security_market_cap_local": null,
+      "issuer_market_cap_reporting": null,
+      "issuer_class_provenance_id": null,
+      "issuer_quote_age_days": null,
+      "share_provenance_id": "share_versions-c4a5fd20f324d07a19e528e4",
+      "close_raw": null,
+      "quote_valid": false,
+      "suspension_verified": true
+    },
+    "CN|CN-301192.SZ|2022-08-11": {
+      "sample_id": "CN|CN-301192.SZ|2022-08-11",
+      "instrument_id": "CN-301192.SZ",
+      "issuer_id": "CN-833874.BJ",
+      "asof_utc": "2022-08-11 23:59:59+08:00",
+      "local_trade_date": "2022-08-11",
+      "input_invalid_reason": "insufficient_history",
+      "input_valid": false,
+      "window_start_date": null,
+      "fundamental_snapshot_id": "fund-c38516c01842b73e692e2fc7",
+      "symbol_asof": "301192",
+      "name_asof": null,
+      "exchange": "SZSE",
+      "ts_code": "301192.SZ",
+      "shares_outstanding_security": null,
+      "security_market_cap_local": null,
+      "issuer_market_cap_reporting": null,
+      "issuer_class_provenance_id": null,
+      "issuer_quote_age_days": null,
+      "share_provenance_id": null,
+      "close_raw": 35.4,
+      "quote_valid": true,
+      "suspension_verified": false
+    },
+    "CN|CN-833994.BJ|2022-07-22": {
+      "sample_id": "CN|CN-833994.BJ|2022-07-22",
+      "instrument_id": "CN-833994.BJ",
+      "issuer_id": "CN-833994.BJ",
+      "asof_utc": "2022-07-22 23:59:59+08:00",
+      "local_trade_date": "2022-07-22",
+      "input_invalid_reason": "history_suspended",
+      "input_valid": false,
+      "window_start_date": "2022-04-25",
+      "fundamental_snapshot_id": "fund-883eceb275a2dd4e57778dd3",
+      "symbol_asof": "833994",
+      "name_asof": "翰博高新",
+      "exchange": "BSE",
+      "ts_code": "833994.BJ",
+      "shares_outstanding_security": 124290000.0,
+      "security_market_cap_local": null,
+      "issuer_market_cap_reporting": null,
+      "issuer_class_provenance_id": null,
+      "issuer_quote_age_days": null,
+      "share_provenance_id": "share_versions-98011af2170567cd89ae043c",
+      "close_raw": null,
+      "quote_valid": false,
+      "suspension_verified": true
+    },
+    "CN|CN-301321.SZ|2022-08-18": {
+      "sample_id": "CN|CN-301321.SZ|2022-08-18",
+      "instrument_id": "CN-301321.SZ",
+      "issuer_id": "CN-833994.BJ",
+      "asof_utc": "2022-08-18 23:59:59+08:00",
+      "local_trade_date": "2022-08-18",
+      "input_invalid_reason": "insufficient_history",
+      "input_valid": false,
+      "window_start_date": null,
+      "fundamental_snapshot_id": "fund-883eceb275a2dd4e57778dd3",
+      "symbol_asof": "301321",
+      "name_asof": null,
+      "exchange": "SZSE",
+      "ts_code": "301321.SZ",
+      "shares_outstanding_security": null,
+      "security_market_cap_local": null,
+      "issuer_market_cap_reporting": null,
+      "issuer_class_provenance_id": null,
+      "issuer_quote_age_days": null,
+      "share_provenance_id": null,
+      "close_raw": 34.0,
+      "quote_valid": true,
+      "suspension_verified": false
+    },
+    "CN|CN-832317.BJ|2022-04-25": {
+      "sample_id": "CN|CN-832317.BJ|2022-04-25",
+      "instrument_id": "CN-832317.BJ",
+      "issuer_id": "CN-832317.BJ",
+      "asof_utc": "2022-04-25 23:59:59+08:00",
+      "local_trade_date": "2022-04-25",
+      "input_invalid_reason": "history_suspended",
+      "input_valid": false,
+      "window_start_date": "2022-01-20",
+      "fundamental_snapshot_id": "fund-9e1d2420beec2c300be07842",
+      "symbol_asof": "832317",
+      "name_asof": "观典防务",
+      "exchange": "BSE",
+      "ts_code": "832317.BJ",
+      "shares_outstanding_security": 237510000.0,
+      "security_market_cap_local": null,
+      "issuer_market_cap_reporting": null,
+      "issuer_class_provenance_id": null,
+      "issuer_quote_age_days": null,
+      "share_provenance_id": "share_versions-4c334ef8c06cac23a29f8b82",
+      "close_raw": null,
+      "quote_valid": false,
+      "suspension_verified": true
+    },
+    "CN|CN-688287.SH|2022-05-25": {
+      "sample_id": "CN|CN-688287.SH|2022-05-25",
+      "instrument_id": "CN-688287.SH",
+      "issuer_id": "CN-832317.BJ",
+      "asof_utc": "2022-05-25 23:59:59+08:00",
+      "local_trade_date": "2022-05-25",
+      "input_invalid_reason": "insufficient_history",
+      "input_valid": false,
+      "window_start_date": null,
+      "fundamental_snapshot_id": "fund-9e1d2420beec2c300be07842",
+      "symbol_asof": "688287",
+      "name_asof": null,
+      "exchange": "SSE",
+      "ts_code": "688287.SH",
+      "shares_outstanding_security": null,
+      "security_market_cap_local": null,
+      "issuer_market_cap_reporting": null,
+      "issuer_class_provenance_id": null,
+      "issuer_quote_age_days": null,
+      "share_provenance_id": null,
+      "close_raw": 16.71,
+      "quote_valid": true,
+      "suspension_verified": false
+    }
+  },
+  "positive_cases": {
+    "CN|CN-001914.SZ|2019-10-21": {
+      "sample_id": "CN|CN-001914.SZ|2019-10-21",
+      "instrument_id": "CN-001914.SZ",
+      "issuer_id": "CN-001914.SZ",
+      "asof_utc": "2019-10-21 23:59:59+08:00",
+      "local_trade_date": "2019-10-21",
+      "input_invalid_reason": null,
+      "input_valid": true,
+      "window_start_date": "2019-07-19",
+      "fundamental_snapshot_id": "fund-0a7f94ef3b27121b41da5c6f",
+      "symbol_asof": "000043",
+      "name_asof": "中航善达",
+      "exchange": "SZSE",
+      "ts_code": "001914.SZ",
+      "shares_outstanding_security": null,
+      "security_market_cap_local": null,
+      "issuer_market_cap_reporting": null,
+      "issuer_class_provenance_id": null,
+      "issuer_quote_age_days": null,
+      "share_provenance_id": null,
+      "close_raw": 18.78,
+      "quote_valid": true,
+      "suspension_verified": false,
+      "case": "mainland_alias",
+      "financial_fields_in_model": [
+        "revenue_ttm",
+        "net_income_total_ttm",
+        "net_income_parent_ttm"
+      ]
+    },
+    "CN|CN-001914.SZ|2020-01-16": {
+      "sample_id": "CN|CN-001914.SZ|2020-01-16",
+      "instrument_id": "CN-001914.SZ",
+      "issuer_id": "CN-001914.SZ",
+      "asof_utc": "2020-01-16 23:59:59+08:00",
+      "local_trade_date": "2020-01-16",
+      "input_invalid_reason": null,
+      "input_valid": true,
+      "window_start_date": "2019-10-23",
+      "fundamental_snapshot_id": "fund-bf4f9a7934862f8d93e3ac7e",
+      "symbol_asof": "001914",
+      "name_asof": "招商积余",
+      "exchange": "SZSE",
+      "ts_code": "001914.SZ",
+      "shares_outstanding_security": null,
+      "security_market_cap_local": null,
+      "issuer_market_cap_reporting": null,
+      "issuer_class_provenance_id": null,
+      "issuer_quote_age_days": null,
+      "share_provenance_id": null,
+      "close_raw": 21.49,
+      "quote_valid": true,
+      "suspension_verified": false,
+      "case": "mainland_alias",
+      "financial_fields_in_model": []
+    },
+    "CN|CN-001872.SZ|2017-11-16": {
+      "sample_id": "CN|CN-001872.SZ|2017-11-16",
+      "instrument_id": "CN-001872.SZ",
+      "issuer_id": "CN-001872.SZ",
+      "asof_utc": "2017-11-16 23:59:59+08:00",
+      "local_trade_date": "2017-11-16",
+      "input_invalid_reason": null,
+      "input_valid": true,
+      "window_start_date": "2017-08-17",
+      "fundamental_snapshot_id": "fund-1a400be1880a80292b541b38",
+      "symbol_asof": "000022",
+      "name_asof": "深赤湾A",
+      "exchange": "SZSE",
+      "ts_code": "001872.SZ",
+      "shares_outstanding_security": null,
+      "security_market_cap_local": null,
+      "issuer_market_cap_reporting": null,
+      "issuer_class_provenance_id": null,
+      "issuer_quote_age_days": null,
+      "share_provenance_id": null,
+      "close_raw": 24.14,
+      "quote_valid": true,
+      "suspension_verified": false,
+      "case": "mainland_alias",
+      "financial_fields_in_model": [
+        "revenue_ttm",
+        "net_income_total_ttm",
+        "net_income_parent_ttm",
+        "operating_cashflow_ttm",
+        "assets",
+        "liabilities",
+        "parent_equity"
+      ]
+    },
+    "CN|CN-001872.SZ|2019-03-29": {
+      "sample_id": "CN|CN-001872.SZ|2019-03-29",
+      "instrument_id": "CN-001872.SZ",
+      "issuer_id": "CN-001872.SZ",
+      "asof_utc": "2019-03-29 23:59:59+08:00",
+      "local_trade_date": "2019-03-29",
+      "input_invalid_reason": null,
+      "input_valid": true,
+      "window_start_date": "2018-12-26",
+      "fundamental_snapshot_id": "fund-037f4dd2a1dc15a161b6fa27",
+      "symbol_asof": "001872",
+      "name_asof": "招商港口",
+      "exchange": "SZSE",
+      "ts_code": "001872.SZ",
+      "shares_outstanding_security": null,
+      "security_market_cap_local": null,
+      "issuer_market_cap_reporting": null,
+      "issuer_class_provenance_id": null,
+      "issuer_quote_age_days": null,
+      "share_provenance_id": null,
+      "close_raw": 18.34,
+      "quote_valid": true,
+      "suspension_verified": false,
+      "case": "mainland_alias",
+      "financial_fields_in_model": [
+        "revenue_ttm",
+        "net_income_total_ttm",
+        "net_income_parent_ttm",
+        "assets",
+        "liabilities",
+        "parent_equity"
+      ]
+    },
+    "CN|CN-301192.SZ|2022-11-11": {
+      "sample_id": "CN|CN-301192.SZ|2022-11-11",
+      "instrument_id": "CN-301192.SZ",
+      "issuer_id": "CN-833874.BJ",
+      "asof_utc": "2022-11-11 23:59:59+08:00",
+      "local_trade_date": "2022-11-11",
+      "input_invalid_reason": null,
+      "input_valid": true,
+      "window_start_date": "2022-08-11",
+      "fundamental_snapshot_id": "fund-205c22302731eafadeef1934",
+      "symbol_asof": "301192",
+      "name_asof": "泰祥股份",
+      "exchange": "SZSE",
+      "ts_code": "301192.SZ",
+      "shares_outstanding_security": 99900000.0,
+      "security_market_cap_local": 2207790000.0,
+      "issuer_market_cap_reporting": 2207790000.0,
+      "issuer_class_provenance_id": null,
+      "issuer_quote_age_days": null,
+      "share_provenance_id": "share_versions-ccf403df08daa0925b2edfe5",
+      "close_raw": 22.1,
+      "quote_valid": true,
+      "suspension_verified": false,
+      "snapshot_issuer_id": "CN-833874.BJ",
+      "snapshot_available_at": "2022-10-28 00:00:00+08:00",
+      "fiscal_period_end": "2022-09-30",
+      "disclosure_date_local": "2022-10-27",
+      "source_version_refs": [
+        "financial_versions-15e044532802e7c6ebdf82a9",
+        "financial_versions-82e366c3c2409d6de0578b44",
+        "financial_versions-c4c039fe3941c2b0192bfd33",
+        "financial_versions-fd8607085a13b704949f10bb"
+      ],
+      "financial_missing_reasons": {
+        "revenue_ttm": "unverified_version",
+        "net_income_total_ttm": "unverified_version",
+        "net_income_parent_ttm": "unverified_version",
+        "operating_cashflow_ttm": "unverified_version",
+        "revenue_ttm_4q_ago": "insufficient_history",
+        "net_income_parent_ttm_4q_ago": "insufficient_history"
+      },
+      "revenue_ttm": null,
+      "net_income_total_ttm": null,
+      "net_income_parent_ttm": null,
+      "operating_cashflow_ttm": null,
+      "assets": 595697385.35,
+      "liabilities": 33941102.74,
+      "parent_equity": 561756282.61,
+      "snapshot_from_prelisting_disclosure": false,
+      "case": "transferred_new_venue",
+      "venue_link": {
+        "scope": "legal_issuer_continuity_only",
+        "issuer_legal_name": "十堰市泰祥实业股份有限公司",
+        "old_instrument_id": "CN-833874.BJ",
+        "new_instrument_id": "CN-301192.SZ",
+        "old_exchange": "BSE",
+        "new_exchange": "SZSE",
+        "old_ts_code": "833874.BJ",
+        "new_ts_code": "301192.SZ",
+        "old_listing_end_exclusive": "2022-07-18",
+        "new_listing_start_inclusive": "2022-08-11",
+        "linkage_available_at": "2022-08-10T16:00:00+00:00",
+        "timeline_available_at": "2022-08-10T16:00:00+00:00",
+        "old_exit_source": {
+          "source_url": "https://www.bse.cn/disclosure/2022/2022-07-15/1657874128_515467.pdf",
+          "source_sha256": "8802c2cbb6a0255048cde3151f16cce6225ae8c0ebcf01389f96daa8498cca80",
+          "observed_at": "2026-11-20T12:42:56.312882+00:00",
+          "source_version_id": "BSE issuer 2022-066",
+          "knowledge_quality": "historical_original_evidence",
+          "original_file": "833874-exit.pdf",
+          "publication_date_local": "2022-07-15",
+          "publication_precision": "date",
+          "available_at": "2022-07-15T16:00:00+00:00"
+        },
+        "new_entry_source": {
+          "source_url": "https://static.cninfo.com.cn/finalpage/2022-08-10/1214261921.PDF",
+          "source_sha256": "dcd11fbb45a8b39f3a492cd838c196a744125bf654145bfb3cfc6da2deda23cb",
+          "observed_at": "2026-11-20T12:42:57.292981+00:00",
+          "source_version_id": "CNINFO 1214261921",
+          "knowledge_quality": "historical_original_evidence",
+          "original_file": "301192-entry.pdf",
+          "publication_date_local": "2022-08-10",
+          "publication_precision": "date",
+          "available_at": "2022-08-10T16:00:00+00:00"
+        },
+        "linkage_source": {
+          "source_url": "https://static.cninfo.com.cn/finalpage/2022-08-10/1214261921.PDF",
+          "source_sha256": "dcd11fbb45a8b39f3a492cd838c196a744125bf654145bfb3cfc6da2deda23cb",
+          "observed_at": "2026-11-20T12:42:57.292981+00:00",
+          "source_version_id": "CNINFO 1214261921",
+          "knowledge_quality": "historical_original_evidence",
+          "original_file": "301192-entry.pdf",
+          "publication_date_local": "2022-08-10",
+          "publication_precision": "date",
+          "available_at": "2022-08-10T16:00:00+00:00"
+        }
+      },
+      "financial_fields_in_model": [
+        "assets",
+        "liabilities",
+        "parent_equity"
+      ]
+    },
+    "CN|CN-301321.SZ|2022-11-18": {
+      "sample_id": "CN|CN-301321.SZ|2022-11-18",
+      "instrument_id": "CN-301321.SZ",
+      "issuer_id": "CN-833994.BJ",
+      "asof_utc": "2022-11-18 23:59:59+08:00",
+      "local_trade_date": "2022-11-18",
+      "input_invalid_reason": null,
+      "input_valid": true,
+      "window_start_date": "2022-08-18",
+      "fundamental_snapshot_id": "fund-c7079ed2e26e9230b2a9c7c7",
+      "symbol_asof": "301321",
+      "name_asof": "翰博高新",
+      "exchange": "SZSE",
+      "ts_code": "301321.SZ",
+      "shares_outstanding_security": 124290000.0,
+      "security_market_cap_local": 2848726800.0,
+      "issuer_market_cap_reporting": 2848726800.0,
+      "issuer_class_provenance_id": null,
+      "issuer_quote_age_days": null,
+      "share_provenance_id": "share_versions-202792b86d8c23856f64449b",
+      "close_raw": 22.92,
+      "quote_valid": true,
+      "suspension_verified": false,
+      "snapshot_issuer_id": "CN-833994.BJ",
+      "snapshot_available_at": "2022-10-26 00:00:00+08:00",
+      "fiscal_period_end": "2022-09-30",
+      "disclosure_date_local": "2022-10-25",
+      "source_version_refs": [
+        "financial_versions-841c1174ba0cec1a78be00c0",
+        "financial_versions-9f7df3749dc68e697b5382fc",
+        "financial_versions-aa76ead2ac31b0da06e100c5",
+        "financial_versions-f1944dc144f0c9d2ced8490f"
+      ],
+      "financial_missing_reasons": {
+        "revenue_ttm": "unverified_version",
+        "net_income_total_ttm": "unverified_version",
+        "net_income_parent_ttm": "unverified_version",
+        "operating_cashflow_ttm": "unverified_version",
+        "assets_4q_ago": "unverified_version",
+        "parent_equity_4q_ago": "unverified_version",
+        "revenue_ttm_4q_ago": "insufficient_history",
+        "net_income_parent_ttm_4q_ago": "insufficient_history"
+      },
+      "revenue_ttm": null,
+      "net_income_total_ttm": null,
+      "net_income_parent_ttm": null,
+      "operating_cashflow_ttm": null,
+      "assets": 3674075564.53,
+      "liabilities": 2070383546.37,
+      "parent_equity": 1370667269.16,
+      "snapshot_from_prelisting_disclosure": false,
+      "case": "transferred_new_venue",
+      "venue_link": {
+        "scope": "legal_issuer_continuity_only",
+        "issuer_legal_name": "翰博高新材料（合肥）股份有限公司",
+        "old_instrument_id": "CN-833994.BJ",
+        "new_instrument_id": "CN-301321.SZ",
+        "old_exchange": "BSE",
+        "new_exchange": "SZSE",
+        "old_ts_code": "833994.BJ",
+        "new_ts_code": "301321.SZ",
+        "old_listing_end_exclusive": "2022-07-25",
+        "new_listing_start_inclusive": "2022-08-18",
+        "linkage_available_at": "2022-08-17T16:00:00+00:00",
+        "timeline_available_at": "2022-08-17T16:00:00+00:00",
+        "old_exit_source": {
+          "source_url": "https://www.bse.cn/disclosure/2022/2022-07-22/1658483683_879987.pdf",
+          "source_sha256": "03c8e87d0b97ab7f7b309712ca9bbe89255d4180c5e3d4a93325f1b591d31a7f",
+          "observed_at": "2026-11-20T12:42:57.746738+00:00",
+          "source_version_id": "BSE issuer 2022-047",
+          "knowledge_quality": "historical_original_evidence",
+          "original_file": "833994-exit.pdf",
+          "publication_date_local": "2022-07-22",
+          "publication_precision": "date",
+          "available_at": "2022-07-22T16:00:00+00:00"
+        },
+        "new_entry_source": {
+          "source_url": "https://disc.static.szse.cn/download/disc/disk03/finalpage/2022-08-17/51fce967-293a-490b-916b-60c40783b28f.PDF",
+          "source_sha256": "f51ad261280d58f69526871fa7d1796fae7c6afb1ad97c24868bbcdb3be1d306",
+          "observed_at": "2026-11-20T12:42:59.209320+00:00",
+          "source_version_id": "SZSE issuer transfer listing announcement",
+          "knowledge_quality": "historical_original_evidence",
+          "original_file": "301321-entry.pdf",
+          "publication_date_local": "2022-08-17",
+          "publication_precision": "date",
+          "available_at": "2022-08-17T16:00:00+00:00"
+        },
+        "linkage_source": {
+          "source_url": "https://disc.static.szse.cn/download/disc/disk03/finalpage/2022-08-17/51fce967-293a-490b-916b-60c40783b28f.PDF",
+          "source_sha256": "f51ad261280d58f69526871fa7d1796fae7c6afb1ad97c24868bbcdb3be1d306",
+          "observed_at": "2026-11-20T12:42:59.209320+00:00",
+          "source_version_id": "SZSE issuer transfer listing announcement",
+          "knowledge_quality": "historical_original_evidence",
+          "original_file": "301321-entry.pdf",
+          "publication_date_local": "2022-08-17",
+          "publication_precision": "date",
+          "available_at": "2022-08-17T16:00:00+00:00"
+        }
+      },
+      "financial_fields_in_model": [
+        "assets",
+        "liabilities",
+        "parent_equity"
+      ]
+    },
+    "CN|CN-688287.SH|2022-08-18": {
+      "sample_id": "CN|CN-688287.SH|2022-08-18",
+      "instrument_id": "CN-688287.SH",
+      "issuer_id": "CN-832317.BJ",
+      "asof_utc": "2022-08-18 23:59:59+08:00",
+      "local_trade_date": "2022-08-18",
+      "input_invalid_reason": null,
+      "input_valid": true,
+      "window_start_date": "2022-05-25",
+      "fundamental_snapshot_id": "fund-9e1d2420beec2c300be07842",
+      "symbol_asof": "688287",
+      "name_asof": "观典防务",
+      "exchange": "SSE",
+      "ts_code": "688287.SH",
+      "shares_outstanding_security": null,
+      "security_market_cap_local": null,
+      "issuer_market_cap_reporting": null,
+      "issuer_class_provenance_id": null,
+      "issuer_quote_age_days": null,
+      "share_provenance_id": null,
+      "close_raw": 13.59,
+      "quote_valid": true,
+      "suspension_verified": false,
+      "snapshot_issuer_id": "CN-832317.BJ",
+      "snapshot_available_at": "2022-04-21 00:00:00+08:00",
+      "fiscal_period_end": "2022-03-31",
+      "disclosure_date_local": "2022-04-20",
+      "source_version_refs": [
+        "financial_versions-54dd9711d6c0a0e882704305",
+        "financial_versions-ae01fefc282685ec805e03d9",
+        "financial_versions-ae4a9dfbaefaa9070f6950ad",
+        "financial_versions-f3a3487b6992d602bec80e48",
+        "financial_versions-f67a2a7758d033f29e1a7403"
+      ],
+      "financial_missing_reasons": {
+        "assets": "unverified_version",
+        "liabilities": "unverified_version",
+        "parent_equity": "unverified_version",
+        "revenue_ttm": "unverified_version",
+        "net_income_total_ttm": "unverified_version",
+        "net_income_parent_ttm": "unverified_version",
+        "operating_cashflow_ttm": "unverified_version",
+        "revenue_ttm_4q_ago": "insufficient_history",
+        "net_income_parent_ttm_4q_ago": "insufficient_history"
+      },
+      "revenue_ttm": null,
+      "net_income_total_ttm": null,
+      "net_income_parent_ttm": null,
+      "operating_cashflow_ttm": null,
+      "assets": null,
+      "liabilities": null,
+      "parent_equity": null,
+      "snapshot_from_prelisting_disclosure": true,
+      "case": "transferred_new_venue",
+      "venue_link": {
+        "scope": "legal_issuer_continuity_only",
+        "issuer_legal_name": "观典防务技术股份有限公司",
+        "old_instrument_id": "CN-832317.BJ",
+        "new_instrument_id": "CN-688287.SH",
+        "old_exchange": "BSE",
+        "new_exchange": "SSE",
+        "old_ts_code": "832317.BJ",
+        "new_ts_code": "688287.SH",
+        "old_listing_end_exclusive": "2022-04-26",
+        "new_listing_start_inclusive": "2022-05-25",
+        "linkage_available_at": "2022-05-18T16:00:00+00:00",
+        "timeline_available_at": "2022-05-24T16:00:00+00:00",
+        "old_exit_source": {
+          "source_url": "https://www.bse.cn/disclosure/2022/2022-04-25/1650875588_282390.pdf",
+          "source_sha256": "75c864f8119e4bedb09ef50f7441fdcf550e18c9a919e74466bb6e3eae85ea61",
+          "observed_at": "2026-11-20T12:42:59.526913+00:00",
+          "source_version_id": "BSE issuer 2022-021",
+          "knowledge_quality": "historical_original_evidence",
+          "original_file": "832317-exit.pdf",
+          "publication_date_local": "2022-04-25",
+          "publication_precision": "date",
+          "available_at": "2022-04-25T16:00:00+00:00"
+        },
+        "new_entry_source": {
+          "source_url": "https://www.sse.com.cn/disclosure/announcement/listing/c/c_20220523_5702466.shtml",
+          "source_sha256": "24330a78a49b564ff455124f3eb68dae7b996935930de9ebd3bae094c963afb8",
+          "observed_at": "2026-11-20T12:43:01.048719+00:00",
+          "source_version_id": "SSE stock announcement 2022-60",
+          "knowledge_quality": "historical_original_evidence",
+          "original_file": "688287-entry.html",
+          "publication_date_local": "2022-05-24",
+          "publication_precision": "date",
+          "available_at": "2022-05-24T16:00:00+00:00"
+        },
+        "linkage_source": {
+          "source_url": "https://epaper.cs.com.cn/zgzqb/html/2022-05/18/nw.D110000zgzqb_20220518_5-B083.htm",
+          "source_sha256": "8b0ce481276a7ebf6b73bd3caeb7de4d918eb1228b3c24c18098fadff311cae3",
+          "observed_at": "2026-11-20T12:44:37.457684+00:00",
+          "source_version_id": "China Securities Journal issuer co-publication B083",
+          "knowledge_quality": "historical_original_evidence",
+          "original_file": "688287-reregistration.html",
+          "publication_date_local": "2022-05-18",
+          "publication_precision": "date",
+          "available_at": "2022-05-18T16:00:00+00:00",
+          "catalogue_provenance": {
+            "source_url": "https://query.sse.com.cn/security/stock/queryCompanyBulletinNew.do?SECURITY_CODE=688287&START_DATE=2022-05-18&END_DATE=2022-05-24&isPagination=true&pageHelp.pageSize=40&pageHelp.cacheSize=1&pageHelp.pageNo=1&pageHelp.beginPage=1&pageHelp.endPage=1",
+            "source_sha256": "477acae61ab8e997e64f83804ba63a1d1d29322822a49f6c882b2dc681da26e1",
+            "observed_at": "2026-11-20T12:43:01.900454+00:00",
+            "source_version_id": "SSE issuer announcement catalogue 2022-05",
+            "knowledge_quality": "historical_original_evidence"
+          },
+          "exchange_original_scan": {
+            "source_url": "https://big5.sse.com.cn/site/cht/www.sse.com.cn/disclosure/listedinfo/announcement/c/new/2022-05-18/688287_20220518_1_EAgd1b61.pdf",
+            "source_sha256": "8e870d057151f945727852f743f75a70f31d6439d04624ef5d0e541ac1c6f985",
+            "observed_at": "2026-11-20T12:43:02.869199+00:00",
+            "source_version_id": "SSE 1006648",
+            "knowledge_quality": "historical_original_evidence",
+            "original_file": "688287-reregistration.pdf"
+          }
+        }
+      },
+      "financial_fields_in_model": []
+    },
+    "CN|CN-688287.SH|2022-08-29": {
+      "sample_id": "CN|CN-688287.SH|2022-08-29",
+      "instrument_id": "CN-688287.SH",
+      "issuer_id": "CN-832317.BJ",
+      "asof_utc": "2022-08-29 23:59:59+08:00",
+      "local_trade_date": "2022-08-29",
+      "input_invalid_reason": null,
+      "input_valid": true,
+      "window_start_date": "2022-06-06",
+      "fundamental_snapshot_id": "fund-7020f8462102829a8d628bf3",
+      "symbol_asof": "688287",
+      "name_asof": "观典防务",
+      "exchange": "SSE",
+      "ts_code": "688287.SH",
+      "shares_outstanding_security": null,
+      "security_market_cap_local": null,
+      "issuer_market_cap_reporting": null,
+      "issuer_class_provenance_id": null,
+      "issuer_quote_age_days": null,
+      "share_provenance_id": null,
+      "close_raw": 13.13,
+      "quote_valid": true,
+      "suspension_verified": false,
+      "snapshot_issuer_id": "CN-832317.BJ",
+      "snapshot_available_at": "2022-08-27 00:00:00+08:00",
+      "fiscal_period_end": "2022-06-30",
+      "disclosure_date_local": "2022-08-26",
+      "source_version_refs": [
+        "financial_versions-2e626bc02897724869b14d18",
+        "financial_versions-ae01fefc282685ec805e03d9",
+        "financial_versions-f67a2a7758d033f29e1a7403"
+      ],
+      "financial_missing_reasons": {
+        "revenue_ttm": "unverified_version",
+        "net_income_total_ttm": "unverified_version",
+        "net_income_parent_ttm": "unverified_version",
+        "operating_cashflow_ttm": "unverified_version",
+        "revenue_ttm_4q_ago": "insufficient_history",
+        "net_income_parent_ttm_4q_ago": "insufficient_history"
+      },
+      "revenue_ttm": null,
+      "net_income_total_ttm": null,
+      "net_income_parent_ttm": null,
+      "operating_cashflow_ttm": null,
+      "assets": 1039265402.74,
+      "liabilities": 53338761.2,
+      "parent_equity": 985926641.54,
+      "case": "transferred_new_venue_finance",
+      "financial_fields_in_model": [
+        "assets",
+        "liabilities",
+        "parent_equity"
+      ]
+    },
+    "CN|CN-600958.SH|2018-01-02": {
+      "sample_id": "CN|CN-600958.SH|2018-01-02",
+      "instrument_id": "CN-600958.SH",
+      "issuer_id": "CN-600958.SH",
+      "asof_utc": "2018-01-02 23:59:59+08:00",
+      "local_trade_date": "2018-01-02",
+      "input_invalid_reason": null,
+      "input_valid": true,
+      "window_start_date": "2017-10-09",
+      "fundamental_snapshot_id": "fund-fc341995c367dff675cfdc80",
+      "symbol_asof": "600958",
+      "name_asof": "东方证券",
+      "exchange": "SSE",
+      "ts_code": "600958.SH",
+      "shares_outstanding_security": 5966575803.0,
+      "security_market_cap_local": 83472395483.97,
+      "issuer_market_cap_reporting": 90126136184.4632,
+      "issuer_class_provenance_id": "issuer_class_versions-5f05d0a3a5b788080757482b",
+      "issuer_quote_age_days": 0,
+      "share_provenance_id": "share_versions-5f05d0a3a5b788080757482b",
+      "close_raw": 13.99,
+      "quote_valid": true,
+      "suspension_verified": false,
+      "net_income_parent_ttm": 3067070240.42,
+      "parent_equity": 41685873397.43,
+      "revenue_ttm": null,
+      "case": "multiclass_valuation",
+      "financial_fields_in_model": [
+        "net_income_total_ttm",
+        "net_income_parent_ttm",
+        "operating_cashflow_ttm",
+        "assets",
+        "liabilities",
+        "parent_equity"
+      ],
+      "native_valuation_lines": {
+        "earnings_yield_ttm": "earnings_yield_ttm=0.034030862",
+        "book_to_market": "book_to_market=0.46252814",
+        "sales_to_market_ttm": "sales_to_market_ttm=NA"
+      }
+    },
+    "CN|CN-600958.SH|2018-03-30": {
+      "sample_id": "CN|CN-600958.SH|2018-03-30",
+      "instrument_id": "CN-600958.SH",
+      "issuer_id": "CN-600958.SH",
+      "asof_utc": "2018-03-30 23:59:59+08:00",
+      "local_trade_date": "2018-03-30",
+      "input_invalid_reason": null,
+      "input_valid": true,
+      "window_start_date": "2017-12-28",
+      "fundamental_snapshot_id": "fund-fc341995c367dff675cfdc80",
+      "symbol_asof": "600958",
+      "name_asof": "东方证券",
+      "exchange": "SSE",
+      "ts_code": "600958.SH",
+      "shares_outstanding_security": 5966575803.0,
+      "security_market_cap_local": 74045205715.23,
+      "issuer_market_cap_reporting": null,
+      "issuer_class_provenance_id": null,
+      "issuer_quote_age_days": null,
+      "share_provenance_id": "share_versions-5f05d0a3a5b788080757482b",
+      "close_raw": 12.41,
+      "quote_valid": true,
+      "suspension_verified": false,
+      "case": "legally_missing_issuer_valuation",
+      "financial_fields_in_model": [
+        "net_income_total_ttm",
+        "net_income_parent_ttm",
+        "operating_cashflow_ttm",
+        "assets",
+        "liabilities",
+        "parent_equity"
+      ],
+      "native_valuation_lines": {
+        "earnings_yield_ttm": "earnings_yield_ttm=NA",
+        "book_to_market": "book_to_market=NA",
+        "sales_to_market_ttm": "sales_to_market_ttm=NA"
+      }
+    },
+    "CN|CN-600999.SH|2017-03-30": {
+      "sample_id": "CN|CN-600999.SH|2017-03-30",
+      "instrument_id": "CN-600999.SH",
+      "issuer_id": "CN-600999.SH",
+      "asof_utc": "2017-03-30 23:59:59+08:00",
+      "local_trade_date": "2017-03-30",
+      "input_invalid_reason": null,
+      "input_valid": true,
+      "window_start_date": "2016-12-28",
+      "fundamental_snapshot_id": "fund-59a8fe7c905f4ee46e1b1673",
+      "symbol_asof": "600999",
+      "name_asof": "招商证券",
+      "exchange": "SSE",
+      "ts_code": "600999.SH",
+      "shares_outstanding_security": 5719008149.0,
+      "security_market_cap_local": 93620163399.13,
+      "issuer_market_cap_reporting": 103987784110.27266,
+      "issuer_class_provenance_id": "issuer_class_versions-20cb81a971f15183820837c7",
+      "issuer_quote_age_days": 0,
+      "share_provenance_id": "share_versions-20cb81a971f15183820837c7",
+      "close_raw": 16.37,
+      "quote_valid": true,
+      "suspension_verified": false,
+      "net_income_parent_ttm": 5403450595.57,
+      "parent_equity": 59826337030.11,
+      "revenue_ttm": null,
+      "case": "multiclass_valuation",
+      "financial_fields_in_model": [
+        "net_income_total_ttm",
+        "net_income_parent_ttm",
+        "operating_cashflow_ttm",
+        "assets",
+        "liabilities",
+        "parent_equity"
+      ],
+      "native_valuation_lines": {
+        "earnings_yield_ttm": "earnings_yield_ttm=0.051962361",
+        "book_to_market": "book_to_market=0.57532084",
+        "sales_to_market_ttm": "sales_to_market_ttm=NA"
+      }
+    },
+    "CN|CN-600999.SH|2017-04-14": {
+      "sample_id": "CN|CN-600999.SH|2017-04-14",
+      "instrument_id": "CN-600999.SH",
+      "issuer_id": "CN-600999.SH",
+      "asof_utc": "2017-04-14 23:59:59+08:00",
+      "local_trade_date": "2017-04-14",
+      "input_invalid_reason": null,
+      "input_valid": true,
+      "window_start_date": "2017-01-11",
+      "fundamental_snapshot_id": "fund-59a8fe7c905f4ee46e1b1673",
+      "symbol_asof": "600999",
+      "name_asof": "招商证券",
+      "exchange": "SSE",
+      "ts_code": "600999.SH",
+      "shares_outstanding_security": 5719008149.0,
+      "security_market_cap_local": 93791733643.59999,
+      "issuer_market_cap_reporting": null,
+      "issuer_class_provenance_id": null,
+      "issuer_quote_age_days": null,
+      "share_provenance_id": "share_versions-20cb81a971f15183820837c7",
+      "close_raw": 16.4,
+      "quote_valid": true,
+      "suspension_verified": false,
+      "case": "legally_missing_issuer_valuation",
+      "financial_fields_in_model": [
+        "net_income_total_ttm",
+        "net_income_parent_ttm",
+        "operating_cashflow_ttm",
+        "assets",
+        "liabilities",
+        "parent_equity"
+      ],
+      "native_valuation_lines": {
+        "earnings_yield_ttm": "earnings_yield_ttm=NA",
+        "book_to_market": "book_to_market=NA",
+        "sales_to_market_ttm": "sales_to_market_ttm=NA"
+      }
+    }
+  },
+  "native_evidence": [
+    {
+      "sample_id": "CN|CN-001914.SZ|2019-10-21",
+      "split": "train",
+      "exchange": "SZSE",
+      "questions": [
+        "return_1d",
+        "return_5d",
+        "return_20d"
+      ],
+      "options_per_question": [
+        7,
+        7,
+        7
+      ],
+      "numeric_sessions": 60,
+      "sequence_channel_order": [
+        "open_relative",
+        "high_relative",
+        "low_relative",
+        "close_relative",
+        "log_return_1d",
+        "volume_relative"
+      ],
+      "finite_observations_by_channel": {
+        "open_relative": 60,
+        "high_relative": 60,
+        "low_relative": 60,
+        "close_relative": 60,
+        "log_return_1d": 60,
+        "volume_relative": 60
+      },
+      "non_null_factors": 13,
+      "non_null_financial_fields": 3,
+      "native_tokens": 6859,
+      "shared_tokens": 5961,
+      "split_sequences": 3,
+      "masks": [
+        false,
+        true,
+        true
+      ],
+      "class_ids": [
+        0,
+        5,
+        5
+      ],
+      "request_sha256": "bb744070121367de57dcc4605baf21dc595671e61cfa4f8a1f28203f136afd2c"
+    },
+    {
+      "sample_id": "CN|CN-001914.SZ|2020-01-16",
+      "split": "train",
+      "exchange": "SZSE",
+      "questions": [
+        "return_1d",
+        "return_5d",
+        "return_20d"
+      ],
+      "options_per_question": [
+        7,
+        7,
+        7
+      ],
+      "numeric_sessions": 60,
+      "sequence_channel_order": [
+        "open_relative",
+        "high_relative",
+        "low_relative",
+        "close_relative",
+        "log_return_1d",
+        "volume_relative"
+      ],
+      "finite_observations_by_channel": {
+        "open_relative": 60,
+        "high_relative": 60,
+        "low_relative": 60,
+        "close_relative": 60,
+        "log_return_1d": 60,
+        "volume_relative": 60
+      },
+      "non_null_factors": 11,
+      "non_null_financial_fields": 0,
+      "native_tokens": 6815,
+      "shared_tokens": 5915,
+      "split_sequences": 3,
+      "masks": [
+        true,
+        true,
+        true
+      ],
+      "class_ids": [
+        1,
+        1,
+        5
+      ],
+      "request_sha256": "eee45ea4ba818c8423afbc9f8ab368afb4a3e1aadcf86ba3c4dfe7d6a421866c"
+    },
+    {
+      "sample_id": "CN|CN-001872.SZ|2017-11-16",
+      "split": "train",
+      "exchange": "SZSE",
+      "questions": [
+        "return_1d",
+        "return_5d",
+        "return_20d"
+      ],
+      "options_per_question": [
+        7,
+        7,
+        7
+      ],
+      "numeric_sessions": 60,
+      "sequence_channel_order": [
+        "open_relative",
+        "high_relative",
+        "low_relative",
+        "close_relative",
+        "log_return_1d",
+        "volume_relative"
+      ],
+      "finite_observations_by_channel": {
+        "open_relative": 60,
+        "high_relative": 60,
+        "low_relative": 60,
+        "close_relative": 60,
+        "log_return_1d": 60,
+        "volume_relative": 60
+      },
+      "non_null_factors": 18,
+      "non_null_financial_fields": 7,
+      "native_tokens": 6709,
+      "shared_tokens": 5806,
+      "split_sequences": 3,
+      "masks": [
+        true,
+        false,
+        false
+      ],
+      "class_ids": [
+        3,
+        0,
+        0
+      ],
+      "request_sha256": "8b1379d48f1be0c4dfe2c00288f6bec44ca32ca7686be52a053ed0ed103d8930"
+    },
+    {
+      "sample_id": "CN|CN-001872.SZ|2019-03-29",
+      "split": "train",
+      "exchange": "SZSE",
+      "questions": [
+        "return_1d",
+        "return_5d",
+        "return_20d"
+      ],
+      "options_per_question": [
+        7,
+        7,
+        7
+      ],
+      "numeric_sessions": 60,
+      "sequence_channel_order": [
+        "open_relative",
+        "high_relative",
+        "low_relative",
+        "close_relative",
+        "log_return_1d",
+        "volume_relative"
+      ],
+      "finite_observations_by_channel": {
+        "open_relative": 60,
+        "high_relative": 60,
+        "low_relative": 60,
+        "close_relative": 60,
+        "log_return_1d": 60,
+        "volume_relative": 60
+      },
+      "non_null_factors": 17,
+      "non_null_financial_fields": 6,
+      "native_tokens": 6926,
+      "shared_tokens": 6032,
+      "split_sequences": 3,
+      "masks": [
+        true,
+        true,
+        true
+      ],
+      "class_ids": [
+        4,
+        4,
+        2
+      ],
+      "request_sha256": "14702799cfdc32b496494ea819b7ab073f096f33201acc09da9494ba29c68b1e"
+    },
+    {
+      "sample_id": "CN|CN-301192.SZ|2022-11-11",
+      "split": "train",
+      "exchange": "SZSE",
+      "questions": [
+        "return_1d",
+        "return_5d",
+        "return_20d"
+      ],
+      "options_per_question": [
+        7,
+        7,
+        7
+      ],
+      "numeric_sessions": 60,
+      "sequence_channel_order": [
+        "open_relative",
+        "high_relative",
+        "low_relative",
+        "close_relative",
+        "log_return_1d",
+        "volume_relative"
+      ],
+      "finite_observations_by_channel": {
+        "open_relative": 60,
+        "high_relative": 60,
+        "low_relative": 60,
+        "close_relative": 60,
+        "log_return_1d": 60,
+        "volume_relative": 60
+      },
+      "non_null_factors": 15,
+      "non_null_financial_fields": 3,
+      "native_tokens": 6756,
+      "shared_tokens": 5861,
+      "split_sequences": 3,
+      "masks": [
+        true,
+        true,
+        true
+      ],
+      "class_ids": [
+        4,
+        2,
+        2
+      ],
+      "request_sha256": "4db0e8bc5cf932164f169a5e0f41cd75589f1c46cf08b441bfa442781d5871d6"
+    },
+    {
+      "sample_id": "CN|CN-301321.SZ|2022-11-18",
+      "split": "train",
+      "exchange": "SZSE",
+      "questions": [
+        "return_1d",
+        "return_5d",
+        "return_20d"
+      ],
+      "options_per_question": [
+        7,
+        7,
+        7
+      ],
+      "numeric_sessions": 60,
+      "sequence_channel_order": [
+        "open_relative",
+        "high_relative",
+        "low_relative",
+        "close_relative",
+        "log_return_1d",
+        "volume_relative"
+      ],
+      "finite_observations_by_channel": {
+        "open_relative": 60,
+        "high_relative": 60,
+        "low_relative": 60,
+        "close_relative": 60,
+        "log_return_1d": 60,
+        "volume_relative": 60
+      },
+      "non_null_factors": 16,
+      "non_null_financial_fields": 3,
+      "native_tokens": 6793,
+      "shared_tokens": 5897,
+      "split_sequences": 3,
+      "masks": [
+        true,
+        true,
+        true
+      ],
+      "class_ids": [
+        4,
+        2,
+        1
+      ],
+      "request_sha256": "ee990eb607738dc42d008d768e8e224e4cde96973cccecf176e5d81dffc11507"
+    },
+    {
+      "sample_id": "CN|CN-688287.SH|2022-08-18",
+      "split": "train",
+      "exchange": "SSE",
+      "questions": [
+        "return_1d",
+        "return_5d",
+        "return_20d"
+      ],
+      "options_per_question": [
+        7,
+        7,
+        7
+      ],
+      "numeric_sessions": 60,
+      "sequence_channel_order": [
+        "open_relative",
+        "high_relative",
+        "low_relative",
+        "close_relative",
+        "log_return_1d",
+        "volume_relative"
+      ],
+      "finite_observations_by_channel": {
+        "open_relative": 60,
+        "high_relative": 60,
+        "low_relative": 60,
+        "close_relative": 60,
+        "log_return_1d": 60,
+        "volume_relative": 60
+      },
+      "non_null_factors": 11,
+      "non_null_financial_fields": 0,
+      "native_tokens": 6737,
+      "shared_tokens": 5842,
+      "split_sequences": 3,
+      "masks": [
+        true,
+        true,
+        true
+      ],
+      "class_ids": [
+        1,
+        1,
+        2
+      ],
+      "request_sha256": "3afc1c09ccd91a03bffc71831c5a32e430435d8bd2b8c172bfcac16568890464"
+    },
+    {
+      "sample_id": "CN|CN-688287.SH|2022-08-29",
+      "split": "train",
+      "exchange": "SSE",
+      "questions": [
+        "return_1d",
+        "return_5d",
+        "return_20d"
+      ],
+      "options_per_question": [
+        7,
+        7,
+        7
+      ],
+      "numeric_sessions": 60,
+      "sequence_channel_order": [
+        "open_relative",
+        "high_relative",
+        "low_relative",
+        "close_relative",
+        "log_return_1d",
+        "volume_relative"
+      ],
+      "finite_observations_by_channel": {
+        "open_relative": 60,
+        "high_relative": 60,
+        "low_relative": 60,
+        "close_relative": 60,
+        "log_return_1d": 60,
+        "volume_relative": 60
+      },
+      "non_null_factors": 12,
+      "non_null_financial_fields": 3,
+      "native_tokens": 6733,
+      "shared_tokens": 5835,
+      "split_sequences": 3,
+      "masks": [
+        true,
+        true,
+        true
+      ],
+      "class_ids": [
+        5,
+        5,
+        1
+      ],
+      "request_sha256": "fe8b44a7741fa3632e3f8cb03384b31e6856e7db427b056367da12138952b07c"
+    },
+    {
+      "sample_id": "CN|CN-600958.SH|2018-01-02",
+      "split": "train",
+      "exchange": "SSE",
+      "questions": [
+        "return_1d",
+        "return_5d",
+        "return_20d"
+      ],
+      "options_per_question": [
+        7,
+        7,
+        7
+      ],
+      "numeric_sessions": 60,
+      "sequence_channel_order": [
+        "open_relative",
+        "high_relative",
+        "low_relative",
+        "close_relative",
+        "log_return_1d",
+        "volume_relative"
+      ],
+      "finite_observations_by_channel": {
+        "open_relative": 60,
+        "high_relative": 60,
+        "low_relative": 60,
+        "close_relative": 60,
+        "log_return_1d": 60,
+        "volume_relative": 60
+      },
+      "non_null_factors": 20,
+      "non_null_financial_fields": 6,
+      "native_tokens": 6775,
+      "shared_tokens": 5877,
+      "split_sequences": 3,
+      "masks": [
+        true,
+        true,
+        true
+      ],
+      "class_ids": [
+        6,
+        4,
+        5
+      ],
+      "request_sha256": "6d9ebb55feeb2521bc57f3c7879460011f0341304b29556ab924cd910143fe64"
+    },
+    {
+      "sample_id": "CN|CN-600958.SH|2018-03-30",
+      "split": "train",
+      "exchange": "SSE",
+      "questions": [
+        "return_1d",
+        "return_5d",
+        "return_20d"
+      ],
+      "options_per_question": [
+        7,
+        7,
+        7
+      ],
+      "numeric_sessions": 60,
+      "sequence_channel_order": [
+        "open_relative",
+        "high_relative",
+        "low_relative",
+        "close_relative",
+        "log_return_1d",
+        "volume_relative"
+      ],
+      "finite_observations_by_channel": {
+        "open_relative": 60,
+        "high_relative": 60,
+        "low_relative": 60,
+        "close_relative": 60,
+        "log_return_1d": 60,
+        "volume_relative": 60
+      },
+      "non_null_factors": 19,
+      "non_null_financial_fields": 6,
+      "native_tokens": 6777,
+      "shared_tokens": 5872,
+      "split_sequences": 3,
+      "masks": [
+        true,
+        true,
+        true
+      ],
+      "class_ids": [
+        3,
+        4,
+        2
+      ],
+      "request_sha256": "f240d981b4454f8a20c0d69e33e88155b236dc0fdd1f87276c9f8f7fb2696386"
+    },
+    {
+      "sample_id": "CN|CN-600999.SH|2017-03-30",
+      "split": "train",
+      "exchange": "SSE",
+      "questions": [
+        "return_1d",
+        "return_5d",
+        "return_20d"
+      ],
+      "options_per_question": [
+        7,
+        7,
+        7
+      ],
+      "numeric_sessions": 60,
+      "sequence_channel_order": [
+        "open_relative",
+        "high_relative",
+        "low_relative",
+        "close_relative",
+        "log_return_1d",
+        "volume_relative"
+      ],
+      "finite_observations_by_channel": {
+        "open_relative": 60,
+        "high_relative": 60,
+        "low_relative": 60,
+        "close_relative": 60,
+        "log_return_1d": 60,
+        "volume_relative": 60
+      },
+      "non_null_factors": 20,
+      "non_null_financial_fields": 6,
+      "native_tokens": 6760,
+      "shared_tokens": 5851,
+      "split_sequences": 3,
+      "masks": [
+        true,
+        true,
+        true
+      ],
+      "class_ids": [
+        1,
+        4,
+        1
+      ],
+      "request_sha256": "1d90a1f91c778b9041c1e3896d4fe2d00b818a4269539a5e1f6373f98132c63d"
+    },
+    {
+      "sample_id": "CN|CN-600999.SH|2017-04-14",
+      "split": "train",
+      "exchange": "SSE",
+      "questions": [
+        "return_1d",
+        "return_5d",
+        "return_20d"
+      ],
+      "options_per_question": [
+        7,
+        7,
+        7
+      ],
+      "numeric_sessions": 60,
+      "sequence_channel_order": [
+        "open_relative",
+        "high_relative",
+        "low_relative",
+        "close_relative",
+        "log_return_1d",
+        "volume_relative"
+      ],
+      "finite_observations_by_channel": {
+        "open_relative": 60,
+        "high_relative": 60,
+        "low_relative": 60,
+        "close_relative": 60,
+        "log_return_1d": 60,
+        "volume_relative": 60
+      },
+      "non_null_factors": 18,
+      "non_null_financial_fields": 6,
+      "native_tokens": 6777,
+      "shared_tokens": 5868,
+      "split_sequences": 3,
+      "masks": [
+        true,
+        true,
+        true
+      ],
+      "class_ids": [
+        5,
+        1,
+        2
+      ],
+      "request_sha256": "aaa5428041fd5edd37968f2817468190f71e59dbda7d2487200838d81007b0f8"
+    }
+  ],
+  "price_prefix_check": {
+    "scope": "model assembly from cutoff price windows",
+    "feature_inputs": "published factor columns and as-of snapshots held fixed",
+    "sample_count": 12,
+    "evidence": [
+      {
+        "sample_id": "CN|CN-001914.SZ|2019-10-21",
+        "first_retained_trade_date": "2019-07-19",
+        "last_retained_trade_date": "2019-10-21",
+        "retained_rows": 61,
+        "later_rows_physically_excluded": 25,
+        "model_input_equal": true,
+        "native_request_equal": true
+      },
+      {
+        "sample_id": "CN|CN-001914.SZ|2020-01-16",
+        "first_retained_trade_date": "2019-10-23",
+        "last_retained_trade_date": "2020-01-16",
+        "retained_rows": 61,
+        "later_rows_physically_excluded": 19,
+        "model_input_equal": true,
+        "native_request_equal": true
+      },
+      {
+        "sample_id": "CN|CN-001872.SZ|2017-11-16",
+        "first_retained_trade_date": "2017-08-17",
+        "last_retained_trade_date": "2017-11-16",
+        "retained_rows": 61,
+        "later_rows_physically_excluded": 25,
+        "model_input_equal": true,
+        "native_request_equal": true
+      },
+      {
+        "sample_id": "CN|CN-001872.SZ|2019-03-29",
+        "first_retained_trade_date": "2018-12-26",
+        "last_retained_trade_date": "2019-03-29",
+        "retained_rows": 61,
+        "later_rows_physically_excluded": 21,
+        "model_input_equal": true,
+        "native_request_equal": true
+      },
+      {
+        "sample_id": "CN|CN-301192.SZ|2022-11-11",
+        "first_retained_trade_date": "2022-08-11",
+        "last_retained_trade_date": "2022-11-11",
+        "retained_rows": 61,
+        "later_rows_physically_excluded": 25,
+        "model_input_equal": true,
+        "native_request_equal": true
+      },
+      {
+        "sample_id": "CN|CN-301321.SZ|2022-11-18",
+        "first_retained_trade_date": "2022-08-18",
+        "last_retained_trade_date": "2022-11-18",
+        "retained_rows": 61,
+        "later_rows_physically_excluded": 25,
+        "model_input_equal": true,
+        "native_request_equal": true
+      },
+      {
+        "sample_id": "CN|CN-688287.SH|2022-08-18",
+        "first_retained_trade_date": "2022-05-25",
+        "last_retained_trade_date": "2022-08-18",
+        "retained_rows": 61,
+        "later_rows_physically_excluded": 24,
+        "model_input_equal": true,
+        "native_request_equal": true
+      },
+      {
+        "sample_id": "CN|CN-688287.SH|2022-08-29",
+        "first_retained_trade_date": "2022-06-06",
+        "last_retained_trade_date": "2022-08-29",
+        "retained_rows": 61,
+        "later_rows_physically_excluded": 23,
+        "model_input_equal": true,
+        "native_request_equal": true
+      },
+      {
+        "sample_id": "CN|CN-600958.SH|2018-01-02",
+        "first_retained_trade_date": "2017-10-09",
+        "last_retained_trade_date": "2018-01-02",
+        "retained_rows": 61,
+        "later_rows_physically_excluded": 25,
+        "model_input_equal": true,
+        "native_request_equal": true
+      },
+      {
+        "sample_id": "CN|CN-600958.SH|2018-03-30",
+        "first_retained_trade_date": "2017-12-28",
+        "last_retained_trade_date": "2018-03-30",
+        "retained_rows": 61,
+        "later_rows_physically_excluded": 21,
+        "model_input_equal": true,
+        "native_request_equal": true
+      },
+      {
+        "sample_id": "CN|CN-600999.SH|2017-03-30",
+        "first_retained_trade_date": "2016-12-28",
+        "last_retained_trade_date": "2017-03-30",
+        "retained_rows": 61,
+        "later_rows_physically_excluded": 22,
+        "model_input_equal": true,
+        "native_request_equal": true
+      },
+      {
+        "sample_id": "CN|CN-600999.SH|2017-04-14",
+        "first_retained_trade_date": "2017-01-11",
+        "last_retained_trade_date": "2017-04-14",
+        "retained_rows": 61,
+        "later_rows_physically_excluded": 24,
+        "model_input_equal": true,
+        "native_request_equal": true
+      }
+    ]
+  }
+}

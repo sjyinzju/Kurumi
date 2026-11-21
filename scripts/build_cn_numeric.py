@@ -24,6 +24,7 @@ ENDPOINTS = (
     "stk_seasoned", "repurchase", "income", "balancesheet", "cashflow", "disclosure_date",
     "index_member_all", "index_classify",
 )
+PRICE_SUPPLEMENTS = ("daily", "adj_factor", "suspend_d", "stk_limit", "trade_cal")
 
 
 def sha256(path):
@@ -53,17 +54,21 @@ def finish_stage(con, name, signature):
 
 def build(root: Path, prices_only: bool, evidence_dir: Path | None = None,
           prehistory: Path | None = None, suspension_evidence: Path | None = None,
-          resume_export: Path | None = None, compute_only: bool = False):
+          resume_export: Path | None = None, compute_only: bool = False,
+          karpo_assets: Path | None = None, spill_dir: Path | None = None, memory_limit_gib: int = 10):
     workspace = root / "numeric" / ".build-cn"
     workspace.mkdir(parents=True, exist_ok=True)
     supplements = workspace / "sources"
     supplements.mkdir(exist_ok=True)
+    spill = spill_dir or workspace / "spill"
+    spill.mkdir(parents=True, exist_ok=True)
     with FileLock(str(root / "90_metadata" / "ingestion.lock"), timeout=0), duckdb.connect(
         str(workspace / "work.duckdb")
     ) as con:
         attach_registry(con, root)
-        con.execute(f"SET temp_directory={literal(workspace / 'spill')}")
-        con.execute("SET memory_limit='14GB'; SET preserve_insertion_order=false; SET max_temp_directory_size='20GB'")
+        con.execute(f"SET temp_directory={literal(spill)}")
+        con.execute("SET memory_limit=?", [f"{memory_limit_gib}GiB"])
+        con.execute("SET preserve_insertion_order=false; SET max_temp_directory_size='20GB'")
         con.execute("CREATE TABLE IF NOT EXISTS build_checkpoints(stage VARCHAR PRIMARY KEY, signature VARCHAR, done_at TIMESTAMPTZ)")
         con.execute(
             "CREATE OR REPLACE TABLE source_parts AS SELECT endpoint,partition_key,path,rows,content_hash "
@@ -74,19 +79,23 @@ def build(root: Path, prices_only: bool, evidence_dir: Path | None = None,
             "legacy_parts": digest(con.sql("SELECT * FROM source_parts ORDER BY path").fetchall()),
             "legacy_dataset_version": con.sql("SELECT dataset_version FROM quant.dataset_versions ORDER BY created_at DESC LIMIT 1").fetchone()[0],
             "supplements": {p.relative_to(workspace).as_posix(): sha256(p)
-                            for p in sorted(supplements.glob("*/*.parquet"))},
+                            for p in sorted(p for endpoint in PRICE_SUPPLEMENTS
+                                            for p in (supplements / endpoint).glob("*.parquet"))},
             "calendar_prehistory": {p.name: sha256(p) for p in sorted(prehistory.glob("*.parquet"))}
                                    if prehistory else {},
             "suspension_evidence_sha256": sha256(suspension_evidence) if suspension_evidence else None,
             "price_code": sha256(REPO / "src/kurumi/cn_prices.py"),
             "math_code": sha256(REPO / "src/kurumi/numeric_math.py"),
         }
-        audit_suspensions = bool(suspension_evidence and any(
-            row["state"] == "reported_suspension"
-            for row in json.loads(suspension_evidence.read_text(encoding="utf-8-sig"))
-        ))
-        if audit_suspensions:
+        suspension_rows = (json.loads(suspension_evidence.read_text(encoding="utf-8-sig"))
+                           if suspension_evidence else [])
+        if any(row["state"] == "reported_suspension" for row in suspension_rows):
             inputs["reported_suspension_policy"] = "observed-fact-audit-only.v1"
+        if any(row.get("public_fact_available_by") for row in suspension_rows):
+            inputs["suspension_schedule_code"] = digest([
+                sha256(REPO / "src/kurumi/cn_suspension_clock.py"),
+                sha256(REPO / "src/kurumi/cn_price_refresh.py"),
+            ])
         version = digest(inputs)
         if not stage_status(con, "prices", version):
             refreshed = False
@@ -98,10 +107,12 @@ def build(root: Path, prices_only: bool, evidence_dir: Path | None = None,
                     old_inputs = json.loads((release / "manifest.json").read_text(encoding="utf-8"))["source_snapshot"]
                     refreshed = refresh_suspensions(con, release, suspension_evidence, inputs,
                                                     digest(old_inputs), version)
-            preparation = digest([inputs["legacy_parts"], inputs["supplements"],
-                                  inputs["calendar_prehistory"],
+            preparation_inputs = [inputs["legacy_parts"], inputs["supplements"], inputs["calendar_prehistory"],
                                   inputs["suspension_evidence_sha256"],
-                                  inspect.getsource(prepare_prices), inspect.getsource(source_view)])
+                                  inspect.getsource(prepare_prices), inspect.getsource(source_view)]
+            if "suspension_schedule_code" in inputs:
+                preparation_inputs.append(inputs["suspension_schedule_code"])
+            preparation = digest(preparation_inputs)
             if refreshed:
                 finish_stage(con, "prepare", preparation)
             else:
@@ -110,7 +121,7 @@ def build(root: Path, prices_only: bool, evidence_dir: Path | None = None,
                     finish_stage(con, "prepare", preparation)
                 build_prices(con)
                 con.execute("CREATE OR REPLACE TABLE stock_prices AS FROM stock_base")
-                if audit_suspensions:
+                if suspension_evidence:
                     apply_suspension_evidence(con, suspension_evidence, version)
                 finish_stage(con, "prices", version)
         summaries = {
@@ -125,7 +136,7 @@ def build(root: Path, prices_only: bool, evidence_dir: Path | None = None,
             from kurumi.cn_publish import complete_build
 
             complete_build(con, workspace, inputs, evidence_dir, prehistory, suspension_evidence,
-                           resume_export, compute_only)
+                           resume_export, compute_only, karpo_assets)
 
 
 def main():
@@ -134,13 +145,20 @@ def main():
     parser.add_argument("--pit-evidence", type=Path, help="Directory containing verified PIT evidence streams")
     parser.add_argument("--calendar-prehistory", type=Path, help="Earlier SSE/SZSE calendar partitions")
     parser.add_argument("--suspension-evidence", type=Path, help="Verified official suspension intervals")
+    parser.add_argument("--karpo-assets", type=Path, default=REPO / "artifacts/karpo-b8e6fd7",
+                        help="Native Karpo tokenizer and processor used for release validation")
+    parser.add_argument("--spill-dir", type=Path, help="Dedicated temporary DuckDB spill directory on any local volume")
+    parser.add_argument("--memory-limit-gib", type=int, default=10, help="DuckDB memory budget in GiB")
     parser.add_argument("--resume-export", type=Path, help="Resume verified shards from an unpublished staging directory with matching upstream checkpoints")
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument("--prices-only", action="store_true", help="Checkpoint the full CN calendar/price grid and measure source gaps")
     mode.add_argument("--compute-only", action="store_true", help="Checkpoint PIT, supervision and features before writing Parquet")
     args = parser.parse_args()
+    if args.memory_limit_gib < 1:
+        parser.error("--memory-limit-gib must be positive")
     build(args.data_root.resolve(), args.prices_only, args.pit_evidence, args.calendar_prehistory,
-          args.suspension_evidence, args.resume_export, args.compute_only)
+          args.suspension_evidence, args.resume_export, args.compute_only, args.karpo_assets, args.spill_dir,
+          args.memory_limit_gib)
 
 
 if __name__ == "__main__":

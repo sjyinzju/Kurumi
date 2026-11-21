@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 from pathlib import Path
 from urllib.parse import urlsplit
 
@@ -34,7 +35,10 @@ def main():
                 headers = {"Referer": "https://www.sse.com.cn/disclosure/dealinstruc/suspension/stock/"}
             else:
                 extension = ".pdf" if source.path.lower().endswith(".pdf") else ".html"
-            path = args.output / (name + extension)
+            if source.netloc == "www.bse.cn":
+                headers = {"Referer": "https://www.bse.cn/"}
+            local_name = re.sub(r"[^a-zA-Z0-9_.-]", "_", name)
+            path = args.output / (local_name + extension)
             expected = event.get(f"{edge}_source_sha256")
             if expected is None and not args.record_new_hashes:
                 raise ValueError(f"Missing expected SHA-256 for {name}")

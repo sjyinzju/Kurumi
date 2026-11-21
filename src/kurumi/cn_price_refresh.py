@@ -5,7 +5,7 @@ import hashlib
 import json
 from pathlib import Path
 
-from .cn_prices import literal
+from .cn_suspension_clock import suspension_schedule
 
 
 def refresh_suspensions(con, previous_release: Path, evidence: Path, inputs, old_signature, new_signature):
@@ -13,6 +13,8 @@ def refresh_suspensions(con, previous_release: Path, evidence: Path, inputs, old
     old_inputs = old_manifest["source_snapshot"]
     different = {key for key in inputs.keys() | old_inputs.keys() if inputs.get(key) != old_inputs.get(key)}
     allowed = {"suspension_evidence_sha256", "reported_suspension_policy"}
+    if "suspension_schedule_code" not in old_inputs:
+        allowed.add("suspension_schedule_code")
     if "suspension_evidence_sha256" not in different or not different <= allowed:
         return False
     current = con.execute("SELECT signature FROM build_checkpoints WHERE stage='prices'").fetchone()
@@ -33,21 +35,21 @@ def refresh_suspensions(con, previous_release: Path, evidence: Path, inputs, old
 
 
 def apply_suspension_evidence(con, evidence, new_signature):
+    con.register("_verified_suspension_intervals", suspension_schedule(evidence))
     con.execute("BEGIN TRANSACTION")
     try:
-        con.execute(f"""
+        con.execute("""
             CREATE OR REPLACE TABLE builds_official_suspend AS
                 SELECT h.instrument_id,c.local_trade_date,
                        min(CASE WHEN e.state='reported_suspension' THEN 'exchange-observed:'
                                 ELSE 'exchange-halt:' END||e.start_source_id::VARCHAR) AS official_batch
-                FROM read_json_auto({literal(evidence)}) e
+                FROM _verified_suspension_intervals e
                 JOIN security_aliases a ON e.ts_code=a.symbol
                 JOIN security_history h USING(instrument_id)
                 JOIN market_calendar c ON c.exchange=h.exchange
-                  AND c.local_trade_date>=CASE WHEN e.state='reported_suspension' THEN e.effective_from::DATE
-                       ELSE greatest(e.effective_from::DATE,e.start_published_date::DATE+1) END
-                  AND c.local_trade_date<e.effective_to_exclusive::DATE
-                WHERE e.state IN ('suspended','listing_suspended','reported_suspension') GROUP BY 1,2
+                  AND c.local_trade_date>=e.first_known_session
+                  AND c.local_trade_date<e.effective_to_exclusive
+                GROUP BY 1,2
             ;
             CREATE OR REPLACE TEMP TABLE refreshed_suspensions AS
             SELECT p.instrument_id,p.local_trade_date,s.official_batch,q.raw_close IS NULL AS confirmed_no_quote
@@ -91,5 +93,7 @@ def apply_suspension_evidence(con, evidence, new_signature):
     except BaseException:
         con.execute("ROLLBACK")
         raise
+    finally:
+        con.unregister("_verified_suspension_intervals")
     con.execute("CHECKPOINT")
     print(f"additive suspension refresh verified {changed} rows", flush=True)

@@ -1,5 +1,5 @@
 {
-  "dataset_version": "cn-8dfdd9db8a90fd88e132e3675fd31e311e02b5a50ad437cca7f8bdff7198e03b",
+  "dataset_version": "cn-e22d9ca02b9d2602eb7e095e9b1e1330452ce6109437f673a08d924f50aced9c",
   "dataset_status": "INCOMPLETE",
   "scope": "sampled",
   "samples": [
@@ -427,12 +427,12 @@
         "low_relative": 60,
         "close_relative": 60,
         "log_return_1d": 60,
-        "volume_relative": 0
+        "volume_relative": 60
       },
-      "non_null_factors": 12,
-      "non_null_financial_fields": 4,
-      "native_tokens": 6336,
-      "shared_tokens": 5438,
+      "non_null_factors": 16,
+      "non_null_financial_fields": 6,
+      "native_tokens": 6894,
+      "shared_tokens": 5996,
       "split_sequences": 3,
       "masks": [
         true,
@@ -444,7 +444,7 @@
         6,
         5
       ],
-      "request_sha256": "15a97fb7ac56b671159e324e579fc2ddc3fad4544174ea4ce0ebb795d2b16c2e"
+      "request_sha256": "f312dcd6a937ae0b10b17310b5e090229449f70826c5a3a4b55b9ec6d32b9e94"
     },
     {
       "sample_id": "CN|CN-000001.SZ|2024-01-02",
@@ -475,12 +475,12 @@
         "low_relative": 60,
         "close_relative": 60,
         "log_return_1d": 60,
-        "volume_relative": 0
+        "volume_relative": 60
       },
-      "non_null_factors": 12,
-      "non_null_financial_fields": 4,
-      "native_tokens": 6128,
-      "shared_tokens": 5223,
+      "non_null_factors": 14,
+      "non_null_financial_fields": 0,
+      "native_tokens": 6645,
+      "shared_tokens": 5740,
       "split_sequences": 3,
       "masks": [
         true,
@@ -492,7 +492,7 @@
         2,
         5
       ],
-      "request_sha256": "b57192878e3031241edbbf5b3233aab564f04d13c7fbd4e225569b6144a4f035"
+      "request_sha256": "6a939db3a19a611625c903a09aa90e9d4349085d66c694b5c15f8bb0036877fe"
     },
     {
       "sample_id": "CN|CN-000001.SZ|2024-07-01",
@@ -523,12 +523,12 @@
         "low_relative": 60,
         "close_relative": 60,
         "log_return_1d": 60,
-        "volume_relative": 0
+        "volume_relative": 60
       },
-      "non_null_factors": 12,
-      "non_null_financial_fields": 4,
-      "native_tokens": 6332,
-      "shared_tokens": 5429,
+      "non_null_factors": 16,
+      "non_null_financial_fields": 3,
+      "native_tokens": 6887,
+      "shared_tokens": 5984,
       "split_sequences": 3,
       "masks": [
         true,
@@ -540,7 +540,7 @@
         0,
         2
       ],
-      "request_sha256": "ba1e79abeaa17a9183ee4c4babbfdf786cd8b57faed68d7233b1fba6ccbe096c"
+      "request_sha256": "11b684d6b8ae701cdf23a025b4c6934a7135def231001bf44dbfedef2dd1d6d1"
     },
     {
       "sample_id": "CN|CN-000001.SZ|2025-01-02",
@@ -571,12 +571,12 @@
         "low_relative": 60,
         "close_relative": 60,
         "log_return_1d": 60,
-        "volume_relative": 0
+        "volume_relative": 60
       },
-      "non_null_factors": 12,
+      "non_null_factors": 16,
       "non_null_financial_fields": 4,
-      "native_tokens": 6171,
-      "shared_tokens": 5270,
+      "native_tokens": 6729,
+      "shared_tokens": 5828,
       "split_sequences": 3,
       "masks": [
         true,
@@ -588,7 +588,7 @@
         2,
         2
       ],
-      "request_sha256": "8e499091902249b71bf57062c919b1523bed1bc4b8d744fce2305986389b4c44"
+      "request_sha256": "480683ceda00968b248b92150cb43fd74af9fd18653f516545d27d8955545436"
     },
     {
       "sample_id": "CN|CN-430017.BJ|2024-01-02",
@@ -619,12 +619,12 @@
         "low_relative": 60,
         "close_relative": 60,
         "log_return_1d": 60,
-        "volume_relative": 0
+        "volume_relative": 60
       },
-      "non_null_factors": 10,
-      "non_null_financial_fields": 0,
-      "native_tokens": 6252,
-      "shared_tokens": 5353,
+      "non_null_factors": 16,
+      "non_null_financial_fields": 3,
+      "native_tokens": 6879,
+      "shared_tokens": 5980,
       "split_sequences": 3,
       "masks": [
         true,
@@ -636,7 +636,7 @@
         1,
         1
       ],
-      "request_sha256": "e0f2731b1f595ddadb77cbe37e380c8768cbbc337d3bd53babff1fb3464165b2"
+      "request_sha256": "6a56c4620fb92b65639b8b55377b2e18d8bec0fd86eb891d2c1138cb743102ec"
     },
     {
       "sample_id": "CN|CN-430017.BJ|2024-07-01",
@@ -667,12 +667,12 @@
         "low_relative": 60,
         "close_relative": 60,
         "log_return_1d": 60,
-        "volume_relative": 0
+        "volume_relative": 60
       },
-      "non_null_factors": 10,
-      "non_null_financial_fields": 0,
-      "native_tokens": 6145,
-      "shared_tokens": 5242,
+      "non_null_factors": 16,
+      "non_null_financial_fields": 3,
+      "native_tokens": 6763,
+      "shared_tokens": 5860,
       "split_sequences": 3,
       "masks": [
         true,
@@ -684,7 +684,7 @@
         1,
         2
       ],
-      "request_sha256": "8e020a37c947f0fd9f70367f2f3a75634d30af525da012acc90b261c79b94f11"
+      "request_sha256": "cd8a50f23fb18465472ae9bc03c32b02c116ef86c0d905ce80b8a194e26638de"
     },
     {
       "sample_id": "CN|CN-430017.BJ|2025-01-02",
@@ -715,12 +715,12 @@
         "low_relative": 60,
         "close_relative": 60,
         "log_return_1d": 60,
-        "volume_relative": 0
+        "volume_relative": 60
       },
-      "non_null_factors": 10,
-      "non_null_financial_fields": 0,
-      "native_tokens": 6074,
-      "shared_tokens": 5176,
+      "non_null_factors": 12,
+      "non_null_financial_fields": 3,
+      "native_tokens": 6643,
+      "shared_tokens": 5745,
       "split_sequences": 3,
       "masks": [
         true,
@@ -732,7 +732,7 @@
         5,
         5
       ],
-      "request_sha256": "d8eda3538a5b1f3563a9ee2a9e64a569b74cddaf1f0b559a80eb85ee1126693b"
+      "request_sha256": "68c2999f0e90a630285ad429b6d03b2b2602fb3af0f485b3cb556e8c3f31b78f"
     },
     {
       "sample_id": "CN|CN-430047.BJ|2022-02-15",
@@ -763,12 +763,12 @@
         "low_relative": 60,
         "close_relative": 60,
         "log_return_1d": 60,
-        "volume_relative": 0
+        "volume_relative": 60
       },
-      "non_null_factors": 10,
-      "non_null_financial_fields": 0,
-      "native_tokens": 6036,
-      "shared_tokens": 5145,
+      "non_null_factors": 16,
+      "non_null_financial_fields": 3,
+      "native_tokens": 6662,
+      "shared_tokens": 5771,
       "split_sequences": 3,
       "masks": [
         true,
@@ -780,7 +780,7 @@
         0,
         1
       ],
-      "request_sha256": "48794b4ff7cc6e1e7cecfc259fe8ad5734287ba57aceffab88ca1e822fb433ca"
+      "request_sha256": "1b699bdb9d615e385ebe83150c47fcf28cdf2ab875fc7d07d70e8941bd7dc239"
     },
     {
       "sample_id": "CN|CN-600000.SH|2015-04-07",
@@ -811,12 +811,12 @@
         "low_relative": 60,
         "close_relative": 60,
         "log_return_1d": 60,
-        "volume_relative": 0
+        "volume_relative": 60
       },
-      "non_null_factors": 10,
-      "non_null_financial_fields": 1,
-      "native_tokens": 6284,
-      "shared_tokens": 5388,
+      "non_null_factors": 16,
+      "non_null_financial_fields": 6,
+      "native_tokens": 6890,
+      "shared_tokens": 5994,
       "split_sequences": 3,
       "masks": [
         true,
@@ -828,7 +828,7 @@
         5,
         4
       ],
-      "request_sha256": "22aa7d8a8574f473b8b72b57057e4b3ff26c4b7afd60276889eb2f505e03f4ee"
+      "request_sha256": "b6c7c976826d780d300b0e2310738ad7ab1db499ed47681aaea414293633d140"
     },
     {
       "sample_id": "CN|CN-600000.SH|2024-01-02",
@@ -859,12 +859,12 @@
         "low_relative": 60,
         "close_relative": 60,
         "log_return_1d": 60,
-        "volume_relative": 0
+        "volume_relative": 60
       },
-      "non_null_factors": 10,
+      "non_null_factors": 14,
       "non_null_financial_fields": 1,
-      "native_tokens": 6014,
-      "shared_tokens": 5105,
+      "native_tokens": 6585,
+      "shared_tokens": 5676,
       "split_sequences": 3,
       "masks": [
         true,
@@ -876,7 +876,7 @@
         4,
         5
       ],
-      "request_sha256": "f489be74dd5eadbbf6cbe152b1cd8d8106b8000307ca92b0bb17eee346537f32"
+      "request_sha256": "db49644969d37e53ca21a91029d09230422609691b359caa4a20931b6d2e19c4"
     },
     {
       "sample_id": "CN|CN-600000.SH|2024-07-01",
@@ -907,12 +907,12 @@
         "low_relative": 60,
         "close_relative": 60,
         "log_return_1d": 60,
-        "volume_relative": 0
+        "volume_relative": 60
       },
-      "non_null_factors": 10,
-      "non_null_financial_fields": 1,
-      "native_tokens": 6269,
-      "shared_tokens": 5364,
+      "non_null_factors": 17,
+      "non_null_financial_fields": 4,
+      "native_tokens": 6885,
+      "shared_tokens": 5980,
       "split_sequences": 3,
       "masks": [
         true,
@@ -924,7 +924,7 @@
         5,
         5
       ],
-      "request_sha256": "f14a314e6eb04750670147fc75b29851bf83f80e3acf8bbce11af528af11b2fe"
+      "request_sha256": "d576e6b25ee8f354ac764868d59734d9264f0a3fe0ae67d9141990c7b31179a9"
     },
     {
       "sample_id": "CN|CN-600000.SH|2025-01-02",
@@ -955,12 +955,12 @@
         "low_relative": 60,
         "close_relative": 60,
         "log_return_1d": 60,
-        "volume_relative": 0
+        "volume_relative": 60
       },
-      "non_null_factors": 10,
-      "non_null_financial_fields": 1,
-      "native_tokens": 6217,
-      "shared_tokens": 5316,
+      "non_null_factors": 16,
+      "non_null_financial_fields": 4,
+      "native_tokens": 6816,
+      "shared_tokens": 5915,
       "split_sequences": 3,
       "masks": [
         true,
@@ -972,7 +972,7 @@
         4,
         4
       ],
-      "request_sha256": "916afbfa51cafc05d942a87926805458896250105a9fdbfb537d8e784425d908"
+      "request_sha256": "8033264c433a454e72d705bf47a73339b9b32932884ae34c916f1ac6daffa2fa"
     },
     {
       "sample_id": "CN|CN-688277.SH|2026-06-30",
@@ -1003,12 +1003,12 @@
         "low_relative": 60,
         "close_relative": 60,
         "log_return_1d": 60,
-        "volume_relative": 0
+        "volume_relative": 60
       },
-      "non_null_factors": 10,
+      "non_null_factors": 14,
       "non_null_financial_fields": 0,
-      "native_tokens": 6116,
-      "shared_tokens": 5216,
+      "native_tokens": 6670,
+      "shared_tokens": 5770,
       "split_sequences": 3,
       "masks": [
         true,
@@ -1020,7 +1020,7 @@
         2,
         0
       ],
-      "request_sha256": "36df7a3bb2b6ac578c60e27f757daeb356cd677b5c59c64be537bf5a0c0c5db7"
+      "request_sha256": "4990bd2118d1efde2c4915501a6648485c03f410101ec7855bb2a1f4f50284b5"
     },
     {
       "sample_id": "CN|CN-873665.BJ|2023-12-28",
@@ -1051,12 +1051,12 @@
         "low_relative": 60,
         "close_relative": 60,
         "log_return_1d": 60,
-        "volume_relative": 0
+        "volume_relative": 60
       },
-      "non_null_factors": 10,
-      "non_null_financial_fields": 0,
-      "native_tokens": 6249,
-      "shared_tokens": 5356,
+      "non_null_factors": 16,
+      "non_null_financial_fields": 3,
+      "native_tokens": 6869,
+      "shared_tokens": 5976,
       "split_sequences": 3,
       "masks": [
         true,
@@ -1068,7 +1068,7 @@
         0,
         0
       ],
-      "request_sha256": "394e7d4b803ed13677fc026658922fdaa36ceb3cf8c7db67bc8e36495b1603cc"
+      "request_sha256": "1153d5e6f8c50b352fb0747d50ce66004afff90ef482147467f07d5b0baa7009"
     },
     {
       "sample_id": "CN|CN-873833.BJ|2024-06-27",
@@ -1099,12 +1099,12 @@
         "low_relative": 60,
         "close_relative": 60,
         "log_return_1d": 60,
-        "volume_relative": 0
+        "volume_relative": 60
       },
-      "non_null_factors": 10,
-      "non_null_financial_fields": 0,
-      "native_tokens": 6080,
-      "shared_tokens": 5185,
+      "non_null_factors": 16,
+      "non_null_financial_fields": 3,
+      "native_tokens": 6701,
+      "shared_tokens": 5806,
       "split_sequences": 3,
       "masks": [
         true,
@@ -1116,7 +1116,7 @@
         0,
         0
       ],
-      "request_sha256": "2d7d5f994dc77551d88fbc61085564cd6267bef80e955e1ae62b528626208247"
+      "request_sha256": "6fe725e6abe9b40def28edc05c1836f25dc60aa130b9fcc4ed9f14f6ee8a2f9a"
     },
     {
       "sample_id": "CN|CN-920118.BJ|2024-12-30",
@@ -1147,12 +1147,12 @@
         "low_relative": 60,
         "close_relative": 60,
         "log_return_1d": 60,
-        "volume_relative": 0
+        "volume_relative": 60
       },
-      "non_null_factors": 10,
-      "non_null_financial_fields": 0,
-      "native_tokens": 6053,
-      "shared_tokens": 5154,
+      "non_null_factors": 16,
+      "non_null_financial_fields": 3,
+      "native_tokens": 6672,
+      "shared_tokens": 5773,
       "split_sequences": 3,
       "masks": [
         true,
@@ -1164,7 +1164,7 @@
         0,
         0
       ],
-      "request_sha256": "f56f525466432ad8c2222e4db286292f285d80a867992648d2e819171fa5082a"
+      "request_sha256": "865b84234be6aec05989d22869682b3b50270d36ed1355deb5446ad7eb02a225"
     },
     {
       "sample_id": "CN|CN-002142.SZ|2026-04-27",
@@ -1195,12 +1195,12 @@
         "low_relative": 60,
         "close_relative": 60,
         "log_return_1d": 60,
-        "volume_relative": 0
+        "volume_relative": 60
       },
-      "non_null_factors": 17,
+      "non_null_factors": 24,
       "non_null_financial_fields": 7,
-      "native_tokens": 6429,
-      "shared_tokens": 5530,
+      "native_tokens": 7007,
+      "shared_tokens": 6108,
       "split_sequences": 3,
       "masks": [
         true,
@@ -1212,7 +1212,7 @@
         2,
         1
       ],
-      "request_sha256": "219c35978aad74e235e2aa9c2d3cf2c4fc1bc78fbd8169e7cf01064279baf456"
+      "request_sha256": "20dad9ac8b70991804d054dba7501160a187c7719f7e2f5e36144d6c6bc9682f"
     },
     {
       "sample_id": "CN|CN-300059.SZ|2026-04-27",
@@ -1243,12 +1243,12 @@
         "low_relative": 60,
         "close_relative": 60,
         "log_return_1d": 60,
-        "volume_relative": 0
+        "volume_relative": 60
       },
-      "non_null_factors": 23,
+      "non_null_factors": 24,
       "non_null_financial_fields": 7,
-      "native_tokens": 6358,
-      "shared_tokens": 5455,
+      "native_tokens": 6878,
+      "shared_tokens": 5975,
       "split_sequences": 3,
       "masks": [
         true,
@@ -1260,7 +1260,7 @@
         5,
         1
       ],
-      "request_sha256": "2fdf87f3b80d43acf61c26b4aeae8f1535e0f7e69db4a1baaaef00fb804dccc8"
+      "request_sha256": "8ba550b768ef3c2e9b60b219c509dd8878608fdf4d072fc6e1e1d6f9108b8c51"
     }
   ]
 }

@@ -34,6 +34,16 @@ def prepare_prices(con, source_dir: Path, prehistory: Path | None = None,
     for endpoint in ("daily", "adj_factor", "suspend_d", "stk_limit"):
         source_view(con, endpoint, source_dir)
     source_view(con, "trade_cal", source_dir, prehistory)
+    corroborated = sorted((source_dir / "daily").glob("baostock-daily-*.parquet"))
+    if corroborated:
+        files = ",".join(literal(p) for p in corroborated)
+        con.execute(f"""
+            CREATE OR REPLACE TEMP VIEW _corroborated_daily_keys AS
+            SELECT DISTINCT ts_code,trade_date FROM read_parquet([{files}])
+        """)
+    else:
+        con.execute("""CREATE OR REPLACE TEMP VIEW _corroborated_daily_keys AS
+            SELECT NULL::VARCHAR ts_code,NULL::VARCHAR trade_date WHERE false""")
     install_return_macros(con)
     con.execute("""
         CREATE OR REPLACE TABLE security_history AS
@@ -110,15 +120,22 @@ def prepare_prices(con, source_dir: Path, prehistory: Path | None = None,
           AND row_number() OVER (PARTITION BY instrument_id,known_from ORDER BY name_end DESC NULLS FIRST,
                                  name_batch)=1;
         CREATE OR REPLACE TABLE builds_quotes AS
-        SELECT a.instrument_id, strptime(d.trade_date,'%Y%m%d')::DATE AS local_trade_date,
-               min(d.open) AS raw_open,min(d.high) AS raw_high,min(d.low) AS raw_low,
-               min(d.close) AS raw_close,min(d.vol) AS raw_vol,min(d.amount) AS raw_amount,
-               min(d._batch_id) AS daily_batch, count(DISTINCT (d.open,d.high,d.low,d.close,d.vol,d.amount))>1
-                    AS daily_conflict
-        FROM src_daily d JOIN security_aliases a ON d.ts_code=a.symbol
-        WHERE d.trade_date BETWEEN '20150101' AND '20260731'
-          AND isfinite(d.close) AND d.close>0 AND (d.vol IS NULL OR d.vol>0)
-        GROUP BY a.instrument_id,d.trade_date;
+        WITH candidates AS (
+            SELECT a.instrument_id,d.trade_date,d.open,d.high,d.low,d.close,d.vol,d.amount,d._batch_id,
+                   starts_with(d._batch_id,'baostock-daily-') AS trade_corroborated
+            FROM src_daily d JOIN security_aliases a ON d.ts_code=a.symbol
+            WHERE d.trade_date BETWEEN '20150101' AND '20260731'
+              AND isfinite(d.close) AND d.close>0 AND (d.vol IS NULL OR d.vol>0)
+              AND (starts_with(d._batch_id,'baostock-daily-') OR NOT EXISTS (
+                    SELECT 1 FROM _corroborated_daily_keys v
+                    WHERE v.ts_code=d.ts_code AND v.trade_date=d.trade_date))
+        )
+        SELECT instrument_id,strptime(trade_date,'%Y%m%d')::DATE AS local_trade_date,
+               min(open) AS raw_open,min(high) AS raw_high,min(low) AS raw_low,
+               min(close) AS raw_close,min(vol) AS raw_vol,min(amount) AS raw_amount,
+               min(_batch_id) AS daily_batch,coalesce(bool_or(trade_corroborated),false) AS trade_corroborated,
+               count(DISTINCT (open,high,low,close,vol,amount))>1 AS daily_conflict
+        FROM candidates GROUP BY instrument_id,trade_date;
         CREATE OR REPLACE TABLE builds_adj AS
         SELECT a.instrument_id, strptime(f.trade_date,'%Y%m%d')::DATE AS local_trade_date,
                CASE WHEN count(DISTINCT f.adj_factor)=1 AND isfinite(min(f.adj_factor)) AND min(f.adj_factor)>0
@@ -195,7 +212,9 @@ def build_prices(con):
                    coalesce(NOT q.daily_conflict AND isfinite(q.raw_close) AND q.raw_close>0 AND
                      (q.raw_high IS NULL OR q.raw_high>=q.raw_close) AND
                      (q.raw_low IS NULL OR q.raw_low<=q.raw_close) AND
-                     (q.raw_vol IS NULL OR q.raw_vol>0) AND NOT coalesce(s.has_full_suspend_event,false),false) AS quote_valid
+                     (q.raw_vol IS NULL OR q.raw_vol>0) AND
+                     (NOT coalesce(s.has_full_suspend_event,false) OR
+                      (q.trade_corroborated AND official.official_batch IS NULL)),false) AS quote_valid
             FROM grid g
             ASOF LEFT JOIN builds_names n ON g.instrument_id=n.instrument_id AND g.local_trade_date>=n.known_from
             LEFT JOIN builds_quotes q ON g.instrument_id=q.instrument_id AND g.local_trade_date=q.local_trade_date
@@ -205,7 +224,8 @@ def build_prices(con):
               ON g.instrument_id=official.instrument_id AND g.local_trade_date=official.local_trade_date
             LEFT JOIN builds_limit l ON g.instrument_id=l.instrument_id AND g.local_trade_date=l.local_trade_date
         ), normalized AS (
-            SELECT o.* EXCLUDE(raw_open,raw_low,raw_high,raw_close,raw_vol,raw_amount,up_limit,down_limit),
+            SELECT o.* EXCLUDE(raw_open,raw_low,raw_high,raw_close,raw_vol,raw_amount,up_limit,down_limit,
+                               trade_corroborated),
                 CASE WHEN quote_valid AND isfinite(raw_open) AND raw_open>0 AND raw_open>=raw_low AND raw_open<=raw_high THEN raw_open END AS open_raw,
                 CASE WHEN quote_valid AND isfinite(raw_high) AND raw_high>=raw_close THEN raw_high END AS high_raw,
                 CASE WHEN quote_valid AND isfinite(raw_low) AND raw_low>0 AND raw_low<=raw_close THEN raw_low END AS low_raw,

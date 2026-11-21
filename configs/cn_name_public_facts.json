@@ -1,0 +1,51 @@
+[
+  {
+    "ts_code": "000417.SZ", "session": "2024-08-06", "name": "合百集团", "official_id": "1220797369",
+    "official_literals": ["合肥百货", "证券简称的启用日期：2024年8月6日"],
+    "timing_url": "https://www.stcn.com/article/detail/1279037.html", "clock_literal": "2024-08-05 20:30",
+    "public_fact_available_by": "2024-08-05T20:30:59+08:00",
+    "news_literals": ["证券简称由“合肥百货”变更为“合百集团”", "启用日期为2024年8月6日"]
+  },
+  {
+    "ts_code": "000530.SZ", "session": "2020-03-24", "name": "冰山冷热", "official_id": "1207393511",
+    "official_literals": ["2020年3月24日起", "公司A股证券简称由“大冷股份”变更为“冰山冷热”"],
+    "timing_url": "https://www.cs.com.cn/ssgs/gsxw/202003/t20200323_6038060.html",
+    "clock_literal": "2020-03-23 17:22", "public_fact_available_by": "2020-03-23T17:22:59+08:00",
+    "news_literals": ["自3月24日起", "公司A股证券简称由“大冷股份”变更为“冰山冷热”"]
+  },
+  {
+    "ts_code": "000589.SZ", "session": "2019-05-08", "name": "贵州轮胎", "official_id": "1206236482",
+    "official_literals": ["2019年5月8日", "贵州轮胎", "黔轮胎"],
+    "timing_url": "https://finance.sina.com.cn/stock/y/2019-05-07/doc-ihvhiews0383663.shtml",
+    "clock_literal": "2019年05月07日17:19", "public_fact_available_by": "2019-05-07T17:19:59+08:00",
+    "news_literals": ["自5月8日起", "贵州轮胎", "黔轮胎A"]
+  },
+  {
+    "ts_code": "000590.SZ", "session": "2020-12-22", "name": "启迪药业", "official_id": "1208955911",
+    "official_literals": ["启迪古汉", "证券简称启用日期：2020年12月22日"],
+    "timing_url": "https://ggjd.cnstock.com/company/scp_ggjd/tjd_ggjj/202012/4634065.htm",
+    "clock_literal": "2020-12-21 22:04:43", "public_fact_available_by": "2020-12-21T22:04:43+08:00",
+    "news_literals": ["自2020年12月22日起由“启迪古汉”变更为“启迪药业”"]
+  },
+  {
+    "ts_code": "000590.SZ", "session": "2025-12-23", "name": "古汉医药", "official_id": "1224891396",
+    "official_literals": ["证券简称由“启迪药业”变更为“古汉医药”", "启用日期：2025年12月23日"],
+    "timing_url": "https://economy.rednet.cn/content/646956/67/15563377.html",
+    "clock_literal": "2025-12-23 13:03:00", "public_fact_available_by": "2025-12-23T13:03:00+08:00",
+    "news_literals": ["自2025年12月23日起", "证券简称由启迪药业变更为古汉医药"]
+  },
+  {
+    "ts_code": "000709.SZ", "session": "2016-01-26", "name": "河钢股份", "official_id": "1201940627",
+    "official_literals": ["河北钢铁", "证券简称自2016年1月26日起发生变更"],
+    "timing_url": "https://finance.sina.com.cn/stock/t/2016-01-26/doc-ifxnurxn9990312.shtml",
+    "clock_literal": "2016年01月26日05:57", "public_fact_available_by": "2016-01-26T05:57:59+08:00",
+    "news_literals": ["股票简称：河钢股份公告编号：2016-003"]
+  },
+  {
+    "ts_code": "002476.SZ", "session": "2026-06-16", "name": "新叶股份", "official_id": "1225372518",
+    "official_literals": ["宝莫股份", "新证券简称启用日期：2026年6月16日"],
+    "timing_url": "https://www.stcn.com/article/detail/3962743.html", "clock_literal": "2026-06-15 20:54",
+    "public_fact_available_by": "2026-06-15T20:54:59+08:00",
+    "news_literals": ["证券简称自2026年6月16日起变更为“新叶股份”"]
+  }
+]

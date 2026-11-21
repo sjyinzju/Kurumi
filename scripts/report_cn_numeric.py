@@ -136,6 +136,7 @@ def render(release, before, after, additional):
     status = quality["status"]
     frozen = manifest["source_snapshot"]["suspension_evidence_sha256"]
     pit_hashes = manifest["pit_evidence_sha256"]
+    followup = additional.get("followup")
     evidence_options = [
         (Path("artifacts/cn_numeric/suspension_augmented_input.json"), Path("artifacts/cn_numeric/pit_corrected_input")),
         (Path("artifacts/cn_numeric/suspension_augmented_input.json"), Path("artifacts/cn_numeric/pit_augmented_input")),
@@ -147,7 +148,11 @@ def render(release, before, after, additional):
                       and {f.name: hashlib.sha256(f.read_bytes()).hexdigest()
                            for f in d.glob("*.jsonl")} == pit_hashes),
                       (Path("configs/cn_suspension_evidence.json"), Path("artifacts/cn_pit_evidence")))
-    build_options = f"--calendar-prehistory artifacts/cn-calendar/trade_cal --suspension-evidence {proof.as_posix()}"
+    if followup:
+        proof = Path(followup["suspension_evidence"])
+        pit = Path(followup["pit_evidence"])
+    build_options = (f"--calendar-prehistory artifacts/cn-calendar/trade_cal "
+                     f"--suspension-evidence '{proof.as_posix()}'")
     doc = [
         "# CN 数值数据集报告",
         f"`{status}`。版本 `{manifest['dataset_version']}`。数据目录为 `{release}`。",
@@ -160,6 +165,10 @@ def render(release, before, after, additional):
                    f"{after['files'].get(key,0):,} | {gib(after['bytes'].get(key,0))} |")
     doc.append(f"全盘可用空间由 {gib(before['free_bytes'])} GiB 变为 {gib(after['free_bytes'])} GiB。"
                f"发布清单内文件大小合计 {gib(sum(x['bytes'] for x in manifest['files'].values()))} GiB。")
+    if followup:
+        doc.append(f"本轮开始时 E 盘剩余约 {followup['start_free_gib']:.2f} GiB。"
+                   "目录对比以首轮建设前保存的清单为基线。")
+        doc.extend(followup.get("storage_observations", []))
     cleanup = additional.get("cleanup") or {}
     gc = additional.get("canonical_gc") or {}
     removed_files = cleanup.get("deleted_files", [])
@@ -203,11 +212,24 @@ def render(release, before, after, additional):
         fields = ["security_days", "actual_quotes", "adjustment", "valid_inputs", "reported_suspensions", "verified_suspensions",
                   "share_verified", "issuer_cap_verified", "unit_chain_verified", "finance_verified", "industry_verified"]
         doc.append(f"| {coverage['exchange']} | " + " | ".join(f"{(coverage[k] or 0):,}" for k in fields) + " |")
+    if prior_coverage := additional.get("baseline_exchange_coverage"):
+        origins = {r["exchange"]: r for r in prior_coverage}
+        doc.extend(["### 本轮前后对比",
+                    "| 交易所 | 实际收盘 | 股数 | 发行人市值 | U 链 | 财务 | 行业 |\n|---|---:|---:|---:|---:|---:|---:|"])
+        comparable = ("actual_quotes", "share_verified", "issuer_cap_verified", "unit_chain_verified",
+                      "finance_verified", "industry_verified")
+        for current in quality["exchange_coverage"]:
+            old = origins[current["exchange"]]
+            doc.append("| " + current["exchange"] + " | " + " | ".join(
+                f"{old[k] or 0:,} → {current[k] or 0:,}" for k in comparable
+            ) + " |")
     doc.extend(["## 因子与市场状态覆盖",
                 "下表分母为各表实际发布行数。行业表只列已有可核验归属线索的行业和时段，完整母集门槛独立核查。",
-                "| 表 | 字段 | 有效值 | 发布行数 |\n|---|---|---:|---:|"])
+                "| 表 | 字段 | 上版有效值 | 有效值 | 发布行数 |\n|---|---|---:|---:|---:|"])
+    old_feature_counts = {(table, field): valid for table, field, _, valid in additional.get("baseline_features", [])}
     for table, field, physical, valid in additional["feature_counts"]:
-        doc.append(f"| `{table}` | `{field}` | {valid:,} | {physical:,} |")
+        old = old_feature_counts.get((table, field))
+        doc.append(f"| `{table}` | `{field}` | {f'{old:,}' if old is not None else '—'} | {valid:,} | {physical:,} |")
     doc.extend(["## 样本与监督",
                 "| Split | 期限 | 候选 | 有效 | 无效 | 七档计数（0 至 6） |\n|---|---:|---:|---:|---:|---|"])
     invalid_by_split = []
@@ -242,6 +264,8 @@ def render(release, before, after, additional):
     doc.extend(["## 补采与证据",
                 "日历、补采请求、证据原件来源、公开时间及版本哈希见 `reference/`。"
                 "每日实际收盘与经证实停牌的市场估值分开保存。停牌填估值的规则只适用于市场与行业聚合。"])
+    if followup:
+        doc.extend(followup.get("sources", []))
     for endpoint, summary in additional.get("backfill", {}).items():
         doc.append(f"- `{endpoint}` 完成 {summary['completed_scopes']:,}/{summary['scopes']:,} 个证券范围，"
                    f"覆盖计划 {summary['requested_keys']:,} 个缺键，源响应匹配 {summary['filled_keys']:,} 个键。"
@@ -288,11 +312,19 @@ def render(release, before, after, additional):
     if field_check := additional.get("independent_field_coverage"):
         doc.append(f"独立 Arrow 扫描核实 {field_check['groups']:,} 个字段原因分组及 "
                    f"{field_check['reason_entries']:,} 个稀疏原因记录，和发布表逐组一致。")
-    doc.extend(["## 阻塞和训练影响",
-                "原始财务表的本地严格可知时间晚于样本截止。可证实的公告版本进入 PIT 快照，其余历史金额保留为未验证。"
-                "跨股类的股数、股本生效版本、拆合股与送转动作全集以及历史申万分类是主要依赖缺口。"
-                "市场和行业缺少可核实的完整前期分母时，按契约将相应指标保留 NULL。"
-                "样本、标签和掩码可用于构建验收，正式加载默认检查发布状态。"])
+    doc.append("## 阻塞和训练影响")
+    if followup:
+        doc.extend(followup.get("blockers", []))
+        if "structural_dependencies" in quality:
+            doc.append(f"自动判定识别 {len(quality['structural_dependencies']):,} 个结构性依赖范围。"
+                       "逐项原因见 `reports/quality_summary.json`。"
+                       "各 split、年份、交易所及已核验行业的 PIT 分母见 `reports/pit_coverage_by_stratum.parquet`，"
+                       "同口径的因子覆盖见 `reports/stock_factor_coverage_by_stratum.parquet`，"
+                       "前置期和其余上市会计期的七项证据覆盖见 `reports/financial_period_coverage.parquet`。")
+    else:
+        doc.append("原始财务表的本地严格可知时间晚于样本截止。可证实的公告版本进入 PIT 快照，其余历史金额保留为未验证。"
+                   "跨股类的股数、股本生效版本、拆合股与送转动作全集以及历史申万分类是主要依赖缺口。"
+                   "市场和行业缺少可核实的完整前期分母时，按契约将相应指标保留 NULL。")
     if additional.get("sources"):
         doc.append("TuShare `bak_basic` 实测权限拒绝。可访问的 `daily_basic` 和 `index_member_all` "
                    "能提供对照值，历史版本追溯仍需原件。巨潮原件首批请求可用，后续 36 个发行人的请求及重试返回 HTTP 403。"
@@ -336,29 +368,34 @@ def render(release, before, after, additional):
                 "| 财务字段 | 非空快照数 |\n|---|---:|"])
     for field, count in snapshots["fields_available"].items():
         doc.append(f"| `{field}` | {count:,} |")
+    loader_opt = ", allow_incomplete=True" if status == "INCOMPLETE" else ""
+    cli_loader_opt = " --allow-incomplete" if status == "INCOMPLETE" else ""
+    if followup:
+        build_options += " --spill-dir (Join-Path $env:TEMP 'kurumi-cn-followup-spill') --memory-limit-gib 8"
     doc.extend(["## 命令",
                 "```powershell\n"
                 "$python = 'E:/quant/.venv/Scripts/python.exe'\n"
                 "$env:PYTHONPATH = 'E:/Kurumi/src;E:/Kurumi/reference/karpo-decision/src;E:/Kurumi/artifacts/karpo-runtime'\n"
                 f"& $python scripts/build_cn_numeric.py --prices-only {build_options}\n"
                 "& $python scripts/backfill_cn_prices.py --endpoint daily --endpoint adj_factor --endpoint suspend_d\n"
-                f"& $python scripts/build_cn_numeric.py --compute-only {build_options} --pit-evidence {pit.as_posix()}\n"
-                f"& $python scripts/build_cn_numeric.py {build_options} --pit-evidence {pit.as_posix()}\n"
+                f"& $python scripts/build_cn_numeric.py --compute-only {build_options} --pit-evidence '{pit.as_posix()}'\n"
+                f"& $python scripts/build_cn_numeric.py {build_options} --pit-evidence '{pit.as_posix()}'\n"
                 f"$dataset = '{release.as_posix()}'\n"
                 "& $python scripts/verify_cn_numeric.py $dataset\n"
-                "& $python scripts/check_numeric_loading.py $dataset --representative --price-prefix --allow-incomplete "
+                f"& $python scripts/check_numeric_loading.py $dataset --representative --price-prefix{cli_loader_opt} "
                 "--karpo-assets artifacts/karpo-b8e6fd7"
                 + (" --recovered-ttm-audit artifacts/cn_pit_finance_corrected/targeted_recovery_result.json"
                    if additional.get("financial_semantics") else "") + "\n"
                 "```",
                 "构建阶段按价格、PIT、监督、特征和 Parquet 分区记录断点。原生检查依赖的轻量配置和 tokenizer "
                 "可由 `scripts/fetch_karpo_encoding.py artifacts/karpo-b8e6fd7` 重新获取。",
+                *( ["本版示例启用显式 QA 开关。正式后训练入口会检查 `NUMERIC_READY`。"] if loader_opt else [] ),
                 "训练代码使用 `kurumi.numeric_loader.NumericDataset`，通过 `iter_sample_ids(split)` 取得实际清单，"
                 "通过 `load_batch(sample_ids)` 取得模型输入、监督和审计。",
                 "```python\n"
                 "from itertools import islice\n"
                 "from kurumi.numeric_loader import NumericDataset\n\n"
-                "dataset = NumericDataset.from_config('configs/cn_numeric.toml', allow_incomplete=True)\n"
+                f"dataset = NumericDataset.from_config('configs/cn_numeric.toml'{loader_opt})\n"
                 "batch = dataset.load_batch(list(islice(dataset.iter_sample_ids('train'), 32)))\n"
                 "```"])
     return "\n\n".join(doc).replace("|\n\n|", "|\n|") + "\n", {
@@ -372,6 +409,8 @@ def main():
     parser.add_argument("dataset", type=Path)
     parser.add_argument("--before", type=Path, default=Path("artifacts/cn_numeric/before.json"))
     parser.add_argument("--artifacts", type=Path, default=Path("artifacts/cn_numeric"))
+    parser.add_argument("--baseline-release", type=Path, help="Immutable predecessor for coverage comparisons")
+    parser.add_argument("--followup", type=Path, help="Acquisition and remaining blockers for this increment")
     args = parser.parse_args()
     dataset = args.dataset.resolve()
     data_root = dataset.parent.parent
@@ -412,6 +451,25 @@ def main():
         "xbrl_source_probe": optional_json(args.artifacts / "xbrl_public_source_probe.json"),
         "legacy_reference_check": legacy_reference_check(data_root),
     }
+    if args.followup:
+        context = read_json(args.followup)
+        from kurumi.cn_publish import evidence_signature, sha256
+
+        if evidence_signature(Path(context["pit_evidence"])) != manifest["pit_evidence_sha256"] or (
+            sha256(Path(context["suspension_evidence"])) != manifest["source_snapshot"]["suspension_evidence_sha256"]
+        ):
+            raise ValueError("Follow-up build inputs do not match the release manifest")
+        more.update(followup=context, sources=None, xbrl_source_probe=None)
+        more["sampled_peak"] = context.get("sampled_peak")
+    if args.baseline_release:
+        more["baseline_exchange_coverage"] = read_json(args.baseline_release / "manifest.json")["exchange_coverage"]
+        more["baseline_features"] = feature_counts(args.baseline_release)
+    actual_validation = read_json(dataset / "reports/validation_results.json").get("independent", {})
+    for evidence, key in (("release_bytes_windows_labels_and_masks", "independent"),
+                          ("pit_source_prefix", "pit_prefix"), ("native_karpo", "native"),
+                          ("independent_stock_factor_recalculation", "independent_features")):
+        if receipt := actual_validation.get(evidence, {}).get("path"):
+            more[key] = read_json(dataset / receipt) | {"dataset_version": version}
     text, summary = render(dataset, read_json(args.before), inventory(data_root), more)
     report = Path("docs/cn_numeric_dataset_report.md")
     report.write_text(text, encoding="utf-8")
