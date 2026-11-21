@@ -53,6 +53,14 @@
 
 本批未取得申万分类、指数变动、实施分派、港股股本及后续合并报表等明细。第五版研究样本有 10,291,962 个有效输入证券日缺历史行业，2,074,690 个前一日市场成员记录缺已验证 A 股类股数，2,601 个证券日缺股数单位链。这里的影响计数是发布实测，供应商旧计数仅用于描述已尝试范围。公开财报、交易所公告和可核验历史归属继续独立补齐。 [行业回执](cn_industry_source_audit.md) · [股本和单位链回执](cn_csmar_day2_capital_evidence.md) · [市场分母](cn_market_denominator_audit.md)
 
+## 11 月 21 日校园网复测与续采
+
+切换到校园网后，官方 SDK 从对照表 `STK_INDCLASSIFYVERSION` 成功计数并下载 23 行。申万历史分类、分红送转和合并资产负债表的三个小样各返回 3 行。北京时间 14:36 按原清单续采，新增 16 页、1,029,036 行。逐页复核 SHA-256 和解压行数后，原归档累计 36 页、1,467,865 行。首批 20 页与既有哈希一致。 [校园网复测](../artifacts/cn_numeric_followup/csmar_control_20261121/campus_recheck_20261121_1434/summary.json) · [全量页核验](../artifacts/cn_numeric_followup/csmar_control_20261121/campus_recheck_20261121_1434/capture_integrity.json)
+
+新增明细含 13,337 条申万历史分类、7,620 条指数样本变更、165,480 条分红明细、435,446 条财报披露记录，以及 406,975 条合并资产负债表和利润表记录。分红表比旧计数多 1 行，刷新服务端计数后与归档对齐，旧计数另存证据。`IDX_Idxinfo` 额外取得 178 行指数资料，响应缺少原请求中的 `Idxinfo04`，逐页审计保留字段警告。 [逐表数量和原清单断点](../artifacts/cn_numeric_followup/csmar_control_20261121/campus_recheck_20261121_1434/resume_result.json)
+
+原清单 39 个范围中，15 个完整下载，1 个已归档但有字段警告，23 个尚未取得明细。本轮在 `FS_Comscfd` 的 2017–2022 年合并现金流量表收到 `-2404` 日下载额度限制。额度刷新后沿用原清单续采。 [运行日志](../artifacts/cn_numeric/csmar_runtime/campus_resume_20261121_1435.log)
+
 ## 命令
 
 以下为 `E:\Kurumi` PowerShell 命令。`capture` 为已纳入构建来源区的归档目录，`r` 为 SDK 独立环境和运行文件目录。官方下载的 `csmarapi.rar` 只解压 SDK 源码和 `config.ini`。项目 `.env` 支持 `CSMAR_ACCOUNT`／`CSMAR_PASSWORD`，也支持 `CSMAR账号：`／`CSMAR密码：`。
