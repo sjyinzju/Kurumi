@@ -2,6 +2,7 @@
 
 import argparse
 import gzip
+import hashlib
 import json
 from collections import Counter, defaultdict
 from datetime import datetime
@@ -218,7 +219,12 @@ def stage(root, release, base, capture, checkpoints, originals, output):
                                                conflicts=actual_conflicts), revisions, counts, conflicts=actual_conflicts)
     proposals, reviewed, additions, conflicts = merge_additive_candidates(
         (row for row in frozen if row["ts_code"].endswith(".BJ")), candidates, counts)
-    result = replace(base, proposals, reviewed, output / "financial_versions.jsonl", additions)
+    if proposals or additions:
+        result = replace(base, proposals, reviewed, output / "financial_versions.jsonl", additions)
+    else:
+        with base.open("rb") as stream:
+            unchanged = hashlib.file_digest(stream, "sha256").hexdigest()
+        result = {"base_sha256": unchanged, "output_sha256": unchanged, "replacements": [], "added_versions": []}
     report = {"release": release.name, "csmar_version_proofs": len(proofs), "csmar_raw_conflicts": orig_conflicts,
               "counts": [{"scope": scope, "count": count} for scope, count in sorted(counts.items())],
               "decisions": result, "csmar_normalization_conflicts": actual_conflicts, "retained_value_conflicts": conflicts}

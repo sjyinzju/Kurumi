@@ -6,6 +6,7 @@ import pytest
 from scripts.stage_cn_bse_financial_filings import (
     FIELDS,
     extract_amount,
+    partial_amounts,
     statement_period_columns,
     statement_sections,
 )
@@ -42,3 +43,18 @@ def test_wrapped_consolidated_labels_do_not_switch_to_appendix():
     profit = FIELDS["利润表"]["net_income_parent_ytd"]
     assert extract_amount(by_section["资产负债表"], equity, 0, 2)[0] == Decimal("163577514.61")
     assert extract_amount(by_section["利润表"], profit, 0, 2)[0] == Decimal("5956028.07")
+
+
+def test_partial_income_accepts_half_year_but_rejects_ambiguous_third_quarter():
+    pages = ["""(三) 合并利润表
+单位：元
+项目 本期金额 上期金额
+其中：营业收入 51,891,387.23 42,531,366.08
+(四) 母公司利润表
+"""]
+    requested = {"revenue_ytd", "operating_cashflow_ytd"}
+    values, traces = partial_amounts(pages, date(2024, 6, 30), requested, "2024年半年度报告")
+    assert values == {"revenue_ytd": 51891387.23}
+    assert traces["revenue_ytd"]["pdf_page"] == 1
+    with pytest.raises(ValueError, match="fiscal_period_unconfirmed"):
+        partial_amounts(pages, date(2024, 9, 30), requested, "2024年第三季度报告")

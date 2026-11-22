@@ -1,0 +1,329 @@
+{
+  "date": "2026-11-22",
+  "base_release": "cn-71132cf836bd63c14a85bbb71cbbd607a3372d4c7f0b91e359382d359ecc6d45",
+  "release_updated": false,
+  "archive": "E:/QuantData/numeric/.build-cn/sources/csmar",
+  "verified_prior_pages_reused": 48,
+  "new_downloads": [
+    {
+      "table": "STK_LISTEDCOINFOCHG",
+      "start": "1990-01-01",
+      "end": "2026-07-31",
+      "rows": 2573,
+      "page_sha256": "717d18768933cd91961370e1d83ebb388df1400f5aefb81d78ae28d940126b7a"
+    },
+    {
+      "table": "TRD_Dalyr",
+      "start": "2022-01-24",
+      "end": "2026-07-31",
+      "rows": 1783,
+      "page_sha256": "2b8d9634d442d527870bd9567574d346c817948fb525875faac49d0e1354af6b"
+    },
+    {
+      "table": "ANN_Security",
+      "start": "2015-01-05",
+      "end": "2015-12-31",
+      "rows": 1631,
+      "page_sha256": "dde3301899094799d151edd61e56e730c2bb90364d76bf38397b3334f6fc1892"
+    },
+    {
+      "table": "ANN_Security",
+      "start": "2016-01-04",
+      "end": "2016-12-30",
+      "rows": 1607,
+      "page_sha256": "ce61e809e6c66bc3eb79d617560ae660fcc156b1d76557030bcd2dbf556bc528"
+    },
+    {
+      "table": "ANN_Security",
+      "start": "2017-01-03",
+      "end": "2017-12-29",
+      "rows": 1567,
+      "page_sha256": "11c6ec02fbcd663490d9da0a6f465ebbf7854a113ed0a4310f494c81c1b756cf"
+    }
+  ],
+  "new_archive_rows": 9161,
+  "archive_rows": 2371283,
+  "archive_nonempty_pages": 53,
+  "successes_today_from_local_receipts": {
+    "ordinary_queries": 14,
+    "packages": 3,
+    "quota_exhaustion_observed": false,
+    "package_quota_debit_known": false
+  },
+  "remaining_announcement_scopes": [
+    {
+      "year": 2018,
+      "count": null,
+      "status": "failed",
+      "failure": "CSMAR HTTP status 401"
+    },
+    {
+      "year": 2019,
+      "count": null,
+      "status": "failed",
+      "failure": "CSMAR HTTP status 401"
+    },
+    {
+      "year": 2025,
+      "count": 137,
+      "status": "ok",
+      "failure": null
+    },
+    {
+      "year": 2020,
+      "count": null,
+      "status": "failed",
+      "failure": "CSMAR HTTP status 401"
+    },
+    {
+      "year": 2021,
+      "count": null,
+      "status": "failed",
+      "failure": "CSMAR HTTP status 401"
+    },
+    {
+      "year": 2022,
+      "count": null,
+      "status": "failed",
+      "failure": "CSMAR HTTP status 401"
+    },
+    {
+      "year": 2026,
+      "count": null,
+      "status": "failed",
+      "failure": "CSMAR HTTP status 401"
+    },
+    {
+      "year": 2024,
+      "count": null,
+      "status": "failed",
+      "failure": "CSMAR HTTP status 401"
+    },
+    {
+      "year": 2023,
+      "count": null,
+      "status": "failed",
+      "failure": "CSMAR HTTP status 401"
+    }
+  ],
+  "early_limit_keys_skipped_after_null_source": 26,
+  "validated_increment": {
+    "halt_later_whole_sessions": 8481,
+    "halt_same_day_clock_sessions": 1131,
+    "halt_remaining": 14881,
+    "name_keys": {
+      "updated_previously_null": 32,
+      "changed_prior_nonnull": 0
+    },
+    "valid_input_name_days_remaining": 47,
+    "bse_cashflow": {
+      "file_candidates": 959,
+      "outcomes": {
+        "fiscal_period_unconfirmed_现金流量表": 270,
+        "verified_original_amount": 656,
+        "operating_cashflow_equation_failed": 2,
+        "ambiguous_or_missing_operating_cashflow_ytd": 8,
+        "CSMAR cash amounts differ from the original filing": 18,
+        "yuan_unit_unconfirmed_现金流量表": 1,
+        "ambiguous_or_missing_operating_out": 2,
+        "ambiguous_or_missing_operating_in": 2
+      },
+      "replacements": 426,
+      "new_versions": 163,
+      "cohort": {
+        "valid_inputs": 217747,
+        "base_v11_all_seven": 66966,
+        "repaired_all_seven": 69939
+      },
+      "cashflow_ttm_before": 102853,
+      "cashflow_ttm_after": 159175,
+      "gains": {
+        "operating_cashflow_ttm": 56433,
+        "revenue_ttm_4q_ago": 75,
+        "net_income_parent_ttm_4q_ago": 75,
+        "assets_4q_ago": 31,
+        "parent_equity_4q_ago": 31
+      },
+      "losses": {
+        "assets": 258,
+        "liabilities": 258,
+        "parent_equity": 258,
+        "assets_4q_ago": 102,
+        "parent_equity_4q_ago": 102,
+        "revenue_ttm_4q_ago": 53,
+        "net_income_parent_ttm_4q_ago": 53,
+        "revenue_ttm": 162,
+        "net_income_total_ttm": 162,
+        "net_income_parent_ttm": 162,
+        "operating_cashflow_ttm": 111
+      },
+      "losses_by_anchor": [
+        {
+          "anchor": "newer_fiscal_anchor",
+          "field": "assets",
+          "affected_days": 258,
+          "example": {
+            "ticker": "920190.BJ",
+            "trade_date": "2023-03-27",
+            "prior_period": "2022-06-30",
+            "repaired_period": "2022-09-30",
+            "missing_reason": "missing_source"
+          }
+        },
+        {
+          "anchor": "newer_fiscal_anchor",
+          "field": "assets_4q_ago",
+          "affected_days": 102,
+          "example": {
+            "ticker": "920190.BJ",
+            "trade_date": "2023-03-27",
+            "prior_period": "2022-06-30",
+            "repaired_period": "2022-09-30",
+            "missing_reason": "missing_source"
+          }
+        },
+        {
+          "anchor": "newer_fiscal_anchor",
+          "field": "liabilities",
+          "affected_days": 258,
+          "example": {
+            "ticker": "920190.BJ",
+            "trade_date": "2023-03-27",
+            "prior_period": "2022-06-30",
+            "repaired_period": "2022-09-30",
+            "missing_reason": "missing_source"
+          }
+        },
+        {
+          "anchor": "newer_fiscal_anchor",
+          "field": "net_income_parent_ttm",
+          "affected_days": 162,
+          "example": {
+            "ticker": "920339.BJ",
+            "trade_date": "2023-02-17",
+            "prior_period": "2022-06-30",
+            "repaired_period": "2022-09-30",
+            "missing_reason": "missing_source"
+          }
+        },
+        {
+          "anchor": "newer_fiscal_anchor",
+          "field": "net_income_parent_ttm_4q_ago",
+          "affected_days": 53,
+          "example": {
+            "ticker": "920190.BJ",
+            "trade_date": "2023-03-27",
+            "prior_period": "2022-06-30",
+            "repaired_period": "2022-09-30",
+            "missing_reason": "missing_source"
+          }
+        },
+        {
+          "anchor": "newer_fiscal_anchor",
+          "field": "net_income_total_ttm",
+          "affected_days": 162,
+          "example": {
+            "ticker": "920339.BJ",
+            "trade_date": "2023-02-17",
+            "prior_period": "2022-06-30",
+            "repaired_period": "2022-09-30",
+            "missing_reason": "missing_source"
+          }
+        },
+        {
+          "anchor": "newer_fiscal_anchor",
+          "field": "operating_cashflow_ttm",
+          "affected_days": 111,
+          "example": {
+            "ticker": "920339.BJ",
+            "trade_date": "2023-02-17",
+            "prior_period": "2022-06-30",
+            "repaired_period": "2022-09-30",
+            "missing_reason": "missing_source"
+          }
+        },
+        {
+          "anchor": "newer_fiscal_anchor",
+          "field": "parent_equity",
+          "affected_days": 258,
+          "example": {
+            "ticker": "920190.BJ",
+            "trade_date": "2023-03-27",
+            "prior_period": "2022-06-30",
+            "repaired_period": "2022-09-30",
+            "missing_reason": "missing_source"
+          }
+        },
+        {
+          "anchor": "newer_fiscal_anchor",
+          "field": "parent_equity_4q_ago",
+          "affected_days": 102,
+          "example": {
+            "ticker": "920190.BJ",
+            "trade_date": "2023-03-27",
+            "prior_period": "2022-06-30",
+            "repaired_period": "2022-09-30",
+            "missing_reason": "missing_source"
+          }
+        },
+        {
+          "anchor": "newer_fiscal_anchor",
+          "field": "revenue_ttm",
+          "affected_days": 162,
+          "example": {
+            "ticker": "920339.BJ",
+            "trade_date": "2023-02-17",
+            "prior_period": "2022-06-30",
+            "repaired_period": "2022-09-30",
+            "missing_reason": "missing_source"
+          }
+        },
+        {
+          "anchor": "newer_fiscal_anchor",
+          "field": "revenue_ttm_4q_ago",
+          "affected_days": 53,
+          "example": {
+            "ticker": "920190.BJ",
+            "trade_date": "2023-03-27",
+            "prior_period": "2022-06-30",
+            "repaired_period": "2022-09-30",
+            "missing_reason": "missing_source"
+          }
+        }
+      ]
+    },
+    "share_lookup": {
+      "affected_days": 1612694,
+      "annual_note_and_disclosure_date": 1535756,
+      "matching_total": 251025,
+      "matching_fully_flowable_total": 172266
+    },
+    "share_and_cap_days_certified": 0,
+    "limit_days_certified": 0,
+    "industry_days_certified": 0,
+    "unit_chain_days_certified": 0
+  },
+  "verified_increment_files": {
+    "name_replay.json": "9e87084233c9d2c35e09409abe3c00ba90d3ad0efbf28cdf7ec4d5d95978fdb6",
+    "official_suspensions_additions.json": "5873164e0ad86534aacf87e97a36723008d29cebe6829510afc0523b8c3c2353",
+    "official_suspensions_same_day_additions.json": "b1b2f94ea311255245cfdc2f3ae41377df73a516b7d03ab45a3ccf282936433f",
+    "same_day_halts_audit.json": "4492a40208bb4e7c28a6ad634e01b4d621d03d8274fb4f1b8d003668d795fa23",
+    "security_name_versions.jsonl": "3ed66b51d26dc419ec51e540f7a34747230739864d0b274ccd7f62ab28287c88",
+    "suspension_incremental_audit.json": "a562bfe8138a9c4d9e02405ca260d1ad97ab20979b6787d656fca8b32bf02164",
+    "finance\\cashflow_replay.json": "e824f171cfc4c51cabac386ed97daf616b64c4ab5b3ec7dc70a1dcd07cc982bc",
+    "finance\\cashflow_review.json": "dc55cf2f3dbc06f57ad4c170f4ab2c0b9b327561c910d6605d30f55b0cf128d1",
+    "finance\\new_versions.jsonl": "2863e5683cb998839ca960ecfb81002ad5d906f32f175bae5099116580deb177",
+    "finance\\qualified_originals.jsonl": "44110e22da2ee4722c6818325cbc41f0315187adc81df366bc7e1217129733eb",
+    "finance\\replacements.jsonl": "f25bf2dfb8e57af22e4b0f4133b238e1f9476d07f1ee75f1c46fbe33f2f7d58f",
+    "finance\\reviewed.json": "0f062e0509ee7ac7084717cafbfe2fb110700f8b82850610ab5fc90821662e59",
+    "stock_daily_suspension_delta\\year=2015\\part-000.parquet": "8e1e12c4cfb131dd14380d820675e1f35b0ef270422ea93c666682acbd77ee06",
+    "stock_daily_suspension_delta\\year=2016\\part-000.parquet": "43216e574f06bd0c2ca2dfcb5464a57af2f14fed6a1cd0c939e916663e20b629",
+    "stock_daily_suspension_delta\\year=2017\\part-000.parquet": "0cd6aa9b8ff956a10b51be05c21572fc179a3dca589c2a5d302da199cca08534",
+    "stock_daily_suspension_delta\\year=2018\\part-000.parquet": "471c1820cac9a1a10aa6ba855ed11b4d12fd3afa0e8f9c71fc606f7a3cdcb825",
+    "stock_daily_suspension_delta\\year=2019\\part-000.parquet": "a1f15758ec5052877341b4c13f03ecd6a70e0760fe16337a2309c00c12c5e7b9",
+    "stock_daily_suspension_delta\\year=2020\\part-000.parquet": "827753949883c0664e526c56671ad346a897a74ca7330b2cd28ae9b27ef29926",
+    "stock_daily_suspension_delta\\year=2021\\part-000.parquet": "b0f1cd17946348ec6411bedcde335696ed2e871b485aea44df3ceba6ec07c61c",
+    "stock_daily_suspension_delta\\year=2023\\part-000.parquet": "c37673827cd9c4d160946de5107ac41dcbb2c38a67ce3c1ebaf4ec0287abbf48"
+  },
+  "repository_tests_passed": 78
+}

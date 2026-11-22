@@ -10,11 +10,13 @@ import logging
 import os
 import re
 import sys
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, datetime, timedelta, timezone
 from pathlib import Path
 
 PROJECT = Path(__file__).resolve().parents[1]
 RUNTIME = PROJECT / "artifacts" / "cn_numeric" / "csmar_runtime"
+PAGE_ROWS = 200_000
+CSMAR_DAY = timezone(timedelta(hours=8))
 
 
 class SourceError(RuntimeError):
@@ -76,6 +78,7 @@ def service(sdk: Path, env: Path):
             return self.request("GET", targetUrl, None, headers)
 
         def request(self, method, url, body, headers):
+            self.last_response_sha256 = None
             try:
                 result = self.http.request(method, url, body=body, headers=headers, redirect=False)
             except (urllib3.exceptions.HTTPError, OSError) as exc:
@@ -107,7 +110,7 @@ def service(sdk: Path, env: Path):
                     for secret in (*self.secrets, *(self.token or [])[:1]):
                         msg = msg.replace(secret, "[redacted]")
                     detail = f" {msg.strip()[:240]}" if msg.strip() else ""
-                if code == -2404 and "limit today" in msg.lower():
+                if code == -2404:
                     raise DailyQuotaError("CSMAR daily download quota reached (service code -2404)")
                 raise SourceError(f"CSMAR {label} (service code {safe_code}){detail}")
             return payload
@@ -131,11 +134,20 @@ def now() -> str:
     return datetime.now(UTC).isoformat()
 
 
-def request_cached(out: Path, method: str, job: dict, condition: str, fetch):
+def receipt_path(out: Path, method: str, job: dict, condition: str):
     query = {"method": method, "table": job["table"], "condition": condition,
              "start": job.get("start", ""), "end": job.get("end", "")}
     req_id = hashlib.sha256(json.dumps(query, sort_keys=True).encode()).hexdigest()
-    path = out / "requests" / query["table"] / (req_id + ".json")
+    return out / "requests" / query["table"] / (req_id + ".json"), query
+
+
+def file_sha256(path: Path) -> str:
+    with path.open("rb") as stream:
+        return hashlib.file_digest(stream, "sha256").hexdigest()
+
+
+def request_cached(out: Path, method: str, job: dict, condition: str, fetch, *, expected=None):
+    path, query = receipt_path(out, method, job, condition)
     data_path = path.with_suffix(".jsonl.gz")
     if path.is_file():
         state = json.loads(path.read_text(encoding="utf-8"))
@@ -144,7 +156,7 @@ def request_cached(out: Path, method: str, job: dict, condition: str, fetch):
                 raise SourceError("Cached query columns differ; retain the original request and its evidence")
             if method == "query" and (
                 not data_path.is_file()
-                or hashlib.sha256(data_path.read_bytes()).hexdigest() != state["sha256"]
+                or file_sha256(data_path) != state["sha256"]
             ):
                 raise SourceError("Cached data file missing or hash differs")
             return state
@@ -165,13 +177,18 @@ def request_cached(out: Path, method: str, job: dict, condition: str, fetch):
         else:
             if not isinstance(result, list) or any(not isinstance(row, dict) for row in result):
                 raise SourceError("Unexpected result type from query")
+            if expected is not None and len(result) != expected:
+                raise SourceError(f"CSMAR returned {len(result)} rows, expected {expected}; scope needs reconciliation")
             temp = data_path.with_suffix(".part")
             with gzip.open(temp, "wt", encoding="utf-8", newline="\n", compresslevel=5) as output:
                 for row in result:
                     output.write(json.dumps(row, ensure_ascii=False, separators=(",", ":")) + "\n")
             temp.replace(data_path)
-            state.update(rows=len(result), sha256=hashlib.sha256(data_path.read_bytes()).hexdigest())
+            state.update(rows=len(result), sha256=file_sha256(data_path))
     except SourceError as exc:
+        response_hash = getattr(getattr(fetch, "__self__", None), "last_response_sha256", None)
+        if response_hash:
+            state["response_body_sha256"] = response_hash
         dump_json(path, state | {"status": "failed", "error": str(exc)})
         raise
     state.update(status="ok", observed_at=now())
@@ -179,7 +196,29 @@ def request_cached(out: Path, method: str, job: dict, condition: str, fetch):
     return state
 
 
-def acquire(client, out: Path, plan: Path, count_only: bool) -> int:
+def page_conditions(condition, count):
+    for offset in range(0, count, PAGE_ROWS):
+        yield (condition if count <= PAGE_ROWS else f"{condition} limit {offset},{PAGE_ROWS}".strip(),
+               min(PAGE_ROWS, count - offset))
+
+
+def archived_package_for(out, job, condition):
+    for path in (out / "requests" / job["table"]).glob("*.json"):
+        record = json.loads(path.read_bytes())
+        query = record["query"]
+        if (query["method"] != "package" or record["status"] != "ok" or record["columns"] != job["columns"]
+                or query["condition"] != condition):
+            continue
+        start, end = job.get("start", ""), job.get("end", "")
+        if (start, end) == (query["start"], query["end"]) or (
+                start and end and query["start"] and query["end"] and query["start"] <= start <= end <= query["end"]):
+            from csmar_package_probe import cached_package
+
+            return cached_package(path, job, record["rows"])
+    return None
+
+
+def acquire(client, out: Path, plan: Path, count_only: bool, prefer_packages=False) -> int:
     failed = 0
     for job in json.loads(plan.read_text(encoding="utf-8")):
         table = job["table"]
@@ -188,16 +227,29 @@ def acquire(client, out: Path, plan: Path, count_only: bool) -> int:
         if not re.fullmatch(r"\w+", table) or re.search(r"\b(?:limit|order\s+by)\b", condition, re.I):
             raise SourceError(f"Unsupported query plan for {label}")
         try:
-            count = request_cached(out, "count", job, condition, client.queryCount)["rows"]
+            if not count_only and (package := archived_package_for(out, job, condition)):
+                covered = package["query"]
+                print(f"CSMAR {label}: covered by verified package {covered['start']} {covered['end']}", flush=True)
+                continue
+            count_receipt = request_cached(out, "count", job, condition, client.queryCount)
+            count = count_receipt["rows"]
             if count_only:
                 print(f"CSMAR {label}: {count:,} eligible source rows", flush=True)
                 continue
+            packaged, _ = receipt_path(out, "package", job, condition)
+            pages = list(page_conditions(condition, count))
+            query_started = any(receipt_path(out, "query", job, page)[0].is_file() for page, _ in pages)
+            if packaged.is_file() or (prefer_packages and count > PAGE_ROWS and not query_started):
+                from csmar_package_probe import acquire_package
+
+                state = acquire_package(client, out, job, count, count_receipt.get("response_body_sha256"))
+                print(f"CSMAR {label}: reconciled {state['rows']:,} rows (package)", flush=True)
+                continue
             downloaded = 0
-            for offset in range(0, count, 200_000):
-                page = condition if count <= 200_000 else f"{condition} limit {offset},200000".strip()
-                state = request_cached(out, "query", job, page, client.query)
-                if state["rows"] != min(200_000, count - offset):
-                    raise SourceError(f"CSMAR page length {state['rows']} differs from count {count}")
+            for page, expected in pages:
+                state = request_cached(out, "query", job, page, client.query, expected=expected)
+                if state["rows"] != expected:
+                    raise SourceError(f"CSMAR cached page length {state['rows']} differs from expected {expected}")
                 downloaded += state["rows"]
             print(f"CSMAR {label}: reconciled {downloaded:,} rows", flush=True)
         except DailyQuotaError:
@@ -229,9 +281,16 @@ def main():
     parser.add_argument("--table", action="append", default=[])
     parser.add_argument("--plan", type=Path)
     parser.add_argument("--count-only", action="store_true")
+    parser.add_argument("--prefer-packages", action="store_true", help="Use the official package route for new scopes over 200,000 rows")
     parser.add_argument("--refresh", action="store_true")
     args = parser.parse_args()
+    quota_receipt = args.out / "last_daily_quota.json"
     try:
+        if args.plan and not args.count_only and quota_receipt.is_file():
+            stopped = json.loads(quota_receipt.read_bytes())
+            if stopped["service_day"] == datetime.now(CSMAR_DAY).date().isoformat():
+                print("CSMAR collection already stopped for today's -2404 limit", file=sys.stderr)
+                return 1
         client = service(args.sdk, args.env)
         inventory(client, args.out, args.refresh)
         for name in args.database:
@@ -255,7 +314,12 @@ def main():
                 dump_json(path, {"observed_at": now(), "table": name, "data": data})
                 print(f"CSMAR table {name}: {len(data)} fields", flush=True)
         if args.plan:
-            return int(acquire(client, args.out, args.plan, args.count_only) != 0)
+            return int(acquire(client, args.out, args.plan, args.count_only, args.prefer_packages) != 0)
+    except DailyQuotaError as exc:
+        dump_json(quota_receipt, {"stopped_at": now(), "service_day": datetime.now(CSMAR_DAY).date().isoformat(),
+                                 "error": str(exc)})
+        print(str(exc), file=sys.stderr, flush=True)
+        return 1
     except SourceError as exc:
         print(str(exc), file=sys.stderr, flush=True)
         return 1

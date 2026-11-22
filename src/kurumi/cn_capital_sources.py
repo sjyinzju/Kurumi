@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import sqlite3
 from collections import defaultdict
 from pathlib import Path
@@ -28,16 +29,38 @@ def csmar_capture(con, root, table):
         if query["method"] == "count" and query["table"] == table and record["status"] == "ok":
             counts[(query["start"], query["end"], query["condition"])] = record["rows"]
     receipts = []
+    pages = defaultdict(list)
     for path in files:
         with path.open("rb") as stream:
             sha256 = hashlib.file_digest(stream, "sha256").hexdigest()
         receipt = json.loads(path.with_suffix("").with_suffix(".json").read_text(encoding="utf-8"))
         query = receipt["query"]
-        expected = counts.get((query["start"], query["end"], query["condition"]))
+        condition = query["condition"]
+        method = query["method"]
+        page = re.fullmatch(r"(.*?)\s*limit (\d+),(\d+)", condition) if method == "query" else None
+        base, offset, length = (page[1].rstrip(), int(page[2]), int(page[3])) if page else (condition, 0, 0)
+        scope = (query["start"], query["end"], base)
+        total = counts.get(scope)
+        expected = min(length, total - offset) if page and total is not None else total
         if (receipt["status"] != "ok" or receipt["sha256"] != sha256 or query["table"] != table
-                or query["method"] != "query" or expected != receipt["rows"]):
+                or method not in {"query", "package"} or expected != receipt["rows"]):
             raise ValueError(f"CSMAR capture receipt/hash mismatch: {table} {path.name}")
+        if method == "package":
+            archive = path.with_suffix("").with_suffix(".zip")
+            with archive.open("rb") as stream:
+                if hashlib.file_digest(stream, "sha256").hexdigest() != receipt.get("zip_sha256"):
+                    raise ValueError(f"CSMAR original ZIP differs from its receipt: {table} {archive.name}")
+        if page:
+            pages[scope].append((offset, expected))
         receipts.append(receipt | {"rows_in_query_count": expected})
+    for scope, captured in pages.items():
+        stop = 0
+        for offset, length in sorted(captured):
+            if offset != stop or length <= 0:
+                raise ValueError(f"CSMAR paged scope is incomplete: {table} {scope}")
+            stop += length
+        if stop != counts[scope]:
+            raise ValueError(f"CSMAR paged scope is incomplete: {table} {scope}")
     con.read_json([str(p) for p in files], convert_strings_to_integers=False).create_view(table)
     if con.sql(f"SELECT count(*) FROM {table}").fetchone()[0] != sum(r["rows"] for r in receipts):
         raise ValueError(f"CSMAR source row count mismatch for {table}")

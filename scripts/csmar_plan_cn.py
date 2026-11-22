@@ -133,14 +133,39 @@ def remaining_plan(capture: Path, extra_codes: Path | None) -> list[dict]:
     return plan
 
 
+def acquisition_priority(capture: Path, extra_codes: Path | None, quote_plan: Path) -> list[dict]:
+    prior = remaining_plan(capture, extra_codes)
+    first = {table: next(scope for scope in prior if scope["table"] == table) for table in (
+        "FS_Comscfd", "AIQ_LCFinRestatY", "FN_Fn044", "TSR_Stkstat", "STK_HK_InstitutionInfo",
+        "STK_HK_CapitalChange", "STK_HK_Divident",
+    )}
+    needed_quotes = json.loads(quote_plan.read_bytes())
+    if any(scope["table"] not in {"HK_STK_DQUOTE", "TRD_Dalyr", "FE_Exrated"} for scope in needed_quotes):
+        raise ValueError("The targeted quote plan contains a non-quote table")
+    return [
+        first["FS_Comscfd"] | {"end": END},
+        first["AIQ_LCFinRestatY"],
+        first["FN_Fn044"] | {"end": "2019-12-31"},
+        first["FN_Fn044"] | {"start": "2020-01-01", "end": END},
+        *(first[table] for table in ("TSR_Stkstat", "STK_HK_InstitutionInfo", "STK_HK_CapitalChange", "STK_HK_Divident")),
+        *needed_quotes,
+    ]
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("phase", choices=("initial", "remaining"))
+    parser.add_argument("phase", choices=("initial", "remaining", "priority"))
     parser.add_argument("--capture", type=Path, default=RUNTIME / "capture")
     parser.add_argument("--cross-codes", type=Path, help="Optional independently verified share_class,code CSV")
+    parser.add_argument("--quote-plan", type=Path, help="Scoped requests produced from the active release's actual quote gaps")
     parser.add_argument("--plan", type=Path, required=True)
     args = parser.parse_args()
-    plan = base_plan(args.capture) if args.phase == "initial" else remaining_plan(args.capture, args.cross_codes)
+    if args.phase == "priority":
+        if args.quote_plan is None:
+            parser.error("priority requires --quote-plan")
+        plan = acquisition_priority(args.capture, args.cross_codes, args.quote_plan)
+    else:
+        plan = base_plan(args.capture) if args.phase == "initial" else remaining_plan(args.capture, args.cross_codes)
     dump_json(args.plan, plan)
     print(f"Saved {len(plan)} scoped queries")
 

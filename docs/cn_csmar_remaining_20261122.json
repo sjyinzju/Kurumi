@@ -1,0 +1,186 @@
+{
+  "status": "INCOMPLETE",
+  "publication_applied": false,
+  "release": "cn-71132cf836bd63c14a85bbb71cbbd607a3372d4c7f0b91e359382d359ecc6d45",
+  "quant_data_root": "E:/QuantData/numeric",
+  "sources": ".build-cn/sources/csmar-pit-remaining-20261122",
+  "prior_sources": {
+    "cashflow_delta": ".build-cn/sources/csmar-pit-residual-20261122/finance",
+    "prior_suspensions": [
+      ".build-cn/sources/csmar-pit-20261122",
+      ".build-cn/sources/csmar-pit-residual-20261122"
+    ]
+  },
+  "csmar": {
+    "reused_pages": 53,
+    "new_pages": 1,
+    "total_pages": 54,
+    "new_rows": 137,
+    "total_rows": 2371420,
+    "session_observed_totals": {
+      "daily_query_successes": 15,
+      "daily_package_successes": 3
+    },
+    "new_page": ".build-cn/sources/csmar/requests/ANN_Security/314531a4fc5b1c087f9aae6aa3820cda5f297aad4d982613c500ae16148c1612.jsonl.gz",
+    "new_page_sha256": "101a9a1c8bf014a018503177c1b5ab4167b7732de7839de5944c153bd9570275",
+    "quota_stop": {
+      "stopped_at": "2026-11-22T10:48:47.805104+00:00",
+      "service_day": "2026-11-22",
+      "error": "CSMAR daily download quota reached (service code -2404)"
+    },
+    "failed_downloads_this_round": 1,
+    "retry_2018_known_rows": 957,
+    "pending_years": [
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2026,
+      2024,
+      2023
+    ],
+    "other_pending_counts_status": "previous_http_401",
+    "pending_plan": "artifacts/cn_numeric_followup/csmar_remaining_20261122/pending_announcement_plan.json"
+  },
+  "suspensions": {
+    "new_same_day_sessions": 25,
+    "new_open_days": 2794,
+    "new_open_intervals": 151,
+    "total_days_recovered": 2819,
+    "remaining": 12062
+  },
+  "finance": {
+    "issuers": 304,
+    "filings_examined": 2131,
+    "filings_qualified": 1356,
+    "enriched_versions": 936,
+    "added_versions": 338,
+    "valid_inputs": 217747,
+    "all_seven_before": 69939,
+    "all_seven_after": 109790,
+    "all_seven_added": 39851,
+    "missing_at_least_one": 107957,
+    "cashflow_ttm_missing": 57330,
+    "gains": {
+      "revenue_ttm": 72040,
+      "net_income_total_ttm": 73233,
+      "net_income_parent_ttm": 53402,
+      "revenue_ttm_4q_ago": 47992,
+      "net_income_parent_ttm_4q_ago": 36104,
+      "assets_4q_ago": 4837,
+      "assets": 2770,
+      "liabilities": 2770,
+      "operating_cashflow_ttm": 1242,
+      "parent_equity_4q_ago": 2001,
+      "parent_equity": 384
+    },
+    "losses": {
+      "assets": 49,
+      "liabilities": 49,
+      "parent_equity": 49,
+      "assets_4q_ago": 18,
+      "parent_equity_4q_ago": 18
+    },
+    "cohorts": [
+      {
+        "year": 2022,
+        "split": "train",
+        "valid_inputs": 19552,
+        "base_v11_all_seven": 8456,
+        "repaired_all_seven": 9399
+      },
+      {
+        "year": 2023,
+        "split": "train",
+        "valid_inputs": 42745,
+        "repaired_all_seven": 16719,
+        "base_v11_all_seven": 12194
+      },
+      {
+        "year": 2024,
+        "split": "calibration",
+        "valid_inputs": 31070,
+        "base_v11_all_seven": 8421,
+        "repaired_all_seven": 17139
+      },
+      {
+        "year": 2024,
+        "split": "validation",
+        "valid_inputs": 27535,
+        "base_v11_all_seven": 7157,
+        "repaired_all_seven": 10754
+      },
+      {
+        "year": 2025,
+        "split": "test",
+        "valid_inputs": 63882,
+        "base_v11_all_seven": 21563,
+        "repaired_all_seven": 37205
+      },
+      {
+        "year": 2026,
+        "split": "test",
+        "valid_inputs": 32963,
+        "repaired_all_seven": 18574,
+        "base_v11_all_seven": 12148
+      }
+    ]
+  },
+  "share": {
+    "codes": [
+      "600128.SH",
+      "600508.SH",
+      "601003.SH",
+      "601158.SH"
+    ],
+    "rows": 10569,
+    "valid_sample_share_days": 10149,
+    "valid_sample_issuer_cap_days": 10149,
+    "sha256": "337c03ea5d213ae2ac190e76622df9805ff0f3a4264aedbc9bf3d0a870656ce1",
+    "quoted_days_without_independent_comparison": 172,
+    "projected_remaining_valid_shares": 1602545,
+    "projected_remaining_valid_issuer_cap": 1636297
+  },
+  "verification": {
+    "pytest_passed": 80,
+    "pit_prefix": {
+      "status": "passed",
+      "financial": {
+        "probes": 4547,
+        "full_snapshot_comparisons": 88800,
+        "future_row_interventions": 49927,
+        "same_period_future_probes": 559,
+        "issuers": 301
+      },
+      "shares": {
+        "probes": 4,
+        "active_prior_selection": 0,
+        "future_row_interventions": 4,
+        "securities": 4
+      }
+    },
+    "files": {
+      "finance/financial_production_replay.json": "6f56f76525fb09d4c2d87abb14e25c7d3a0fa31a626ee303c337fc9efdfc9fbf",
+      "finance/new_versions.jsonl": "7305634aefd820ce4a7db46e02ef9d5cbc6fad9a874fe4a7c13e49f38ebe13c1",
+      "finance/partial_financial_review.json": "da1466c1ee85d86ce29f45f12644c74958790932bc3c2b35956108ee05e3f162",
+      "finance/qualified_originals.jsonl": "e63213465c67bf702823da344d54c3792f4fff2ffdba673a96cfa38acaefd9df",
+      "finance/replacements.jsonl": "99d62c24ead917a1d60dc12519aab95892b3377c3b990d68a3ebc41477a8fad7",
+      "finance/reviewed.json": "9ffbc8972e78672ae65b2bfc41ad07b756937e64be510dc82449fffa56386724",
+      "official_suspensions_open_additions.json": "a5f0ca4dc6404b28961dad176f6e510413bd5f3850297bf25fc8e8a9835549b3",
+      "official_suspensions_same_day_additions.json": "f2029a5c69a21c5c6155a45ee3dee247c287ad4609f7b54bd4dee4efae1c1b18",
+      "open_halt_audit.json": "c1c083d68fa39e4991cce417f244569b102968142fcfacab083d888138e4929a",
+      "same_day_halts_audit.json": "48253d6d2226f6d7fbfcc055501e1c0bc3ac47d7d207df13b256804e49696be2",
+      "share/anchor_audit.json": "700b5371f6681c221090a83b04e053e7e80e9f0df24b301546082a55f79a60df",
+      "share/originals/600128.SH.pdf": "7b00137c3d20e9ec9876eee0e288925da6cddcf826164ccceec963f8b22b2d30",
+      "share/originals/600508.SH.pdf": "bcc915db64a21e490796e871f475268e5f0a65a7e1cbfedcb30f4271f8993e58",
+      "share/originals/601003.SH.2012-12-31.pdf": "9f8ba825a5300a21b9eb8de8223e412b729deb0921587a196d570ab1c055c915",
+      "share/originals/601158.SH.2013-12-31.pdf": "6a266e7ca5ff836066a1ef5b127d0111728b1c7631e6ee66e565db12c387d11a",
+      "share/originals/publisher_originals.json": "7ab3854444a64bea128e82dc5a764014eae37f59f6aa988071eca1a9238d66dc",
+      "share/share_replay.json": "aa4c42f112ad6fe21ee9e38269fabadbf6c10d6eadc2ec72adaa7152cb6e48a9",
+      "share/share_versions.jsonl": "ce8b6725372722bd9e00d4db9253d9e6e043523cabb8dedfec0736c5b9aff936",
+      "share/stock_daily_share_delta.parquet": "337c03ea5d213ae2ac190e76622df9805ff0f3a4264aedbc9bf3d0a870656ce1",
+      "stock_daily_open_halt_delta.parquet": "c560ddb087e8725677659fa953aa4227e1399e4284ff8a7981a1c892278bdb23"
+    }
+  }
+}

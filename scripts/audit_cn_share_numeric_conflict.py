@@ -61,7 +61,7 @@ def _source_segments(con, release, evidence, supplement=()):
     ])
 
 
-def _replay_supplement(con, release, evidence, registry, supplement_dir):
+def _replay_supplement(con, release, evidence, registry, supplement_dir, delta_output=None):
     con.execute("SET threads=1; SET memory_limit='850MB'; SET preserve_insertion_order=false")
     extra = _with_provenance(supplement_dir, "share_versions", {})
     if not extra:
@@ -91,7 +91,7 @@ def _replay_supplement(con, release, evidence, registry, supplement_dir):
         [sorted(months)]).fetchall()
     con.read_parquet([row[0] for row in parts], union_by_name=True, hive_partitioning=False).create_view("daily_basic_parts")
     con.read_parquet(str(release / "stock_daily/market_id=CN/year=*/*.parquet")).create_view("stock_daily")
-    effects = _records(con.execute("""
+    con.execute("""CREATE TEMP TABLE comparisons AS
         WITH observed AS (
             SELECT v.ts_code,cast(v._event_date AS DATE) AS day, min(v._batch_id) AS batch_id,
                    count(DISTINCT total_share) AS provider_versions, max(total_share)*10000 AS total_shares,
@@ -102,6 +102,8 @@ def _replay_supplement(con, release, evidence, registry, supplement_dir):
         ), comparisons AS (
             SELECT s.source_id,s.start_date,s.end_date,s.ts_code,s.share_quantity,b.local_trade_date,
               b.shares_outstanding_security AS old_shares, b.quote_valid, b.share_check_status,
+              b.instrument_id,b.asof_utc,s.available_at,b.input_valid,b.close_raw,b.fundamental_snapshot_id,
+              b.security_market_cap_local AS old_security_cap,b.issuer_market_cap_reporting AS old_issuer_cap,v.batch_id,
               CASE WHEN v.batch_id IS NULL THEN 'missing_provider_comparison'
                    WHEN v.provider_versions>1 THEN 'provider_version_conflict'
                    WHEN v.unsupported_precision>0 THEN 'provider_precision_unverified'
@@ -110,7 +112,10 @@ def _replay_supplement(con, release, evidence, registry, supplement_dir):
             FROM new_spans s JOIN stock_daily b ON b.ts_code=s.ts_code
               AND b.local_trade_date>=s.start_date AND b.local_trade_date<s.end_date AND b.asof_utc>=s.available_at
             LEFT JOIN observed v ON v.ts_code=b.ts_code AND v.day=b.local_trade_date
-        ) SELECT source_id,start_date,end_date,ts_code,share_quantity,count(*) AS affected_stock_days,
+        ) FROM comparisons
+    """)
+    effects = _records(con.execute("""
+        SELECT source_id,start_date,end_date,ts_code,share_quantity,count(*) AS affected_stock_days,
             count_if(new_check_status='matched') AS independently_matched,
             count_if(new_check_status NOT IN ('matched','numeric_conflict','provider_version_conflict')) AS comparison_unverified,
             count_if(new_check_status='matched' AND old_shares IS NULL) AS exact_new_share_days,
@@ -120,7 +125,36 @@ def _replay_supplement(con, release, evidence, registry, supplement_dir):
                      AND old_shares<>share_quantity) AS older_nonnull_with_changed_share
         FROM comparisons GROUP BY ALL ORDER BY ts_code,start_date
     """))
-    return {"release": release.name, "supplement_rows": len(extra), "months": sorted(months), "spans": effects}
+    proof = {"release": release.name, "supplement_rows": len(extra), "months": sorted(months), "spans": effects}
+    if delta_output:
+        con.read_parquet(str(release / "stock_fundamental_asof/**/*.parquet")).create_view("fundamental")
+        delta = con.sql("""
+            SELECT c.instrument_id,c.ts_code,c.local_trade_date,c.asof_utc,c.available_at,c.input_valid,
+                   c.share_quantity AS shares_outstanding_security,
+                   CASE WHEN c.old_security_cap IS NULL THEN c.close_raw*c.share_quantity END AS security_market_cap_local,
+                   CASE WHEN c.old_issuer_cap IS NULL AND coalesce(f.reporting_currency,'CNY')='CNY'
+                        THEN c.close_raw*c.share_quantity END AS issuer_market_cap_reporting,
+                   c.source_id AS source_version_id,c.batch_id AS share_check_batch_id,c.new_check_status AS share_check_status
+            FROM comparisons c LEFT JOIN fundamental f USING (fundamental_snapshot_id)
+            WHERE c.new_check_status='matched' AND c.old_shares IS NULL
+            ORDER BY c.instrument_id,c.local_trade_date
+        """)
+        temporary = delta_output.with_suffix(".partial")
+        delta.write_parquet(str(temporary), compression="zstd")
+        check = con.read_parquet(str(temporary))
+        rows, keys, from_future, valid_shares, valid_caps = check.aggregate("""
+            count(*),count(DISTINCT (instrument_id,local_trade_date)),count_if(available_at>asof_utc),
+            count_if(input_valid AND local_trade_date<=DATE '2026-06-30'),
+            count_if(input_valid AND local_trade_date<=DATE '2026-06-30' AND issuer_market_cap_reporting IS NOT NULL)
+        """).fetchone()
+        if rows != keys or from_future or rows != sum(row["exact_new_share_days"] for row in effects):
+            raise ValueError("Share replay delta keys or historical timestamps differ from the audit")
+        temporary.replace(delta_output)
+        with delta_output.open("rb") as stream:
+            proof["delta"] = {"rows": rows, "valid_sample_share_days": valid_shares,
+                              "valid_sample_issuer_cap_days": valid_caps,
+                              "sha256": hashlib.file_digest(stream, "sha256").hexdigest()}
+    return proof
 
 
 def _audit(con, release, evidence, registry, months):
@@ -201,10 +235,11 @@ def main():
     parser.add_argument("--quant-db", type=Path, default=Path("E:/QuantData/quant.duckdb"))
     parser.add_argument("--month", action="append")
     parser.add_argument("--replay-supplement", type=Path)
+    parser.add_argument("--delta-output", type=Path)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     with duckdb.connect() as con:
-        proof = (_replay_supplement(con, args.release, args.evidence, args.quant_db, args.replay_supplement)
+        proof = (_replay_supplement(con, args.release, args.evidence, args.quant_db, args.replay_supplement, args.delta_output)
                  if args.replay_supplement else _audit(con, args.release, args.evidence, args.quant_db,
                                                        args.month or list(MONTHS)))
     args.output.parent.mkdir(parents=True, exist_ok=True)

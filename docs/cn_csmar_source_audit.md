@@ -1,5 +1,7 @@
 # CSMAR 来源采集记录
 
+2026-11-22 已用官方 SDK 打包和定向查询接续下列历史断点。当天完成 [批量续采](cn_csmar_resume_20261122.md)、[缺口定向补采和本地复算](cn_csmar_gap_reuse_20261122.md) 以及 [停牌、股本和北交所财务增量](cn_csmar_remaining_20261122.md)。当日晚间实测收到 `-2404`，已保存续采断点。
+
 2026-11-20 以本机 CSMAR 账号通过官方 Windows SDK 1.0.2 登录成功，实际取得 207 个数据库条目和相关表、字段字典。在 `artifacts/cn_numeric/csmar_runtime/.venv` 单独使用 Python 3.11.9，保留后训练环境原有依赖。官方 SDK 包含可直接运行的源码。其 `__init__.py` 会导入 `prettytable`，因此隔离环境也安装了这个包。程序仅在本次会话内存保留登录令牌。来源证据保留请求参数、服务端计数、观察时间和归档页 SHA-256。采集的 gzip 页是官方 API 记录的序列化归档。 [官方 SDK 包](https://data.csmar.com/static/packages/domestic/Python/csmarapi.rar)
 
 ## 已下载与验证

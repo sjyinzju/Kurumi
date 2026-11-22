@@ -45,6 +45,13 @@ def audit(capture: Path) -> dict:
         if actual_hash != record["sha256"]:
             raise ValueError(f"Page SHA-256 mismatch: {page}")
         files[page.relative_to(capture).as_posix()] = actual_hash
+        if record["query"]["method"] == "package":
+            archive = path.with_suffix(".zip")
+            zip_hash = hashlib.sha256(archive.read_bytes()).hexdigest()
+            if zip_hash != record["zip_sha256"] or archive.stat().st_size != record["zip_bytes"]:
+                raise ValueError(f"Original ZIP differs from receipt: {archive}")
+            files[archive.relative_to(capture).as_posix()] = zip_hash
+            tables[table]["packages"] = tables[table].get("packages", 0) + 1
         row_count = 0
         cols = set(record["columns"])
         returned_columns = None

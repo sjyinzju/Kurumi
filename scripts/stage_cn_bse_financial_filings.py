@@ -44,7 +44,7 @@ def normalized(text):
     return re.sub(r"\s+", "", text)
 
 
-def statement_sections(pages):
+def statement_sections(pages, *, partial=False):
     headings = Counter()
     section = None
     statements = {name: [] for name in FIELDS}
@@ -52,8 +52,8 @@ def statement_sections(pages):
     for page, line in lines:
         compact = normalized(line)
         heading = SECTION.fullmatch(compact)
-        if set(headings) == set(FIELDS) and (
-                heading and heading[1] == "母公司" and heading[2] == "现金流量表" or
+        if (partial and headings or set(headings) == set(FIELDS)) and (
+                heading and heading[1] == "母公司" and heading[2] == "现金流量表" and headings["现金流量表"] or
                 len(compact) < 55 and re.search(r"(?:财务报表附注|所有者权益变动表|股东权益变动表)$", compact)):
             break
         if heading:
@@ -62,6 +62,8 @@ def statement_sections(pages):
                 headings[section] += 1
         elif section:
             statements[section].append((page, compact, line.strip()))
+    if partial:
+        return {name: rows for name, rows in statements.items() if headings[name] == 1}
     if set(headings) != set(FIELDS) or any(n != 1 for n in headings.values()):
         raise ValueError("ambiguous_consolidated_statement_scope")
     return statements
@@ -109,7 +111,66 @@ def statement_period_columns(header, statement, end):
     raise ValueError(f"fiscal_period_unconfirmed_{statement}")
 
 
-def extract_stated_values(pages, end, allowed_codes, exchange_basis=None):
+def supported_section_columns(header, section, end, title):
+    try:
+        return statement_period_columns(header, section, end)
+    except ValueError:
+        if section == "资产负债表":
+            if end.month == 12 and re.search(rf"{end.year}年?(?:年度报告|年报)", title) and re.search(r"(?:期末|年末)余额(?:期初|年初)余额", normalized(header)):
+                return 0, 2
+            raise
+        compact = normalized(header)
+        explicit_period = re.search(r"本期(?:发生额|金额)上期(?:发生额|金额)|本年(?:金额|发生额)上年(?:金额|发生额)", compact)
+        period_title = {3: r"年第一季度报告", 6: r"年半年度报告", 12: r"年?(?:年度报告|年报)"}.get(end.month)
+        if explicit_period and period_title and not re.search(r"20\d{2}年\d{1,2}月", compact):
+            if re.search(str(end.year) + period_title, title):
+                return 0, 2
+        raise
+
+
+def partial_amounts(pages, end, requested, title):
+    values, traces, rejected = {}, {}, {}
+    for section, rows in statement_sections(pages, partial=True).items():
+        fields = FIELDS[section]
+        if not requested.intersection(fields):
+            continue
+        header = "\n".join(line for _, line, _ in rows[:20])
+        if not re.search(r"单位[:：](?:人民币)?元", header):
+            rejected[section] = "yuan_unit_unconfirmed"
+            continue
+        try:
+            column, n_columns = supported_section_columns(header, section, end, title)
+        except ValueError:
+            rejected[section] = "fiscal_period_unconfirmed"
+            continue
+        table_values, table_traces = {}, {}
+        for field, label in fields.items():
+            try:
+                table_values[field], table_traces[field] = extract_amount(rows, label, column, n_columns)
+            except ValueError:
+                continue
+        controls = {
+            "资产负债表": ("assets", "liabilities", "equity_total"),
+            "现金流量表": ("operating_cashflow_ytd", "operating_out", "operating_in"),
+            "利润表": ("net_income_total_ytd", "income_tax", "profit_total"),
+        }
+        lhs, second, rhs = controls[section]
+        complete = set(controls[section]) <= table_values.keys()
+        expected = table_values.get(rhs, 0) + table_values.get(second, 0) if section == "资产负债表" else table_values.get(rhs, 0) - table_values.get(second, 0)
+        if (section != "利润表" and not complete) or (complete and table_values[lhs] != expected):
+            rejected[section] = "accounting_controls_unverified"
+            continue
+        kept = requested.intersection(table_values)
+        values.update((name, float(table_values[name])) for name in kept)
+        traces.update((name, table_traces[name]) for name in kept)
+    if not values:
+        reasons = ",".join(f"{key}:{value}" for key, value in sorted(rejected.items()))
+        raise ValueError(reasons or "no_requested_consolidated_amount")
+    return values, traces
+
+
+def extract_stated_values(pages, end, allowed_codes, exchange_basis=None, *, cashflow_only=False,
+                          requested=None, title=""):
     later = iter(pages)
     early = list(islice(later, 12))
     identity = normalized("\n".join(early))
@@ -119,7 +180,11 @@ def extract_stated_values(pages, end, allowed_codes, exchange_basis=None):
         early.extend(later)
         if not any("企业会计准则" in normalized(page) for page in early):
             raise ValueError("accounting_basis_unconfirmed")
+    if requested:
+        return partial_amounts(chain(early, later), end, requested, title)
     statements = statement_sections(chain(early, later))
+    if cashflow_only:
+        statements = {"现金流量表": statements["现金流量表"]}
     values, traces = {}, {}
     for statement, rows in statements.items():
         header = "\n".join(line for _, line, _ in rows[:20])
@@ -132,7 +197,7 @@ def extract_stated_values(pages, end, allowed_codes, exchange_basis=None):
             except ValueError:
                 if field not in {"profit_total", "income_tax"}:
                     raise ValueError(f"ambiguous_or_missing_{field}") from None
-    if values["assets"] != values["liabilities"] + values["equity_total"]:
+    if not cashflow_only and values["assets"] != values["liabilities"] + values["equity_total"]:
         raise ValueError("balance_sheet_equation_failed")
     if values["operating_cashflow_ytd"] != values["operating_in"] - values["operating_out"]:
         raise ValueError("operating_cashflow_equation_failed")
@@ -153,7 +218,7 @@ def checked_file(base, receipt):
     return path
 
 
-def _extract_report(pages, period_end, published, listed, codes):
+def _extract_report(pages, period_end, published, listed, codes, cashflow_only=False, requested=None, title=""):
     exchange_basis = next((url for since, url in BSE_ACCOUNTING_BASIS if published >= max(since, listed)), None)
     early = list(islice(pages, 12))
     early_text = normalized("\n".join(early))
@@ -161,7 +226,8 @@ def _extract_report(pages, period_end, published, listed, codes):
         raise ValueError("filing_period_cover_unconfirmed")
     if published < listed and "全国中小企业股份转让系统" in early_text and "主办券商" in early_text:
         exchange_basis = next((url for since, url in NEEQ_ACCOUNTING_BASIS if published >= since), None)
-    values, traces = extract_stated_values(chain(early, pages), period_end, codes, exchange_basis)
+    values, traces = extract_stated_values(chain(early, pages), period_end, codes, exchange_basis,
+                                           cashflow_only=cashflow_only, requested=requested, title=title)
     return values, traces, exchange_basis
 
 
@@ -180,7 +246,7 @@ def _fast_report(pdf, arguments):
         return _extract_report(layouts(), *arguments)
 
 
-def normalize_one(base, target, record, fast_layout=False):
+def normalize_one(base, target, record, fast_layout=False, *, cashflow_only=False, requested=None):
     from pypdf import PdfReader
 
     attachments = [item for item in record["attachments"] if item.get("file")]
@@ -196,7 +262,7 @@ def normalize_one(base, target, record, fast_layout=False):
     period_end = date.fromisoformat(record["period_end"])
     published = date.fromisoformat(record["published_day"])
     listed = date.fromisoformat(target["listed"])
-    arguments = period_end, published, listed, target["historical_codes"]
+    arguments = period_end, published, listed, target["historical_codes"], cashflow_only, requested, record["title"]
     extracted = None
     backend = "pypdf_layout"
     if fast_layout:
