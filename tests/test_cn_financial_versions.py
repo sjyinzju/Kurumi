@@ -1,3 +1,6 @@
+import gzip
+import hashlib
+import json
 import sys
 from collections import Counter
 from datetime import date
@@ -5,7 +8,16 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
-from normalize_cn_financial_versions import accepted_provider, combine, incorporate_revisions
+from normalize_cn_financial_versions import (
+    accepted_provider,
+    combine,
+    csmar_originals,
+    csmar_version_evidence,
+    digest,
+    incorporate_revisions,
+    write_output,
+)
+from verify_cn_financial_sources import check_decisions
 from verify_cn_restatement_control import extract_consolidated_q1
 
 
@@ -94,6 +106,95 @@ def test_statement_revision_preserves_prior_unaffected_facts_and_dates():
         "net_income_total_ytd": "2015-09-30", "operating_cashflow_ytd": "2015-04-29",
     }
     assert revised["previous_filing_sha256"] == "a" * 64
+
+
+def _csmar_fixture(tmp_path, disclosures, table="FS_Comins"):
+    raw = tmp_path / table / "page.jsonl.gz"
+    raw.parent.mkdir()
+    raw.write_bytes(gzip.compress("\n".join(json.dumps(item) for item in disclosures).encode()))
+    observed = "2026-11-20T00:00:00+00:00"
+    raw.with_name("page.json").write_text(json.dumps(
+        {"status": "ok", "sha256": hashlib.sha256(raw.read_bytes()).hexdigest(), "observed_at": observed}
+    ), encoding="utf-8")
+    return observed
+
+
+def _proof(tmp_path, matches, observed):
+    path = tmp_path / "version_evidence.jsonl"
+    with path.open("w", encoding="utf-8") as stream:
+        for i, (row, clock) in enumerate(matches):
+            stream.write(json.dumps({"table": "FS_Comins", "row_sha256": digest(row),
+                                     "fields": ["net_income_parent_ytd"], "published_at": clock,
+                                     "source_version_id": f"dated-filing-{i}", "source_sha256": "b" * 64,
+                                     "source_url": "https://example.org/archive", "observed_at": observed,
+                                     "reporting_currency": "CNY", "amount_unit": "yuan", "report_scope": "consolidated",
+                                     "accounting_basis": "CN_ASBE"}) + "\n")
+    return csmar_version_evidence([path])
+
+
+def test_independently_proven_raw_csmar_with_no_tushare(tmp_path):
+    aliases = {"002591.SZ": ("002591.SZ", date(2011, 5, 27), None, "SZSE")}
+    first = {"Stkcd": "002591", "Accper": "2015-03-31", "Typrep": "A", "IfCorrect": 0,
+             "DeclareDate": None, "B002000101": 5012399.81}
+    revised = first | {"IfCorrect": 1, "DeclareDate": "2015-09-30", "B002000101": -8618400.19}
+    observed = _csmar_fixture(tmp_path, [first, revised])
+    counts, conflicts = Counter(), []
+    original, corrections = csmar_originals(tmp_path, aliases, {}, {}, counts,
+                                            version_evidence={}, conflicts=conflicts)
+    assert not original and not corrections
+    proof = _proof(tmp_path, [(first, "2015-04-29"), (revised, "2015-09-30")], observed)
+    original, corrections = csmar_originals(tmp_path, aliases, {}, {}, counts,
+                                            version_evidence=proof, conflicts=conflicts)
+    versions = list(incorporate_revisions(combine({}, {}, {}, counts, csmar=original), corrections, counts))
+    assert [row["net_income_parent_ytd"] for row in versions] == [5012399.81, -8618400.19]
+    assert [row["published_at"] for row in versions] == ["2015-04-29", "2015-09-30"]
+    assert versions[1]["field_publication_dates"] == {"net_income_parent_ytd": "2015-09-30"}
+    standalone, = incorporate_revisions([], corrections, counts)
+    assert standalone["net_income_parent_ytd"] == -8618400.19
+    assert "previous_filing_sha256" not in standalone
+    write_output(iter(versions), tmp_path, aliases, counts)
+    lineage, files, _ = check_decisions(tmp_path / "financial_versions.jsonl")
+    assert lineage["csmar_independent_version_receipts_verified"] == 2
+    assert {name for name, _, _ in files} == {"FS_Comins"}
+
+
+def test_csmar_conflicts_preserve_qualified_value_and_reject_unordered_versions(tmp_path):
+    aliases = {"002591.SZ": ("002591.SZ", date(2011, 5, 27), None, "SZSE")}
+    row = {"Stkcd": "002591", "Accper": "2015-03-31", "Typrep": "A", "IfCorrect": 0,
+           "DeclareDate": None, "B002000101": -8618400.19}
+    other = row | {"B002000101": -8505773.36}
+    observed = _csmar_fixture(tmp_path, [row, other])
+    proof = _proof(tmp_path, [(row, "2015-04-29"), (other, "2015-04-29")], observed)
+    counts, conflicts = Counter(), []
+    csmar, _ = csmar_originals(tmp_path, aliases, {}, {}, counts, version_evidence=proof, conflicts=conflicts)
+    peer = ("income", "batch", "c" * 64, "row", observed, None, "002591.SZ", "1", "20150429", "5")
+    field = "net_income_parent_ytd"
+    key = ("002591.SZ", "20150331", "20150429", field)
+    retained, = combine({key: {5012399.81: peer}}, {}, {}, counts, csmar=csmar, conflicts=conflicts)
+    assert retained[field] == 5012399.81
+    assert conflicts[-1]["decision"] == "retain_qualified_initial_vendor"
+    rejected, = combine({}, {}, {}, counts, csmar=csmar, conflicts=conflicts)
+    assert rejected["missing_reasons"][field] == "version_conflict"
+    assert field not in rejected
+    assert conflicts[-1]["decision"] == "reject_unordered_csmar_versions"
+
+
+def test_real_different_csmar_assets_without_original_version_do_not_replace_precorrection(tmp_path):
+    aliases = {"002517.SZ": ("002517.SZ", date(2010, 7, 20), None, "SZSE")}
+    # The archived FS_Combas row for 2018 Q2 disagrees with the vendor's explicitly pre-correction statement.
+    raw = {"Stkcd": "002517", "Accper": "2018-06-30", "Typrep": "A", "IfCorrect": 0,
+           "DeclareDate": None, "A001000000": 6920979083.50}
+    observed = _csmar_fixture(tmp_path, [raw], "FS_Combas")
+    code, period, public = "002517.SZ", "20180630", "20180827"
+    disclosures = {(code, period): {public: "actual-publication"}}
+    counts, conflicts = Counter(), []
+    csmar, revisions = csmar_originals(tmp_path, aliases, disclosures, {}, counts,
+                                        version_evidence={}, conflicts=conflicts)
+    precorrection = ("balancesheet", "batch", "a" * 64, "row", observed, None, code, "1", public, "5")
+    row, = combine({(code, period, public, "assets"): {6901065536.79: precorrection}}, {}, {}, counts, csmar=csmar)
+    assert not revisions
+    assert counts["FS_Combas", "historical_amount_not_proven"] == 1
+    assert row["assets"] == 6901065536.79
 
 
 def test_archived_correction_uses_consolidated_q1_and_ignores_parent_table():

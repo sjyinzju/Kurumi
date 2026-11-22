@@ -8,6 +8,7 @@ from collections import Counter
 from concurrent.futures import ProcessPoolExecutor
 from datetime import date
 from decimal import Decimal
+from io import BytesIO
 from itertools import chain, islice
 from pathlib import Path
 
@@ -152,7 +153,34 @@ def checked_file(base, receipt):
     return path
 
 
-def normalize_one(base, target, record):
+def _extract_report(pages, period_end, published, listed, codes):
+    exchange_basis = next((url for since, url in BSE_ACCOUNTING_BASIS if published >= max(since, listed)), None)
+    early = list(islice(pages, 12))
+    early_text = normalized("\n".join(early))
+    if str(period_end.year) not in early_text:
+        raise ValueError("filing_period_cover_unconfirmed")
+    if published < listed and "全国中小企业股份转让系统" in early_text and "主办券商" in early_text:
+        exchange_basis = next((url for since, url in NEEQ_ACCOUNTING_BASIS if published >= since), None)
+    values, traces = extract_stated_values(chain(early, pages), period_end, codes, exchange_basis)
+    return values, traces, exchange_basis
+
+
+def _fast_report(pdf, arguments):
+    import pymupdf
+    from pymupdf.__main__ import page_layout
+
+    with pymupdf.open(pdf) as document:
+        def layouts():
+            for page in document:
+                buffer = BytesIO()
+                flags = pymupdf.TEXT_PRESERVE_LIGATURES | pymupdf.TEXT_PRESERVE_WHITESPACE
+                page_layout(page, buffer, 2, 3, True, False, flags)
+                yield buffer.getvalue().decode("utf-8")
+
+        return _extract_report(layouts(), *arguments)
+
+
+def normalize_one(base, target, record, fast_layout=False):
     from pypdf import PdfReader
 
     attachments = [item for item in record["attachments"] if item.get("file")]
@@ -168,16 +196,20 @@ def normalize_one(base, target, record):
     period_end = date.fromisoformat(record["period_end"])
     published = date.fromisoformat(record["published_day"])
     listed = date.fromisoformat(target["listed"])
-    exchange_basis = next((url for since, url in BSE_ACCOUNTING_BASIS if published >= max(since, listed)), None)
-    pages = (page.extract_text(extraction_mode="layout") if page.get("/Contents") is not None else ""
-             for page in PdfReader(pdf).pages)
-    early = list(islice(pages, 12))
-    early_text = normalized("\n".join(early))
-    if str(period_end.year) not in early_text:
-        raise ValueError("filing_period_cover_unconfirmed")
-    if published < listed and "全国中小企业股份转让系统" in early_text and "主办券商" in early_text:
-        exchange_basis = next((url for since, url in NEEQ_ACCOUNTING_BASIS if published >= since), None)
-    values, traces = extract_stated_values(chain(early, pages), period_end, target["historical_codes"], exchange_basis)
+    arguments = period_end, published, listed, target["historical_codes"]
+    extracted = None
+    backend = "pypdf_layout"
+    if fast_layout:
+        try:
+            extracted = _fast_report(pdf, arguments)
+            backend = "pymupdf_layout"
+        except (RuntimeError, ValueError):
+            pass
+    if extracted is None:
+        pages = (page.extract_text(extraction_mode="layout") if page.get("/Contents") is not None else ""
+                 for page in PdfReader(pdf).pages)
+        extracted = _extract_report(pages, *arguments)
+    values, traces, exchange_basis = extracted
     return {
         **values, "ts_code": target["ticker"], "reported_ts_code": record["archive_code"] + ".BJ",
         "period_start": f"{period_end.year}-01-01", "period_end": period_end.isoformat(),
@@ -186,6 +218,7 @@ def normalize_one(base, target, record):
         "source_version_id": f"issuer-full-filing:sina:{record['id']}", "source_hash_kind": "original_document_bytes",
         "knowledge_quality": "historical_original_evidence", "reporting_currency": "CNY", "accounting_basis": "CN_ASBE",
         "report_scope": "consolidated", "missing_reasons": {}, "source_field_evidence": traces, "accounting_rule_url": exchange_basis,
+        "extraction_backend": backend,
         "corroboration_url": record["catalogue_url"], "corroboration_sha256": record["catalogue_sha256"],
     }
 
@@ -193,22 +226,32 @@ def normalize_one(base, target, record):
 def normalize_candidate(candidate):
     from pypdf.errors import PdfReadError
 
-    base, target, record = candidate
+    base, target, record, fast_layout = candidate
     facts = {"ts_code": target["ticker"], "id": record["id"], "period": record["period_end"],
              "published_day": record["published_day"]}
     try:
-        version = normalize_one(base, target, record)
+        version = normalize_one(base, target, record, fast_layout)
     except (ValueError, OSError, PdfReadError) as exc:
         return None, facts | {"reason": str(exc)}
     return version, facts | {"sha256": version["source_sha256"]}
+
+
+def archive_fingerprints(collection):
+    return {(target["ticker"], record["id"]): (record["published_day"], record["period_end"],
+                record["catalogue_sha256"], tuple(item["sha256"] for item in record["attachments"] if item.get("file")))
+            for target in collection["targets"] for record in target["records"]}
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--collection", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
-    parser.add_argument("--workers", type=int, choices=range(1, 4), default=2)
+    parser.add_argument("--archive-root", type=Path, help="Read original bytes from a separate capture directory")
+    parser.add_argument("--fast-layout", action="store_true", help="Try the validated PyMuPDF layout before pypdf")
+    parser.add_argument("--workers", type=int, choices=range(1, 7), default=2)
     parser.add_argument("--resume-from", type=Path, help="Retain already verified originals and retry failed reports")
+    parser.add_argument("--checked-collection", type=Path,
+                        help="Reuse earlier substantive rejections for identical archived reports")
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
     collection = json.loads(args.collection.read_bytes())
@@ -224,9 +267,22 @@ def main():
         if declared != {(r["ts_code"], r["source_version_id"].rsplit(":", 1)[-1], r["source_sha256"]) for r in old_versions}:
             raise ValueError("Prior originals and acceptance ledger differ")
     completed = {(r["ts_code"], r["id"]) for r in accepted}
+    if args.checked_collection:
+        if not args.resume_from:
+            parser.error("--checked-collection requires the reviewed --resume-from decisions")
+        before = archive_fingerprints(json.loads(args.checked_collection.read_bytes()))
+        after = archive_fingerprints(collection)
+        for decision in prior.get("rejected", ()):
+            identity = (decision["ts_code"], decision["id"])
+            if (identity not in completed and before.get(identity) == after.get(identity)
+                    and identity in before and any(before[identity][-1])
+                    and decision["reason"] not in {"issuer_attachment_unavailable_or_ambiguous", "archive_hash_mismatch"}):
+                rejected.append(decision)
+                completed.add(identity)
     output = args.output / "financial_versions.jsonl"
     partial = output.with_suffix(".partial")
-    candidates = ((args.collection.parent / target["archive_dir"], target, record)
+    archive = args.archive_root or args.collection.parent
+    candidates = ((archive / target["archive_dir"], target, record, args.fast_layout)
                   for target in collection["targets"] for record in target["records"]
                   if (target["ticker"], record["id"]) not in completed)
     with ProcessPoolExecutor(max_workers=args.workers) as pool, partial.open("w", encoding="utf-8", newline="\n") as stream:

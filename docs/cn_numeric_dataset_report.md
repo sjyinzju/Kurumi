@@ -1,5 +1,7 @@
 # CN 数值数据集报告
 
+2026-11-21 23:32 已切换到数据契约 v1.1 的新发布，状态 `INCOMPLETE`。最新补采、全量验收与剩余缺口见 [本轮补齐报告](cn_numeric_gap_batch_report.md) 和 [机器可读摘要](cn_numeric_gap_batch_quality.json)。以下记录保存第七版的历史验收与迁移结果。
+
 `INCOMPLETE`。版本 `cn-369dd922bdcab942f77d959223921a4391200693282df980e321c7e946f90c5a`。数据目录为 `E:\QuantData\numeric\cn-369dd922bdcab942f77d959223921a4391200693282df980e321c7e946f90c5a`。
 
 包含沪、深、北普通 A 股。价格及监督观察截至 2026-07-31，样本截至 2026-06-30。Xtext 记录为 `not_built`。

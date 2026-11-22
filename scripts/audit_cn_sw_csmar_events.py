@@ -369,7 +369,7 @@ def record(args):
     idx_meta = defaultdict(set)
     for row in sources["IDX_Idxinfo"][1]:
         suffix = str(row["Indexcd"]).strip().upper().removesuffix(".SI") + ".SI"
-        idx_meta[suffix].add((row["Idxinfo01"], row["Idxinfo04"], row["Idxinfo06"]))
+        idx_meta[suffix].add((row["Idxinfo01"], row.get("Idxinfo04"), row["Idxinfo06"]))
     controls, anchored_changes = dated_members([args.official_controls, *args.additional_controls])
     outcomes = reconcile(sources["IDX_Chgsmp"][1], idx_meta, index_codes, classes, resolve, version_dates,
                          anchored_changes)

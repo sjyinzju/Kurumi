@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import gzip
 import hashlib
 import json
 import sqlite3
@@ -35,7 +36,7 @@ def check_decisions(path):
             digest_value = row.pop("source_sha256")
             hash_kind = row.get("source_hash_kind")
             counts["total_versions"] += 1
-            if hash_kind:
+            if hash_kind in {"derived_consolidated_filing", "derived_consolidated_filing_correction"}:
                 if digest(row) != digest_value:
                     raise ValueError(f"Derived record digest mismatch for {row['source_version_id']}")
                 counts["derived_payloads_verified"] += 1
@@ -49,7 +50,13 @@ def check_decisions(path):
                 if isinstance(receipt[5], list) and receipt[5][0] == "disclosure_date":
                     receipts.add(tuple(receipt[5][:3]))
                 if receipt[0] in CSMAR_FIELDS:
-                    receipts.add(tuple(receipt[-1][:3]))
+                    proof = receipt[-1]
+                    if proof[0] == "csmar_version_evidence":
+                        if proof[5] != row["published_at"][:10] or dated(receipt[-2]) != proof[5]:
+                            raise ValueError(f"CSMAR source clock differs from the admitted version: {identity}")
+                        counts["csmar_independent_version_receipts_verified"] += 1
+                    else:
+                        receipts.add(tuple(proof[:3]))  # Existing frozen releases use vendor receipts.
                 elif row["ts_code"].endswith(".BJ"):
                     actual = date.fromisoformat(row["published_at"][:10])
                     vendor = date.fromisoformat(dated(receipt[-2]))
@@ -59,19 +66,20 @@ def check_decisions(path):
             for field, index in row.get("source_parts", {}).items():
                 reference = sources[index]
                 endpoint, batch, _, row_id = reference[:4]
-                if endpoint in FIELDS:
+                if endpoint in FIELDS or endpoint in CSMAR_FIELDS:
                     key = (endpoint, field, row["ts_code"][-2:], row["period_end"][:4])
                     sample = (batch, row_id, reference[6], row["period_end"], row[field])
                     fact_samples[key] = min(fact_samples.get(key, sample), sample)
             if hash_kind == "derived_consolidated_filing_correction":
-                prior = corrections.get(row["previous_filing_sha256"])
-                if prior is None or prior["published_at"] >= row["published_at"]:
+                previous = row.get("previous_filing_sha256")
+                prior = corrections.get(previous)
+                if previous and (prior is None or prior["published_at"] >= row["published_at"]):
                     raise ValueError(f"Missing earlier revision member for {identity}")
                 for measure in MEASURES:
                     if measure in row["affected_fields"] or row.get(measure) is None:
                         continue
                     prior_date = prior.get("field_publication_dates", {}).get(measure, prior["published_at"])
-                    if (prior.get(measure) != row[measure]
+                    if (prior is None or prior.get(measure) != row[measure]
                             or row["field_publication_dates"].get(measure) != prior_date):
                         raise ValueError(f"Unsupported carried value for {identity}/{measure}")
                     counts["unchanged_field_carry_verified"] += 1
@@ -138,6 +146,15 @@ def inspect_receipts(receipts, root, checkpoints, csmar, hash_limit, facts):
                 if hashlib.file_digest(stream, "sha256").hexdigest() != checksum:
                     raise ValueError(f"CSMAR source checksum mismatch: {identity}")
             counts["csmar_raw_pages_verified"] += 1
+            if identity in projected_batches:
+                with gzip.open(path, "rt", encoding="utf-8") as stream:
+                    for line in stream:
+                        amounts = json.loads(line)
+                        key = (name, identity, digest(amounts))
+                        for field, value in projected_checks.pop(key, {}).items():
+                            if amounts[CSMAR_FIELDS[name][field]] != value:
+                                raise ValueError(f"CSMAR raw amount differs from PIT input: {key}/{field}")
+                            counts["sampled_csmar_facts_recomputed"] += 1
         elif identity in pages:
             if pages[identity] != (name, checksum):
                 raise ValueError(f"TuShare sample source checksum mismatch: {identity}")
@@ -154,6 +171,8 @@ def inspect_receipts(receipts, root, checkpoints, csmar, hash_limit, facts):
                         raise ValueError(f"TuShare original source checksum mismatch: {identity}")
                 counts["tushare_raw_files_sha256_recomputed"] += 1
                 raw_rehashes[name] += 1
+    if any(name in CSMAR_FIELDS for name, _, _ in projected_checks):
+        raise ValueError("A sampled CSMAR amount could not be resolved in its raw page")
     return counts
 
 

@@ -47,11 +47,15 @@ def audit(capture: Path) -> dict:
         files[page.relative_to(capture).as_posix()] = actual_hash
         row_count = 0
         cols = set(record["columns"])
+        returned_columns = None
         with gzip.open(page, "rt", encoding="utf-8") as stream:
             for line in stream:
                 row = json.loads(line)
                 row_count += 1
-                if set(row) != cols:
+                if returned_columns is None:
+                    returned_columns = set(row)
+                if (set(row) != returned_columns or returned_columns - cols
+                        or cols - returned_columns not in (set(), {"Idxinfo04"} if table == "IDX_Idxinfo" else set())):
                     raise ValueError(f"Returned columns differ from verified request: {page}")
                 symbol = next((row.get(name) for name in SECURITY_COLUMNS if row.get(name)), None)
                 if symbol:
@@ -66,6 +70,10 @@ def audit(capture: Path) -> dict:
         tables[table]["queries"] += 1
         tables[table]["observed_rows"] += row_count
         tables[table]["bytes"] += page.stat().st_size
+        if returned_columns is not None and cols - returned_columns:
+            tables[table].setdefault("missing_requested_columns", []).append(
+                {"page": page.name, "fields": sorted(cols - returned_columns)}
+            )
         scopes[table].add((record["query"]["start"], record["query"]["end"]))
 
     discovered_pages = {p.relative_to(capture).as_posix() for p in capture.rglob("*.jsonl.gz")}

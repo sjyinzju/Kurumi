@@ -1,0 +1,540 @@
+{
+  "prior": {
+    "dataset_version": "cn-369dd922bdcab942f77d959223921a4391200693282df980e321c7e946f90c5a",
+    "status": "INCOMPLETE",
+    "by_exchange": [
+      {
+        "exchange": "BSE",
+        "total_days": 238650,
+        "valid_inputs": 217747,
+        "unknown_name": 318,
+        "valid_unknown_name": 0,
+        "unknown_limit": 0,
+        "unlimited": 257,
+        "unknown_u": 0,
+        "valid_unknown_u": 0,
+        "valid_unknown_shares": 22942,
+        "valid_unknown_issuer_cap": 22942,
+        "valid_unknown_industry": 217450,
+        "suspension_no_pit_clock": 0,
+        "all_seven_finance": 29,
+        "revenue_ttm": 1821,
+        "net_income_total_ttm": 1821,
+        "net_income_parent_ttm": 1821,
+        "operating_cashflow_ttm": 10463,
+        "assets": 200598,
+        "liabilities": 200598,
+        "parent_equity": 200598,
+        "revenue_ttm_4q_ago": 1705,
+        "net_income_parent_ttm_4q_ago": 1705
+      },
+      {
+        "exchange": "SSE",
+        "total_days": 4834142,
+        "valid_inputs": 4375977,
+        "unknown_name": 1443,
+        "valid_unknown_name": 14,
+        "unknown_limit": 3456,
+        "unlimited": 2,
+        "unknown_u": 976,
+        "valid_unknown_u": 687,
+        "valid_unknown_shares": 744763,
+        "valid_unknown_issuer_cap": 766030,
+        "valid_unknown_industry": 4329803,
+        "suspension_no_pit_clock": 83378,
+        "all_seven_finance": 697652,
+        "revenue_ttm": 1414018,
+        "net_income_total_ttm": 1465448,
+        "net_income_parent_ttm": 1465448,
+        "operating_cashflow_ttm": 926873,
+        "assets": 3814695,
+        "liabilities": 3814695,
+        "parent_equity": 3814779,
+        "revenue_ttm_4q_ago": 1622381,
+        "net_income_parent_ttm_4q_ago": 1681935
+      },
+      {
+        "exchange": "SZSE",
+        "total_days": 6545818,
+        "valid_inputs": 5785044,
+        "unknown_name": 1503,
+        "valid_unknown_name": 41,
+        "unknown_limit": 10725,
+        "unlimited": 0,
+        "unknown_u": 1507,
+        "valid_unknown_u": 838,
+        "valid_unknown_shares": 845629,
+        "valid_unknown_issuer_cap": 858114,
+        "valid_unknown_industry": 5730722,
+        "suspension_no_pit_clock": 187729,
+        "all_seven_finance": 1051246,
+        "revenue_ttm": 2162505,
+        "net_income_total_ttm": 2185964,
+        "net_income_parent_ttm": 2185951,
+        "operating_cashflow_ttm": 1234366,
+        "assets": 4996683,
+        "liabilities": 4996525,
+        "parent_equity": 4997004,
+        "revenue_ttm_4q_ago": 2518424,
+        "net_income_parent_ttm_4q_ago": 2543981
+      }
+    ],
+    "all_physical_days": [
+      {
+        "exchange": "BSE",
+        "unknown_name": 327,
+        "unknown_limit": 0,
+        "unlimited": 267,
+        "unknown_u": 0,
+        "unknown_shares": 37331
+      },
+      {
+        "exchange": "SSE",
+        "unknown_name": 1446,
+        "unknown_limit": 3466,
+        "unlimited": 2,
+        "unknown_u": 977,
+        "unknown_shares": 966721
+      },
+      {
+        "exchange": "SZSE",
+        "unknown_name": 1507,
+        "unknown_limit": 10739,
+        "unlimited": 0,
+        "unknown_u": 1509,
+        "unknown_shares": 1055121
+      }
+    ],
+    "daily_aggregate_rows": {
+      "market_daily": [
+        2813,
+        0
+      ],
+      "industry_daily": [
+        13987,
+        0
+      ]
+    },
+    "acceptance": {
+      "release_bytes_windows_labels_and_masks": "passed",
+      "pit_source_prefix": "passed",
+      "native_karpo": "passed",
+      "independent_stock_factor_recalculation": "passed"
+    },
+    "structural_gaps": {
+      "sw_l1_membership": 20,
+      "unavailable_feature": 30,
+      "market_cap_denominator_or_return_coverage": 12,
+      "unverified_historical_industry_mother_set": 4
+    }
+  },
+  "current": {
+    "dataset_version": "cn-71132cf836bd63c14a85bbb71cbbd607a3372d4c7f0b91e359382d359ecc6d45",
+    "status": "INCOMPLETE",
+    "by_exchange": [
+      {
+        "exchange": "BSE",
+        "total_days": 238650,
+        "valid_inputs": 217747,
+        "unknown_name": 318,
+        "valid_unknown_name": 0,
+        "unknown_limit": 0,
+        "unlimited": 257,
+        "unknown_u": 0,
+        "valid_unknown_u": 0,
+        "valid_unknown_shares": 22942,
+        "valid_unknown_issuer_cap": 22942,
+        "valid_unknown_industry": 217450,
+        "suspension_no_pit_clock": 0,
+        "all_seven_finance": 66966,
+        "revenue_ttm": 73636,
+        "net_income_total_ttm": 73636,
+        "net_income_parent_ttm": 73636,
+        "operating_cashflow_ttm": 102853,
+        "assets": 213385,
+        "liabilities": 213385,
+        "parent_equity": 213385,
+        "revenue_ttm_4q_ago": 58553,
+        "net_income_parent_ttm_4q_ago": 58553
+      },
+      {
+        "exchange": "SSE",
+        "total_days": 4834142,
+        "valid_inputs": 4375977,
+        "unknown_name": 1443,
+        "valid_unknown_name": 14,
+        "unknown_limit": 778,
+        "unlimited": 2680,
+        "unknown_u": 969,
+        "valid_unknown_u": 681,
+        "valid_unknown_shares": 744763,
+        "valid_unknown_issuer_cap": 766030,
+        "valid_unknown_industry": 4329803,
+        "suspension_no_pit_clock": 83378,
+        "all_seven_finance": 838670,
+        "revenue_ttm": 1648647,
+        "net_income_total_ttm": 1717299,
+        "net_income_parent_ttm": 1717210,
+        "operating_cashflow_ttm": 1298260,
+        "assets": 3814695,
+        "liabilities": 3814695,
+        "parent_equity": 3814779,
+        "revenue_ttm_4q_ago": 1844686,
+        "net_income_parent_ttm_4q_ago": 1920606
+      },
+      {
+        "exchange": "SZSE",
+        "total_days": 6545818,
+        "valid_inputs": 5785044,
+        "unknown_name": 1503,
+        "valid_unknown_name": 41,
+        "unknown_limit": 8440,
+        "unlimited": 2285,
+        "unknown_u": 1485,
+        "valid_unknown_u": 818,
+        "valid_unknown_shares": 844989,
+        "valid_unknown_issuer_cap": 857474,
+        "valid_unknown_industry": 5730722,
+        "suspension_no_pit_clock": 187729,
+        "all_seven_finance": 1235651,
+        "revenue_ttm": 2457583,
+        "net_income_total_ttm": 2486785,
+        "net_income_parent_ttm": 2486642,
+        "operating_cashflow_ttm": 1675697,
+        "assets": 4996683,
+        "liabilities": 4996525,
+        "parent_equity": 4997004,
+        "revenue_ttm_4q_ago": 2797769,
+        "net_income_parent_ttm_4q_ago": 2828805
+      }
+    ],
+    "all_physical_days": [
+      {
+        "exchange": "BSE",
+        "unknown_name": 327,
+        "unknown_limit": 0,
+        "unlimited": 267,
+        "unknown_u": 0,
+        "unknown_shares": 37331
+      },
+      {
+        "exchange": "SSE",
+        "unknown_name": 1446,
+        "unknown_limit": 788,
+        "unlimited": 2680,
+        "unknown_u": 970,
+        "unknown_shares": 966721
+      },
+      {
+        "exchange": "SZSE",
+        "unknown_name": 1507,
+        "unknown_limit": 8454,
+        "unlimited": 2285,
+        "unknown_u": 1487,
+        "unknown_shares": 1054250
+      }
+    ],
+    "daily_aggregate_rows": {
+      "market_daily": [
+        2813,
+        0
+      ],
+      "industry_daily": [
+        13987,
+        0
+      ]
+    },
+    "acceptance": {
+      "release_bytes_windows_labels_and_masks": "passed",
+      "pit_source_prefix": "passed",
+      "native_karpo": "passed",
+      "independent_stock_factor_recalculation": "passed"
+    },
+    "structural_gaps": {
+      "sw_l1_membership": 20,
+      "stock_factor": 192,
+      "unavailable_feature": 24,
+      "market_cap_denominator_or_return_coverage": 12,
+      "unverified_historical_industry_mother_set": 4
+    }
+  },
+  "label_comparison": {
+    "compared": 34855830,
+    "value_or_mask_changes": 0,
+    "provenance_changes": 3967
+  },
+  "publication": {
+    "dataset_path": "E:/QuantData/numeric/cn-71132cf836bd63c14a85bbb71cbbd607a3372d4c7f0b91e359382d359ecc6d45",
+    "contract_version": "1.1",
+    "text_status": "not_built",
+    "file_bytes": 3692211264,
+    "hardlinked_unchanged_parquets": 24,
+    "free_bytes_at_publish": 11557470208,
+    "core_tables": {
+      "stock_daily": {
+        "rows": 11745773,
+        "first_date": "2015-01-05",
+        "last_date": "2026-07-31"
+      },
+      "stock_fundamental_asof": {
+        "rows": 198799,
+        "first_date": "2012-03-09",
+        "last_date": "2026-05-15"
+      },
+      "market_daily": {
+        "rows": 2813,
+        "first_date": "2015-01-05",
+        "last_date": "2026-07-31"
+      },
+      "industry_daily": {
+        "rows": 13987,
+        "first_date": "2023-02-08",
+        "last_date": "2026-07-31"
+      },
+      "samples": {
+        "rows": 11618610,
+        "first_date": "2015-01-05",
+        "last_date": "2026-06-30"
+      },
+      "labels": {
+        "rows": 34855830,
+        "first_date": "2015-01-05",
+        "last_date": "2026-06-30"
+      }
+    },
+    "full_sql_violation_counts": {
+      "primary_key_stock_daily": 0,
+      "primary_key_stock_fundamental_asof": 0,
+      "primary_key_market_daily": 0,
+      "primary_key_industry_daily": 0,
+      "primary_key_samples": 0,
+      "primary_key_labels": 0,
+      "valid_window": 0,
+      "candidate_horizons": 0,
+      "target_calendar_and_label_formula": 0,
+      "fundamental_time": 0,
+      "sample_source_refs": 0,
+      "split_and_buffer": 0,
+      "calendar_bse_vs_trading_dates": 0,
+      "features_finite_and_domain": 0,
+      "features_explained_nulls": 0,
+      "features_sparse_reasons": 0,
+      "features_coverage_gates": 0,
+      "input_identity_and_clock": 0,
+      "fundamental_source_versions": 0,
+      "selected_pit_source_times": 0,
+      "industry_effective_time": 0,
+      "split_event_source_time": 0,
+      "issuer_class_set_availability": 0,
+      "label_bin_edges_and_zero": 0
+    },
+    "native_sample_count": 16,
+    "stock_factor_recalculation": {
+      "sampled_stock_days": 150,
+      "independently_recalculated_fields": {
+        "return_1d": {
+          "observed_values": 150,
+          "expected_and_observed_nulls": 0
+        },
+        "return_5d": {
+          "observed_values": 150,
+          "expected_and_observed_nulls": 0
+        },
+        "return_20d": {
+          "observed_values": 150,
+          "expected_and_observed_nulls": 0
+        },
+        "return_60d": {
+          "observed_values": 150,
+          "expected_and_observed_nulls": 0
+        },
+        "price_ma20_gap": {
+          "observed_values": 150,
+          "expected_and_observed_nulls": 0
+        },
+        "price_ma60_gap": {
+          "observed_values": 150,
+          "expected_and_observed_nulls": 0
+        },
+        "volatility_20d_daily": {
+          "observed_values": 150,
+          "expected_and_observed_nulls": 0
+        },
+        "volatility_60d_daily": {
+          "observed_values": 150,
+          "expected_and_observed_nulls": 0
+        },
+        "drawdown_from_peak_60d": {
+          "observed_values": 150,
+          "expected_and_observed_nulls": 0
+        },
+        "turnover_total_1d": {
+          "observed_values": 73,
+          "expected_and_observed_nulls": 77
+        },
+        "turnover_total_mean_20d": {
+          "observed_values": 67,
+          "expected_and_observed_nulls": 83
+        },
+        "volume_ratio_1_20": {
+          "observed_values": 103,
+          "expected_and_observed_nulls": 47
+        },
+        "earnings_yield_ttm": {
+          "observed_values": 26,
+          "expected_and_observed_nulls": 124
+        },
+        "book_to_market": {
+          "observed_values": 41,
+          "expected_and_observed_nulls": 109
+        },
+        "sales_to_market_ttm": {
+          "observed_values": 12,
+          "expected_and_observed_nulls": 138
+        },
+        "roe_ttm": {
+          "observed_values": 42,
+          "expected_and_observed_nulls": 108
+        },
+        "roa_ttm": {
+          "observed_values": 43,
+          "expected_and_observed_nulls": 107
+        },
+        "net_margin_ttm": {
+          "observed_values": 34,
+          "expected_and_observed_nulls": 116
+        },
+        "revenue_growth_yoy_ttm": {
+          "observed_values": 30,
+          "expected_and_observed_nulls": 120
+        },
+        "profit_change_to_assets": {
+          "observed_values": 40,
+          "expected_and_observed_nulls": 110
+        },
+        "liabilities_to_assets": {
+          "observed_values": 85,
+          "expected_and_observed_nulls": 65
+        },
+        "operating_cashflow_to_assets_ttm": {
+          "observed_values": 46,
+          "expected_and_observed_nulls": 104
+        }
+      },
+      "violations": []
+    },
+    "repository_tests_passed": 76,
+    "training_sample_counts": [
+      {
+        "split": "calibration",
+        "samples": 651003
+      },
+      {
+        "split": "test",
+        "samples": 1891977
+      },
+      {
+        "split": "train",
+        "samples": 7209690
+      },
+      {
+        "split": "validation",
+        "samples": 608311
+      }
+    ]
+  },
+  "acquisition": {
+    "csmar": {
+      "tables": 15,
+      "pages": 36,
+      "raw_rows": 1467865,
+      "financial_rows": 615506,
+      "financial_proofs": 7372,
+      "version_amount_discrepancies": 1113,
+      "new_share_versions": 4
+    },
+    "tushare": {
+      "complete_scopes": 3905,
+      "new_historical_name_versions": 0,
+      "new_unlimited_regimes": 4963,
+      "new_split_chain_dates": 29
+    },
+    "bse": {
+      "issuers": 304,
+      "archive_candidates": 6463,
+      "pdf_attachments": 6440,
+      "accepted_formal_reports": 3468,
+      "added_financial_versions": 851,
+      "enriched_financial_versions": 2270
+    }
+  },
+  "additional_diagnostics": {
+    "label_target_lineage": {
+      "rows_by_year": [
+        "year",
+        "provenance_changed",
+        "target_limit_confirmed_unlimited",
+        "valid_label"
+      ],
+      "details": [
+        [
+          "year=2019",
+          277,
+          277,
+          0
+        ],
+        [
+          "year=2020",
+          817,
+          817,
+          0
+        ],
+        [
+          "year=2021",
+          1435,
+          1435,
+          0
+        ],
+        [
+          "year=2022",
+          1083,
+          1083,
+          0
+        ],
+        [
+          "year=2023",
+          355,
+          355,
+          0
+        ]
+      ]
+    },
+    "sample_comparison": {
+      "columns": [
+        "rows",
+        "non_financial_or_key_changes",
+        "snapshot_link_changes"
+      ],
+      "changed_shards": {
+        "year=2022": [
+          1174104,
+          0,
+          1078
+        ],
+        "year=2023": [
+          1260742,
+          0,
+          1907
+        ],
+        "year=2024": [
+          1296501,
+          0,
+          109
+        ]
+      },
+      "compared_total": 11618610
+    },
+    "share_gap_premarket_intersection": 341865,
+    "share_gap_prior_to_premarket": 1270829
+  }
+}

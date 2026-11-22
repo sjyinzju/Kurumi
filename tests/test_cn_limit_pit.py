@@ -16,7 +16,7 @@ def test_historical_limits_use_exact_symbol_and_session(tmp_path):
         con.execute("""
             CREATE TABLE prices AS SELECT 'CN-001914.SZ' instrument_id, '001914.SZ' ts_code,
                 CASE WHEN d=DATE '2019-12-13' THEN '000043' ELSE '001914' END AS symbol_asof,
-                d local_trade_date, true quote_valid, 20.49 high_raw, 19.71 low_raw,
+                d local_trade_date, true quote_valid, 20.49 high_raw, 19.71 low_raw, 2 AS listing_age_sessions,
                 'unknown' limit_regime, NULL::DOUBLE upper_limit_price, NULL::DOUBLE lower_limit_price,
                 NULL::VARCHAR limit_batch, 'prior' provenance_id,
                 map(['upper_limit_price','lower_limit_price','another_field'], ['missing_source','missing_source','other'])
@@ -44,3 +44,13 @@ def test_historical_limits_use_exact_symbol_and_session(tmp_path):
                        "WHERE local_trade_date=DATE '2019-12-13'").fetchone() == (
             "unlimited", None, None, "not_applicable",
         )
+
+        ipo = unlimited | {"historical_limit_derivation": "exchange_ipo_first_five_sessions",
+                           "verified_listing_session": 2, "ipo_issue_batch_sha256": "2" * 64,
+                           "official_rule_sha256": ["3" * 64]}
+        evidence.write_text(json.dumps(ipo) + "\n", encoding="utf-8")
+        overlay = register_verified_limits(con, tmp_path, "prices")
+        assert con.sql(f"SELECT count(*) FROM {overlay} WHERE limit_regime='unlimited'").fetchone() == (1,)
+        evidence.write_text(json.dumps(ipo | {"verified_listing_session": 3}) + "\n", encoding="utf-8")
+        with pytest.raises(ValueError, match="disagrees with the frozen price grid"):
+            register_verified_limits(con, tmp_path, "prices")

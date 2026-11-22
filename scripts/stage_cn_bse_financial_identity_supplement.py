@@ -16,7 +16,7 @@ def evaluate(job):
     base, target, record, identity = job
     old_code = identity["neeq_code"]
     expanded = target | {"historical_codes": [old_code]}
-    row, receipt = normalize_candidate((base, expanded, record))
+    row, receipt = normalize_candidate((base, expanded, record, False))
     if row:
         source, = [item for item in record["attachments"] if item.get("file")]
         try:

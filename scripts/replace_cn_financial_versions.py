@@ -24,7 +24,7 @@ def by_key(rows):
 def replace(base, proposed, reviewed, output, additions=()):
     retained, replacements = map(by_key, (reviewed, proposed))
     later = by_key(additions)
-    if not retained or retained.keys() != replacements.keys():
+    if (not retained and not later) or retained.keys() != replacements.keys():
         raise ValueError("The replacement records must correspond to the reviewed old keys")
     if base.resolve() == output.resolve():
         raise ValueError("Write a new version stream beside the retained source")

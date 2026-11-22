@@ -11,6 +11,7 @@ import re
 import sqlite3
 from collections import Counter, defaultdict
 from datetime import date, datetime, timedelta
+from heapq import merge
 from itertools import groupby
 from pathlib import Path
 
@@ -187,11 +188,47 @@ def originals(paths, aliases):
     return results
 
 
-def csmar_originals(root, aliases, disclosures, reported, initial, latest_candidates, counts):
-    """Audit CSMAR against separately identified first-publication versions."""
+def csmar_version_evidence(paths):
+    """Read reviewed field and publication evidence bound to an exact CSMAR raw row."""
+    evidence = {}
+    for path in paths:
+        with path.open(encoding="utf-8") as stream:
+            for line in stream:
+                proof = json.loads(line)
+                table = proof["table"]
+                fields = proof["fields"]
+                public = proof["published_at"]
+                if (table not in CSMAR_FIELDS or not fields or not set(fields) <= CSMAR_FIELDS[table].keys()
+                        or any(not HASH.fullmatch(proof[k]) for k in ("row_sha256", "source_sha256"))
+                        or not proof["source_url"].startswith("https://") or not proof["source_version_id"]
+                        or proof["reporting_currency"] != "CNY" or proof["amount_unit"] != "yuan"
+                        or proof["report_scope"] != "consolidated"
+                        or proof["accounting_basis"] != "CN_ASBE" or date.fromisoformat(public).isoformat() != public
+                        or datetime.fromisoformat(proof["observed_at"]) < _between_time(public)[1]):
+                    raise ValueError(f"Invalid CSMAR version evidence in {path}")
+                key = (table, proof["row_sha256"])
+                if evidence.setdefault(key, proof) != proof:
+                    raise ValueError(f"Conflicting CSMAR evidence for {key}")
+    return evidence
+
+
+def compare_csmar(key, values, peer, context, counts, conflicts):
+    if not values or not peer:
+        return
+    different = any(abs(value - other) > 0.01 for value in values for other in peer)
+    counts[key[-1], f"csmar_{context}_{'conflict' if different else 'matched'}"] += 1
+    if different and conflicts is not None:
+        conflicts.append(dict(zip(("ts_code", "period_end", "publication_day", "field"), key, strict=True)) | {
+            "decision": context, "csmar": sorted(values.items()), "comparison": sorted(peer.items()),
+        })
+
+
+def csmar_originals(root, aliases, disclosures, latest_candidates, counts, *, version_evidence, conflicts):
+    """Use independently qualified archived facts; vendor numbers are audit comparisons."""
+    originals = defaultdict(dict)
     amendments = defaultdict(dict)
     if root is None:
-        return amendments
+        return originals, amendments
     codes = defaultdict(set)
     for alias, (target, *_rest) in aliases.items():
         codes[alias[:6]].add(target)
@@ -209,66 +246,59 @@ def csmar_originals(root, aliases, disclosures, reported, initial, latest_candid
                         continue
                     code = next(iter(matches))
                     end = row["Accper"].replace("-", "")
-                    if end[4:] not in {"0331", "0630", "0930", "1231"}:
+                    if not FIRST_PERIOD <= end <= LAST_PERIOD or end[4:] not in {"0331", "0630", "0930", "1231"}:
                         continue
                     filing_days = disclosures.get((code, end), {})
-                    if len(filing_days) != 1:
+                    first_day = next(iter(filing_days)) if len(filing_days) == 1 else None
+                    flag = str(row.get("IfCorrect"))
+                    revision = (row.get("DeclareDate") or "").replace("-", "")
+                    row_sha = digest(row)
+                    proof = version_evidence.get((table, row_sha))
+                    if proof is None:
+                        counts[table, "historical_amount_not_proven"] += 1
                         continue
-                    pub, disclosure_hash = next(iter(filing_days.items()))
-                    revision = row.get("DeclareDate")
-                    uncorrected = row.get("IfCorrect") in (0, "0") and revision is None
-                    if not uncorrected:
-                        counts[table, "revision_original_not_preserved"] += 1
-                        if row.get("IfCorrect") not in (1, "1") or not revision:
-                            continue
-                        revision = revision.replace("-", "")
-                        if not re.fullmatch(r"\d{8}", revision) or not pub < revision <= LAST_PUBLICATION:
-                            continue
-                    key = (code, end, revision or pub)
-                    prior = reported.get((code, end, pub))
+                    public = proof["published_at"].replace("-", "")
+                    if (not end < public <= LAST_PUBLICATION or
+                            (revision and (flag != "1" or revision != public)) or (flag == "1" and not revision)):
+                        counts[table, "version_clock_conflict"] += 1
+                        continue
+                    key = (code, end, public)
+                    evidence = ("csmar_version_evidence", proof["source_version_id"], proof["source_sha256"],
+                                proof["source_url"], proof["observed_at"], proof["published_at"],
+                                proof.get("revenue_accounting_basis"))
+                    marker = (table, path.name, receipt["sha256"], row_sha, receipt["observed_at"],
+                              filing_days.get(first_day), str(row["Stkcd"]), flag, public, evidence)
                     if revision:
                         amended = amendments[key]
                         for measure in mapping:
                             amended.setdefault(measure, {})
-                    for measure, column in mapping.items():
-                        amount = row.get(column)
+                    for measure in proof["fields"]:
+                        amount = row.get(mapping[measure])
                         if amount is None:
                             continue
-                        if measure == "revenue_ytd":
-                            # Do not use an industrial field to fill a financial-sector gap.
-                            if not prior or prior[7] != "1" or code == "300059.SZ":
-                                continue
-                        known = initial.get((*key, measure), {})
                         amount = float(amount)
                         if not math.isfinite(amount):
                             continue
-                        if known and uncorrected:
-                            consistent = min(abs(amount - value) for value in known) <= 0.01
-                            counts[measure, "csmar_confirmed" if consistent else "csmar_different"] += 1
-                        else:
-                            possibilities = latest_candidates.get((*key, measure), {})
-                            if len(possibilities) == 1 and amount in possibilities:
-                                peer = possibilities[amount]
-                                marker = (table, path.name, receipt["sha256"], digest(row), receipt["observed_at"],
-                                          disclosure_hash, str(row["Stkcd"]), row["IfCorrect"], key[2], peer)
-                                if uncorrected:
-                                    initial[(*key, measure)][amount] = marker
-                                    counts[measure, "csmar_no_correction_with_same_filing_tushare_amount"] += 1
-                                else:
-                                    amended[measure][amount] = marker
-                                    counts[measure, "csmar_and_tushare_explicit_correction"] += 1
-                            elif uncorrected:
-                                counts[measure, "csmar_no_correction_needs_filing_evidence"] += 1
-    # A statement correction with no linked revised amount remains an audit lead.
-    return {key: fields for key, fields in amendments.items() if any(fields.values())}
+                        fact = (*key, measure)
+                        target = amended[measure] if revision else originals[fact]
+                        saved = target.get(amount)
+                        if saved is None or marker[:4] < saved[:4]:
+                            target[amount] = marker
+                        compare_csmar(fact, {amount: marker}, latest_candidates.get(fact, {}),
+                                      "audit_only_vendor", counts, conflicts)
+                        counts[measure, "csmar_qualified"] += 1
+    return originals, {key: fields for key, fields in amendments.items() if any(fields.values())}
 
 
-def incorporate_revisions(origins, amendments, counts):
+def incorporate_revisions(origins, amendments, counts, *, conflicts=None):
     """Preserve preceding facts solely outside the documented corrected statement scope."""
     by_quarter = defaultdict(dict)
     for (code, end, day), changed in amendments.items():
         by_quarter[code, dated(end)][dated(day)] = changed
-    for key, group in groupby(origins, key=lambda row: (row["ts_code"], row["period_end"])):
+    filing_groups = groupby(origins, key=lambda row: (row["ts_code"], row["period_end"]))
+    all_periods = merge(filing_groups, ((key, ()) for key in sorted(by_quarter)), key=lambda pair: pair[0])
+    for key, groups in groupby(all_periods, key=lambda pair: pair[0]):
+        group = (row for _, filings in groups for row in filings)
         revisions = by_quarter.get(key, {})
         if not revisions:
             yield from group
@@ -284,55 +314,73 @@ def incorporate_revisions(origins, amendments, counts):
                 previous = originals_today[0] if len(originals_today) == 1 else None
                 if day in revisions:
                     counts["correction", "archived_original_takes_precedence"] += 1
-                continue
-            if previous is None:
+                    for field, candidates in revisions[day].items():
+                        documented = {row[field]: (row["source_version_id"], row["source_sha256"])
+                                      for row in originals_today if row.get(field) is not None}
+                        compare_csmar((key[0], key[1], day, field), candidates, documented,
+                                      "retain_archived_filing", counts, conflicts)
                 continue
             changed = revisions[day]
             values, reasons, ref_indices = {}, {}, {}
-            clocks = [previous["observed_at"]]
-            sources = sorted({next(iter(matches.values()))
-                              for matches in changed.values() if len(matches) == 1})
-            previous_dates = previous.get("field_publication_dates", {})
+            prior = previous or {}
+            comparable = (prior.get("reporting_currency"), prior.get("accounting_basis"), prior.get("report_scope")) == (
+                "CNY", "CN_ASBE", "consolidated")
+            clocks = [prior["observed_at"]] if previous else []
+            sources = sorted({ref for matches in changed.values() for ref in matches.values()})
+            for ref in sources:
+                clocks.extend((ref[4], ref[-1][4]))
+            previous_dates = prior.get("field_publication_dates", {})
             field_dates = {}
             for field in MEASURES:
                 if field not in changed:
-                    if previous.get(field) is not None:
-                        values[field] = previous[field]
-                        field_dates[field] = previous_dates.get(field, previous["published_at"])
+                    if comparable and prior.get(field) is not None:
+                        values[field] = prior[field]
+                        field_dates[field] = previous_dates.get(field, prior["published_at"])
                     else:
-                        reasons[field] = previous.get("missing_reasons", {}).get(field, "unverified_version")
+                        reasons[field] = prior.get("missing_reasons", {}).get(field, "unverified_version")
                 elif len(changed[field]) == 1:
                     amount, ref = next(iter(changed[field].items()))
                     values[field] = amount
-                    clocks.extend((ref[4], ref[-1][4]))
                     ref_indices[field] = sources.index(ref)
                     field_dates[field] = day
                 else:
                     reasons[field] = "version_conflict" if changed[field] else "unverified_version"
-            if not ref_indices:
-                continue
-            counts["correction", "explicit_matched_statement_versions"] += 1
+                    if changed[field]:
+                        counts[field, "csmar_unresolved_version_conflict"] += 1
+                        if conflicts is not None:
+                            conflicts.append({"ts_code": key[0], "period_end": key[1], "publication_day": day,
+                                              "field": field, "decision": "reject_unordered_csmar_versions",
+                                              "csmar": sorted(changed[field].items())})
+            counts["correction", "independently_qualified_statement_versions"] += 1
             record = {
-                "ts_code": key[0], "period_end": key[1], "period_start": previous["period_start"],
-                "reporting_currency": previous["reporting_currency"], "accounting_basis": previous["accounting_basis"],
+                "ts_code": key[0], "period_end": key[1], "period_start": key[1][:4] + "-01-01",
+                "reporting_currency": "CNY", "accounting_basis": "CN_ASBE",
                 "report_scope": "consolidated", "published_at": day,
                 "observed_at": max(datetime.fromisoformat(stamp) for stamp in clocks).isoformat(),
                 "source_url": CSMAR_URL, "source_version_id": f"cn-statement-correction-v1:{key[0]}:{key[1]}:{day}",
                 "knowledge_quality": "historical_original_evidence",
                 "source_hash_kind": "derived_consolidated_filing_correction", "source_records": sources,
-                "source_parts": ref_indices, "previous_filing_id": previous["source_version_id"],
-                "previous_filing_sha256": previous["source_sha256"], "field_publication_dates": field_dates,
+                "source_parts": ref_indices, "field_publication_dates": field_dates,
                 "missing_reasons": reasons, "affected_fields": sorted(changed), **values,
             }
-            source = previous.get("corroboration_url", previous["source_url"])
-            record["corroboration_url"] = source
-            record["corroboration_sha256"] = previous.get("corroboration_sha256", previous["source_sha256"])
+            if previous:
+                record.update(previous_filing_id=previous["source_version_id"],
+                              previous_filing_sha256=previous["source_sha256"],
+                              corroboration_url=previous.get("corroboration_url", previous["source_url"]),
+                              corroboration_sha256=previous.get("corroboration_sha256", previous["source_sha256"]))
+            if "revenue_ytd" in ref_indices:
+                basis = sources[ref_indices["revenue_ytd"]][-1][6]
+            else:
+                basis = prior.get("revenue_accounting_basis") if "revenue_ytd" in values else None
+            if basis is not None:
+                record["revenue_accounting_basis"] = basis
             previous = record | {"source_sha256": digest(record)}
             yield previous
 
 
-def combine(initial, dates, archived, counts):
-    periods = set(dates) | {key[:3] for key in initial} | set(archived)
+def combine(initial, dates, archived, counts, *, csmar=None, conflicts=None):
+    csmar = csmar or {}
+    periods = set(dates) | {key[:3] for key in initial} | {key[:3] for key in csmar} | set(archived)
     for key in sorted(periods):
         code, end, publication = key
         documents = archived.get(key, [])
@@ -341,9 +389,16 @@ def combine(initial, dates, archived, counts):
             yield from documents
             continue
         protected = documents[0] if documents else {}
-        amounts, reasons, references = {}, {}, {}
+        if protected and (protected["reporting_currency"], protected["accounting_basis"], protected["report_scope"]) != (
+            "CNY", "CN_ASBE", "consolidated"
+        ):
+            yield protected
+            continue
+        amounts, reasons, references, disputed = {}, {}, {}, set()
         for measure in MEASURES:
-            variants = initial.get((*key, measure), {})
+            fact = (*key, measure)
+            variants = initial.get(fact, {})
+            csmar_variants = csmar.get(fact, {})
             official = protected.get(measure)
             if official is not None:
                 amounts[measure] = official
@@ -351,10 +406,22 @@ def combine(initial, dates, archived, counts):
                     counts[measure, "compared_original"] += 1
                     if min(abs(x - official) for x in variants) > 0.51:
                         counts[measure, "original_conflicts"] += 1
+                compare_csmar(fact, csmar_variants, {official: (protected["source_version_id"],
+                              protected["source_sha256"])}, "retain_archived_filing", counts, conflicts)
                 continue
+            if len(variants) == 1:
+                compare_csmar(fact, csmar_variants, variants, "retain_qualified_initial_vendor", counts, conflicts)
+            elif csmar_variants:
+                compare_csmar(fact, csmar_variants, variants, "prefer_independently_qualified_csmar", counts, conflicts)
+                variants = csmar_variants
             if len(variants) != 1:
                 reasons[measure] = "version_conflict" if variants else "unverified_version"
                 counts[measure, reasons[measure]] += 1
+                disputed.update(variants.values())
+                if csmar_variants and variants is csmar_variants and conflicts is not None:
+                    conflicts.append({"ts_code": code, "period_end": end, "publication_day": publication,
+                                      "field": measure, "decision": "reject_unordered_csmar_versions",
+                                      "csmar": sorted(csmar_variants.items())})
                 continue
             amount, receipt = next(iter(variants.items()))
             references[measure] = receipt
@@ -362,13 +429,14 @@ def combine(initial, dates, archived, counts):
             if receipt[0] in FIELDS and receipt[-1] == "5":
                 counts[measure, "accepted_precorrection_vendor"] += 1
             amounts[measure] = amount
-        if not references and protected:
+        if not references and protected and not disputed:
             yield protected
             continue
-        sources = sorted(set(references.values()))
+        sources = sorted(set(references.values()) | disputed)
         admission = dates.get(key)
         observed_at = [ref[4] for ref in sources] + ([protected["observed_at"]] if protected else [])
         observed_at.extend(ref[5][4] for ref in sources if isinstance(ref[5], tuple))
+        observed_at.extend(ref[-1][4] for ref in sources if ref[0] in CSMAR_FIELDS)
         if admission:
             observed_at.append(admission[4])
             if isinstance(admission[5], tuple):
@@ -393,6 +461,11 @@ def combine(initial, dates, archived, counts):
                 "original_filing_id": protected["source_version_id"],
                 "source_field_evidence": protected.get("source_field_evidence", {}),
             })
+        revenue = references.get("revenue_ytd")
+        basis = (revenue[-1][6] if revenue and revenue[0] in CSMAR_FIELDS else
+                 protected.get("revenue_accounting_basis") if protected.get("revenue_ytd") is not None else None)
+        if basis is not None:
+            combined["revenue_accounting_basis"] = basis
         yield combined | {"source_sha256": digest(combined)}
 
 
@@ -418,6 +491,7 @@ def main():
     parser.add_argument("--checkpoint", type=Path, action="append", default=[])
     parser.add_argument("--originals", action="append", type=Path, default=[])
     parser.add_argument("--csmar-capture", type=Path)
+    parser.add_argument("--csmar-version-evidence", type=Path, action="append", default=[])
     parser.add_argument("--security-code-evidence", type=Path)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
@@ -429,10 +503,15 @@ def main():
         disclosures = disclosure_dates(con, aliases, args.checkpoint)
         raw = provider_rows(con, args.checkpoint)
         initial, reported, current = accepted_provider(raw, aliases, disclosures, counts)
-    amendments = csmar_originals(args.csmar_capture, aliases, disclosures, reported, initial, current, counts)
+    proofs = csmar_version_evidence(args.csmar_version_evidence)
+    conflicts = []
+    csmar, amendments = csmar_originals(args.csmar_capture, aliases, disclosures, current, counts,
+                                      version_evidence=proofs, conflicts=conflicts)
     original = originals(args.originals, aliases)
-    rows = combine(initial, reported, original, counts)
-    write_output(incorporate_revisions(rows, amendments, counts), args.output, aliases, counts)
+    rows = combine(initial, reported, original, counts, csmar=csmar, conflicts=conflicts)
+    write_output(incorporate_revisions(rows, amendments, counts, conflicts=conflicts), args.output, aliases, counts)
+    (args.output / "csmar_financial_conflicts.json").write_text(
+        json.dumps(conflicts, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     summary = {"counts": [{"scope": key, "count": count} for key, count in sorted(counts.items())],
                "source_semantics": {endpoint: f"https://tushare.pro/document/2?doc_id={doc}"
                                     for endpoint, doc in DOCS.items()},

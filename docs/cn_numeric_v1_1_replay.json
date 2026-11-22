@@ -1,0 +1,195 @@
+{
+  "contract_version": "1.1",
+  "published_status": "INCOMPLETE",
+  "dataset_version": "cn-369dd922bdcab942f77d959223921a4391200693282df980e321c7e946f90c5a",
+  "frozen_financial_source_sha256": "5d4e08ed9e3823caa8146b1fb4bb67a2bd2458c938b9514637ef053dccc302cf",
+  "financial_source_rows": 220070,
+  "matched_snapshot_ids": 198118,
+  "ttm_snapshot_cells": {
+    "restored": 87654,
+    "unchanged": 489472,
+    "changed_or_lost": 0
+  },
+  "restored_snapshot_cells_by_field": {
+    "net_income_parent_ttm": 13402,
+    "net_income_parent_ttm_4q_ago": 11953,
+    "net_income_total_ttm": 13405,
+    "operating_cashflow_ttm": 24302,
+    "revenue_ttm": 13001,
+    "revenue_ttm_4q_ago": 11591
+  },
+  "restored_valid_input_cells_by_exchange": {
+    "BSE": {
+      "ttm": 45647,
+      "financial_factors": 38397
+    },
+    "SSE": {
+      "ttm": 1570285,
+      "financial_factors": 1614293
+    },
+    "SZSE": {
+      "ttm": 1901920,
+      "financial_factors": 2006636
+    }
+  },
+  "financial_factor_replay": {
+    "existing_values": 39457287,
+    "restored_values": 3659326,
+    "changed_or_lost": 0
+  },
+  "structural_gaps_in_published_release": {
+    "financial_factor": 41,
+    "financial_value": 25,
+    "stock_factor": 192
+  },
+  "recomputed_bse_coverage_by_cohort": [
+    {
+      "year": 2022,
+      "split": "train",
+      "valid_inputs": 19552,
+      "revenue_ttm": 2850,
+      "net_income_total_ttm": 2850,
+      "net_income_parent_ttm": 2850,
+      "operating_cashflow_ttm": 3398,
+      "revenue_ttm_4q_ago": 951,
+      "net_income_parent_ttm_4q_ago": 951,
+      "all_seven": 1798
+    },
+    {
+      "year": 2023,
+      "split": "train",
+      "valid_inputs": 42745,
+      "revenue_ttm": 1860,
+      "net_income_total_ttm": 1860,
+      "net_income_parent_ttm": 1860,
+      "operating_cashflow_ttm": 7290,
+      "revenue_ttm_4q_ago": 3353,
+      "net_income_parent_ttm_4q_ago": 3353,
+      "all_seven": 1447
+    },
+    {
+      "year": 2024,
+      "split": "calibration",
+      "valid_inputs": 31070,
+      "revenue_ttm": 76,
+      "net_income_total_ttm": 76,
+      "net_income_parent_ttm": 76,
+      "operating_cashflow_ttm": 4586,
+      "revenue_ttm_4q_ago": 958,
+      "net_income_parent_ttm_4q_ago": 958,
+      "all_seven": 37
+    },
+    {
+      "year": 2024,
+      "split": "validation",
+      "valid_inputs": 27535,
+      "revenue_ttm": 525,
+      "net_income_total_ttm": 525,
+      "net_income_parent_ttm": 525,
+      "operating_cashflow_ttm": 4785,
+      "revenue_ttm_4q_ago": 1073,
+      "net_income_parent_ttm_4q_ago": 1073,
+      "all_seven": 405
+    },
+    {
+      "year": 2025,
+      "split": "test",
+      "valid_inputs": 63882,
+      "revenue_ttm": 630,
+      "net_income_total_ttm": 630,
+      "net_income_parent_ttm": 630,
+      "operating_cashflow_ttm": 7969,
+      "revenue_ttm_4q_ago": 540,
+      "net_income_parent_ttm_4q_ago": 540,
+      "all_seven": 495
+    },
+    {
+      "year": 2026,
+      "split": "test",
+      "valid_inputs": 32963,
+      "revenue_ttm": 455,
+      "net_income_total_ttm": 455,
+      "net_income_parent_ttm": 455,
+      "operating_cashflow_ttm": 3381,
+      "revenue_ttm_4q_ago": 318,
+      "net_income_parent_ttm_4q_ago": 318,
+      "all_seven": 374
+    }
+  ],
+  "csmar_validation": {
+    "real_lineage": {
+      "total_versions": 3,
+      "derived_payloads_verified": 3,
+      "csmar_independent_version_receipts_verified": 5,
+      "unchanged_field_carry_verified": 1,
+      "correction_candidates_verified": 1,
+      "csmar_raw_pages_verified": 5,
+      "sampled_csmar_facts_recomputed": 13
+    },
+    "valid_versions": [
+      {
+        "code": "001872.SZ",
+        "period": "2017-12-31",
+        "published_at": "2018-03-07",
+        "fields": {
+          "assets": 7975470563.32,
+          "liabilities": 1408427653.69,
+          "net_income_parent_ytd": 504495064.39,
+          "net_income_total_ytd": 713858775.07,
+          "parent_equity": 4922969405.92,
+          "revenue_ytd": 2456218834.63
+        }
+      },
+      {
+        "code": "002591.SZ",
+        "period": "2015-03-31",
+        "published_at": "2015-04-29",
+        "fields": {
+          "operating_cashflow_ytd": -8547200.76
+        }
+      },
+      {
+        "code": "002591.SZ",
+        "period": "2015-03-31",
+        "published_at": "2015-09-30",
+        "fields": {
+          "assets": 935176303.41,
+          "liabilities": 158900736.75,
+          "net_income_parent_ytd": -8618400.19,
+          "net_income_total_ytd": -9178265.15,
+          "parent_equity": 751385336.34,
+          "revenue_ytd": 35258397.06
+        }
+      }
+    ],
+    "captured_source_disagreement": {
+      "ts_code": "002517.SZ",
+      "period_end": "2018-06-30",
+      "tushare_precorrection_assets": 6901065536.79,
+      "csmar_captured_assets": 6920979083.5,
+      "csmar_row_sha256": "6106eb79bbfa308cd46fc45297535706505cfab54d2976ffa93d5dc5d3e5a579",
+      "decision": "retain_qualified_initial_vendor_unverified_csmar_rejected"
+    }
+  },
+  "prior_csmar_cross_check_receipts": {
+    "derived_consolidated_filing_correction_fields": 3402,
+    "derived_consolidated_filing_correction_versions": 839,
+    "derived_consolidated_filing_fields": 499,
+    "derived_consolidated_filing_versions": 319
+  },
+  "prefix_validation": {
+    "result": "PASS",
+    "security_days": 60,
+    "financial_snapshot_comparisons": 15372
+  },
+  "verified_sample_and_label_files": 24,
+  "verified_unit_archive_intervals": 14994,
+  "pytest_passed_on_final_rerun": 76,
+  "evidence_receipt_sha256": {
+    "v1_1_ttm_replay.json": "dc4ee23c9ac7580b5e072b9a4a088a6633d639e0e21e89449b441b8987b64215",
+    "v1_1_pit_prefix.json": "64da9b9e9290c3ed751025ba605f6a3eef26dbb397090aed2985cce4d4ed795f",
+    "receipt.json": "9410ccda478a3fc93331fac75ca26143b4669b74c02adfe0eb0aec7aa58ea274",
+    "v1_1_csmar_raw_conflict.json": "a7a066779d6085f3df828e91efe9515d49e6797620a96c56d4490b7493a5fd68",
+    "v1_1_immutable_release.json": "8e973cf0f340b7c80c6ae7df7fb1e0af7e34efa475faa4ea42d8b778a8678de4"
+  }
+}

@@ -5,6 +5,7 @@ import hashlib
 import html
 import json
 import re
+import threading
 from concurrent.futures import ThreadPoolExecutor
 from datetime import date, datetime, timezone
 from pathlib import Path
@@ -17,12 +18,15 @@ HEADERS = {"User-Agent": "Mozilla/5.0", "Accept": "*/*"}
 ANCHOR = re.compile(r"""<a\b[^>]*?href\s*=\s*["']([^"']+)["'][^>]*>(.*?)</a>""", re.I | re.S)
 DATE = re.compile(r"20\d\d-\d\d-\d\d")
 PDF_URL = re.compile(r"""https?://[^"'<>\s]+?\.pdf""", re.I)
+HTTP = threading.local()
 
 
 def retrieve(url, **kwargs):
     receipt = {"url": url, "observed_at": datetime.now(timezone.utc).isoformat()}
+    if not hasattr(HTTP, "session"):
+        HTTP.session = requests.Session()
     try:
-        response = requests.get(url, headers=HEADERS, timeout=(6, 12), **kwargs)
+        response = HTTP.session.get(url, headers=HEADERS, timeout=(6, 12), **kwargs)
     except requests.RequestException as exc:
         return receipt | {"error": type(exc).__name__}, None
     body = response.content

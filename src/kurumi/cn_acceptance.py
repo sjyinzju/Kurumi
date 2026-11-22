@@ -10,8 +10,8 @@ import sys
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from .cn_features import COMMON_STATE_FIELDS
-from .cn_pit import FLOW, STOCK
+from .cn_features import COMMON_STATE_FIELDS, FACTOR_NAMES, FINANCIAL_FACTORS
+from .cn_pit import FIN_NUM, FLOW, STOCK
 from .cn_prices import literal
 from .numeric_math import class_id_for_z, install_return_macros
 
@@ -146,6 +146,49 @@ def financial_period_coverage(con, evidence):
     """)
 
 
+def financial_factor_coverage(con):
+    """Count actual values and unresolved dependencies within valid-input cohorts."""
+    def history_years(field):
+        if field.endswith("_ttm_4q_ago"):
+            return "CASE WHEN f.fiscal_quarter=4 THEN 1 ELSE 2 END"
+        if field.endswith("_ttm"):
+            return "CASE WHEN f.fiscal_quarter=4 THEN 0 ELSE 1 END"
+        return "1" if field.endswith("_4q_ago") else "0"
+
+    aggregates, fields = [], []
+    for field in (*FIN_NUM, *FACTOR_NAMES):
+        is_financial = field in FIN_NUM
+        prefix = "f" if is_financial else "d"
+        financial_inputs = (field,) if is_financial else FINANCIAL_FACTORS.get(field, (None, (), None))[1]
+        expected = "false"
+        if financial_inputs:
+            years = ",".join(history_years(name) for name in financial_inputs)
+            expected = f"d.listing_date <= f.fiscal_period_end - greatest({years},0) * INTERVAL '1 year'"
+        valid = f"isfinite({prefix}.{field})"
+        reason = f"coalesce({prefix}.missing_reasons['{field}'],'missing_source')"
+        unresolved_reasons = "'missing_source','unverified_version','version_conflict','low_coverage'"
+        if is_financial:
+            unresolved_reasons += ",'invalid_value'"
+        aggregates.extend((
+            f"count(*) FILTER (WHERE {valid}) AS {field}_valid",
+            f"count(*) FILTER (WHERE NOT coalesce({valid},false) AND ({reason} IN ({unresolved_reasons}) "
+            f"OR ({reason}='insufficient_history' AND {expected}))) AS {field}_unresolved",
+        ))
+        family = "financial_value" if is_financial else "financial_factor" if financial_inputs else "stock_factor"
+        fields.append(f"('{family}','{field}',{field}_valid,{field}_unresolved)")
+    con.execute(f"""
+        CREATE OR REPLACE TEMP TABLE financial_factor_coverage AS
+        WITH cohorts AS (
+            SELECT d.exchange,year(s.local_trade_date) AS year,s.split,count(*) AS valid_inputs,
+                   {','.join(aggregates)}
+            FROM samples s JOIN stock_daily d USING(instrument_id,local_trade_date)
+            LEFT JOIN stock_fundamental_asof f ON f.fundamental_snapshot_id=s.fundamental_snapshot_id
+            WHERE s.input_valid GROUP BY 1,2,3
+        ) SELECT exchange,year,split,family,field,valid_inputs,n_valid,n_unresolved
+          FROM cohorts CROSS JOIN LATERAL (VALUES {','.join(fields)}) v(family,field,n_valid,n_unresolved)
+    """)
+
+
 def structural_dependencies(con):
     """Detect unavailable source families without making individual nulls a completeness gate."""
     gaps = []
@@ -154,19 +197,28 @@ def structural_dependencies(con):
                count_if(input_valid AND shares_outstanding_security IS NOT NULL),
                count_if(input_valid AND issuer_market_cap_reporting IS NOT NULL),
                count_if(input_valid AND split_chain_known),
-               count_if(input_valid AND fundamental_snapshot_id IS NOT NULL),
                count_if(input_valid AND industry_code_asof IS NOT NULL)
         FROM stock_base WHERE local_trade_date <= DATE '2026-06-30' GROUP BY 1,2 ORDER BY 1,2
     """).fetchall()
-    families = ("security_shares", "issuer_capitalization", "share_unit_chain", "financial_pit", "sw_l1_membership")
+    families = ("security_shares", "issuer_capitalization", "share_unit_chain", "sw_l1_membership")
     for exchange, year, n, *present in totals:
         for family, count in zip(families, present, strict=True):
             if n and not count:
                 gaps.append(dict(dependency=family, exchange=exchange, year=year, affected_valid_inputs=n))
 
+    financial_factor_coverage(con)
+    extinct_fields = con.sql("""
+        SELECT exchange,year,split,family,field,valid_inputs,n_unresolved
+        FROM financial_factor_coverage WHERE n_valid=0 AND n_unresolved>0 ORDER BY ALL
+    """).fetchall()
+    gaps.extend(dict(dependency=family, field=field, exchange=exchange, year=year, split=split,
+                     valid_inputs=n, affected_valid_inputs=unresolved)
+                for exchange, year, split, family, field, n, unresolved in extinct_fields)
+
     extinct_features = con.sql("""
         SELECT dataset_table,field,sum(n_rows)::BIGINT
-        FROM feature_coverage GROUP BY 1,2 HAVING sum(n_valid)=0 ORDER BY 1,2
+        FROM feature_coverage WHERE dataset_table<>'stock_daily'
+        GROUP BY 1,2 HAVING sum(n_valid)=0 ORDER BY 1,2
     """).fetchall()
     gaps.extend(dict(dependency="unavailable_feature", table=table, field=field, expected_rows=n)
                 for table, field, n in extinct_features)

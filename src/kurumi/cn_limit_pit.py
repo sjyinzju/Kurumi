@@ -33,8 +33,14 @@ def register_verified_limits(con, root, price_view):
         regime = row.get("limit_regime", "limited")
         limited = (regime == "limited" and up is not None and down is not None and
                    math.isfinite(up) and math.isfinite(down) and up > down > 0 and up < 99999)
-        unlimited = (regime == "unlimited" and up is None and down is None and
-                     row.get("historical_limit_derivation") == "sse_star_2019_first_five_sessions")
+        derivation = row.get("historical_limit_derivation")
+        ipo_rule = (derivation == "exchange_ipo_first_five_sessions"
+                    and 1 <= row.get("verified_listing_session", 0) <= 5
+                    and re.fullmatch(r"[0-9a-f]{64}", row.get("ipo_issue_batch_sha256", ""))
+                    and row.get("official_rule_sha256")
+                    and all(re.fullmatch(r"[0-9a-f]{64}", digest) for digest in row["official_rule_sha256"]))
+        unlimited = (regime == "unlimited" and up is None and down is None
+                     and (derivation == "sse_star_2019_first_five_sessions" or ipo_rule))
         if (key in keys or not re.fullmatch(r"[0-9]{6}\.(?:SH|SZ|BJ)", source)
                 or not re.fullmatch(r"[0-9a-f]{64}", check_hash)
                 or not (limited or unlimited)
@@ -45,15 +51,19 @@ def register_verified_limits(con, root, price_view):
         keys.add(key)
         fact = hashlib.sha256(line).hexdigest()
         parsed.append(dict(instrument_id=key[0], local_trade_date=day, ts_code=row["ts_code"], symbol=source[:6],
-                           regime=regime, upper=up, lower=down, batch=f"stk-limit:{check_hash}:{fact}"))
+                           regime=regime, upper=up, lower=down, batch=f"stk-limit:{check_hash}:{fact}",
+                           ipo_session=row.get("verified_listing_session") if ipo_rule else None))
     if not parsed:
         return price_view
     con.register("_verified_trading_limits", pa.Table.from_pylist(parsed))
+    ipo_check = ("OR (l.ipo_session IS NOT NULL AND p.listing_age_sessions IS DISTINCT FROM l.ipo_session)"
+                 if any(row["ipo_session"] is not None for row in parsed) else "")
     incompatible = con.sql(f"""
         SELECT l.instrument_id,l.local_trade_date FROM _verified_trading_limits l
         LEFT JOIN {price_view} p USING(instrument_id,local_trade_date)
         WHERE p.instrument_id IS NULL OR p.ts_code IS DISTINCT FROM l.ts_code
            OR p.symbol_asof IS DISTINCT FROM l.symbol
+           {ipo_check}
            OR (p.quote_valid AND (p.high_raw>l.upper+1e-9 OR p.low_raw<l.lower-1e-9))
            OR (p.limit_regime<>'unknown' AND (p.limit_regime IS DISTINCT FROM l.regime
                                           OR p.upper_limit_price IS DISTINCT FROM l.upper

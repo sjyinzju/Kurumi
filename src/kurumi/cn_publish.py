@@ -43,6 +43,7 @@ CORE = {
     "labels": ("sample_id", "horizon"),
 }
 CONTRACT = {
+    "contract_version": "1.1",
     "schema_version": "kurumi.numeric.v1", "feature_version": "numeric30.v1",
     "choice_spec_version": "return_z7_vol60.v1", "input_template_version": "kurumi.numeric.input.v1",
     "markets": ["CN"], "price_read_start_date": "2015-01-01", "sample_end_date": "2026-06-30",
@@ -559,10 +560,12 @@ def complete_build(con, workspace, inputs, evidence_dir=None, prehistory=None, s
                                 FROM samples GROUP BY ALL ORDER BY 1,2,3""")
     source_blockers = [
         {"dependency": key, "missing_security_days": sum(r["security_days"]-r[key] for r in coverage)}
-        for key in ("share_verified", "unit_chain_verified", "finance_verified", "industry_verified")
+        for key in ("share_verified", "unit_chain_verified", "industry_verified")
         if sum(r["security_days"]-r[key] for r in coverage)
     ]
     dependencies = structural_dependencies(con)
+    export_query(con, publish / "reports" / "financial_factor_coverage.parquet",
+                 "SELECT * FROM financial_factor_coverage ORDER BY exchange,year,split,family,field")
     runtime_limits = con.sql("""SELECT current_setting('threads'), current_setting('memory_limit'),
         current_setting('temp_directory'), current_setting('max_temp_directory_size')""").fetchone()
     quality = {"exchange_coverage": coverage, "inputs": input_counts,

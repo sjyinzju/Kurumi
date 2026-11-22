@@ -63,6 +63,8 @@ def _with_provenance(root, name, ledger):
             if coverage_audit:
                 if row.get("published_at") is not None or not row.get("effective_to"):
                     raise ValueError("Archival coverage needs an explicit interval and no claimed publication clock")
+                if date.fromisoformat(row["effective_from"]) >= date.fromisoformat(row["effective_to"]):
+                    raise ValueError("Archival coverage must have a nonempty effective interval")
                 original_day = published = available = None
                 precision = "derived_coverage"
             elif row["knowledge_quality"] != "historical_original_evidence":
@@ -150,10 +152,14 @@ def financial_snapshots(rows):
                 break
             for version in versions:
                 history[version["quarter_index"]].append(version)
-            q = max(history)
+            first_q, q = min(history), max(history)
+            required = (q, q - 4)
+            quarter = q % 4 + 1
+            if quarter != 4:
+                required += (q - quarter, q - 4 - quarter, q - 8)
             periods = {
                 index: _choose(history[index], semantic_fields, check_revenue_basis=True)
-                for index in range(q - 8, q + 1) if index in history
+                for index in required if index in history
             }
             anchor = periods[q]
             end = history[q][0]["fiscal_period_end"]
@@ -163,7 +169,9 @@ def financial_snapshots(rows):
             def fact(index, field):
                 row = periods.get(index)
                 if row is None:
-                    return None, "version_conflict" if index in periods else "insufficient_history"
+                    reason = ("version_conflict" if index in periods else
+                              "insufficient_history" if index < first_q else "missing_source")
+                    return None, reason
                 refs.add(row["provenance_id"])
                 if anchor is None or any(row[k] != anchor[k] for k in semantic_fields[:3]):
                     return None, "version_conflict"
@@ -171,7 +179,7 @@ def financial_snapshots(rows):
                 if value is None:
                     reason = row.get("missing_reasons", {}).get(field, "missing_source")
                     return None, "missing_source" if reason == "SOURCE_MISSING" else reason
-                # This applies to both operands of a YTD difference and to the prior-year TTM.
+                # The anchor's revenue basis applies to every TTM and year-over-year operand.
                 if field == "revenue_ytd" and row.get("revenue_accounting_basis") != anchor.get("revenue_accounting_basis"):
                     return None, "version_conflict"
                 if not math.isfinite(value):
@@ -179,18 +187,15 @@ def financial_snapshots(rows):
                 return value, None
 
             def ttm(index, field):
-                quarterly = []
-                for component in range(index - 3, index + 1):
-                    value, reason = fact(component, field)
-                    if reason:
-                        return None, reason
-                    if component % 4:
-                        previous, reason = fact(component - 1, field)
-                        if reason:
-                            return None, reason
-                        value -= previous
-                    quarterly.append(value)
-                return math.fsum(quarterly), None
+                current, reason = fact(index, field)
+                quarter = index % 4 + 1
+                if reason or quarter == 4:
+                    return current, reason
+                last_fy, fy_reason = fact(index - quarter, field)
+                last_ytd, ytd_reason = fact(index - 4, field)
+                if fy_reason or ytd_reason:
+                    return None, fy_reason or ytd_reason
+                return math.fsum((current, last_fy, -last_ytd)), None
 
             result = {
                 "fundamental_snapshot_id": "fund-" + hashlib.sha256(

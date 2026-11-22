@@ -206,7 +206,7 @@ def render(release, before, after, additional):
     doc.extend(["完整字段、Arrow 类型、单位和主键见发布包 `schema.json`。"
                 "按交易所、年份、字段和原因的分布见 `reports/field_coverage.parquet`，"
                 "30 个因子、市场及行业字段的分母、有效项与覆盖见 `reports/feature_coverage.parquet`。", "## 全量覆盖",
-                "| 交易所 | 证券日 | 实际收盘 | 复权有效 | 输入有效 | 停牌事实 | 停牌时点证据 | 股数 | 发行人市值 | U 链 | 财务 | 行业 |"
+                "| 交易所 | 证券日 | 实际收盘 | 复权有效 | 输入有效 | 停牌事实 | 停牌时点证据 | 股数 | 发行人市值 | U 链 | 财务快照链接 | 行业 |"
                 "\n|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|"])
     for coverage in quality["exchange_coverage"]:
         fields = ["security_days", "actual_quotes", "adjustment", "valid_inputs", "reported_suspensions", "verified_suspensions",
@@ -215,7 +215,7 @@ def render(release, before, after, additional):
     if prior_coverage := additional.get("baseline_exchange_coverage"):
         origins = {r["exchange"]: r for r in prior_coverage}
         doc.extend(["### 本轮前后对比",
-                    "| 交易所 | 实际收盘 | 股数 | 发行人市值 | U 链 | 财务 | 行业 |\n|---|---:|---:|---:|---:|---:|---:|"])
+                    "| 交易所 | 实际收盘 | 股数 | 发行人市值 | U 链 | 财务快照链接 | 行业 |\n|---|---:|---:|---:|---:|---:|---:|"])
         comparable = ("actual_quotes", "share_verified", "issuer_cap_verified", "unit_chain_verified",
                       "finance_verified", "industry_verified")
         for current in quality["exchange_coverage"]:

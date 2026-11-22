@@ -57,11 +57,14 @@ def test_revenue_switch_preserves_prefix_and_recovers_after_public_restatements(
     snapshots = list(financial_snapshots(filings))
     assert snapshots[:len(gross)] == list(financial_snapshots(gross))
     assert snapshots[len(gross) - 1]["revenue_ttm"] == 530
-    for candidate in snapshots[len(gross):-2]:
+    for candidate in snapshots[len(gross):-3]:
         assert candidate["revenue_ttm"] is None
         assert candidate["missing_reasons"]["revenue_ttm"] == "version_conflict"
         assert candidate["net_income_total_ttm"] == 40
         assert candidate["parent_equity"] == 600
+    first_annual = snapshots[-3]
+    assert first_annual["revenue_ttm"] == 600
+    assert first_annual["revenue_ttm_4q_ago"] is None
     coherent_current, coherent_yoy = snapshots[-2:]
     assert coherent_current["fiscal_period_end"] == date(2025, 12, 31)
     assert coherent_current["revenue_ttm"] == 600

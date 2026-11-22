@@ -6,7 +6,14 @@ import pytest
 
 from kurumi.cn_disclosures import extract_fields
 from kurumi.cn_issuer_caps import build_class_caps
-from kurumi.cn_pit import _between_time, _effective_segments, _unit_segments, build_pit, financial_snapshots
+from kurumi.cn_pit import (
+    _between_time,
+    _effective_segments,
+    _unit_segments,
+    _with_provenance,
+    build_pit,
+    financial_snapshots,
+)
 
 
 def test_public_date_uses_next_local_day():
@@ -51,6 +58,37 @@ def test_historical_revision_changes_ttm_only_from_publication():
     assert full[-1]["available_at"] == datetime(2024, 5, 8, 16, tzinfo=timezone.utc)
 
 
+def test_annual_ttm_only_needs_the_two_annual_filings_for_yoy():
+    prior = _financial("2023-12-31", "2024-03-25", 900, "prior-fy")
+    annual = _financial("2024-12-31", "2025-03-25", 1100, "current-fy")
+    result = list(financial_snapshots([prior, annual]))[-1]
+    assert result["revenue_ttm"] == 1100
+    assert result["revenue_ttm_4q_ago"] == 900
+    assert result["net_income_parent_ttm_4q_ago"] == -450
+    assert result["operating_cashflow_ttm"] == 2200
+    assert result["source_version_refs"] == ["current-fy", "prior-fy"]
+
+
+@pytest.mark.parametrize("quarter_end", ["03-31", "06-30", "09-30"])
+def test_interim_ttm_uses_only_the_same_quarters_and_fy(quarter_end):
+    def interim(year, ytd):
+        return _financial(f"{year}-{quarter_end}", f"{year}-11-01", ytd, f"{year}-ytd")
+
+    rows = [interim(2022, 100), _financial("2022-12-31", "2023-03-25", 800, "2022-fy"),
+            interim(2023, 175), _financial("2023-12-31", "2024-03-25", 900, "2023-fy"), interim(2024, 230)]
+    result = list(financial_snapshots(rows))[-1]
+    assert result["revenue_ttm"] == 955
+    assert result["revenue_ttm_4q_ago"] == 875
+    assert result["net_income_parent_ttm_4q_ago"] == -437.5
+    for basis in ({"accounting_basis": "other"}, {"reporting_currency": "USD"}):
+        conflict = list(financial_snapshots([*rows[:2], rows[2] | basis, *rows[3:]]))[-1]
+        assert conflict["revenue_ttm"] is None
+        assert conflict["missing_reasons"]["revenue_ttm"] == "version_conflict"
+    parent = rows[2] | {"report_scope": "parent"}
+    with pytest.raises(ValueError, match="consolidated"):
+        list(financial_snapshots([parent]))
+
+
 def test_conflicting_current_amount_does_not_revert_to_previous_anchor():
     previous = _financial("2023-12-31", "2024-03-14", 400, "year")
     first = _financial("2024-03-31", "2024-04-30", 100, "first")
@@ -90,6 +128,25 @@ def test_unit_chain_uses_latest_public_version_without_rewriting_past():
     assert [(r["start_date"], r["factor"]) for r in full] == [
         (date(2024, 5, 18), 2.0), (date(2024, 5, 25), 1.0), (date(2024, 6, 2), 2.0),
     ]
+
+
+def test_archive_unit_coverage_is_bounded_and_has_no_fabricated_clock(tmp_path):
+    record = {"ts_code": "870357.BJ", "effective_from": "2024-05-20", "effective_to": "2024-05-25",
+              "observed_at": "2026-08-01T00:00:00+00:00", "source_version_id": "audit",
+              "source_url": "https://example.org/archive-audit", "source_sha256": "0" * 64,
+              "knowledge_quality": "historical_action_archive_coverage"}
+    path = tmp_path / "split_coverage.jsonl"
+    path.write_text(json.dumps(record), encoding="utf-8")
+    qualified = _with_provenance(tmp_path, "split_coverage", {})
+    assert qualified[0]["published_at"] is qualified[0]["available_at"] is None
+    assert qualified[0]["public_time_precision"] == "derived_coverage"
+    segments = list(_effective_segments(qualified, "ts_code", ()))
+    assert segments[0]["start_date"] == date(2024, 5, 20)
+    assert segments[1] == {"ts_code": "870357.BJ", "start_date": date(2024, 5, 25), "provenance_id": None}
+    for bad in ({"effective_to": "2024-05-20"}, {"published_at": "2024-05-19"}):
+        path.write_text(json.dumps(record | bad), encoding="utf-8")
+        with pytest.raises(ValueError, match="[Aa]rchival coverage"):
+            _with_provenance(tmp_path, "split_coverage", {})
 
 
 def test_multiclass_uses_available_fx_and_explicit_stale_units(tmp_path):
