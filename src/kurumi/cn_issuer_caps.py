@@ -7,7 +7,7 @@ import math
 import pyarrow as pa
 
 
-def build_class_caps(con, root, versions, effective_segments):
+def build_class_caps(con, root, versions, effective_segments, *, fill_missing=False):
     segments = []
     valid_currencies = {"CNY", "USD", "HKD"}
     for row in versions:
@@ -46,11 +46,27 @@ def build_class_caps(con, root, versions, effective_segments):
     con.register("_class_states", states)
     con.register("_class_members", pa.table({name: pa.array([r[idx] for r in rows], type=typ)
                                             for idx, (name, typ) in enumerate(zip(fields, types))}))
-    con.read_parquet(str(input_quotes)).create_view("_class_quotes")
-    con.read_parquet(str(input_fx)).create_view("_class_fx")
-    con.execute("""
-        CREATE OR REPLACE TEMP TABLE class_market_caps AS
-        WITH stock_scope AS (
+    con.read_parquet(str(input_quotes)).create_view("_class_quotes", replace=True)
+    con.read_parquet(str(input_fx)).create_view("_class_fx", replace=True)
+    continuity = root / "class_quote_unit_continuity.parquet"
+    if continuity.is_file():
+        con.read_parquet(str(continuity)).create_view("_class_quote_units", replace=True)
+    else:
+        con.execute("""CREATE OR REPLACE TEMP VIEW _class_quote_units AS
+            SELECT NULL::VARCHAR class_id,NULL::DATE quote_date,NULL::DATE valuation_date WHERE false""")
+    if fill_missing:
+        stock_scope = """
+            SELECT b.instrument_id,b.issuer_id,b.ts_code,b.asof_utc,b.local_trade_date,b.close_raw,
+                   c.version_id,coalesce(f.reporting_currency,c.reporting_ccy) AS reporting_ccy,
+                   p.shares_outstanding_security
+            FROM stock_pit p JOIN stock_base b USING(instrument_id,local_trade_date)
+            ASOF JOIN _class_states c ON b.ts_code=c.ts_code AND b.local_trade_date>=c.start_date
+            LEFT JOIN stock_fundamental_asof f USING(fundamental_snapshot_id)
+            WHERE p.issuer_market_cap_reporting IS NULL AND p.shares_outstanding_security>0
+              AND c.version_id IS NOT NULL AND c.available_at<=b.asof_utc
+        """
+    else:
+        stock_scope = """
             SELECT b.instrument_id,b.issuer_id,b.ts_code,b.asof_utc,b.local_trade_date,b.close_raw,
                    c.version_id, coalesce(f.reporting_currency,c.reporting_ccy) AS reporting_ccy,
                    h.shares_outstanding_security
@@ -60,16 +76,23 @@ def build_class_caps(con, root, versions, effective_segments):
             ASOF LEFT JOIN stock_fundamental_asof f ON b.issuer_id=f.issuer_id AND b.asof_utc>=f.available_at
             WHERE c.version_id IS NOT NULL AND c.available_at<=b.asof_utc AND h.available_at<=b.asof_utc
                   AND NOT h.single_share_class
-        ), parts AS (
+        """
+    con.execute(f"""
+        CREATE OR REPLACE TEMP TABLE class_market_caps AS
+        WITH stock_scope AS ({stock_scope}), parts AS (
             SELECT b.*, m.class_id,m.currency,m.shares,m.unit_factor,
                    CASE WHEN m.class_id=b.ts_code AND b.shares_outstanding_security=m.shares THEN b.close_raw
                         WHEN m.class_id<>b.ts_code AND q.currency=m.currency AND q.quote_date=b.local_trade_date THEN q.price
                         WHEN m.class_id<>b.ts_code AND q.currency=m.currency AND q.quote_date<b.local_trade_date
                              AND m.unit_factor>0 AND q.quote_unit_factor>0
-                        THEN q.price*q.quote_unit_factor/m.unit_factor END AS price,
+                        THEN q.price*q.quote_unit_factor/m.unit_factor
+                        WHEN m.class_id<>b.ts_code AND q.currency=m.currency AND u.class_id IS NOT NULL
+                        THEN q.price END AS price,
                    CASE WHEN m.class_id=b.ts_code THEN 0 ELSE date_diff('day',q.quote_date,b.local_trade_date) END AS quote_age
             FROM stock_scope b JOIN _class_members m USING(version_id)
             ASOF LEFT JOIN _class_quotes q ON m.class_id=q.class_id AND b.asof_utc>=q.available_at
+            LEFT JOIN _class_quote_units u ON m.class_id=u.class_id AND q.quote_date=u.quote_date
+               AND b.local_trade_date=u.valuation_date
         ), converted AS (
             SELECT p.*,
                    CASE WHEN p.currency=p.reporting_ccy THEN p.price*p.shares
@@ -87,3 +110,15 @@ def build_class_caps(con, root, versions, effective_segments):
     con.unregister("_class_states")
     con.unregister("_class_members")
     return True
+
+
+def fill_class_caps(con, root, versions, effective_segments):
+    build_class_caps(con, root, versions, effective_segments, fill_missing=True)
+    con.execute("""
+        UPDATE stock_pit p SET issuer_market_cap_reporting=c.cap,
+               issuer_quote_age_days=c.issuer_quote_age_days,
+               issuer_class_provenance_id=c.issuer_class_provenance_id
+        FROM class_market_caps c
+        WHERE p.instrument_id=c.instrument_id AND p.local_trade_date=c.local_trade_date
+          AND p.issuer_market_cap_reporting IS NULL
+    """)

@@ -17,7 +17,7 @@ AMOUNT = re.compile(r"(?<![.\d,])[-−－]?(?:\d{1,3}(?:,\d{3})+|\d+)\.\d{2}(?![
 FIELDS = {
     "资产负债表": {
         "assets": r"^(?:资产总计|资产合计)", "liabilities": r"^负债合计",
-        "parent_equity": r"^归属于母公司(?:所有者|股东)权益(?:[（(]或股东权益[）)])?(?:合计|总计|(?=[-−－\d]))",
+        "parent_equity": r"^归属于母公司(?:所有者|股东)权益(?:[（(]或股东权益[）)])?(?:合计|总计|(?=$|[-−－\d]))",
         "equity_total": r"^(?:所有者权益|股东权益)(?:（或股东权益）)?合计",
     },
     "利润表": {
@@ -37,7 +37,7 @@ BSE_ACCOUNTING_BASIS = ((date(2025, 4, 25), "https://www.bse.cn/cxjg_list/200025
                         (date(2021, 11, 15), "https://www.bse.cn/cxjg_list/200010908.html"))
 NEEQ_ACCOUNTING_BASIS = ((date(2025, 5, 1), "https://www.neeq.com.cn/class_c0/200025689.html"),
                          (date(2021, 11, 15), "https://www.neeq.com.cn/class_c0/200011043.html"),
-                         (date(2020, 12, 31), "https://www.neeq.com.cn/class_c0/200011905.html"))
+                         (date(2020, 1, 3), "https://www.neeq.com.cn/class_c0/200011905.html"))
 
 
 def normalized(text):
@@ -70,16 +70,30 @@ def statement_sections(pages, *, partial=False):
 
 
 def extract_amount(rows, label, column, n_columns):
+    note_column = None
+    for _, _, original in rows[:20]:
+        header = re.search(r"^(?:项目|科目)\s+(?:附注|注释)\s+(?=\S)", original)
+        if header:
+            note = re.search(r"附注|注释", header[0])
+            note_column = note.start() - 4, min(note.end() + 10, header.end() - 2)
+            break
     matches = []
     for idx, (page, compact, original) in enumerate(rows):
         amounts = list(AMOUNT.finditer(original))
+        if amounts and note_column:
+            first = amounts[0]
+            if (note_column[0] <= first.start() and first.end() <= note_column[1]
+                    and re.fullmatch(r"\d{1,2}\.\d{2}", first[0])):
+                amounts.pop(0)
         if len(amounts) != n_columns:
             continue
         spellings = [compact]
+        prefix = normalized(original[:amounts[0].start()])
+        spellings.append(prefix)
         if idx + 1 < len(rows) and rows[idx + 1][0] == page:
             continuation = rows[idx + 1][1]
-            if continuation.startswith(("净利润", "合计", "计", "东权益）合计", "权益）合计")) and not AMOUNT.search(continuation):
-                spellings.append(normalized(original[:amounts[0].start()]) + continuation)
+            if re.fullmatch(r"(?:股东权益|东权益|权益|益)[）)](?:合计|总计)?|净利润|合计|计", continuation):
+                spellings.append(prefix + continuation)
         if idx and rows[idx - 1][0] == page and compact.startswith("净利润"):
             previous = rows[idx - 1][1]
             if "归属于母公司" in previous and not AMOUNT.search(previous):
@@ -116,7 +130,11 @@ def supported_section_columns(header, section, end, title):
         return statement_period_columns(header, section, end)
     except ValueError:
         if section == "资产负债表":
-            if end.month == 12 and re.search(rf"{end.year}年?(?:年度报告|年报)", title) and re.search(r"(?:期末|年末)余额(?:期初|年初)余额", normalized(header)):
+            period_title = {3: r"年第一季度报告", 6: r"年半年度报告", 9: r"年第三季度报告",
+                            12: r"年?(?:年度报告|年报)"}.get(end.month)
+            if (period_title and re.search(str(end.year) + period_title, title)
+                    and re.search(r"(?:期末|年末)余额(?:期初|年初)余额", normalized(header))
+                    and not re.search(r"20\d{2}年\d{1,2}月", normalized(header))):
                 return 0, 2
             raise
         compact = normalized(header)
@@ -224,7 +242,10 @@ def _extract_report(pages, period_end, published, listed, codes, cashflow_only=F
     early_text = normalized("\n".join(early))
     if str(period_end.year) not in early_text:
         raise ValueError("filing_period_cover_unconfirmed")
-    if published < listed and "全国中小企业股份转让系统" in early_text and "主办券商" in early_text:
+    neeq_code = any(re.search(rf"NEEQ[:：]?{code}(?!\d)", early_text) for code in codes)
+    if published < listed and "主办券商" in early_text and (
+        "全国中小企业股份转让系统" in early_text or neeq_code
+    ):
         exchange_basis = next((url for since, url in NEEQ_ACCOUNTING_BASIS if published >= since), None)
     values, traces = extract_stated_values(chain(early, pages), period_end, codes, exchange_basis,
                                            cashflow_only=cashflow_only, requested=requested, title=title)

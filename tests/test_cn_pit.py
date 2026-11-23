@@ -5,7 +5,7 @@ import duckdb
 import pytest
 
 from kurumi.cn_disclosures import extract_fields
-from kurumi.cn_issuer_caps import build_class_caps
+from kurumi.cn_issuer_caps import build_class_caps, fill_class_caps
 from kurumi.cn_pit import (
     _between_time,
     _effective_segments,
@@ -164,7 +164,7 @@ def test_multiclass_uses_available_fx_and_explicit_stale_units(tmp_path):
             CREATE TABLE _share_segments AS SELECT '000012.SZ' ts_code, DATE '2024-05-17' start_date,
                 TIMESTAMPTZ '2024-05-16 16:00:00+00' available_at, false single_share_class, 100.0 shares_outstanding_security;
             CREATE TABLE stock_fundamental_asof AS SELECT 'issuer' issuer_id,'CNY' reporting_currency,
-                TIMESTAMPTZ '2024-05-17 00:00:00+00' available_at;
+                TIMESTAMPTZ '2024-05-17 00:00:00+00' available_at,'fin' AS fundamental_snapshot_id;
         """)
         quotes = str(tmp_path / "class_quotes.parquet")
         fx = str(tmp_path / "class_fx.parquet")
@@ -183,6 +183,25 @@ def test_multiclass_uses_available_fx_and_explicit_stale_units(tmp_path):
         record["classes"][1].pop("unit_factor")
         assert build_class_caps(con, tmp_path, [record], _effective_segments)
         assert con.sql("SELECT cap FROM class_market_caps").fetchall() == []
+        # A publication build reads a single immutable set of quote inputs.
+        con.execute("DROP VIEW _class_quote_units")
+        con.execute("""
+            CREATE TABLE stock_pit AS SELECT instrument_id,local_trade_date,'fin' AS fundamental_snapshot_id,
+                100.0 AS shares_outstanding_security, 1200.0::DOUBLE AS issuer_market_cap_reporting,
+                NULL::BIGINT AS issuer_quote_age_days,NULL::VARCHAR AS issuer_class_provenance_id
+            FROM stock_base;
+            COPY (SELECT '200012.SZ' class_id, DATE '2024-05-17' quote_date, DATE '2024-05-20' valuation_date)
+                TO ? (FORMAT PARQUET);
+        """, [str(tmp_path / "class_quote_unit_continuity.parquet")])
+        fill_class_caps(con, tmp_path, [record], _effective_segments)
+        assert con.sql("SELECT issuer_market_cap_reporting FROM stock_pit").fetchone() == (1200.0,)
+        con.execute("UPDATE stock_pit SET issuer_market_cap_reporting=NULL, shares_outstanding_security=99")
+        fill_class_caps(con, tmp_path, [record], _effective_segments)
+        assert con.sql("SELECT issuer_market_cap_reporting FROM stock_pit").fetchone() == (None,)
+        con.execute("UPDATE stock_pit SET shares_outstanding_security=100")
+        fill_class_caps(con, tmp_path, [record], _effective_segments)
+        assert con.sql("""SELECT issuer_market_cap_reporting,issuer_quote_age_days,issuer_class_provenance_id
+                          FROM stock_pit""").fetchone() == (1288.0, 3, "issuer-shares")
 
 
 def test_report_reads_current_cny_consolidated_values():

@@ -150,15 +150,13 @@ def normalize_fx(con, capture, output):
     return rows
 
 
-def normalize_class_versions(con, capture, share_evidence, output, quote_path=None):
+def normalize_class_versions(con, capture, share_evidence, output):
     receipts = csmar_capture(con, capture, "TRD_Co")
     links = {code: (b, h) for code, b, h in con.sql("""
         SELECT Stkcd,min(Crcd),min(Commnt) FROM TRD_Co
         WHERE Markettype IN(1,4,16,32,64)
         GROUP BY Stkcd HAVING count(DISTINCT (Crcd,Commnt))=1
     """).fetchall()}
-    quoted = {row[0]: row[1] for row in con.read_parquet(str(quote_path or output / "class_quotes.parquet"))
-              .aggregate("class_id,min(quote_date)", "class_id").fetchall()}
     result = []
     for source in share_evidence:
         with source.open(encoding="utf-8") as stream:
@@ -183,9 +181,6 @@ def normalize_class_versions(con, capture, share_evidence, output, quote_path=No
                     if not h_code or not h_code.isdecimal() or len(h_code) > 5:
                         continue
                     parts.append({"class_id": h_code.zfill(5) + ".HK", "shares": h_shares, "currency": "HKD"})
-                if any(c["class_id"] not in quoted or quoted[c["class_id"]].isoformat() > row["published_at"][:10]
-                       for c in parts[1:]):
-                    continue
                 result.append(row | {"classes": parts, "class_link_source_url": "https://data.csmar.com/",
                                      "class_link_source_sha256": receipts[0]["sha256"]})
     target = output / "issuer_class_versions.jsonl"

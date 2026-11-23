@@ -11,7 +11,7 @@ import duckdb
 from kurumi.cn_capital_sources import csmar_capture
 
 
-def stage(release, capture, archives, output):
+def stage(release, capture, archives, output, *, issuer_gaps=False):
     with duckdb.connect(config={"threads": 4, "memory_limit": "2GB"}) as con:
         capital, = csmar_capture(con, capture / "requests", "TRD_Capchg")
         con.read_parquet(str(release / "reference/security_history.parquet")).create_view("securities")
@@ -66,12 +66,13 @@ def stage(release, capture, archives, output):
                 WHERE coalesce(same_day_conflicts,0)=0
             ), gaps AS (
                 SELECT DISTINCT e.ts_code,e.effective
-                FROM stock s ASOF JOIN bounded e ON s.ts_code=e.ts_code AND s.local_trade_date>=e.effective
-                WHERE s.shares_outstanding_security IS NULL AND s.local_trade_date>=e.usable_from
+                FROM bounded e JOIN stock s ON s.ts_code=e.ts_code AND s.local_trade_date>=e.usable_from
                   AND (e.expires IS NULL OR s.local_trade_date<e.expires)
+                WHERE s.shares_outstanding_security IS NULL OR
+                      (? AND (e.b_shares>0 OR e.h_shares>0) AND s.issuer_market_cap_reporting IS NULL)
             )
             SELECT e.* FROM bounded e SEMI JOIN gaps USING(ts_code,effective) ORDER BY ts_code,effective
-        """).to_arrow_table().to_pylist()
+        """, params=[issuer_gaps]).to_arrow_table().to_pylist()
     with output.open("w", encoding="utf-8") as stream:
         for row in rows:
             stream.write(json.dumps({
@@ -95,5 +96,6 @@ if __name__ == "__main__":
     for name in ("release", "capture", "output"):
         parser.add_argument(f"--{name}", required=True, type=Path)
     parser.add_argument("--archives", required=True, type=Path, nargs="+")
+    parser.add_argument("--issuer-gaps", action="store_true", help="Include complete schedules for issuer valuation gaps")
     args = parser.parse_args()
-    stage(args.release, args.capture, args.archives, args.output)
+    stage(args.release, args.capture, args.archives, args.output, issuer_gaps=args.issuer_gaps)

@@ -52,7 +52,7 @@ def csmar_amounts(capture):
     return observed, [item["sha256"] for item in receipts]
 
 
-def stage(capture, archive, prior_audit, base, output, workers, *, original_only=False):
+def stage(capture, archive, prior_audit, base, output, workers, *, original_only=False, rejection_reason=None):
     output.mkdir(parents=True, exist_ok=True)
     audited = json.loads(prior_audit.read_bytes())
     source = base / "financial_versions.jsonl"
@@ -61,7 +61,8 @@ def stage(capture, archive, prior_audit, base, output, workers, *, original_only
     for row in base_rows:
         known[row["ts_code"], row["period_end"], row["published_at"][:10]].update(
             field for field in MEASURES if row.get(field) is not None)
-    rejected = {(r["ts_code"], r["id"]) for r in audited["rejected"] if r["reason"] not in {
+    rejected = {(r["ts_code"], r["id"]) for r in audited["rejected"]
+                if (not rejection_reason or r["reason"] == rejection_reason) and r["reason"] not in {
         "issuer_attachment_unavailable_or_ambiguous", "archive_hash_mismatch", "filing_security_identity_missing",
     }}
     catalog = json.loads((archive / "collection.json").read_bytes())
@@ -120,9 +121,10 @@ def main():
         cli.add_argument(f"--{key}", type=Path, required=True)
     cli.add_argument("--workers", type=int, default=4)
     cli.add_argument("--original-only", action="store_true", help="Use independently legible fields of the issuer original")
+    cli.add_argument("--rejection-reason", help="Retry only the indicated disposition in the archived extraction audit")
     args = cli.parse_args()
     stage(args.capture, args.archive, args.prior_audit, args.base, args.output, args.workers,
-          original_only=args.original_only)
+          original_only=args.original_only, rejection_reason=args.rejection_reason)
 
 
 if __name__ == "__main__":

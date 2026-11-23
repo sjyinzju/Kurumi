@@ -13,7 +13,7 @@ from zoneinfo import ZoneInfo
 
 import pyarrow as pa
 
-from .cn_issuer_caps import build_class_caps
+from .cn_issuer_caps import build_class_caps, fill_class_caps
 
 LOCAL = ZoneInfo("Asia/Shanghai")
 UTC = timezone.utc
@@ -302,6 +302,7 @@ def build_pit(con, source_schema="quant", evidence_dir: Path | None = None):
     shares = _with_provenance(root, "share_versions", ledger)
     structured_shares = _with_provenance(root, "structured_share_versions", ledger)
     issuer_classes = _with_provenance(root, "issuer_class_versions", ledger)
+    structured_issuer_classes = _with_provenance(root, "structured_issuer_class_versions", ledger)
     industry = _with_provenance(root, "industry_versions", ledger)
     split_events = _with_provenance(root, "split_events", ledger)
     split_coverage = _with_provenance(root, "split_coverage", ledger)
@@ -502,6 +503,8 @@ def build_pit(con, source_schema="quant", evidence_dir: Path | None = None):
             FROM _resolved_share_conflicts s
             WHERE p.instrument_id=s.instrument_id AND p.local_trade_date=s.local_trade_date;
         """)
+    if structured_issuer_classes:
+        fill_class_caps(con, root, structured_issuer_classes, _effective_segments)
     _materialize(con, "pit_provenance", list(ledger.values()), {
         "provenance_id": pa.string(), "source_url": pa.string(), "source_sha256": pa.string(),
         "source_version_id": pa.string(), "published_at": STAMP, "observed_at": STAMP,

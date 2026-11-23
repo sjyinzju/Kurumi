@@ -41,7 +41,7 @@ def stage(root, sources):
         raise ValueError("Pass one normalized source or audit artifact per filename")
     if "financial_versions.jsonl" not in names:
         raise ValueError("A frozen build must name its admitted financial stream")
-    if "issuer_class_versions.jsonl" in names:
+    if {"issuer_class_versions.jsonl", "structured_issuer_class_versions.jsonl"} & names.keys():
         missing = {"class_quotes.parquet", "class_fx.parquet"} - names.keys()
         if missing:
             raise ValueError(f"Cross-class inputs are missing from the freeze: {', '.join(sorted(missing))}")

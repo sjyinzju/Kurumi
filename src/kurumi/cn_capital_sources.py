@@ -17,7 +17,7 @@ TUSHARE_DIVIDEND = "https://tushare.pro/document/2?doc_id=103"
 TUSHARE_BALANCE = "https://tushare.pro/document/2?doc_id=36"
 
 
-def csmar_capture(con, root, table):
+def csmar_capture(con, root, table, *, bind_rows=False):
     directory = root / table
     files = sorted(directory.glob("*.jsonl.gz"))
     if not files:
@@ -61,7 +61,19 @@ def csmar_capture(con, root, table):
             stop += length
         if stop != counts[scope]:
             raise ValueError(f"CSMAR paged scope is incomplete: {table} {scope}")
-    con.read_json([str(p) for p in files], convert_strings_to_integers=False).create_view(table)
+    rows = con.read_json([str(p) for p in files], convert_strings_to_integers=False, filename=bind_rows)
+    if bind_rows:
+        con.execute("CREATE OR REPLACE TEMP TABLE _csmar_receipt_hashes (filename VARCHAR, _capture_sha256 VARCHAR)")
+        con.executemany("INSERT INTO _csmar_receipt_hashes VALUES (?,?)",
+                        [(str(path), receipt["sha256"]) for path, receipt in zip(files, receipts, strict=True)])
+        rows.create_view(f"_{table}_capture")
+        con.execute(f"""
+            CREATE OR REPLACE TEMP TABLE {table} AS
+            SELECT r.* EXCLUDE(filename), h._capture_sha256
+            FROM _{table}_capture r JOIN _csmar_receipt_hashes h USING(filename)
+        """)
+    else:
+        rows.create_view(table)
     if con.sql(f"SELECT count(*) FROM {table}").fetchone()[0] != sum(r["rows"] for r in receipts):
         raise ValueError(f"CSMAR source row count mismatch for {table}")
     return receipts

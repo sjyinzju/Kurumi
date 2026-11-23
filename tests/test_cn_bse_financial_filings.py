@@ -58,3 +58,24 @@ def test_partial_income_accepts_half_year_but_rejects_ambiguous_third_quarter():
     assert traces["revenue_ytd"]["pdf_page"] == 1
     with pytest.raises(ValueError, match="fiscal_period_unconfirmed"):
         partial_amounts(pages, date(2024, 9, 30), requested, "2024年第三季度报告")
+
+
+def test_partial_statements_distinguish_decimal_notes_and_wrapped_equity():
+    pages = ["""（一） 合并资产负债表
+单位：元
+项目                    附注          期末余额                期初余额
+归属于母公司所有者权益（或股东权      349,914,718.36         153,212,884.84
+益）合计
+（三） 合并利润表
+单位：元
+项目                    附注          2024年1-6月             2023年1-6月
+其中：营业收入                6.31          59,675,141.95          64,654,602.85
+（四） 母公司利润表
+"""]
+    values, traces = partial_amounts(pages, date(2024, 6, 30),
+                                      {"revenue_ytd", "parent_equity"}, "2024年半年度报告")
+    assert values == {"revenue_ytd": 59675141.95, "parent_equity": 349914718.36}
+    assert traces["revenue_ytd"]["comparison_amount"] == "64,654,602.85"
+    pages[0] = pages[0].replace("64,654,602.85", "")
+    with pytest.raises(ValueError, match="no_requested_consolidated_amount"):
+        partial_amounts(pages, date(2024, 6, 30), {"revenue_ytd"}, "2024年半年度报告")
