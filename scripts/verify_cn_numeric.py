@@ -6,7 +6,9 @@ import hashlib
 import json
 import math
 import statistics
+from datetime import date, datetime
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 import duckdb
 import pyarrow.parquet as pq
@@ -131,15 +133,35 @@ def check_one(con, sample_id):
 def check_later_observed_suspensions(con, root):
     source = root / "reference" / "official_suspensions.json"
     items = json.loads(source.read_text(encoding="utf-8")) if source.is_file() else []
+    market_time = ZoneInfo("Asia/Shanghai")
     checked = []
     for item in items:
         if item["state"] != "reported_suspension":
             continue
         rows = con.execute("""
-            SELECT instrument_id,quote_valid,suspension_reported,suspension_verified,trading_status
+            SELECT instrument_id,quote_valid,suspension_reported,suspension_verified,trading_status,asof_utc
             FROM stock_daily WHERE ts_code=? AND local_trade_date=?
         """, [item["ts_code"], item["effective_from"]]).fetchall()
-        if len(rows) != 1 or rows[0][1:] != (False, True, False, "unknown"):
+        if len(rows) != 1:
+            raise ValueError(f"Observation-only halt has no unique security day: {item['ts_code']}")
+        day = item["effective_from"]
+        clock = rows[0][-1].astimezone(market_time)
+        timely_sources = []
+        for proof in items:
+            if (proof["ts_code"] != item["ts_code"] or proof["state"] not in {"suspended", "listing_suspended"}
+                    or not proof["effective_from"] <= day < proof["effective_to_exclusive"]):
+                continue
+            timestamp = proof.get("public_fact_available_by")
+            if timestamp:
+                known_at = datetime.fromisoformat(timestamp)
+                timely = known_at.tzinfo is not None and known_at <= clock
+            else:
+                timely = date.fromisoformat(proof["start_published_date"]) < clock.date()
+            if timely:
+                timely_sources.append(proof["start_source_id"])
+        verified = bool(timely_sources)
+        status = "suspended" if verified else "unknown"
+        if rows[0][1:-1] != (False, True, verified, status):
             raise ValueError(f"Observation-only halt was promoted or lost: {item['ts_code']} {item['effective_from']}")
         reason_counts = con.execute("""
             SELECT invalid_reason,count(*) FROM labels WHERE starts_with(sample_id,?)
@@ -147,8 +169,8 @@ def check_later_observed_suspensions(con, root):
         """, [f"CN|{rows[0][0]}|", item["effective_from"]]).fetchall()
         if any(reason is None or reason == "target_missing_quote" for reason, _ in reason_counts):
             raise ValueError(f"Actual halt not recognized in supervision: {item['ts_code']}")
-        checked.append({"ts_code": item["ts_code"], "date": item["effective_from"],
-                        "label_reasons": dict(reason_counts), "model_status": "unknown"})
+        checked.append({"ts_code": item["ts_code"], "date": day, "label_reasons": dict(reason_counts),
+                        "model_status": status, "timely_source_ids": sorted(timely_sources)})
     return checked
 
 

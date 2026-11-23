@@ -10,14 +10,14 @@ from itertools import chain
 from pathlib import Path
 
 import duckdb
-
 from csmar_acquire import dump_json, file_sha256
-from kurumi.cn_capital_sources import csmar_capture
 from normalize_cn_financial_versions import CSMAR_FIELDS, MEASURES
 from replace_cn_financial_versions import replace
 from stage_cn_bse_financial_filings import normalize_one
 from stage_cn_bse_financial_gaps import merge_additive_candidates
 from stage_cn_csmar_cashflow_originals import write_lines
+
+from kurumi.cn_capital_sources import csmar_capture
 
 
 def extract(task):
@@ -29,7 +29,7 @@ def extract(task):
     except (ValueError, PdfReadError, OSError) as exc:
         return None, str(exc)
     agreed = {field for field in matching if row.get(field) is not None
-              and any(abs(row[field] - value) < .005 for value in matching[field])}
+              and (matching[field] is None or any(abs(row[field] - value) < .005 for value in matching[field]))}
     if not agreed:
         return None, "no_CSMAR_amount_matches_the_original_document"
     row = {name: value for name, value in row.items() if name not in MEASURES or name in agreed}
@@ -52,7 +52,7 @@ def csmar_amounts(capture):
     return observed, [item["sha256"] for item in receipts]
 
 
-def stage(capture, archive, prior_audit, base, output, workers):
+def stage(capture, archive, prior_audit, base, output, workers, *, original_only=False):
     output.mkdir(parents=True, exist_ok=True)
     audited = json.loads(prior_audit.read_bytes())
     source = base / "financial_versions.jsonl"
@@ -65,7 +65,7 @@ def stage(capture, archive, prior_audit, base, output, workers):
         "issuer_attachment_unavailable_or_ambiguous", "archive_hash_mismatch", "filing_security_identity_missing",
     }}
     catalog = json.loads((archive / "collection.json").read_bytes())
-    amounts, hashes = csmar_amounts(capture)
+    amounts, hashes = ({}, []) if original_only else csmar_amounts(capture)
     candidates = []
     for target in catalog["targets"]:
         code = target["ticker"]
@@ -76,13 +76,16 @@ def stage(capture, archive, prior_audit, base, output, workers):
             raw = [amounts.get((alias, period), {}) for alias in target["historical_codes"]]
             candidates_fields = {}
             for field in sorted(set(MEASURES) - known[code, period, day]):
+                if original_only:
+                    candidates_fields[field] = None
+                    continue
                 available = {value for value, correction in chain.from_iterable(t.get(field, ()) for t in raw)
                              if not correction or day in correction.split(",")}
                 if available:
                     candidates_fields[field] = available
             if candidates_fields:
                 candidates.append((archive / target["archive_dir"], target, notice, candidates_fields))
-    print(f"Partial filing candidates with CSMAR counterparts: {len(candidates)}", flush=True)
+    print(f"Partial filing candidates: {len(candidates)} (original only: {original_only})", flush=True)
     results, by_field, verified = Counter(), Counter(), []
     with ProcessPoolExecutor(max_workers=workers) as pool:
         for index, (row, outcome) in enumerate(pool.map(extract, candidates, chunksize=3), 1):
@@ -105,7 +108,8 @@ def stage(capture, archive, prior_audit, base, output, workers):
         write_lines(output / filename, records)
     dump_json(output / "reviewed.json", {"replace": reviewed})
     dump_json(output / "partial_financial_review.json", dict(candidates=len(candidates), outcomes=dict(results),
-        qualified_field_counts=dict(by_field), csmar_source_sha256=hashes, input_sha256=file_sha256(source),
+        qualified_field_counts=dict(by_field), original_only=original_only,
+        csmar_source_sha256=hashes, input_sha256=file_sha256(source),
         merge_counts=[{"scope": k, "count": v} for k, v in sorted(counts.items())], conflicts=conflicts, decisions=decisions))
     print(f"Checked {len(candidates)} filings. Added {len(changed)} supplements and {len(additions)} versions", flush=True)
 
@@ -115,8 +119,10 @@ def main():
     for key in ("capture", "archive", "prior-audit", "base", "output"):
         cli.add_argument(f"--{key}", type=Path, required=True)
     cli.add_argument("--workers", type=int, default=4)
+    cli.add_argument("--original-only", action="store_true", help="Use independently legible fields of the issuer original")
     args = cli.parse_args()
-    stage(args.capture, args.archive, args.prior_audit, args.base, args.output, args.workers)
+    stage(args.capture, args.archive, args.prior_audit, args.base, args.output, args.workers,
+          original_only=args.original_only)
 
 
 if __name__ == "__main__":

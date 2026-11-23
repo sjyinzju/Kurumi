@@ -11,6 +11,7 @@ from importlib.metadata import version
 from pathlib import Path
 from types import SimpleNamespace
 
+from .cn_features import MARKET_BENCHMARK_FIELDS, MARKET_BENCHMARK_INPUT_TEMPLATE
 from .numeric_loader import (
     CHANNELS,
     COVERAGE_FIELDS,
@@ -61,7 +62,7 @@ def _context_state(title, data, fields, groups):
     names = ",".join(COVERAGE_FIELDS)
     lines.append(f"coverage columns={names}")
     lines.extend(f"{group}=" + ",".join(_show(data["coverage"][group][name]) for name in COVERAGE_FIELDS)
-                 for group in groups)
+                 for group in groups if group in data["coverage"])
     return lines
 
 
@@ -92,6 +93,9 @@ def render_state(model_input: dict) -> str:
     ))
     market = state["Xmarket"]
     lines.extend(_context_state("Market", market["market"], MARKET_FIELDS, MARKET_COVERAGE_GROUPS))
+    if any(field in market["market"] for field in MARKET_BENCHMARK_FIELDS):
+        lines.append("[Market benchmark: CSI All Share gross total return, H00985]")
+        lines.append(_fields(market["market"], MARKET_BENCHMARK_FIELDS))
     lines.extend(_context_state("Industry", market["industry"], INDUSTRY_FIELDS, INDUSTRY_COVERAGE_GROUPS))
     if state["Xtext"] != {"text_ref": None, "text_status": "not_built"}:
         raise ValueError("Numeric input template accepts only the not_built text slot")
@@ -216,7 +220,9 @@ class KarpoNumericEncoder:
         if cache is not None:
             if not dataset_version or not sample_id:
                 raise ValueError("Cached native plans require dataset version and stable sample ID")
-            namespace_parts = (dataset_version, INPUT_TEMPLATE_VERSION, self.encoder_revision,
+            market = model_input["Xstate"]["Xmarket"]["market"]
+            template = MARKET_BENCHMARK_INPUT_TEMPLATE if MARKET_BENCHMARK_FIELDS[0] in market else INPUT_TEMPLATE_VERSION
+            namespace_parts = (dataset_version, template, self.encoder_revision,
                                self.tokenizer_revision, text_version, text_condition, self.max_length, self.runtime)
             namespace = json.dumps(namespace_parts, ensure_ascii=True, sort_keys=True, separators=(",", ":"))
             market, _, day = sample_id.split("|")

@@ -276,3 +276,17 @@ def test_pit_uses_only_eligible_share_industry_and_split_evidence(tmp_path):
         """).fetchall() == [
             (None, None, None), (10_000, 10_000, "missing_provider_comparison"), (None, None, "numeric_conflict"),
         ]
+
+        structured = provenance | facts["share_versions"] | {
+            "published_at": "2024-05-21", "source_version_id": "dated-structure",
+            "shares_outstanding_security": 20_000, "verification_rule": "dated_structured_equity_disclosure",
+        }
+        (tmp_path / "structured_share_versions.jsonl").write_text(json.dumps(structured) + "\n", encoding="utf-8")
+        build_pit(con, evidence_dir=tmp_path)
+        assert con.sql("""
+            SELECT shares_outstanding_security,issuer_market_cap_reporting,share_check_status
+            FROM stock_pit ORDER BY local_trade_date
+        """).fetchall() == [
+            (None, None, None), (10_000, 10_000, "missing_provider_comparison"),
+            (20_000, 20_000, "matched_structured_after_conflict"),
+        ]

@@ -5,7 +5,9 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 from datetime import timedelta
+from decimal import Decimal
 from pathlib import Path
 
 import duckdb
@@ -96,7 +98,8 @@ def main():
     parser.add_argument("--unit-divisor", required=True, type=int, choices=(1, 10))
     parser.add_argument("--cash-divisor", required=True, type=int, choices=(1, 10))
     parser.add_argument("--implemented-status", required=True)
-    parser.add_argument("--distribution-object", action="append", required=True)
+    parser.add_argument("--distribution-object", action="append", default=[])
+    parser.add_argument("--all-registered-holders", action="store_true")
     parser.add_argument("--output", required=True, type=Path)
     args = parser.parse_args()
     with duckdb.connect() as con:
@@ -105,13 +108,24 @@ def main():
         candidates = _candidates(con, args.frozen, args.unit_divisor, args.cash_divisor)
     chosen = {}
     for row in candidates:
-        if str(row["Schedu"]) == args.implemented_status and str(row["Trfojb"]) in args.distribution_object:
-            chosen.setdefault((row["ts_code"], row["ex_day"]), row)
+        holders = str(row["Trfojb"])
+        full_scope = (args.all_registered_holders and not any(term in holders for term in ("除外", "排除", "以外", "不参与"))
+                      and re.search(r"登记在册的(?:本?公司)?全体(?:A股)?股东[。.]?$", holders))
+        if str(row["Schedu"]) != args.implemented_status or not (holders in args.distribution_object or full_scope):
+            continue
+        if row["unit_per_share"] > 0 and args.all_registered_holders:
+            terms = row["Annocont"]
+            ratios = re.findall(r"(?:转增|送)([0-9]+(?:\.[0-9]+)?)股", terms)
+            literal = sum(map(Decimal, ratios), Decimal(0)) / 10
+            if not terms.startswith(("10股", "10转", "10送")) or abs(float(literal) - row["unit_per_share"]) > 1e-6:
+                continue
+            row["announced_unit_per_share"] = float(literal)
+        chosen.setdefault((row["ts_code"], row["ex_day"]), row)
     receipt, = source["source_receipts"]
     events = [{
         "ts_code": row["ts_code"], "effective_from": row["ex_day"], "published_at": row["pub"],
         "observed_at": receipt["observed_at"], "event_kind": "unit_distribution",
-        "split_multiplier": 1 + row["unit_per_share"], "source_url": CSMAR_URL,
+        "split_multiplier": 1 + row.get("announced_unit_per_share", row["unit_per_share"]), "source_url": CSMAR_URL,
         "source_version_id": f"CD_Dividend|{row['ts_code']}|{row['pub']}|{row['ex_day']}|{row['Rank']}",
         "source_sha256": receipt["sha256"], "verification_rule": "implemented_distribution_explicitly_reconciled.v1",
         "knowledge_quality": "historical_original_evidence",
@@ -122,6 +136,7 @@ def main():
         "cd_dividend_receipt": receipt, "unit_divisor": args.unit_divisor, "cash_divisor": args.cash_divisor,
         "independent_capital_payments_receipts": source["cross_check_receipts"],
         "implemented_status": args.implemented_status, "accepted_objects": args.distribution_object,
+        "accepted_all_registered_holders_terms": args.all_registered_holders,
         "source_candidates": len(candidates), "new_coverage_days": len(chosen), "new_actual_unit_events": len(events),
         "qualified_actions": list(chosen.values())}, ensure_ascii=False, default=str, indent=2) + "\n", "utf-8")
     digest = hashlib.sha256(audit.read_bytes()).hexdigest()

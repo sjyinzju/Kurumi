@@ -114,13 +114,15 @@ def ipo_limit_rule(exchange, symbol, listing, trade_day):
         return f"{exchange}_2023"
     if exchange == "SZSE" and symbol.startswith(("300", "301")) and listing >= date(2020, 8, 24):
         return "SZSE_GEM_2020"
+    if exchange == "SSE" and symbol.startswith("688") and listing >= date(2019, 7, 22):
+        return "SSE_STAR_2019"
     return None
 
 
 def dated_limits(gaps, cases, counts, star_rules, ipo_rules, ipo_facts):
     for instrument, code, alias, day, quote, high, low, age, exchange, listing in gaps:
         variants = cases.get((alias, day), {})
-        ipo = ipo_facts.get((alias, listing)) if quote and age and 1 <= age <= 5 else None
+        ipo = ipo_facts.get((alias, listing)) if age and 1 <= age <= 5 else None
         rule_code = ipo_limit_rule(exchange, alias[:6], listing, day) if ipo else None
         rule = ipo_rules.get(rule_code)
         if len(variants) > 1 or (not variants and not rule):
@@ -249,6 +251,8 @@ def stage(release, frozen, capture, checkpoints, output, star_archive=None, ipo_
                 if hashlib.sha256((ipo_archive / receipt["file"]).read_bytes()).hexdigest() != receipt["sha256"]:
                     raise ValueError(f"Exchange IPO limit rule hash differs: {name}")
                 ipo_rules[name] = receipt
+        if star_rules:
+            ipo_rules["SSE_STAR_2019"] = star_rules[1]
         with duckdb.connect(str(quant_db), read_only=True) as con:
             ipo_facts = {(code, day): (sha, observed) for code, day, sha, observed in con.sql("""
                 SELECT a.ts_code,strptime(a.issue_date,'%Y%m%d')::DATE,min(b.metadata->>'content_hash'),

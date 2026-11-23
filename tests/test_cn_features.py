@@ -90,6 +90,12 @@ def test_market_coverage_keeps_members_with_missing_prior_caps_and_separates_clo
         assert rows[65][2:] == (1, 0.0)
         assert rows[68][1]["cap_coverage"] is None
         assert rows[68][1]["status"] == "missing_source"
+        independent = con.sql("""
+            SELECT advance_ratio, return_dispersion_1d, suspension_ratio,
+                   coverage.advance_ratio.status, coverage.advance_ratio.cap_coverage
+            FROM market_daily WHERE local_trade_date = DATE '2015-01-01' + 68
+        """).fetchone()
+        assert independent == (1.0, 0.0, 0.0, "valid", None)
         con.execute("""
             CREATE TEMP VIEW stock_daily AS
             SELECT instrument_id AS exchange, * EXCLUDE(factor_missing_reasons),
@@ -125,6 +131,22 @@ def test_stock_excess_return_aligns_market_compound_to_exchange_endpoints():
         assert len(benchmark_components) == 6
         expected_benchmark = prod(1 + value for value, in benchmark_components) - 1
         assert observed - excess == pytest.approx(expected_benchmark, abs=1e-7)
+
+
+def test_separate_published_benchmark_recovers_relative_factors_with_missing_caps(tmp_path):
+    with fixture_connection() as con:
+        source = tmp_path / "benchmark.parquet"
+        con.sql("""SELECT local_trade_date, 100 * exp(i/200.0 + sin(i)/100.0) AS close
+                   FROM stock_base WHERE instrument_id='SSE'""").write_parquet(str(source))
+        con.execute("UPDATE stock_base SET shares_outstanding_security=NULL WHERE instrument_id='SSE'")
+        build_features(con, source)
+        weighted, benchmark = con.sql("""SELECT return_5d,benchmark_return_5d FROM market_daily
+                                       ORDER BY local_trade_date DESC LIMIT 1""").fetchone()
+        actual, excess, beta = con.sql("""SELECT return_5d,excess_market_5d,beta_market_60d FROM stock_factors
+                                        WHERE instrument_id='SSE' ORDER BY local_trade_date DESC LIMIT 1""").fetchone()
+        assert weighted is None
+        assert actual - excess == pytest.approx(benchmark, abs=1e-7)
+        assert beta == pytest.approx(1.0, abs=1e-7)
 
 
 def test_partial_membership_cannot_publish_industry_denominator():

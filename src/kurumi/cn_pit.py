@@ -248,6 +248,28 @@ def _effective_segments(rows, identity, fields):
                 previous = version
 
 
+def _supplemented_share_segments(primary, supplemental):
+    """Fill uncovered intervals while preserving already selected disclosure evidence."""
+    changes = defaultdict(dict)
+    for index, rows in enumerate((primary, supplemental)):
+        for row in rows:
+            changes[row["ts_code"], row["start_date"]][index] = row
+    current = [None, None]
+    previous_code = None
+    previous_source = None
+    for (code, start), updates in sorted(changes.items()):
+        if code != previous_code:
+            current = [None, None]
+            previous_code, previous_source = code, None
+        for index, row in updates.items():
+            current[index] = row if row["provenance_id"] is not None else None
+        active = current[0] or current[1]
+        source = active["provenance_id"] if active else None
+        if source != previous_source:
+            yield (active or {}) | {"ts_code": code, "start_date": start, "provenance_id": source}
+            previous_source = source
+
+
 def _unit_segments(rows):
     events = defaultdict(lambda: defaultdict(list))
     for row in rows:
@@ -278,6 +300,7 @@ def build_pit(con, source_schema="quant", evidence_dir: Path | None = None):
     ledger = {}
     financial = _with_provenance(root, "financial_versions", ledger)
     shares = _with_provenance(root, "share_versions", ledger)
+    structured_shares = _with_provenance(root, "structured_share_versions", ledger)
     issuer_classes = _with_provenance(root, "issuer_class_versions", ledger)
     industry = _with_provenance(root, "industry_versions", ledger)
     split_events = _with_provenance(root, "split_events", ledger)
@@ -291,7 +314,7 @@ def build_pit(con, source_schema="quant", evidence_dir: Path | None = None):
         SELECT a.symbol, q.ts_code FROM security_aliases a JOIN quotes q USING(instrument_id)
         QUALIFY count(DISTINCT q.ts_code) OVER(PARTITION BY a.symbol)=1
     """).fetchall()) if alias_source else {}
-    for source in (financial, shares, issuer_classes, industry, split_events, split_coverage):
+    for source in (financial, shares, structured_shares, issuer_classes, industry, split_events, split_coverage):
         for row in source:
             row["ts_code"] = aliases.get(row["ts_code"], row["ts_code"])
     issuers = dict(con.execute("SELECT DISTINCT ts_code, issuer_id FROM stock_base").fetchall())
@@ -305,14 +328,19 @@ def build_pit(con, source_schema="quant", evidence_dir: Path | None = None):
         "source_version_refs": pa.list_(pa.string()), "missing_reasons": missing,
     })
     share_fields = ("shares_outstanding_security", "single_share_class", "reporting_currency")
-    share_segments = list(_effective_segments(shares, "ts_code", share_fields))
-    _materialize(con, "_share_segments", share_segments, {
+    structured_segments = list(_effective_segments(structured_shares, "ts_code", share_fields))
+    share_segments = list(_supplemented_share_segments(
+        _effective_segments(shares, "ts_code", share_fields), structured_segments,
+    ))
+    share_schema = {
         "ts_code": pa.string(), "start_date": pa.date32(), "shares_outstanding_security": pa.float64(),
         "single_share_class": pa.bool_(), "reporting_currency": pa.string(),
         "share_precision_shares": pa.float64(), "available_at": STAMP, "provenance_id": pa.string(),
         "verification_rule": pa.string(),
-    })
-    if shares:
+    }
+    _materialize(con, "_share_segments", share_segments, share_schema)
+    _materialize(con, "_structured_share_segments", structured_segments, share_schema)
+    if share_segments:
         con.execute(f"""
             CREATE OR REPLACE TEMP TABLE _daily_share_check AS
             SELECT ts_code, CAST(_event_date AS DATE) AS local_trade_date,
@@ -445,6 +473,35 @@ def build_pit(con, source_schema="quant", evidence_dir: Path | None = None):
         {class_join}
         LEFT JOIN _daily_share_check c ON b.ts_code = c.ts_code AND b.local_trade_date = c.local_trade_date
     """)
+    if structured_segments:
+        # A dated single-class schedule can resolve a genuine conflict when it also matches
+        # the contemporaneous day-level total. Preserve all already accepted stock rows.
+        con.execute("""
+            CREATE OR REPLACE TEMP TABLE _resolved_share_conflicts AS
+            WITH rejected AS (
+                SELECT p.instrument_id,p.local_trade_date,b.ts_code,b.asof_utc,b.close_raw,
+                       p.fundamental_snapshot_id,c.total_shares,c.share_precision_shares
+                FROM stock_pit p JOIN stock_base b USING(instrument_id,local_trade_date)
+                JOIN _daily_share_check c ON b.ts_code=c.ts_code AND b.local_trade_date=c.local_trade_date
+                WHERE p.share_check_status='numeric_conflict' AND p.shares_outstanding_security IS NULL
+            ) SELECT b.instrument_id,b.local_trade_date,h.shares_outstanding_security,
+                     h.shares_outstanding_security*b.close_raw AS security_cap,
+                     IF(coalesce(f.reporting_currency,h.reporting_currency)='CNY',
+                        h.shares_outstanding_security*b.close_raw,NULL) AS issuer_cap,
+                     h.provenance_id
+              FROM rejected b ASOF JOIN _structured_share_segments h
+                ON b.ts_code=h.ts_code AND b.local_trade_date>=h.start_date
+              LEFT JOIN stock_fundamental_asof f USING(fundamental_snapshot_id)
+              WHERE h.provenance_id IS NOT NULL AND h.single_share_class AND h.available_at<=b.asof_utc
+                AND abs(h.shares_outstanding_security-b.total_shares) <=
+                    (coalesce(h.share_precision_shares,0)+b.share_precision_shares)/2 + 1e-4;
+            UPDATE stock_pit p SET shares_outstanding_security=s.shares_outstanding_security,
+                   security_market_cap_local=s.security_cap,
+                   issuer_market_cap_reporting=coalesce(p.issuer_market_cap_reporting,s.issuer_cap),
+                   share_provenance_id=s.provenance_id,share_check_status='matched_structured_after_conflict'
+            FROM _resolved_share_conflicts s
+            WHERE p.instrument_id=s.instrument_id AND p.local_trade_date=s.local_trade_date;
+        """)
     _materialize(con, "pit_provenance", list(ledger.values()), {
         "provenance_id": pa.string(), "source_url": pa.string(), "source_sha256": pa.string(),
         "source_version_id": pa.string(), "published_at": STAMP, "observed_at": STAMP,

@@ -157,7 +157,7 @@ def partial_amounts(pages, end, requested, title):
         lhs, second, rhs = controls[section]
         complete = set(controls[section]) <= table_values.keys()
         expected = table_values.get(rhs, 0) + table_values.get(second, 0) if section == "资产负债表" else table_values.get(rhs, 0) - table_values.get(second, 0)
-        if (section != "利润表" and not complete) or (complete and table_values[lhs] != expected):
+        if complete and table_values[lhs] != expected:
             rejected[section] = "accounting_controls_unverified"
             continue
         kept = requested.intersection(table_values)

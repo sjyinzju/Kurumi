@@ -26,7 +26,8 @@ from kurumi.cn_pit import (
     financial_snapshots,
 )
 
-TYPES = ("financial_versions", "share_versions", "industry_versions", "split_events", "split_coverage")
+TYPES = ("financial_versions", "share_versions", "structured_share_versions", "industry_versions", "split_events",
+         "split_coverage")
 PROBE_CODES = ("000001.SZ", "000019.SZ", "002142.SZ", "300059.SZ", "600000.SH", "600276.SH")
 PROBE_DAYS = (
     "2016-04-11", "2018-04-10", "2020-01-02", "2022-04-12", "2023-04-10",
@@ -52,7 +53,7 @@ def future_changes(name, row, cutoff):
     else:
         # Force business time before the cutoff while keeping public time unchanged.
         changed.update(effective_from=(cutoff - timedelta(days=1)).isoformat(), effective_to=None)
-        if name == "share_versions":
+        if name in ("share_versions", "structured_share_versions"):
             changed.update(shares_outstanding_security=row["shares_outstanding_security"] * 2, single_share_class=False)
         if name == "industry_versions":
             changed.update(industry_code="future-mutation", industry_name="future-mutation")
@@ -302,6 +303,9 @@ def main():
             "financial_helper": financial_prefix(versions["financial_versions"]),
             "share_segment_helper": segment_prefix("share_versions", versions["share_versions"],
                                                    ("shares_outstanding_security", "single_share_class")),
+            "structured_share_segment_helper": segment_prefix("structured_share_versions",
+                                                                 versions["structured_share_versions"],
+                                                                 ("shares_outstanding_security", "single_share_class")),
             "industry_segment_helper": segment_prefix("industry_versions", versions["industry_versions"],
                                                       ("classification_version", "industry_code", "industry_name")),
             "split_coverage_segment_helper": segment_prefix("split_coverage", versions["split_coverage"], ()),

@@ -18,7 +18,15 @@ from .cn_acceptance import (
     temporal_violations,
     validate_candidate,
 )
-from .cn_features import FACTOR_NAMES, build_features, feature_quality
+from .cn_features import (
+    FACTOR_NAMES,
+    MARKET_BENCHMARK_INPUT_TEMPLATE,
+    MARKET_BENCHMARK_VERSION,
+    MIN_COVERAGE,
+    STATE_COVERAGE_VERSION,
+    build_features,
+    feature_quality,
+)
 from .cn_identity import apply_code_changes
 from .cn_issuer_continuity import register_issuer_continuity
 from .cn_limit_pit import register_verified_limits
@@ -49,7 +57,9 @@ CONTRACT = {
     "markets": ["CN"], "price_read_start_date": "2015-01-01", "sample_end_date": "2026-06-30",
     "label_observation_end_date": "2026-07-31", "horizons": [1, 5, 20], "lookback_returns": 60,
     "required_close_observations": 61, "volatility_ddof": 1, "zero_log_return_tolerance": 1e-12,
-    "market_cap_coverage_min": 0.99, "numeric_cache_limit_gib": 8, "text_status": "not_built",
+    "market_cap_coverage_min": MIN_COVERAGE, "market_count_coverage_min": MIN_COVERAGE,
+    "market_state_coverage_version": STATE_COVERAGE_VERSION,
+    "numeric_cache_limit_gib": 8, "text_status": "not_built",
     "split": {"train_end": "2023-12-31", "validation_start": "2024-01-01", "validation_end": "2024-06-30",
               "calibration_start": "2024-07-01", "calibration_end": "2024-12-31",
               "test_start": "2025-01-01", "test_end": "2026-06-30"},
@@ -260,6 +270,7 @@ def export_auxiliary(con, workspace, publish, prehistory):
         "reference/split_events.parquet": "SELECT * FROM _split_events",
         "reference/split_coverage.parquet": "SELECT * FROM _split_coverage",
         "reference/share_segments.parquet": "SELECT * FROM _share_segments",
+        "reference/structured_share_segments.parquet": "SELECT * FROM _structured_share_segments",
         "reports/pit_source_coverage.parquet": "SELECT * FROM pit_source_coverage",
         "reports/quote_gaps.parquet": "SELECT * FROM quote_gaps ORDER BY exchange,local_trade_date,instrument_id",
         "reports/training_samples.parquet": "SELECT * FROM training_samples ORDER BY split,local_trade_date,sample_id",
@@ -399,7 +410,8 @@ def reusable_supervision_release(con, numeric_root, inputs, code, price_signatur
         if (old_evidence.get(name) != current_evidence.get(name) or
                 (name in current_evidence and manifest["code_sha256"].get(module) != code[module])):
             return None
-    old_modules = pit_identity_modules(pit_modules, manifest["code_sha256"], old_evidence)
+    old_pit_modules = {name: manifest["code_sha256"][name] for name in pit_modules}
+    old_modules = pit_identity_modules(old_pit_modules, manifest["code_sha256"], old_evidence)
     old_pit = digest([price_signature, old_evidence, old_modules, PIT_ENRICHMENT_RULE_ID])
     old_supervision = digest([old_pit, *(code[k] for k in rules)])
     recorded = con.sql("SELECT signature FROM build_checkpoints WHERE stage='supervision'").fetchone()
@@ -417,7 +429,11 @@ def complete_build(con, workspace, inputs, evidence_dir=None, prehistory=None, s
     revision = git_revision()
     evidence_dir = evidence_dir or workspace / "sources" / "pit"
     evidence = evidence_signature(evidence_dir)
-    fingerprint = digest([inputs, code, revision, evidence, CONTRACT, duckdb_version(con)])
+    benchmark = "market_benchmark.parquet"
+    benchmark_path = evidence_dir / benchmark if benchmark in evidence else None
+    contract = CONTRACT | ({"market_relative_benchmark_version": MARKET_BENCHMARK_VERSION,
+                            "input_template_version": MARKET_BENCHMARK_INPUT_TEMPLATE} if benchmark_path else {})
+    fingerprint = digest([inputs, code, revision, evidence, contract, duckdb_version(con)])
     publish = workspace / f"publish-{fingerprint[:24]}"
     if resume_export is not None:
         publish = resume_export.resolve()
@@ -511,7 +527,7 @@ def complete_build(con, workspace, inputs, evidence_dir=None, prehistory=None, s
     feature_tables = ("stock_factors", "market_daily", "industry_daily")
     if con.sql("SELECT signature FROM build_checkpoints WHERE stage='features'").fetchone() != (feature_sig,):
         print("build features", flush=True)
-        build_features(con)
+        build_features(con, benchmark_path)
         for table in feature_tables:
             con.execute(f"CREATE OR REPLACE TABLE built_{table} AS FROM {table}")
             con.execute(f"DROP TABLE temp.main.{table}")
@@ -529,7 +545,7 @@ def complete_build(con, workspace, inputs, evidence_dir=None, prehistory=None, s
     stock_files = ", ".join(literal(publish / name) for name in metadata if name.startswith("stock_daily/"))
     con.execute(f"CREATE OR REPLACE TEMP VIEW stock_daily AS SELECT * FROM read_parquet([{stock_files}], hive_partitioning=false)")
     export_auxiliary(con, workspace, publish, prehistory)
-    reference_streams = {"security_name_versions.jsonl", "issuer_venue_transfers.jsonl", "stock_limit_evidence.jsonl"}
+    reference_streams = {"security_name_versions.jsonl", "issuer_venue_transfers.jsonl", "stock_limit_evidence.jsonl", benchmark}
     for name, expected in evidence.items():
         if name.endswith(".json") or name in reference_streams:
             reference = publish / "reference" / name
@@ -583,7 +599,7 @@ def complete_build(con, workspace, inputs, evidence_dir=None, prehistory=None, s
                                            FROM quote_gaps GROUP BY ALL ORDER BY 1""")}
     write_json(publish / "schema.json", {"tables": schemas})
     # JSON syntax is also YAML 1.2. Keep one canonical serialization of fixed parameters.
-    write_json(publish / "contract.yaml", CONTRACT)
+    write_json(publish / "contract.yaml", contract)
     validation = {"full_sql_violation_counts": tests}
     quality_path = publish / "reports" / "quality_summary.json"
     validation_path = publish / "reports" / "validation_results.json"
@@ -596,7 +612,7 @@ def complete_build(con, workspace, inputs, evidence_dir=None, prehistory=None, s
     source_parts = {endpoint: [path for (path,) in con.execute(
         "SELECT path FROM source_parts WHERE endpoint=? ORDER BY path", [endpoint]
     ).fetchall()] for endpoint in ("daily", "daily_basic")}
-    write_json(manifest_path, {**CONTRACT, "status": candidate_status, "dataset_version": publish.name,
+    write_json(manifest_path, {**contract, "status": candidate_status, "dataset_version": publish.name,
                                "files": file_inventory(publish, metadata)})
     con.execute("SET memory_limit='6GB'")
     try:
@@ -615,7 +631,7 @@ def complete_build(con, workspace, inputs, evidence_dir=None, prehistory=None, s
     dataset_version = "cn-" + digest([fingerprint, metadata])
     shared_files = link_identical_parquets(publish, workspace.parent, metadata)
     write_json(manifest_path, {
-        **CONTRACT, **quality, "dataset_version": dataset_version, "code_sha256": code,
+        **contract, **quality, "dataset_version": dataset_version, "code_sha256": code,
         "source_repo_revision": revision,
         "native_karpo_code_revision": "6600011eb5cf46232d056ec0717dc726146d29de",
         "native_karpo_checkpoint_revision": "b8e6fd7463cea8662c556d6257955d7ef9c10d19",

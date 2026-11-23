@@ -99,6 +99,19 @@ METRIC_VALUES = {
     "turnover_total_median": "turnover_total",
     "suspension_ratio": "suspension_value",
 }
+COUNT_GATED = {
+    "advance_ratio": "valuation_return", "return_dispersion_1d": "valuation_return",
+    **{metric: value for metric, value in METRIC_VALUES.items() if metric != "return_1d"},
+}
+STATE_COVERAGE = METRIC_VALUES | COUNT_GATED
+STATE_COVERAGE_VERSION = "numeric_market_coverage.count_for_unweighted.v1"
+MIN_COVERAGE = 0.99
+MARKET_BENCHMARK_VERSION = "cn.csi_all_share_gross_total_return.h00985.v1"
+MARKET_BENCHMARK_INPUT_TEMPLATE = "kurumi.numeric.input.v1.cn_h00985"
+MARKET_BENCHMARK_FIELDS = (
+    *(f"benchmark_return_{n}d" for n in WINDOWS), "benchmark_volatility_20d_daily",
+    "benchmark_volatility_60d_daily", "benchmark_drawdown_from_peak_60d",
+)
 COMMON_STATE_FIELDS = (
     "return_1d", "return_5d", "return_20d", "return_60d", "volatility_20d_daily", "volatility_60d_daily",
     "advance_ratio", "above_ma20_ratio", "activity_proxy_ratio_20d",
@@ -106,11 +119,14 @@ COMMON_STATE_FIELDS = (
 MARKET_ONLY_FIELDS = (
     "drawdown_from_peak_60d", "return_dispersion_1d", "above_ma60_ratio", "turnover_total_median", "suspension_ratio",
 )
-INDUSTRY_COVERAGE_GROUPS = ("return_1d", "above_ma20_ratio", "activity_proxy_ratio_20d")
+INDUSTRY_COVERAGE_GROUPS = ("return_1d", "advance_ratio", "above_ma20_ratio", "activity_proxy_ratio_20d")
 
 
-def _coverage_struct(value):
+def _coverage_struct(value, *, by_count):
     cap = f"{value}_cap"
+    criterion = (f"divide_if_positive({value}_n_valid, n_expected)" if by_count else
+                 f"divide_if_positive({cap}, expected_cap)")
+    unavailable = "" if by_count else "WHEN n_cap <> n_expected OR NOT expected_cap > 0 THEN 'missing_source'"
     return f"""struct_pack(
         n_expected := CASE WHEN membership_complete THEN coalesce(n_expected, 0) END,
         n_known_expected := coalesce(n_expected, 0), n_valid := coalesce({value}_n_valid, 0),
@@ -122,8 +138,8 @@ def _coverage_struct(value):
             THEN divide_if_positive(coalesce({value}_suspended_cap, 0), expected_cap) END,
         status := CASE WHEN n_expected IS NULL OR n_expected = 0 THEN 'insufficient_history'
                        WHEN NOT membership_complete THEN 'unverified_version'
-                       WHEN n_cap <> n_expected OR NOT expected_cap > 0 THEN 'missing_source'
-                       WHEN coalesce(divide_if_positive({cap}, expected_cap), 0) < 0.99 THEN 'low_coverage'
+                       {unavailable}
+                       WHEN coalesce({criterion}, 0) < {MIN_COVERAGE} THEN 'low_coverage'
                        ELSE 'valid' END
     )"""
 
@@ -181,16 +197,17 @@ def _aggregate_members(con):
 
 
 def _states(con):
-    ratio_valid = {m: f"cov_{v}.status = 'valid'" for m, v in METRIC_VALUES.items()}
+    ratio_valid = {metric: f"cov_{metric}.status = 'valid'" for metric in STATE_COVERAGE}
     coverage_columns = ",".join(
-        f"{_coverage_struct(v)} AS cov_{v}" for v in METRIC_VALUES.values()
+        f"{_coverage_struct(value, by_count=metric in COUNT_GATED)} AS cov_{metric}"
+        for metric, value in STATE_COVERAGE.items()
     )
     keep_columns = [
         "advance_ratio", "return_dispersion_1d", "above_ma20_ratio", "above_ma60_ratio",
         "turnover_total_median", "suspension_ratio",
     ]
     gated = ",".join(
-        f"CASE WHEN {ratio_valid.get(m, ratio_valid['return_1d'])} THEN {m} END AS {m}"
+        f"CASE WHEN {ratio_valid[m]} THEN {m} END AS {m}"
         for m in keep_columns
     )
     rolls = ",".join(
@@ -230,7 +247,7 @@ def _states(con):
                    CASE WHEN {ratio_valid['return_1d']} THEN divide_if_positive(return_num, valuation_return_cap)
                         END AS return_1d,
                    CASE WHEN {ratio_valid['activity_proxy_ratio_20d']} THEN activity_sum END AS activity_sum,
-                   {','.join(f'cov_{v}' for v in METRIC_VALUES.values())},
+                   {','.join(f'cov_{metric}' for metric in STATE_COVERAGE)},
                    coalesce(exchange_closed_count, 0) AS exchange_closed_count,
                    CASE WHEN membership_complete AND n_cap = n_expected THEN
                        divide_if_positive(coalesce(exchange_closed_cap, 0), expected_cap) END AS exchange_closed_weight
@@ -280,6 +297,50 @@ def _aligned_benchmarks(con):
                {horizons}
         FROM endpoints s JOIN market_calendar e USING (local_trade_date)
         WINDOW w AS (PARTITION BY group_id, exchange ORDER BY session_idx)
+    """)
+
+
+def _benchmark(con, source):
+    """Published CSI index levels on the same session endpoints as the stock factors."""
+    from .cn_prices import literal
+
+    rolls = []
+    for n in WINDOWS:
+        window = f"(ORDER BY market_idx ROWS BETWEEN {n - 1} PRECEDING AND CURRENT ROW)"
+        rolls.append(f"CASE WHEN count(day_log) OVER {window}={n} "
+                     f"THEN kurumi_expm1(sum(day_log) OVER {window}) END AS benchmark_return_{n}d")
+    con.execute(f"""
+        CREATE OR REPLACE TEMP TABLE _market_benchmark AS
+        WITH levels AS (
+            SELECT c.*, p.close::DOUBLE AS benchmark_close
+            FROM _feature_market_calendar c LEFT JOIN read_parquet({literal(source)}) p USING(local_trade_date)
+        ), days AS (
+            SELECT *, kurumi_log_ratio(benchmark_close, lag(benchmark_close) OVER (ORDER BY market_idx)) AS day_log
+            FROM levels
+        )
+        SELECT local_trade_date, benchmark_close,
+            {','.join(rolls)},
+            CASE WHEN count(day_log) OVER w20=20 THEN stddev_samp(day_log) OVER w20 END AS benchmark_volatility_20d_daily,
+            CASE WHEN count(day_log) OVER w60=60 THEN stddev_samp(day_log) OVER w60 END AS benchmark_volatility_60d_daily,
+            CASE WHEN count(benchmark_close) OVER w60=60 THEN benchmark_close/max(benchmark_close) OVER w60-1 END
+                AS benchmark_drawdown_from_peak_60d,
+            coalesce(sum(day_log) OVER w,0) AS log_prefix,count(day_log) OVER w AS valid_prefix,market_idx
+        FROM days WINDOW w20 AS (ORDER BY market_idx ROWS BETWEEN 19 PRECEDING AND CURRENT ROW),
+            w60 AS (ORDER BY market_idx ROWS BETWEEN 59 PRECEDING AND CURRENT ROW), w AS (ORDER BY market_idx)
+    """)
+    con.execute("""
+        UPDATE _feature_aligned a SET aligned_1d=b.aligned_1d, aligned_5d=b.aligned_5d, aligned_20d=b.aligned_20d
+        FROM (
+            SELECT exchange, local_trade_date,
+                CASE WHEN valid_prefix-lag(valid_prefix) OVER w=market_idx-lag(market_idx) OVER w
+                    THEN kurumi_expm1(log_prefix-lag(log_prefix) OVER w) END AS aligned_1d,
+                CASE WHEN valid_prefix-lag(valid_prefix,5) OVER w=market_idx-lag(market_idx,5) OVER w
+                    THEN kurumi_expm1(log_prefix-lag(log_prefix,5) OVER w) END AS aligned_5d,
+                CASE WHEN valid_prefix-lag(valid_prefix,20) OVER w=market_idx-lag(market_idx,20) OVER w
+                    THEN kurumi_expm1(log_prefix-lag(log_prefix,20) OVER w) END AS aligned_20d
+            FROM _market_benchmark JOIN market_calendar USING(local_trade_date)
+            WINDOW w AS (PARTITION BY exchange ORDER BY session_idx)
+        ) b WHERE a.is_market AND a.exchange=b.exchange AND a.local_trade_date=b.local_trade_date
     """)
 
 
@@ -453,8 +514,8 @@ def _stock_factors(con):
     """)
 
 
-def _output_states(con):
-    market_metrics = list(METRIC_VALUES)
+def _output_states(con, market_benchmark):
+    market_metrics = tuple(STATE_COVERAGE)
     identity = f"'CN' AS market_id, s.local_trade_date, '{MARKET_CALENDAR_ID}' AS calendar_id, " \
                "timezone('UTC', s.local_trade_date::TIMESTAMP + INTERVAL '15 hours 59 minutes 59 seconds') AS available_at"
     con.execute("""
@@ -472,21 +533,28 @@ def _output_states(con):
     for output, is_market, required in (("market_daily", True, market_metrics),
                                         ("industry_daily", False, INDUSTRY_COVERAGE_GROUPS)):
         metric_fields = COMMON_STATE_FIELDS + (MARKET_ONLY_FIELDS if is_market else ("excess_market_20d",))
-        coverage_fields = [f"{metric} := cov_{METRIC_VALUES[metric]}" for metric in required]
-        reasons = {metric: f"cov_{METRIC_VALUES[metric]}.status" for metric in required}
-        reasons["advance_ratio"] = reasons["return_1d"]
-        if is_market:
-            reasons["return_dispersion_1d"] = reasons["return_1d"]
+        coverage_fields = [f"{metric} := cov_{metric}" for metric in required]
+        reasons = {metric: f"cov_{metric}.status" for metric in required}
         for metric in set(metric_fields) - set(reasons):
             reasons[metric] = "CASE WHEN NOT membership_complete THEN 'unverified_version' WHEN market_idx - first_idx + 1 < "
             reasons[metric] += "60" if "60" in metric else "5" if "5d" in metric else "20"
             reasons[metric] += " THEN 'insufficient_history' ELSE 'low_coverage' END"
         reasons["activity_proxy_ratio_20d"] = (
-            "CASE WHEN cov_amount_proxy.status <> 'valid' THEN cov_amount_proxy.status "
+            "CASE WHEN cov_activity_proxy_ratio_20d.status <> 'valid' THEN cov_activity_proxy_ratio_20d.status "
             "WHEN market_idx - first_idx + 1 < 20 THEN 'insufficient_history' ELSE 'low_coverage' END"
         )
         extra_keys = "" if is_market else ", industry_system, classification_version, industry_code, industry_name"
         join_clause = "LEFT JOIN _feature_rank_coverage r USING (local_trade_date)" if is_market else ""
+        extra_fields = ""
+        if is_market and market_benchmark:
+            extra_fields = ", " + ", ".join(f"b.{field}" for field in MARKET_BENCHMARK_FIELDS)
+            columns = ", ".join(MARKET_BENCHMARK_FIELDS)
+            join_clause += f" LEFT JOIN (SELECT local_trade_date,{columns} FROM _market_benchmark) b USING(local_trade_date)"
+            for field in MARKET_BENCHMARK_FIELDS:
+                window = next((n for n in (60, 20, 5) if f"{n}d" in field), 1)
+                min_sessions = window if field == "benchmark_drawdown_from_peak_60d" else window + 1
+                reasons[field] = (f"CASE WHEN market_idx < {min_sessions} THEN 'insufficient_history' "
+                                  "ELSE 'missing_source' END")
         if is_market:
             for rank_factor, n_valid in (("market_cap_percentile", "cap_n_valid"),
                                          ("liquidity_proxy_percentile_20d", "liquidity_n_valid")):
@@ -505,13 +573,13 @@ def _output_states(con):
                 SELECT s.* {', s.return_20d - m.return_20d AS excess_market_20d' if not is_market else ''}
                 FROM state s {'LEFT JOIN _feature_state m ON m.is_market AND s.market_idx = m.market_idx' if not is_market else ''}
             )
-            SELECT {identity}{extra_keys}, {','.join(metric_fields)}, exchange_closed_count, exchange_closed_weight,
+            SELECT {identity}{extra_keys}, {','.join(metric_fields)}{extra_fields}, exchange_closed_count, exchange_closed_weight,
                    struct_pack({','.join(coverage_fields)}) AS coverage, {_missing_map(reasons)} AS missing_reasons
             FROM selected s {join_clause}
         """)
 
 
-def build_features(con):
+def build_features(con, market_benchmark=None):
     """Build stock_factors, market_daily, industry_daily from canonical in-session rows and PIT snapshots."""
     install_return_macros(con)
     con.execute("""
@@ -522,15 +590,18 @@ def build_features(con):
     _aggregate_members(con)
     _states(con)
     _aligned_benchmarks(con)
+    if market_benchmark:
+        _benchmark(con, market_benchmark)
     _stock_windows(con)
     _stock_factors(con)
-    _output_states(con)
+    _output_states(con, market_benchmark)
     for table in ("_feature_market_calendar", "_feature_exchange_calendar", "_feature_valuation", "_feature_groups",
                   "_feature_state", "_feature_aligned", "_feature_stock_windows", "_feature_rank_coverage"):
         con.execute(f"DROP TABLE {table}")
 
 
 def _value_domain(field):
+    field = field.removeprefix("benchmark_")
     if field == "drawdown_from_peak_60d":
         return f"{field} < -1 OR {field} > 0"
     if field.endswith("_percentile") or "percentile_" in field or field in {
@@ -549,14 +620,15 @@ def _value_domain(field):
 def feature_quality(con):
     """Check all published feature values and summarize expected and observed rows without unrolling samples."""
     market_fields = COMMON_STATE_FIELDS + MARKET_ONLY_FIELDS
-    daily_coverage = {name: name for name in METRIC_VALUES}
-    daily_coverage.update({"advance_ratio": "return_1d", "return_dispersion_1d": "return_1d"})
+    stored_market_fields = {p[0] for p in con.sql("DESCRIBE market_daily").fetchall()}
+    market_fields += tuple(field for field in MARKET_BENCHMARK_FIELDS if field in stored_market_fields)
+    daily_coverage = {name: name for name in STATE_COVERAGE}
     groups = (
         ("stock_daily", FACTOR_NAMES, "exchange", {}),
         ("market_daily", market_fields, "'CN'", daily_coverage),
         ("industry_daily", COMMON_STATE_FIELDS + ("excess_market_20d",),
          "industry_system || '|' || classification_version || '|' || industry_code",
-         {name: daily_coverage[name] for name in (*INDUSTRY_COVERAGE_GROUPS, "advance_ratio")}),
+         {name: daily_coverage[name] for name in INDUSTRY_COVERAGE_GROUPS}),
     )
     queries = []
     for table, fields, stratum, coverage_groups in groups:
@@ -574,8 +646,8 @@ def feature_quality(con):
                           OR {count_coverage} < 0 OR {count_coverage} > 1
                           OR {cap_coverage} < 0 OR {cap_coverage} > 1 + 1e-12
                           OR {suspension} < 0 OR {suspension} > {cap_coverage} + 1e-12"""
-                if field != "activity_proxy_ratio_20d":
-                    gate += f" OR ({field} IS NOT NULL AND coalesce({cap_coverage}, 0) < 0.99)"
+                threshold_basis = count_coverage if field in COUNT_GATED else cap_coverage
+                gate += f" OR ({field} IS NOT NULL AND coalesce({threshold_basis}, 0) < {MIN_COVERAGE})"
             reason = f"missing_reasons['{field}']"
             metrics.append(f"""struct_pack(
                 field := '{field}', n_valid := count({field}),

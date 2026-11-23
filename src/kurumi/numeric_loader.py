@@ -13,6 +13,7 @@ from statistics import median
 
 import pyarrow.dataset as ds
 
+from .cn_features import MARKET_BENCHMARK_FIELDS, MARKET_BENCHMARK_INPUT_TEMPLATE, MARKET_BENCHMARK_VERSION
 from .numeric_math import HORIZONS
 
 SCHEMA_VERSION = "kurumi.numeric.v1"
@@ -48,9 +49,9 @@ INDUSTRY_FIELDS = (
 COVERAGE_FIELDS = (
     "n_expected", "n_valid", "count_coverage", "cap_coverage", "suspension_valuation_weight", "status",
 )
-INDUSTRY_COVERAGE_GROUPS = ("return_1d", "above_ma20_ratio", "activity_proxy_ratio_20d")
+INDUSTRY_COVERAGE_GROUPS = ("return_1d", "advance_ratio", "above_ma20_ratio", "activity_proxy_ratio_20d")
 MARKET_COVERAGE_GROUPS = (
-    *INDUSTRY_COVERAGE_GROUPS, "above_ma60_ratio", "turnover_total_median", "suspension_ratio",
+    *INDUSTRY_COVERAGE_GROUPS, "return_dispersion_1d", "above_ma60_ratio", "turnover_total_median", "suspension_ratio",
     "market_cap_percentile", "liquidity_proxy_percentile_20d",
 )
 IDENTITY_FIELDS = (
@@ -242,9 +243,19 @@ class NumericDataset:
         if status != "NUMERIC_READY" and not (status == "INCOMPLETE" and allow_incomplete):
             raise ValueError(f"Numeric package status is {status}. INCOMPLETE packages require explicit QA opt-in.")
         self.allow_incomplete = status == "INCOMPLETE"
+        benchmark = self.manifest.get("market_relative_benchmark_version")
+        if benchmark not in (None, MARKET_BENCHMARK_VERSION):
+            raise ValueError(f"Incompatible market_relative_benchmark_version: {benchmark!r}")
+        self.market_fields = MARKET_FIELDS + (MARKET_BENCHMARK_FIELDS if benchmark else ())
+        count_coverage = self.manifest.get("market_state_coverage_version")
+        self.market_groups = tuple(group for group in MARKET_COVERAGE_GROUPS
+                                   if count_coverage or group not in ("advance_ratio", "return_dispersion_1d"))
+        self.industry_groups = tuple(group for group in INDUSTRY_COVERAGE_GROUPS
+                                     if count_coverage or group != "advance_ratio")
+        template = MARKET_BENCHMARK_INPUT_TEMPLATE if benchmark else INPUT_TEMPLATE_VERSION
         for key, version in (("schema_version", SCHEMA_VERSION), ("feature_version", FEATURE_VERSION),
                              ("choice_spec_version", CHOICE_SPEC_VERSION),
-                             ("input_template_version", INPUT_TEMPLATE_VERSION)):
+                             ("input_template_version", template)):
             if self.manifest[key] != version:
                 raise ValueError(f"Incompatible {key}: {self.manifest[key]!r}")
         self._tables = {}
@@ -336,7 +347,7 @@ class NumericDataset:
         current_rows = _index(self._rows("stock_daily", STOCK_CURRENT_FIELDS, filter & instrument_filter,
                                         required=("market_id", "instrument_id", "issuer_id", "local_trade_date")),
                               ("market_id", "instrument_id", "local_trade_date"))
-        markets = _index(self._rows("market_daily", (*STATE_KEYS, *MARKET_FIELDS), filter,
+        markets = _index(self._rows("market_daily", (*STATE_KEYS, *self.market_fields), filter,
                                     required=("market_id", "local_trade_date", "available_at")),
                          ("market_id", "local_trade_date"))
         industries = _index(self._rows("industry_daily", (*STATE_KEYS, *INDUSTRY_KEYS[1:4], *INDUSTRY_FIELDS), filter,
@@ -373,8 +384,8 @@ class NumericDataset:
                 Xstate=dict(
                     Xstock=dict(identity=_pick(current, IDENTITY_FIELDS), current=_pick(current, CURRENT_FIELDS),
                                 sequence=sequence, factors=_pick(current, FACTORS), fundamentals=_financial(finance, end)),
-                    Xmarket=dict(market=_state(market, MARKET_FIELDS, MARKET_COVERAGE_GROUPS),
-                                 industry=_state(industry, INDUSTRY_FIELDS, INDUSTRY_COVERAGE_GROUPS)),
+                    Xmarket=dict(market=_state(market, self.market_fields, self.market_groups),
+                                 industry=_state(industry, INDUSTRY_FIELDS, self.industry_groups)),
                     Xtext=dict(text_ref=None, text_status="not_built"),
                 ),
                 Xchoice=choice_tasks(sample["sigma_60d"]),
