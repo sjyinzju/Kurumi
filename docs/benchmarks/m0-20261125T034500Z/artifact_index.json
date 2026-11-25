@@ -1,0 +1,353 @@
+{
+  "state": "COMPLETE",
+  "run_id": "m0-20261125T034500Z",
+  "run_root": "/home/shijunyu/kurumi-research/runs/benchmarks/v1/karpo-m0/m0-20261125T034500Z",
+  "data_root": "/home/shijunyu/kurumi-research/data/benchmarks/v1",
+  "model": {
+    "repo_id": "MachinePulseAI/karpo-decision-31B",
+    "revision": "b8e6fd7463cea8662c556d6257955d7ef9c10d19",
+    "provenance_manifest": "/home/shijunyu/kurumi-research/runs/setup/model-manifest.json",
+    "decision_config_sha256": "9a4502700d4aca2d277d177d45d886c5e7525c71e5c483bba77f115b4a7f13af",
+    "readout_sha256": "ccb630d849aed395b9a61cf72cd375cf6f91ccd133998df691cc7185aa82b90a",
+    "tokenizer_sha256": "cc8d3a0ce36466ccc1278bf987df5f71db1719b9ca6b4118264f45cb627bfe0f",
+    "decision_config": {
+      "template": "karpo-blocks-v1",
+      "attention": "bidirectional",
+      "base_model": "google/gemma-4-31B-it",
+      "marker": "<mask>",
+      "temperatures": {
+        "choice": 1.0,
+        "noul": 1.0,
+        "score": 1.0
+      },
+      "max_pixels": 1638400,
+      "readout_dtype": "float32",
+      "backbone": null,
+      "format_version": 1
+    }
+  },
+  "native_revision": "6600011eb5cf46232d056ec0717dc726146d29de",
+  "precision": {
+    "backbone": "torch.bfloat16",
+    "readout": "torch.float32"
+  },
+  "inference": {
+    "interface": "karpo_native_python",
+    "batch_size": 1,
+    "seed": 17,
+    "max_length": 32768,
+    "token_budget": 32768,
+    "temperature_policy": "checkpoint_native",
+    "additional_calibration": false,
+    "update_weights": false
+  },
+  "gpu": {
+    "name": "NVIDIA GB10",
+    "capability": [
+      12,
+      1
+    ],
+    "cuda": "13.0"
+  },
+  "control_files": {
+    "run_manifest.json": {
+      "path": "/home/shijunyu/kurumi-research/runs/benchmarks/v1/karpo-m0/m0-20261125T034500Z/run_manifest.json",
+      "sha256": "afd5f4705d3c0f5b6128e4ce6913697cad192d4252a7d89100bad4a2c489db1e",
+      "size_bytes": 25215
+    },
+    "summary.csv": {
+      "path": "/home/shijunyu/kurumi-research/runs/benchmarks/v1/karpo-m0/m0-20261125T034500Z/summary.csv",
+      "sha256": "e9b58421fe4e0bf2507c8781b7bb0b867bd55f364716b12294aca598936e94a7",
+      "size_bytes": 675
+    },
+    "report.md": {
+      "path": "/home/shijunyu/kurumi-research/runs/benchmarks/v1/karpo-m0/m0-20261125T034500Z/report.md",
+      "sha256": "c847c1aeeaedaa8080f43cb4795c661b9a3ac03a5de7acaa833ff0ae93bf991d",
+      "size_bytes": 5580
+    },
+    "slurm.sh": {
+      "path": "/home/shijunyu/kurumi-research/runs/benchmarks/v1/karpo-m0/m0-20261125T034500Z/slurm.sh",
+      "sha256": "bf2a4204b5feab65c494b3b23a7749d32b64ea26f96e50670d0a90ece4d12d0e",
+      "size_bytes": 600
+    },
+    "slurm-job-id.txt": {
+      "path": "/home/shijunyu/kurumi-research/runs/benchmarks/v1/karpo-m0/m0-20261125T034500Z/slurm-job-id.txt",
+      "sha256": "1ef0ed1aa2f619d18920640cca6baba2d03d8f3b47fe2de22e80e32124737316",
+      "size_bytes": 10
+    },
+    "python-headers.sha256": {
+      "path": "/home/shijunyu/kurumi-research/runs/benchmarks/v1/karpo-m0/m0-20261125T034500Z/python-headers.sha256",
+      "sha256": "d99474048d6deff8539dc3832a4447b914af3afe148a5147824374ab3ab697a9",
+      "size_bytes": 115
+    },
+    "protocol/benchmark_adapters.py": {
+      "path": "/home/shijunyu/kurumi-research/runs/benchmarks/v1/karpo-m0/m0-20261125T034500Z/protocol/benchmark_adapters.py",
+      "sha256": "ac9c840e04bf5dff55d4f7e535847e7b9b568cc76f7f366bd243365d37ad2508",
+      "size_bytes": 13826
+    },
+    "protocol/benchmark_contract_v1.md": {
+      "path": "/home/shijunyu/kurumi-research/runs/benchmarks/v1/karpo-m0/m0-20261125T034500Z/protocol/benchmark_contract_v1.md",
+      "sha256": "3fb83257f04ffce710e206ba98779f16282baf7f5cbdd1931c13509910828b1a",
+      "size_bytes": 20109
+    },
+    "protocol/model-manifest.json": {
+      "path": "/home/shijunyu/kurumi-research/runs/benchmarks/v1/karpo-m0/m0-20261125T034500Z/protocol/model-manifest.json",
+      "sha256": "a5fd5df3146f085b516fe9088e2231a00e1c19434e4148d459360399f4a0aed7",
+      "size_bytes": 4963
+    },
+    "protocol/run_benchmarks.04b460ec1876.py": {
+      "path": "/home/shijunyu/kurumi-research/runs/benchmarks/v1/karpo-m0/m0-20261125T034500Z/protocol/run_benchmarks.04b460ec1876.py",
+      "sha256": "04b460ec1876fb2eb8c43e884004301f0012bb7a4ad99663db23a4b7c6ec4b9c",
+      "size_bytes": 38475
+    },
+    "protocol/runtime.local.toml": {
+      "path": "/home/shijunyu/kurumi-research/runs/benchmarks/v1/karpo-m0/m0-20261125T034500Z/protocol/runtime.local.toml",
+      "sha256": "96cffcd0493c95a4e3c86aa2b1aa01f9db5faa81892ffb502c48b145434bb96c",
+      "size_bytes": 615
+    },
+    "protocol/sources.v1.lock.json": {
+      "path": "/home/shijunyu/kurumi-research/runs/benchmarks/v1/karpo-m0/m0-20261125T034500Z/protocol/sources.v1.lock.json",
+      "sha256": "24bd5efec3c38d019abd7ff87265ef14ddc39f8f5352bbf58b8efa5535085e72",
+      "size_bytes": 3484
+    },
+    "protocol/v1.toml": {
+      "path": "/home/shijunyu/kurumi-research/runs/benchmarks/v1/karpo-m0/m0-20261125T034500Z/protocol/v1.toml",
+      "sha256": "f00753af67f2ec9131e544189646028a7b30d663644802907c9a428a29c9a285",
+      "size_bytes": 1321
+    },
+    "slurm-4252.log": {
+      "path": "/home/shijunyu/kurumi-research/runs/benchmarks/v1/karpo-m0/m0-20261125T034500Z/slurm-4252.log",
+      "sha256": "c3d4739e1e40112b0fc816ed64e92b31fd72cd06055b353d8b91550b4880a328",
+      "size_bytes": 19485
+    },
+    "slurm-4253.log": {
+      "path": "/home/shijunyu/kurumi-research/runs/benchmarks/v1/karpo-m0/m0-20261125T034500Z/slurm-4253.log",
+      "sha256": "c91999f87f5424ea149099180d79f0dd2135e3b91774b9751063637f59b5e058",
+      "size_bytes": 22117
+    },
+    "slurm-4252.sh": {
+      "path": "/home/shijunyu/kurumi-research/runs/benchmarks/v1/karpo-m0/m0-20261125T034500Z/slurm-4252.sh",
+      "sha256": "891c754c738214048c855e682e9070c6ee0f37bf839f0dd8e5f0ff6ebfc25ef6",
+      "size_bytes": 254
+    },
+    "errors.jsonl": {
+      "path": "/home/shijunyu/kurumi-research/runs/benchmarks/v1/karpo-m0/m0-20261125T034500Z/errors.jsonl",
+      "sha256": "7fcb964ae7579ffc92068ebd6bde8f231ed7ad5d7fc7f3ad298be83653b843e5",
+      "size_bytes": 778
+    }
+  },
+  "benchmarks": {
+    "finben_bigdata": {
+      "source_manifest": {
+        "path": "/home/shijunyu/kurumi-research/data/benchmarks/v1/finben_bigdata/manifest.json",
+        "sha256": "af87c0f1a3e4545872f446a29ae6bef693e5bb1471760cc4bcfa5996c1fec274",
+        "size_bytes": 1536
+      },
+      "inputs": {
+        "/home/shijunyu/kurumi-research/data/benchmarks/v1/finben_bigdata/raw/test-00000-of-00001-bcbe082671cc1fdb.parquet": "4496a9811c78577c642e7360e73983f915aea7ed7bba065f22d03ea591578a1c",
+        "/home/shijunyu/kurumi-research/data/benchmarks/v1/finben_bigdata/prepared/requests.jsonl": "bb4349d9fa4070381329f681c4a653921fb73adae748b019852ba43c9c831741",
+        "/home/shijunyu/kurumi-research/data/benchmarks/v1/finben_bigdata/prepared/labels.parquet": "e8868a06a6d40e59d159e0d8833985337dd18509ba8f844c74cc67195a87d97b"
+      },
+      "outputs": {
+        "responses.jsonl": {
+          "path": "/home/shijunyu/kurumi-research/runs/benchmarks/v1/karpo-m0/m0-20261125T034500Z/finben_bigdata/responses.jsonl",
+          "sha256": "206827730977e2eb325a15ca4e3438196ac835b87cacc1d13ba81b65b26abfc2",
+          "size_bytes": 586208
+        },
+        "encoded_lengths.jsonl": {
+          "path": "/home/shijunyu/kurumi-research/runs/benchmarks/v1/karpo-m0/m0-20261125T034500Z/finben_bigdata/encoded_lengths.jsonl",
+          "sha256": "8d0669e1b831bbc712e1f59512fd7f04286b5df212812d6999d9d11279887729",
+          "size_bytes": 109290
+        },
+        "errors.jsonl": {
+          "path": "/home/shijunyu/kurumi-research/runs/benchmarks/v1/karpo-m0/m0-20261125T034500Z/finben_bigdata/errors.jsonl",
+          "sha256": "64c4cd1587a8b1a21a1e6339ed95898b80c104c6db978daae256dc9f573eadff",
+          "size_bytes": 887
+        },
+        "metrics.json": {
+          "path": "/home/shijunyu/kurumi-research/runs/benchmarks/v1/karpo-m0/m0-20261125T034500Z/finben_bigdata/metrics.json",
+          "sha256": "5c568650e6a4f9d14ee2cc0bccfaa46914b2c0185f9b630caee4021bf1345090",
+          "size_bytes": 732
+        },
+        "predictions.parquet": {
+          "path": "/home/shijunyu/kurumi-research/runs/benchmarks/v1/karpo-m0/m0-20261125T034500Z/finben_bigdata/predictions.parquet",
+          "sha256": "63a750f17a73ea8416a014f6ea373c84108bee494582c3b71d4795de106b326a",
+          "size_bytes": 87486
+        }
+      }
+    },
+    "finben_acl": {
+      "source_manifest": {
+        "path": "/home/shijunyu/kurumi-research/data/benchmarks/v1/finben_acl/manifest.json",
+        "sha256": "53f15b65071f6349cfda91f137694e6a23be6b6d403c42b97cfeb382ee73bcda",
+        "size_bytes": 1535
+      },
+      "inputs": {
+        "/home/shijunyu/kurumi-research/data/benchmarks/v1/finben_acl/raw/data/test-00000-of-00001-9e63b9de85b2453a.parquet": "7179bacf4cf4c330a6dd1254fd32cf8cc16924b99200a458a0d1029066bd843f",
+        "/home/shijunyu/kurumi-research/data/benchmarks/v1/finben_acl/prepared/requests.jsonl": "ed42c90a0f877d20508eeef121755a95d38eb604d3ba7d3bb2c86a4ddf1d5394",
+        "/home/shijunyu/kurumi-research/data/benchmarks/v1/finben_acl/prepared/labels.parquet": "2558217ca334bf5879d35f45e18c55dde6fbaf96a3519c5b3f6602e6a4a4089f"
+      },
+      "outputs": {
+        "responses.jsonl": {
+          "path": "/home/shijunyu/kurumi-research/runs/benchmarks/v1/karpo-m0/m0-20261125T034500Z/finben_acl/responses.jsonl",
+          "sha256": "c44aaff1e055b656b5096cd7a5ddee77e425d68e8768dfa790a416335da1c078",
+          "size_bytes": 1469751
+        },
+        "encoded_lengths.jsonl": {
+          "path": "/home/shijunyu/kurumi-research/runs/benchmarks/v1/karpo-m0/m0-20261125T034500Z/finben_acl/encoded_lengths.jsonl",
+          "sha256": "bed31425bfaf57143cefe6d07ba34cbe96baf14f8f989f7651fecb7b990fb0ba",
+          "size_bytes": 264979
+        },
+        "errors.jsonl": {
+          "path": "/home/shijunyu/kurumi-research/runs/benchmarks/v1/karpo-m0/m0-20261125T034500Z/finben_acl/errors.jsonl",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size_bytes": 0
+        },
+        "metrics.json": {
+          "path": "/home/shijunyu/kurumi-research/runs/benchmarks/v1/karpo-m0/m0-20261125T034500Z/finben_acl/metrics.json",
+          "sha256": "d64663f3a58a2fff1db1fab263f2c83f0fe18709f728295bc2d3730b5a6f3cd0",
+          "size_bytes": 732
+        },
+        "predictions.parquet": {
+          "path": "/home/shijunyu/kurumi-research/runs/benchmarks/v1/karpo-m0/m0-20261125T034500Z/finben_acl/predictions.parquet",
+          "sha256": "a7e804619828a51b59df9224c843c4aa834408b43630193da67a4de865774cc4",
+          "size_bytes": 213965
+        }
+      }
+    },
+    "alphafin_test": {
+      "source_manifest": {
+        "path": "/home/shijunyu/kurumi-research/data/benchmarks/v1/alphafin_test/manifest.json",
+        "sha256": "8862faf3ae1e00d01254fb6a588ecc6a90b4a67e15e1c30cc26286d4ae15b7a0",
+        "size_bytes": 1325
+      },
+      "inputs": {
+        "/home/shijunyu/kurumi-research/data/benchmarks/v1/alphafin_test/raw/test/1000_report_marketdata.json": "f5f084f3760cf05adb7aed745f3cd7fea0944618f8e31a1e20cd5db4a403ef72",
+        "/home/shijunyu/kurumi-research/data/benchmarks/v1/alphafin_test/prepared/requests.jsonl": "043dda30645f5ebdd1f838fdcfc8da496783ee2efc63f751b1fdc0313f268967",
+        "/home/shijunyu/kurumi-research/data/benchmarks/v1/alphafin_test/prepared/labels.parquet": "308193dd199d433f1dbf53c78abe69a22862ad0d0412b67f1534f16d5c8df9ce"
+      },
+      "outputs": {
+        "responses.jsonl": {
+          "path": "/home/shijunyu/kurumi-research/runs/benchmarks/v1/karpo-m0/m0-20261125T034500Z/alphafin_test/responses.jsonl",
+          "sha256": "2fa6f906909a3fbdd3c724a54586d5fdb0b414e13214552566ae673a7e181b92",
+          "size_bytes": 399760
+        },
+        "encoded_lengths.jsonl": {
+          "path": "/home/shijunyu/kurumi-research/runs/benchmarks/v1/karpo-m0/m0-20261125T034500Z/alphafin_test/encoded_lengths.jsonl",
+          "sha256": "722dee3d2072f9f6d33755aa04ee099fd95d737610b75d85600c92ea41101862",
+          "size_bytes": 73890
+        },
+        "errors.jsonl": {
+          "path": "/home/shijunyu/kurumi-research/runs/benchmarks/v1/karpo-m0/m0-20261125T034500Z/alphafin_test/errors.jsonl",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size_bytes": 0
+        },
+        "metrics.json": {
+          "path": "/home/shijunyu/kurumi-research/runs/benchmarks/v1/karpo-m0/m0-20261125T034500Z/alphafin_test/metrics.json",
+          "sha256": "f9618b5c13d19441d2853c20461b60e49f455c7252891c982993bcef731cc7ab",
+          "size_bytes": 719
+        },
+        "predictions.parquet": {
+          "path": "/home/shijunyu/kurumi-research/runs/benchmarks/v1/karpo-m0/m0-20261125T034500Z/alphafin_test/predictions.parquet",
+          "sha256": "8137cd495d2d9c066598eae7604031cfd46ae3cfc7acb37e4875dd35f1efbbb2",
+          "size_bytes": 69128
+        }
+      }
+    },
+    "pi_round2_full": {
+      "source_manifest": {
+        "path": "/home/shijunyu/kurumi-research/data/benchmarks/v1/pi_round2_full/manifest.json",
+        "sha256": "7c4b008d6e5e70d047bc25b21f0bf98378c2d529a63d5c3c0283438ef06c686f",
+        "size_bytes": 1565
+      },
+      "inputs": {
+        "/home/shijunyu/kurumi-research/data/benchmarks/v1/pi_round2_full/raw/pi-trading-arena-round2.zip": "1254a8ef2389b7d7946ca8996a2adf1fbdd5da853680d82a718b467bc6ea1b46",
+        "/home/shijunyu/kurumi-research/data/benchmarks/v1/pi_round2_full/raw/official/rounds/round2/full/decision_points.jsonl": "5f301c1431bf5ca209576c4c5e1234392bb7f25f0b7d7fe3b36a662898248e09",
+        "/home/shijunyu/kurumi-research/data/benchmarks/v1/pi_round2_full/raw/official/data/bars_15m.csv": "757c9f0e90fee45302b4ba68191af430341544d69d5ae4dbed9c6bfe190ae736",
+        "/home/shijunyu/kurumi-research/data/benchmarks/v1/pi_round2_full/raw/official/arena/simulate.py": "190184a5543da97b52121c9901f5af81df04d8fd2b5d46b129b2f744936e8253",
+        "/home/shijunyu/kurumi-research/data/benchmarks/v1/pi_round2_full/prepared/requests.jsonl": "9882b8358f1386f4f2256bb93381cb573837d5f1da68da3a29313018b6e82114"
+      },
+      "outputs": {
+        "responses.jsonl": {
+          "path": "/home/shijunyu/kurumi-research/runs/benchmarks/v1/karpo-m0/m0-20261125T034500Z/pi_round2_full/responses.jsonl",
+          "sha256": "071602bc115658ba3726b4337bcf1363a66289285f0a489aa3d920e173118480",
+          "size_bytes": 514326
+        },
+        "encoded_lengths.jsonl": {
+          "path": "/home/shijunyu/kurumi-research/runs/benchmarks/v1/karpo-m0/m0-20261125T034500Z/pi_round2_full/encoded_lengths.jsonl",
+          "sha256": "fed3bdf598a4cb4e1dda61699650c7c85ecc70d0df84311bf4d4b081ee635630",
+          "size_bytes": 6815
+        },
+        "errors.jsonl": {
+          "path": "/home/shijunyu/kurumi-research/runs/benchmarks/v1/karpo-m0/m0-20261125T034500Z/pi_round2_full/errors.jsonl",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size_bytes": 0
+        },
+        "metrics.json": {
+          "path": "/home/shijunyu/kurumi-research/runs/benchmarks/v1/karpo-m0/m0-20261125T034500Z/pi_round2_full/metrics.json",
+          "sha256": "797cdcd7c41b3f33abdbf2377e96906310410807897503c53ef3ddffbefee259",
+          "size_bytes": 3168
+        },
+        "answers_karpo-m0.jsonl": {
+          "path": "/home/shijunyu/kurumi-research/runs/benchmarks/v1/karpo-m0/m0-20261125T034500Z/pi_round2_full/replay/rounds/round2/full/answers_karpo-m0.jsonl",
+          "sha256": "44352615e9c01902d18792920763a1f2c41e9987aeb478dbfa28ec2f2e1839a3",
+          "size_bytes": 515046
+        },
+        "summary.json": {
+          "path": "/home/shijunyu/kurumi-research/runs/benchmarks/v1/karpo-m0/m0-20261125T034500Z/pi_round2_full/replay/rounds/round2/full/summary.json",
+          "sha256": "96ae9677ec2ce49c539f6544e1275f274102167981dbe3d4f447c4ebe6fbde6e",
+          "size_bytes": 11648
+        },
+        "equity_curves.csv": {
+          "path": "/home/shijunyu/kurumi-research/runs/benchmarks/v1/karpo-m0/m0-20261125T034500Z/pi_round2_full/replay/rounds/round2/full/equity_curves.csv",
+          "sha256": "93b21fe2ce55efeb12f5129c285b2d06ef4e187d2aa1c8948cf55f13b4298f75",
+          "size_bytes": 25705
+        },
+        "official_equity.csv": {
+          "path": "/home/shijunyu/kurumi-research/runs/benchmarks/v1/karpo-m0/m0-20261125T034500Z/pi_round2_full/replay/rounds/round2/full/official_equity.csv",
+          "sha256": "2209b0cb42ae0b5338a1eeb084dd722ca7e3f6d623ce85d4f6d81286585a06c7",
+          "size_bytes": 3111
+        },
+        "official_actions.csv": {
+          "path": "/home/shijunyu/kurumi-research/runs/benchmarks/v1/karpo-m0/m0-20261125T034500Z/pi_round2_full/replay/rounds/round2/full/official_actions.csv",
+          "sha256": "90557c92b3182bfb47e8e00110b8cdccb6510e7d00f75e031eb2b2b0d612fd19",
+          "size_bytes": 9438
+        },
+        "picks.csv": {
+          "path": "/home/shijunyu/kurumi-research/runs/benchmarks/v1/karpo-m0/m0-20261125T034500Z/pi_round2_full/replay/rounds/round2/full/picks.csv",
+          "sha256": "b2be173dcae31108ed17d91393fe17c3eafc33501916c9a2d654f8bc97e990af",
+          "size_bytes": 106152
+        },
+        "simulate.log": {
+          "path": "/home/shijunyu/kurumi-research/runs/benchmarks/v1/karpo-m0/m0-20261125T034500Z/pi_round2_full/replay/simulate.log",
+          "sha256": "b8501336cf135c3943b05888d12db1502fcb2c09f1c01e24d7fbcb7eb722ddd6",
+          "size_bytes": 5190
+        }
+      }
+    }
+  },
+  "jobs": [
+    {
+      "JobID": "4252",
+      "State": "FAILED",
+      "ExitCode": "1:0",
+      "Elapsed": "00:09:12",
+      "ElapsedRaw": "552",
+      "Start": "2026-11-25T03:41:50",
+      "End": "2026-11-25T03:51:02",
+      "NodeList": "pgx04"
+    },
+    {
+      "JobID": "4253",
+      "State": "COMPLETED",
+      "ExitCode": "0:0",
+      "Elapsed": "02:19:52",
+      "ElapsedRaw": "8392",
+      "Start": "2026-11-25T03:53:50",
+      "End": "2026-11-25T06:13:42",
+      "NodeList": "pgx03"
+    }
+  ],
+  "wall_seconds": 9103.74024,
+  "slurm_elapsed_seconds": 8944
+}

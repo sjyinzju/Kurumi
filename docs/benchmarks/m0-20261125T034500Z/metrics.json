@@ -1,0 +1,235 @@
+{
+  "finben_bigdata": {
+    "benchmark_id": "finben_bigdata",
+    "protocol_id": "kurumi-external-bench-v1",
+    "expected": 1472,
+    "success": 1472,
+    "failed": 0,
+    "scoring": {
+      "names": [
+        "accuracy",
+        "mcc",
+        "brier",
+        "nll"
+      ],
+      "positive_class": "up",
+      "tie_break": "first_option_in_original_order",
+      "brier_definition": "mean((p_up-y_true)^2)",
+      "nll_definition": "mean(-ln(max(p_gold,nll_floor)))",
+      "nll_floor": 1e-12,
+      "mcc_zero_denominator": 0.0,
+      "probability_atol": 1e-05
+    },
+    "accuracy": 0.5414402173913043,
+    "mcc": 0.040208002427761985,
+    "tp": 603,
+    "tn": 194,
+    "fp": 465,
+    "fn": 210,
+    "brier": 0.24942767662483808,
+    "nll": 0.6925534304619658,
+    "inference_seconds": 1085.8388267275877
+  },
+  "finben_acl": {
+    "benchmark_id": "finben_acl",
+    "protocol_id": "kurumi-external-bench-v1",
+    "expected": 3720,
+    "success": 3720,
+    "failed": 0,
+    "scoring": {
+      "names": [
+        "accuracy",
+        "mcc",
+        "brier",
+        "nll"
+      ],
+      "positive_class": "up",
+      "tie_break": "first_option_in_original_order",
+      "brier_definition": "mean((p_up-y_true)^2)",
+      "nll_definition": "mean(-ln(max(p_gold,nll_floor)))",
+      "nll_floor": 1e-12,
+      "mcc_zero_denominator": 0.0,
+      "probability_atol": 1e-05
+    },
+    "accuracy": 0.48870967741935484,
+    "mcc": -0.025635810679473216,
+    "tp": 1037,
+    "tn": 781,
+    "fp": 1031,
+    "fn": 871,
+    "brier": 0.27004913542298065,
+    "nll": 0.7408338724176706,
+    "inference_seconds": 3707.8372688340023
+  },
+  "alphafin_test": {
+    "benchmark_id": "alphafin_test",
+    "protocol_id": "kurumi-external-bench-v1",
+    "expected": 1000,
+    "success": 1000,
+    "failed": 0,
+    "scoring": {
+      "names": [
+        "accuracy",
+        "mcc",
+        "brier",
+        "nll"
+      ],
+      "positive_class": "up",
+      "tie_break": "first_option_in_original_order",
+      "brier_definition": "mean((p_up-y_true)^2)",
+      "nll_definition": "mean(-ln(max(p_gold,nll_floor)))",
+      "nll_floor": 1e-12,
+      "mcc_zero_denominator": 0.0,
+      "probability_atol": 1e-05
+    },
+    "accuracy": 0.483,
+    "mcc": -0.021305145181024096,
+    "tp": 353,
+    "tn": 130,
+    "fp": 386,
+    "fn": 131,
+    "brier": 0.36685618365387146,
+    "nll": 1.1105512955643257,
+    "inference_seconds": 2027.7716329419054
+  },
+  "pi_round2_full": {
+    "benchmark_id": "pi_round2_full",
+    "protocol_id": "kurumi-external-bench-v1",
+    "expected": 90,
+    "success": 90,
+    "failed": 0,
+    "scoring": {
+      "track": "round2/full",
+      "policy": "pick>=0.5",
+      "scorer_sha256": "190184a5543da97b52121c9901f5af81df04d8fd2b5d46b129b2f744936e8253"
+    },
+    "name": "karpo-m0 [pick>=0.5]",
+    "kind": "model",
+    "final_usd": 816.38,
+    "return_pct": -18.36,
+    "max_drawdown_pct": -20.88,
+    "switches": 43,
+    "steps_in_cash": 13,
+    "best_choice_hits": "8/90",
+    "policy": "pick>=0.5",
+    "questions": 2070,
+    "equity_marks": 91,
+    "official_leaderboard": [
+      {
+        "model": "morph-reflex",
+        "final_usd": 1065.77,
+        "return_pct": 6.58
+      },
+      {
+        "model": "microsoft-decision-1",
+        "final_usd": 1063.56,
+        "return_pct": 6.36
+      },
+      {
+        "model": "jev-1.13",
+        "final_usd": 1031.32,
+        "return_pct": 3.13
+      },
+      {
+        "model": "google-gemini-decision-1",
+        "final_usd": 1007.71,
+        "return_pct": 0.77
+      },
+      {
+        "model": "jev-1.14",
+        "final_usd": 996.75,
+        "return_pct": -0.32
+      },
+      {
+        "model": "cloudflare-clef",
+        "final_usd": 988.55,
+        "return_pct": -1.15
+      },
+      {
+        "model": "perplexity-decider-v1.1-27b",
+        "final_usd": 954.93,
+        "return_pct": -4.51
+      },
+      {
+        "model": "microsoft-decision-1.1",
+        "final_usd": 952.87,
+        "return_pct": -4.71
+      },
+      {
+        "model": "cloudflare-clef-flash",
+        "final_usd": 921.93,
+        "return_pct": -7.81
+      },
+      {
+        "model": "perplexity-decider-v1.2",
+        "final_usd": 882.0,
+        "return_pct": -11.8
+      },
+      {
+        "model": "inception-mercury-decide",
+        "final_usd": 845.9,
+        "return_pct": -15.41
+      },
+      {
+        "model": "openai-gpt-6-luna-decisions",
+        "final_usd": 829.75,
+        "return_pct": -17.02
+      },
+      {
+        "model": "liquid-d1-ultra",
+        "final_usd": 828.46,
+        "return_pct": -17.15
+      },
+      {
+        "model": "karpo-m0",
+        "final_usd": 816.38,
+        "return_pct": -18.36
+      },
+      {
+        "model": "nace-ai-drex-v1.5",
+        "final_usd": 766.63,
+        "return_pct": -23.34
+      }
+    ],
+    "period": {
+      "first_decision": "2026-08-28T10:15:00-04:00",
+      "last_decision": "2026-10-09T15:45:00-04:00",
+      "end_mark": "2026-10-12 13:45:00+00:00",
+      "decision_points": 90,
+      "trading_days": 30
+    },
+    "baselines": [
+      {
+        "name": "baseline: momentum #1 (no model)",
+        "kind": "baseline",
+        "final_usd": 715.77,
+        "return_pct": -28.42,
+        "max_drawdown_pct": -29.35,
+        "switches": 19,
+        "steps_in_cash": 0,
+        "best_choice_hits": "11/90"
+      },
+      {
+        "name": "baseline: buy & hold QQQ",
+        "kind": "baseline",
+        "final_usd": 1038.06,
+        "return_pct": 3.81,
+        "max_drawdown_pct": -2.23,
+        "switches": 1,
+        "steps_in_cash": 0,
+        "best_choice_hits": "0/90"
+      },
+      {
+        "name": "baseline: cash",
+        "kind": "baseline",
+        "final_usd": 1000.0,
+        "return_pct": 0.0,
+        "max_drawdown_pct": 0.0,
+        "switches": 0,
+        "steps_in_cash": 90,
+        "best_choice_hits": "4/90"
+      }
+    ],
+    "inference_seconds": 987.5323164104484
+  }
+}
