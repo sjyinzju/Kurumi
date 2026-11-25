@@ -9,7 +9,7 @@ import pyarrow as pa
 
 def build_class_caps(con, root, versions, effective_segments, *, fill_missing=False):
     segments = []
-    valid_currencies = {"CNY", "USD", "HKD"}
+    valid_currencies = {"CNY", "USD", "HKD", "EUR"}
     for row in versions:
         distinct = {}
         for part in row["classes"]:

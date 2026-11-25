@@ -292,6 +292,53 @@ def _unit_segments(rows):
             }
 
 
+def _apply_bigquant_share_reconciliations(con, path):
+    con.read_parquet(str(path)).create_view("_bigquant_share_checks")
+    invalid = con.sql("""
+        SELECT ts_code,local_trade_date FROM _bigquant_share_checks
+        GROUP BY 1,2 HAVING count(*)<>1 OR count_if(
+            evidence_stream NOT IN ('share_segments','structured_share_segments')
+            OR NOT coalesce(regexp_full_match(source_sha256,'[0-9a-f]{64}'),false)
+            OR NOT coalesce(isfinite(shares_outstanding_security) AND shares_outstanding_security>0,false)
+        )>0 LIMIT 1
+    """).fetchone()
+    if invalid:
+        raise ValueError(f"Invalid or duplicate BigQuant share reconciliation: {invalid}")
+    matches = " UNION ALL ".join(f"""
+        SELECT b.instrument_id,b.local_trade_date,h.shares_outstanding_security,h.provenance_id,
+               h.shares_outstanding_security*b.close_raw AS security_cap,
+               IF(coalesce(f.reporting_currency,h.reporting_currency)='CNY',
+                  h.shares_outstanding_security*b.close_raw,NULL) AS issuer_cap,
+               'bigquant:' || r.source_sha256 AS check_batch
+        FROM _bigquant_share_checks r
+        JOIN stock_base b USING(ts_code,local_trade_date)
+        JOIN stock_pit p USING(instrument_id,local_trade_date)
+        ASOF JOIN _{stream} h ON b.ts_code=h.ts_code AND b.local_trade_date>=h.start_date
+        LEFT JOIN stock_fundamental_asof f ON p.fundamental_snapshot_id=f.fundamental_snapshot_id
+        WHERE r.evidence_stream='{stream}' AND p.share_check_status='numeric_conflict'
+          AND p.shares_outstanding_security IS NULL AND h.single_share_class AND h.available_at<=b.asof_utc
+          AND h.provenance_id=r.provenance_id AND h.shares_outstanding_security=r.shares_outstanding_security
+    """ for stream in ("share_segments", "structured_share_segments"))
+    con.execute(f"""
+        UPDATE stock_pit p SET shares_outstanding_security=v.shares_outstanding_security,
+            security_market_cap_local=v.security_cap,
+            issuer_market_cap_reporting=coalesce(p.issuer_market_cap_reporting,v.issuer_cap),
+            share_provenance_id=v.provenance_id,share_check_status='matched_bigquant_after_conflict',
+            share_check_batch_id=v.check_batch
+        FROM ({matches}) v
+        WHERE p.instrument_id=v.instrument_id AND p.local_trade_date=v.local_trade_date
+    """)
+    mismatched = con.sql("""
+        SELECT r.ts_code,r.local_trade_date FROM _bigquant_share_checks r
+        LEFT JOIN stock_base b USING(ts_code,local_trade_date)
+        LEFT JOIN stock_pit p USING(instrument_id,local_trade_date)
+        WHERE p.shares_outstanding_security IS DISTINCT FROM r.shares_outstanding_security
+        LIMIT 1
+    """).fetchone()
+    if mismatched:
+        raise ValueError(f"BigQuant cross-check no longer matches the original share proof: {mismatched}")
+
+
 def build_pit(con, source_schema="quant", evidence_dir: Path | None = None):
     """Join eligible historical versions, with separate source-gap audit tables."""
     if not re.fullmatch(r"[A-Za-z_]\w*", source_schema):
@@ -301,6 +348,7 @@ def build_pit(con, source_schema="quant", evidence_dir: Path | None = None):
     financial = _with_provenance(root, "financial_versions", ledger)
     shares = _with_provenance(root, "share_versions", ledger)
     structured_shares = _with_provenance(root, "structured_share_versions", ledger)
+    conflict_shares = _with_provenance(root, "share_conflict_versions", ledger)
     issuer_classes = _with_provenance(root, "issuer_class_versions", ledger)
     structured_issuer_classes = _with_provenance(root, "structured_issuer_class_versions", ledger)
     industry = _with_provenance(root, "industry_versions", ledger)
@@ -315,7 +363,7 @@ def build_pit(con, source_schema="quant", evidence_dir: Path | None = None):
         SELECT a.symbol, q.ts_code FROM security_aliases a JOIN quotes q USING(instrument_id)
         QUALIFY count(DISTINCT q.ts_code) OVER(PARTITION BY a.symbol)=1
     """).fetchall()) if alias_source else {}
-    for source in (financial, shares, structured_shares, issuer_classes, industry, split_events, split_coverage):
+    for source in (financial, shares, structured_shares, conflict_shares, issuer_classes, industry, split_events, split_coverage):
         for row in source:
             row["ts_code"] = aliases.get(row["ts_code"], row["ts_code"])
     issuers = dict(con.execute("SELECT DISTINCT ts_code, issuer_id FROM stock_base").fetchall())
@@ -474,10 +522,18 @@ def build_pit(con, source_schema="quant", evidence_dir: Path | None = None):
         {class_join}
         LEFT JOIN _daily_share_check c ON b.ts_code = c.ts_code AND b.local_trade_date = c.local_trade_date
     """)
-    if structured_segments:
+    if structured_segments or conflict_shares:
         # A dated single-class schedule can resolve a genuine conflict when it also matches
         # the contemporaneous day-level total. Preserve all already accepted stock rows.
-        con.execute("""
+        resolver = "_structured_share_segments"
+        if conflict_shares:
+            # Short conflict proofs must not truncate the baseline or its BigQuant reconciliation.
+            resolver = "_share_conflict_segments"
+            resolved_segments = _supplemented_share_segments(
+                _effective_segments(conflict_shares, "ts_code", share_fields), structured_segments,
+            )
+            _materialize(con, resolver, list(resolved_segments), share_schema)
+        con.execute(f"""
             CREATE OR REPLACE TEMP TABLE _resolved_share_conflicts AS
             WITH rejected AS (
                 SELECT p.instrument_id,p.local_trade_date,b.ts_code,b.asof_utc,b.close_raw,
@@ -490,7 +546,7 @@ def build_pit(con, source_schema="quant", evidence_dir: Path | None = None):
                      IF(coalesce(f.reporting_currency,h.reporting_currency)='CNY',
                         h.shares_outstanding_security*b.close_raw,NULL) AS issuer_cap,
                      h.provenance_id
-              FROM rejected b ASOF JOIN _structured_share_segments h
+              FROM rejected b ASOF JOIN {resolver} h
                 ON b.ts_code=h.ts_code AND b.local_trade_date>=h.start_date
               LEFT JOIN stock_fundamental_asof f USING(fundamental_snapshot_id)
               WHERE h.provenance_id IS NOT NULL AND h.single_share_class AND h.available_at<=b.asof_utc
@@ -503,6 +559,9 @@ def build_pit(con, source_schema="quant", evidence_dir: Path | None = None):
             FROM _resolved_share_conflicts s
             WHERE p.instrument_id=s.instrument_id AND p.local_trade_date=s.local_trade_date;
         """)
+    share_reconciliations = root / "bigquant_share_reconciliations.parquet" if root is not None else None
+    if share_reconciliations is not None and share_reconciliations.is_file():
+        _apply_bigquant_share_reconciliations(con, share_reconciliations)
     if structured_issuer_classes:
         fill_class_caps(con, root, structured_issuer_classes, _effective_segments)
     _materialize(con, "pit_provenance", list(ledger.values()), {

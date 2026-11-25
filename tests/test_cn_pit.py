@@ -309,3 +309,30 @@ def test_pit_uses_only_eligible_share_industry_and_split_evidence(tmp_path):
             (None, None, None), (10_000, 10_000, "missing_provider_comparison"),
             (20_000, 20_000, "matched_structured_after_conflict"),
         ]
+
+        con.execute("""
+            INSERT INTO quant.canonical_daily_basic
+              SELECT '920357.BJ', day::DATE, 3.0, 'test', NULL
+              FROM UNNEST(['2024-05-23', '2024-05-24']) t(day);
+            INSERT INTO stock_base
+              SELECT 'stock','issuer','920357.BJ',day::DATE,(day||' 15:59:59+00')::TIMESTAMPTZ,1.0
+              FROM UNNEST(['2024-05-23', '2024-05-24']) t(day);
+        """)
+        exact = structured | {
+            "effective_from": "2024-05-23", "effective_to": "2024-05-24", "published_at": "2024-05-22",
+            "source_version_id": "exact-charter-quantity", "shares_outstanding_security": 30_000,
+        }
+        (tmp_path / "share_conflict_versions.jsonl").write_text(json.dumps(exact) + "\n", encoding="utf-8")
+        con.sql("""
+            SELECT ts_code, DATE '2024-05-24' local_trade_date, provenance_id, shares_outstanding_security,
+                   repeat('1',64) source_sha256, 'structured_share_segments' evidence_stream
+            FROM _structured_share_segments WHERE provenance_id IS NOT NULL
+        """).write_parquet(str(tmp_path / "bigquant_share_reconciliations.parquet"))
+        build_pit(con, evidence_dir=tmp_path)
+        assert con.sql("""
+            SELECT shares_outstanding_security,share_check_status FROM stock_pit
+            WHERE local_trade_date>=DATE '2024-05-23' ORDER BY local_trade_date
+        """).fetchall() == [
+            (30_000, "matched_structured_after_conflict"),
+            (20_000, "matched_bigquant_after_conflict"),
+        ]
