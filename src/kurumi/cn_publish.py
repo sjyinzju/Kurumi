@@ -11,6 +11,7 @@ from pathlib import Path
 import pyarrow.parquet as pq
 
 from .cn_acceptance import (
+    enhancement_gaps,
     financial_period_coverage,
     label_boundary_violations,
     publication_status,
@@ -20,6 +21,8 @@ from .cn_acceptance import (
 )
 from .cn_features import (
     FACTOR_NAMES,
+    INDUSTRY_MIN_EFFECTIVE_MEMBERS,
+    INDUSTRY_MIN_VALID_MEMBERS,
     MARKET_BENCHMARK_INPUT_TEMPLATE,
     MARKET_BENCHMARK_VERSION,
     MIN_COVERAGE,
@@ -28,6 +31,12 @@ from .cn_features import (
     feature_quality,
 )
 from .cn_identity import apply_code_changes
+from .cn_industry_training import (
+    HISTORICAL_TRAIN_PROFILE,
+    INDUSTRY_TRAINING_STATE,
+    INDUSTRY_TRAINING_STOCK,
+    build_industry_training,
+)
 from .cn_issuer_continuity import register_issuer_continuity
 from .cn_limit_pit import register_verified_limits
 from .cn_name_pit import register_verified_names
@@ -51,13 +60,15 @@ CORE = {
     "labels": ("sample_id", "horizon"),
 }
 CONTRACT = {
-    "contract_version": "1.1",
+    "contract_version": "1.2",
     "schema_version": "kurumi.numeric.v1", "feature_version": "numeric30.v1",
     "choice_spec_version": "return_z7_vol60.v1", "input_template_version": "kurumi.numeric.input.v1",
     "markets": ["CN"], "price_read_start_date": "2015-01-01", "sample_end_date": "2026-06-30",
     "label_observation_end_date": "2026-07-31", "horizons": [1, 5, 20], "lookback_returns": 60,
     "required_close_observations": 61, "volatility_ddof": 1, "zero_log_return_tolerance": 1e-12,
-    "market_cap_coverage_min": MIN_COVERAGE, "market_count_coverage_min": MIN_COVERAGE,
+    "market_known_cap_coverage_min": MIN_COVERAGE, "market_count_coverage_min": MIN_COVERAGE,
+    "industry_min_valid_members": INDUSTRY_MIN_VALID_MEMBERS,
+    "industry_min_effective_members": INDUSTRY_MIN_EFFECTIVE_MEMBERS,
     "market_state_coverage_version": STATE_COVERAGE_VERSION,
     "numeric_cache_limit_gib": 8, "text_status": "not_built",
     "split": {"train_end": "2023-12-31", "validation_start": "2024-01-01", "validation_end": "2024-06-30",
@@ -420,10 +431,31 @@ def reusable_supervision_release(con, numeric_root, inputs, code, price_signatur
     return None
 
 
+def export_industry_training(con, publish, source, history_contract):
+    print("build historical industry training profile", flush=True)
+    with con.cursor() as extension:
+        stats = build_industry_training(extension, source)
+        keys = ((INDUSTRY_TRAINING_STOCK, "local_trade_date,sample_id"),
+                (INDUSTRY_TRAINING_STATE, "local_trade_date,classification_version,industry_code"))
+        for table, order in keys:
+            years = extension.sql(f"SELECT DISTINCT year(local_trade_date) FROM {table} ORDER BY 1").fetchall()
+            for (year,) in years:
+                target = publish / table / "market_id=CN" / f"year={year}" / "part-000.parquet"
+                export_query(extension, target, f"FROM {table} WHERE year(local_trade_date)={year} ORDER BY {order}")
+        export_query(extension, publish / "reference/industry_training_intervals.parquet",
+                     "FROM industry_training_intervals ORDER BY instrument_id,effective_from")
+    audit_path = source.with_suffix(".json")
+    if sha256(source) != history_contract["interval_input_sha256"] or sha256(audit_path) != history_contract["audit_input_sha256"]:
+        raise ValueError("Historical industry training input changed during the build")
+    write_json(publish / "reports/industry_training_history.json",
+               {**stats, "source_audit": json.loads(audit_path.read_text(encoding="utf-8"))})
+    return stats
+
+
 def complete_build(con, workspace, inputs, evidence_dir=None, prehistory=None, suspension_evidence=None,
-                   resume_export=None, compute_only=False, karpo_assets=None):
+                   resume_export=None, compute_only=False, karpo_assets=None, industry_training_history=None):
     scripts = ("build_cn_numeric.py", "verify_cn_numeric.py", "check_cn_pit_prefix.py", "check_numeric_loading.py",
-               "check_cn_features.py")
+               "check_cn_features.py", "stage_cn_industry_reconstruction.py")
     repo_code = (*sorted((PROJECT / "src/kurumi").glob("*.py")), *(PROJECT / "scripts" / p for p in scripts))
     code = {p.relative_to(PROJECT).as_posix(): sha256(p) for p in repo_code}
     revision = git_revision()
@@ -433,6 +465,15 @@ def complete_build(con, workspace, inputs, evidence_dir=None, prehistory=None, s
     benchmark_path = evidence_dir / benchmark if benchmark in evidence else None
     contract = CONTRACT | ({"market_relative_benchmark_version": MARKET_BENCHMARK_VERSION,
                             "input_template_version": MARKET_BENCHMARK_INPUT_TEMPLATE} if benchmark_path else {})
+    if industry_training_history:
+        audit_path = industry_training_history.with_suffix(".json")
+        source_digest = sha256(industry_training_history)
+        history_audit = json.loads(audit_path.read_text(encoding="utf-8"))
+        if history_audit.get("parquet_sha256") != source_digest or history_audit.get("scope") != "train":
+            raise ValueError("Historical industry training source does not match its train-only receipt")
+        contract["industry_training_profile"] = dict(name=HISTORICAL_TRAIN_PROFILE, scope="train",
+                                                       interval_input_sha256=source_digest,
+                                                       audit_input_sha256=sha256(audit_path))
     fingerprint = digest([inputs, code, revision, evidence, contract, duckdb_version(con)])
     publish = workspace / f"publish-{fingerprint[:24]}"
     if resume_export is not None:
@@ -538,6 +579,8 @@ def complete_build(con, workspace, inputs, evidence_dir=None, prehistory=None, s
         return
     for table in feature_tables:
         con.execute(f"CREATE OR REPLACE TEMP VIEW {table} AS FROM built_{table}")
+    history_stats = (export_industry_training(con, publish, industry_training_history, contract["industry_training_profile"])
+                     if industry_training_history else None)
     con.execute("CREATE OR REPLACE TEMP VIEW stock_daily AS " + stock_daily_sql())
     metadata, schemas = export_core(con, publish, previous)
     # Run row-wide validation against the actual published bytes and reuse the compressed
@@ -580,13 +623,14 @@ def complete_build(con, workspace, inputs, evidence_dir=None, prehistory=None, s
         if sum(r["security_days"]-r[key] for r in coverage)
     ]
     dependencies = structural_dependencies(con)
+    optional_gaps = enhancement_gaps(con)
     export_query(con, publish / "reports" / "financial_factor_coverage.parquet",
                  "SELECT * FROM financial_factor_coverage ORDER BY exchange,year,split,family,field")
     runtime_limits = con.sql("""SELECT current_setting('threads'), current_setting('memory_limit'),
         current_setting('temp_directory'), current_setting('max_temp_directory_size')""").fetchone()
     quality = {"exchange_coverage": coverage, "inputs": input_counts,
                "supervision": splits, "source_dependencies": source_blockers,
-               "structural_dependencies": dependencies,
+               "structural_dependencies": dependencies, "enhancement_gaps": optional_gaps,
                "build_runtime": dict(zip(("threads", "memory_limit", "spill_directory", "spill_limit"),
                                          runtime_limits, strict=True)),
                "training_sample_counts": rows(con, "SELECT split,count(*) AS samples FROM training_samples GROUP BY ALL ORDER BY 1"),
@@ -597,6 +641,8 @@ def complete_build(con, workspace, inputs, evidence_dir=None, prehistory=None, s
                                            count_if(missing_adjustment) AS factor_missing,
                                            min(local_trade_date) AS earliest,max(local_trade_date) AS latest
                                            FROM quote_gaps GROUP BY ALL ORDER BY 1""")}
+    if history_stats is not None:
+        quality["industry_training_reconstruction"] = history_stats
     write_json(publish / "schema.json", {"tables": schemas})
     # JSON syntax is also YAML 1.2. Keep one canonical serialization of fixed parameters.
     write_json(publish / "contract.yaml", contract)

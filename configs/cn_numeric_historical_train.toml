@@ -1,0 +1,4 @@
+numeric_root = 'E:\QuantData\numeric'
+industry_profile = 'historical_train'
+
+# Set dataset_version to pin the experiment to an immutable release.

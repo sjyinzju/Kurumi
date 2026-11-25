@@ -50,8 +50,14 @@ def fixture_connection(*, end=70, gaps=False, exchange_closure=False):
     return con
 
 
+def add_members(con, n):
+    con.execute(f"""INSERT INTO stock_base SELECT * EXCLUDE (member) REPLACE ('copy-' || member AS instrument_id)
+                FROM stock_base CROSS JOIN range({n}) t(member) WHERE instrument_id = 'SSE'""")
+
+
 def test_stock_factors_and_market_formulas():
     with fixture_connection() as con:
+        add_members(con, 3)
         build_features(con)
         columns = {row[0] for row in con.execute("DESCRIBE stock_factors").fetchall()}
         assert set(FACTOR_NAMES) <= columns
@@ -85,11 +91,11 @@ def test_market_coverage_keeps_members_with_missing_prior_caps_and_separates_clo
         assert rows[62][1]["n_expected"] == 2
         assert rows[62][1]["status"] == "low_coverage"
         assert rows[63][1]["cap_coverage"] is None
-        assert rows[63][1]["status"] == "missing_source"
+        assert rows[63][1]["status"] == "low_coverage"
         assert rows[65][0] is not None
         assert rows[65][2:] == (1, 0.0)
         assert rows[68][1]["cap_coverage"] is None
-        assert rows[68][1]["status"] == "missing_source"
+        assert rows[68][1]["status"] == "low_coverage"
         independent = con.sql("""
             SELECT advance_ratio, return_dispersion_1d, suspension_ratio,
                    coverage.advance_ratio.status, coverage.advance_ratio.cap_coverage
@@ -149,8 +155,9 @@ def test_separate_published_benchmark_recovers_relative_factors_with_missing_cap
         assert beta == pytest.approx(1.0, abs=1e-7)
 
 
-def test_partial_membership_cannot_publish_industry_denominator():
+def test_partial_membership_publishes_reliable_industry_with_unknown_full_denominator():
     with fixture_connection() as con:
+        add_members(con, 4)
         con.execute("UPDATE stock_base SET industry_code_asof=NULL WHERE instrument_id='SZSE'")
         build_features(con)
         market_return = con.sql("SELECT return_1d FROM market_daily ORDER BY local_trade_date DESC LIMIT 1").fetchone()[0]
@@ -159,8 +166,55 @@ def test_partial_membership_cannot_publish_industry_denominator():
             SELECT return_1d, coverage.return_1d, missing_reasons['excess_market_20d']
             FROM industry_daily ORDER BY local_trade_date DESC LIMIT 1
         """).fetchone()
-        assert industry_return is None
-        assert coverage["n_known_expected"] == 1
+        assert industry_return == pytest.approx(market_return)
+        assert coverage["n_known_expected"] == 5
         assert coverage["n_expected"] is None
         assert coverage["cap_coverage"] is None
-        assert coverage["status"] == reason == "unverified_version"
+        assert coverage["known_cap_coverage"] == 1
+        assert coverage["classification_count_coverage"] == pytest.approx(5 / 6)
+        assert coverage["status"] == "valid"
+        assert coverage["reliability"] == "partial"
+        assert reason is None
+
+
+def test_market_accepts_exact_count_threshold_but_keeps_true_cap_unknown():
+    with fixture_connection() as con:
+        add_members(con, 18)
+        con.execute("UPDATE stock_base SET shares_outstanding_security=NULL WHERE i=68 AND instrument_id='SSE'")
+        build_features(con)
+        result, coverage = con.sql("""
+            SELECT return_1d, coverage.return_1d FROM market_daily ORDER BY local_trade_date DESC LIMIT 1
+        """).fetchone()
+        assert result is not None
+        assert coverage["n_valid"] == 19 and coverage["count_coverage"] == 0.95
+        assert coverage["n_cap_missing"] == 1 and coverage["cap_coverage"] is None
+        assert coverage["known_cap_coverage"] == 1 and coverage["reliability"] == "partial"
+
+
+def test_market_rejects_low_cap_coverage_even_when_count_passes():
+    with fixture_connection() as con:
+        add_members(con, 18)
+        con.execute("UPDATE stock_base SET shares_outstanding_security=10000000 WHERE i=68 AND instrument_id='SSE'")
+        con.execute("UPDATE stock_base SET adjusted_close=NULL,close_raw=NULL WHERE i=69 AND instrument_id='SSE'")
+        build_features(con)
+        result, coverage = con.sql("""
+            SELECT return_1d, coverage.return_1d FROM market_daily ORDER BY local_trade_date DESC LIMIT 1
+        """).fetchone()
+        assert result is None and coverage["status"] == "low_coverage"
+        assert coverage["count_coverage"] == 0.95
+        assert coverage["known_cap_coverage"] < 0.95
+        assert coverage["cap_coverage"] == coverage["known_cap_coverage"]
+
+
+def test_industry_concentration_suppresses_weighted_return_only():
+    with fixture_connection() as con:
+        add_members(con, 3)
+        con.execute("UPDATE stock_base SET shares_outstanding_security=10000000 WHERE instrument_id='SSE'")
+        build_features(con)
+        returns, breadth, coverage = con.sql("""
+            SELECT return_1d, advance_ratio, coverage.return_1d FROM industry_daily
+            ORDER BY local_trade_date DESC LIMIT 1
+        """).fetchone()
+        assert returns is None and breadth is not None
+        assert coverage["n_valid"] == 5 and coverage["known_cap_coverage"] == 1
+        assert coverage["effective_members"] < 3 and coverage["status"] == "low_coverage"

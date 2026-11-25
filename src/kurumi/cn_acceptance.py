@@ -190,7 +190,39 @@ def financial_factor_coverage(con):
 
 
 def structural_dependencies(con):
-    """Detect unavailable source families without making individual nulls a completeness gate."""
+    """Require usable supervision and market context in every represented exchange and split."""
+    fields = {column for column, *_ in con.sql("DESCRIBE market_daily").fetchall()}
+    has_market = "m.return_1d IS NOT NULL"
+    if "benchmark_return_1d" in fields:
+        has_market += " OR m.benchmark_return_1d IS NOT NULL"
+    horizons = (1, 5, 20)
+    supported = ",".join(f"count_if(t.supervised_{n}d AND ({has_market}))" for n in horizons)
+    cohorts = con.sql(f"""
+        SELECT b.exchange, s.split, count(*) AS candidates, count_if(s.input_valid) AS valid_inputs,
+               {supported}
+        FROM samples s JOIN stock_base b USING (instrument_id, local_trade_date)
+        LEFT JOIN training_samples t ON t.sample_id = s.sample_id
+        LEFT JOIN market_daily m ON m.market_id = s.market_id AND m.local_trade_date = s.local_trade_date
+        GROUP BY b.exchange, s.split ORDER BY b.exchange, s.split
+    """).fetchall()
+    gaps = []
+    exchanges = {exchange for exchange, *_ in cohorts}
+    splits = {split for _, split, *_ in cohorts}
+    gaps.extend(dict(dependency="missing_exchange", exchange=ex) for ex in sorted({"SSE", "SZSE", "BSE"} - exchanges))
+    gaps.extend(dict(dependency="missing_split", split=split)
+                for split in sorted({"train", "validation", "calibration", "test"} - splits))
+    for exchange, split, candidates, input_valid, *counts in cohorts:
+        scope = dict(exchange=exchange, split=split, candidates=candidates, valid_inputs=input_valid)
+        if not input_valid:
+            gaps.append(dict(dependency="no_valid_price_windows", **scope))
+        else:
+            gaps.extend(dict(dependency="no_supervision_with_market_context", horizon=horizon, **scope)
+                        for horizon, observed in zip(horizons, counts, strict=True) if not observed)
+    return gaps
+
+
+def enhancement_gaps(con):
+    """Report uncovered optional sources and fields across evidence strata."""
     gaps = []
     totals = con.sql("""
         SELECT exchange,year(local_trade_date),count_if(input_valid),

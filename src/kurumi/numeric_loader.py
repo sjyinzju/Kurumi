@@ -14,6 +14,7 @@ from statistics import median
 import pyarrow.dataset as ds
 
 from .cn_features import MARKET_BENCHMARK_FIELDS, MARKET_BENCHMARK_INPUT_TEMPLATE, MARKET_BENCHMARK_VERSION
+from .cn_industry_training import HISTORICAL_TRAIN_PROFILE, INDUSTRY_TRAINING_STATE, INDUSTRY_TRAINING_STOCK
 from .numeric_math import HORIZONS
 
 SCHEMA_VERSION = "kurumi.numeric.v1"
@@ -77,6 +78,8 @@ STOCK_HISTORY_FIELDS = (
 STOCK_CURRENT_FIELDS = (
     "instrument_id", "issuer_id", *IDENTITY_FIELDS, *CURRENT_FIELDS, *FACTORS, "missing_reasons",
 )
+INDUSTRY_IDENTITY_FIELDS = ("industry_system", "classification_version", "industry_code_asof", "industry_name_asof")
+INDUSTRY_EXCESS_FIELDS = ("excess_industry_5d", "excess_industry_20d")
 FUNDAMENTAL_FIELDS = (
     "fundamental_snapshot_id", "issuer_id", "available_at", "disclosure_date_local", "fiscal_period_end",
     "reporting_currency", "source_version_refs", "missing_reasons", *FINANCIALS,
@@ -235,7 +238,7 @@ def _state(row: dict, fields: tuple[str, ...], groups: tuple[str, ...]) -> dict:
 class NumericDataset:
     """Load exactly the requested samples, using shared date partitions and Arrow predicates."""
 
-    def __init__(self, directory: str | Path, *, allow_incomplete: bool = False):
+    def __init__(self, directory: str | Path, *, allow_incomplete: bool = False, industry_profile: str = "strict"):
         self.directory = Path(directory)
         self.manifest = json.loads((self.directory / "manifest.json").read_text(encoding="utf-8"))
         self.dataset_version = self.manifest["dataset_version"]
@@ -243,6 +246,14 @@ class NumericDataset:
         if status != "NUMERIC_READY" and not (status == "INCOMPLETE" and allow_incomplete):
             raise ValueError(f"Numeric package status is {status}. INCOMPLETE packages require explicit QA opt-in.")
         self.allow_incomplete = status == "INCOMPLETE"
+        profile = self.manifest.get("industry_training_profile", {})
+        if industry_profile not in ("strict", HISTORICAL_TRAIN_PROFILE):
+            raise ValueError(f"Unknown industry profile: {industry_profile!r}")
+        if industry_profile == HISTORICAL_TRAIN_PROFILE and (profile.get("name"), profile.get("scope")) != (
+            HISTORICAL_TRAIN_PROFILE, "train",
+        ):
+            raise ValueError("This package has no historical industry training profile")
+        self.industry_profile = industry_profile
         benchmark = self.manifest.get("market_relative_benchmark_version")
         if benchmark not in (None, MARKET_BENCHMARK_VERSION):
             raise ValueError(f"Incompatible market_relative_benchmark_version: {benchmark!r}")
@@ -261,7 +272,7 @@ class NumericDataset:
         self._tables = {}
 
     @classmethod
-    def from_config(cls, config: str | Path, *, allow_incomplete: bool = False):
+    def from_config(cls, config: str | Path, *, allow_incomplete: bool = False, industry_profile: str | None = None):
         config = Path(config).resolve()
         settings = tomllib.loads(config.read_text(encoding="utf-8"))
         root = Path(settings["numeric_root"])
@@ -280,7 +291,8 @@ class NumericDataset:
         release = (root / version).resolve()
         if release.parent != root:
             raise ValueError("Numeric release was resolved outside its configured root")
-        dataset = cls(release, allow_incomplete=allow_incomplete)
+        profile = settings.get("industry_profile", "strict") if industry_profile is None else industry_profile
+        dataset = cls(release, allow_incomplete=allow_incomplete, industry_profile=profile)
         if dataset.dataset_version != version or (pointer and dataset.manifest["status"] != pointer["status"]):
             raise ValueError("Numeric package identity does not match the requested release")
         return dataset
@@ -309,6 +321,18 @@ class NumericDataset:
         table = self._table("reports/training_samples.parquet")
         for batch in table.to_batches(columns=["sample_id"], filter=filter):
             yield from batch.column(0).to_pylist()
+
+    def _historical_industry(self, samples):
+        train = [sample for sample in samples if sample["split"] == "train"]
+        if self.industry_profile != HISTORICAL_TRAIN_PROFILE or not train:
+            return {}, {}
+        windows = _market_windows(train, "local_trade_date", "local_trade_date")
+        ids = ds.field("sample_id").isin([sample["sample_id"] for sample in train])
+        fields = ("sample_id", *INDUSTRY_IDENTITY_FIELDS, *INDUSTRY_EXCESS_FIELDS, "evidence_quality", "effective_from")
+        stock = _index(self._rows(INDUSTRY_TRAINING_STOCK, fields, windows & ids), ("sample_id",))
+        state_fields = (*INDUSTRY_KEYS, *INDUSTRY_FIELDS, "coverage", "missing_reasons")
+        states = _index(self._rows(INDUSTRY_TRAINING_STATE, state_fields, windows), INDUSTRY_KEYS)
+        return stock, states
 
     def _assemble(self, sample_ids) -> tuple[tuple[dict, ...], tuple[dict, ...]]:
         dates = []
@@ -353,6 +377,7 @@ class NumericDataset:
         industries = _index(self._rows("industry_daily", (*STATE_KEYS, *INDUSTRY_KEYS[1:4], *INDUSTRY_FIELDS), filter,
                                        required=(*INDUSTRY_KEYS, "available_at")), INDUSTRY_KEYS
                             ) if any(s["industry_code_asof"] is not None for s in samples) else {}
+        historical_stock, historical_states = self._historical_industry(samples)
         outputs, audits = [], []
         for sample in samples:
             key = (sample["market_id"], sample["instrument_id"])
@@ -376,14 +401,41 @@ class NumericDataset:
                     raise ValueError(f"Model input availability exceeds as-of: {sample['sample_id']}")
             if not market and not self.allow_incomplete:
                 raise ValueError(f"Market state is missing for {sample['sample_id']}")
-            if not industry and sample["industry_code_asof"] is not None and not self.allow_incomplete:
-                raise ValueError(f"Industry state is missing for {sample['sample_id']}")
             if sample["text_status"] != "not_built" or sample["text_ref"] is not None:
                 raise ValueError("Numeric v1 loader requires the not_built text placeholder")
+            identity, factors = _pick(current, IDENTITY_FIELDS), _pick(current, FACTORS)
+            reconstruction = {}
+            if sample["split"] == "train" and self.industry_profile == HISTORICAL_TRAIN_PROFILE:
+                supplement = historical_stock.get((sample["sample_id"],), {})
+                if supplement.get("evidence_quality"):
+                    if identity["industry_code_asof"] is not None:
+                        raise ValueError(f"Reconstruction overlaps a strict membership: {sample['sample_id']}")
+                    identity.update(_pick(supplement, INDUSTRY_IDENTITY_FIELDS))
+                    reconstruction.update(membership_quality=supplement["evidence_quality"],
+                                          membership_effective_from=supplement["effective_from"])
+                recovered = {field: supplement[field] for field in INDUSTRY_EXCESS_FIELDS
+                             if supplement.get(field) is not None}
+                factors.update(recovered)
+                if recovered:
+                    reconstruction["factor_fields"] = tuple(recovered)
+                historical_key = (sample["market_id"], identity["industry_system"], identity["classification_version"],
+                                  identity["industry_code_asof"], end)
+                if historical_key in historical_states:
+                    industry = historical_states[historical_key]
+                    reconstruction["state_quality"] = "historical_reconstruction"
+            industry_reasons = industry.get("missing_reasons")
+            if not industry and identity["industry_code_asof"] is not None:
+                industry_reasons = dict.fromkeys(INDUSTRY_FIELDS, "missing_source")
+            stock_reasons = current.get("missing_reasons")
+            if reconstruction and stock_reasons:
+                supplied = set(reconstruction.get("factor_fields", ()))
+                if "membership_quality" in reconstruction:
+                    supplied.add("industry_code_asof")
+                stock_reasons = [(field, reason) for field, reason in stock_reasons if field not in supplied]
             outputs.append(dict(
                 Xstate=dict(
-                    Xstock=dict(identity=_pick(current, IDENTITY_FIELDS), current=_pick(current, CURRENT_FIELDS),
-                                sequence=sequence, factors=_pick(current, FACTORS), fundamentals=_financial(finance, end)),
+                    Xstock=dict(identity=identity, current=_pick(current, CURRENT_FIELDS),
+                                sequence=sequence, factors=factors, fundamentals=_financial(finance, end)),
                     Xmarket=dict(market=_state(market, self.market_fields, self.market_groups),
                                  industry=_state(industry, INDUSTRY_FIELDS, self.industry_groups)),
                     Xtext=dict(text_ref=None, text_status="not_built"),
@@ -395,8 +447,10 @@ class NumericDataset:
                 asof_utc=sample["asof_utc"], fundamental_snapshot_id=snapshot_id,
                 fundamental_source_versions=finance.get("source_version_refs"),
                 window_provenance=tuple(r.get("provenance_id") for r in history),
-                missing_reasons=dict(stock=current.get("missing_reasons"), fundamental=finance.get("missing_reasons"),
-                                     market=market.get("missing_reasons"), industry=industry.get("missing_reasons")),
+                industry_reconstruction=reconstruction or None,
+                context_coverage=dict(market=market.get("coverage"), industry=industry.get("coverage")),
+                missing_reasons=dict(stock=stock_reasons, fundamental=finance.get("missing_reasons"),
+                                     market=market.get("missing_reasons"), industry=industry_reasons),
             ))
         return tuple(outputs), tuple(audits)
 

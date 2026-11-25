@@ -34,13 +34,30 @@ def register_verified_limits(con, root, price_view):
         limited = (regime == "limited" and up is not None and down is not None and
                    math.isfinite(up) and math.isfinite(down) and up > down > 0 and up < 99999)
         derivation = row.get("historical_limit_derivation")
-        ipo_rule = (derivation == "exchange_ipo_first_five_sessions"
-                    and 1 <= row.get("verified_listing_session", 0) <= 5
-                    and re.fullmatch(r"[0-9a-f]{64}", row.get("ipo_issue_batch_sha256", ""))
-                    and row.get("official_rule_sha256")
-                    and all(re.fullmatch(r"[0-9a-f]{64}", digest) for digest in row["official_rule_sha256"]))
+        listing_proof = {
+            "exchange_ipo_first_five_sessions": "ipo_issue_batch_sha256",
+            "exchange_transfer_first_five_sessions": "transfer_listing_source_sha256",
+        }.get(derivation)
+        first_five = (listing_proof is not None and 1 <= row.get("verified_listing_session", 0) <= 5
+                      and re.fullmatch(r"[0-9a-f]{64}", row.get(listing_proof, ""))
+                      and row.get("official_rule_sha256")
+                      and all(re.fullmatch(r"[0-9a-f]{64}", digest) for digest in row["official_rule_sha256"]))
+        exchange_notice = (
+            derivation == "exchange_historical_unlimited_notice"
+            and row.get("notice_event_type") in {
+                "delisting_first_session", "relisting_first_session", "ipo_first_session", "merger_listing_first_session",
+            }
+            and row.get("notice_trade_date") == day.isoformat()
+            and re.fullmatch(r"[0-9]{4}-[0-9]{2}-[0-9]{2}", row.get("notice_published", ""))
+            and date.fromisoformat(row["notice_published"]) < day
+            and re.fullmatch(
+                r"https://(?:static\.cninfo\.com\.cn|disc\.static\.szse\.cn|static\.sse\.com\.cn|www\.bse\.cn)/[^?#]+\.[pP][dD][fF]",
+                row.get("source_url", ""),
+            )
+            and f"/{row['notice_published']}/" in row["source_url"]
+        )
         unlimited = (regime == "unlimited" and up is None and down is None
-                     and (derivation == "sse_star_2019_first_five_sessions" or ipo_rule))
+                     and (derivation == "sse_star_2019_first_five_sessions" or first_five or exchange_notice))
         if (key in keys or not re.fullmatch(r"[0-9]{6}\.(?:SH|SZ|BJ)", source)
                 or not re.fullmatch(r"[0-9a-f]{64}", check_hash)
                 or not (limited or unlimited)
@@ -52,18 +69,18 @@ def register_verified_limits(con, root, price_view):
         fact = hashlib.sha256(line).hexdigest()
         parsed.append(dict(instrument_id=key[0], local_trade_date=day, ts_code=row["ts_code"], symbol=source[:6],
                            regime=regime, upper=up, lower=down, batch=f"stk-limit:{check_hash}:{fact}",
-                           ipo_session=row.get("verified_listing_session") if ipo_rule else None))
+                           listing_session=row.get("verified_listing_session") if first_five else None))
     if not parsed:
         return price_view
     con.register("_verified_trading_limits", pa.Table.from_pylist(parsed))
-    ipo_check = ("OR (l.ipo_session IS NOT NULL AND p.listing_age_sessions IS DISTINCT FROM l.ipo_session)"
-                 if any(row["ipo_session"] is not None for row in parsed) else "")
+    listing_check = ("OR (l.listing_session IS NOT NULL AND p.listing_age_sessions IS DISTINCT FROM l.listing_session)"
+                     if any(row["listing_session"] is not None for row in parsed) else "")
     incompatible = con.sql(f"""
         SELECT l.instrument_id,l.local_trade_date FROM _verified_trading_limits l
         LEFT JOIN {price_view} p USING(instrument_id,local_trade_date)
         WHERE p.instrument_id IS NULL OR p.ts_code IS DISTINCT FROM l.ts_code
            OR p.symbol_asof IS DISTINCT FROM l.symbol
-           {ipo_check}
+           {listing_check}
            OR (p.quote_valid AND (p.high_raw>l.upper+1e-9 OR p.low_raw<l.lower-1e-9))
            OR (p.limit_regime<>'unknown' AND (p.limit_regime IS DISTINCT FROM l.regime
                                           OR p.upper_limit_price IS DISTINCT FROM l.upper

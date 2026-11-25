@@ -19,6 +19,7 @@ import pyarrow.compute as pc
 import pyarrow.dataset as ds
 import pyarrow.parquet as pq
 
+from kurumi.cn_industry_training import HISTORICAL_TRAIN_PROFILE, INDUSTRY_TRAINING_STOCK
 from kurumi.karpo_numeric import KARPO_MODEL_REVISION, KarpoNumericEncoder, request_from_input
 from kurumi.numeric_loader import (
     CHANNELS,
@@ -268,6 +269,34 @@ def check_price_prefix(loader, batch):
                 sample_count=len(evidence), evidence=evidence)
 
 
+def check_industry_training_profile(loader, batch, encoder=None):
+    table = ds.dataset(loader.directory / INDUSTRY_TRAINING_STOCK, format="parquet", partitioning="hive")
+    match = ds.field("evidence_quality").is_valid() & ds.field("excess_industry_5d").is_valid()
+    probe = table.head(1, columns=["sample_id", "industry_code_asof", "excess_industry_5d"], filter=match).to_pylist()
+    if not probe:
+        raise AssertionError("Historical industry profile has no recovered membership with an excess return")
+    row = probe[0]
+    sample_ids = [row["sample_id"], *(audit["sample_id"] for audit in batch.audit if audit["split"] != "train")]
+    historical = NumericDataset(loader.directory, allow_incomplete=loader.allow_incomplete,
+                                industry_profile=HISTORICAL_TRAIN_PROFILE)
+    strict, extended = loader.load_batch(sample_ids), historical.load_batch(sample_ids)
+    if strict.supervision != extended.supervision or strict.model_input[1:] != extended.model_input[1:]:
+        raise AssertionError("Historical industry profile changed outcomes, masks or evaluation inputs")
+    before, after = strict.model_input[0], extended.model_input[0]
+    before_stock, after_stock = (item["Xstate"]["Xstock"] for item in (before, after))
+    if (before["Xchoice"] != after["Xchoice"] or before_stock["sequence"] != after_stock["sequence"]
+            or before_stock["identity"]["industry_code_asof"] is not None
+            or after_stock["identity"]["industry_code_asof"] != row["industry_code_asof"]
+            or after_stock["factors"]["excess_industry_5d"] != row["excess_industry_5d"]
+            or extended.audit[0]["industry_reconstruction"].get("state_quality") != "historical_reconstruction"
+            or any(audit["industry_reconstruction"] for audit in extended.audit[1:])):
+        raise AssertionError("Historical industry data did not remain confined to the training industry fields")
+    evidence = {"recovered_train_sample": row["sample_id"], "strict_evaluation_samples": sample_ids[1:]}
+    if encoder:
+        evidence["native_evidence"] = check_native_batch(extended, encoder)
+    return evidence
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("dataset", nargs="?", type=Path)
@@ -302,12 +331,15 @@ def main():
         check_recovered_ttm(batch, ttm_evidence)
         report["recovered_ttm_evidence"] = ttm_evidence
         report["recovered_ttm_audit_sha256"] = hashlib.sha256(args.recovered_ttm_audit.read_bytes()).hexdigest()
+    encoder = None
     if args.karpo_assets:
         encoder = KarpoNumericEncoder.from_checkpoint(args.karpo_assets)
         report.update(native_check="passed", code_revision=encoder.encoder_revision,
                       tokenizer_revision=encoder.tokenizer_revision, checkpoint_revision=KARPO_MODEL_REVISION,
                       encoding_runtime=encoder.runtime,
                       native_evidence=check_native_batch(batch, encoder))
+    if loader.manifest.get("industry_training_profile"):
+        report["industry_training_profile"] = check_industry_training_profile(loader, batch, encoder)
     output = json.dumps(report, ensure_ascii=False, indent=2, allow_nan=False) + "\n"
     if args.report:
         args.report.parent.mkdir(parents=True, exist_ok=True)

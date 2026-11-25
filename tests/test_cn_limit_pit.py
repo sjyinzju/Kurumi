@@ -37,6 +37,23 @@ def test_historical_limits_use_exact_symbol_and_session(tmp_path):
 
         unlimited = row | {"limit_regime": "unlimited", "up_limit": None, "down_limit": None,
                            "historical_limit_derivation": "sse_star_2019_first_five_sessions"}
+        notice = unlimited | {
+            "historical_limit_derivation": "exchange_historical_unlimited_notice",
+            "notice_event_type": "delisting_first_session",
+            "notice_trade_date": "2019-12-13",
+            "notice_published": "2019-12-11",
+            "source_url": "https://static.cninfo.com.cn/finalpage/2019-12-11/123.PDF",
+        }
+        evidence.write_text(json.dumps(notice) + "\n", encoding="utf-8")
+        overlay = register_verified_limits(con, tmp_path, "prices")
+        assert con.sql(f"SELECT count(*) FROM {overlay} WHERE limit_regime='unlimited'").fetchone() == (1,)
+        evidence.write_text(json.dumps(notice | {
+            "notice_published": "2019-12-13",
+            "source_url": "https://static.cninfo.com.cn/finalpage/2019-12-13/123.PDF",
+        }) + "\n", encoding="utf-8")
+        with pytest.raises(ValueError, match="Unverified or duplicate"):
+            register_verified_limits(con, tmp_path, "prices")
+
         evidence.write_text(json.dumps(unlimited) + "\n", encoding="utf-8")
         overlay = register_verified_limits(con, tmp_path, "prices")
         assert con.sql(f"SELECT limit_regime, upper_limit_price, lower_limit_price, "

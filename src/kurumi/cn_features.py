@@ -92,7 +92,7 @@ def _valuation(con):
 
 
 METRIC_VALUES = {
-    "return_1d": "valuation_return",
+    "return_1d": "weighted_return",
     "above_ma20_ratio": "above_ma20",
     "above_ma60_ratio": "above_ma60",
     "activity_proxy_ratio_20d": "amount_proxy",
@@ -104,8 +104,10 @@ COUNT_GATED = {
     **{metric: value for metric, value in METRIC_VALUES.items() if metric != "return_1d"},
 }
 STATE_COVERAGE = METRIC_VALUES | COUNT_GATED
-STATE_COVERAGE_VERSION = "numeric_market_coverage.count_for_unweighted.v1"
-MIN_COVERAGE = 0.99
+STATE_COVERAGE_VERSION = "numeric_market_coverage.known_members_and_cap.v2"
+MIN_COVERAGE = 0.95
+INDUSTRY_MIN_VALID_MEMBERS = 5
+INDUSTRY_MIN_EFFECTIVE_MEMBERS = 3
 MARKET_BENCHMARK_VERSION = "cn.csi_all_share_gross_total_return.h00985.v1"
 MARKET_BENCHMARK_INPUT_TEMPLATE = "kurumi.numeric.input.v1.cn_h00985"
 MARKET_BENCHMARK_FIELDS = (
@@ -124,22 +126,35 @@ INDUSTRY_COVERAGE_GROUPS = ("return_1d", "advance_ratio", "above_ma20_ratio", "a
 
 def _coverage_struct(value, *, by_count):
     cap = f"{value}_cap"
-    criterion = (f"divide_if_positive({value}_n_valid, n_expected)" if by_count else
-                 f"divide_if_positive({cap}, expected_cap)")
-    unavailable = "" if by_count else "WHEN n_cap <> n_expected OR NOT expected_cap > 0 THEN 'missing_source'"
-    return f"""struct_pack(
+    count_coverage = f"divide_if_positive(coalesce({value}_n_valid, 0), n_expected)"
+    known_cap_coverage = f"divide_if_positive(coalesce({cap}, 0), expected_cap)"
+    effective_members = "NULL::DOUBLE" if by_count else f"divide_if_positive({cap} * {cap}, return_cap_squares)"
+    missing_cap = "" if by_count else "WHEN expected_cap IS NULL OR expected_cap <= 0 THEN 'missing_source'"
+    weighted_checks = "" if by_count else f"""
+        WHEN coalesce({known_cap_coverage}, 0) < {MIN_COVERAGE} THEN 'low_coverage'
+        WHEN NOT is_market AND coalesce({effective_members}, 0) < {INDUSTRY_MIN_EFFECTIVE_MEMBERS} THEN 'low_coverage'"""
+    return f"""
+        struct_pack(
         n_expected := CASE WHEN membership_complete THEN coalesce(n_expected, 0) END,
         n_known_expected := coalesce(n_expected, 0), n_valid := coalesce({value}_n_valid, 0),
         membership_complete := membership_complete,
-        count_coverage := CASE WHEN membership_complete THEN divide_if_positive({value}_n_valid, n_expected) END,
-        cap_coverage := CASE WHEN membership_complete AND n_cap = n_expected
-            THEN divide_if_positive(coalesce({cap}, 0), expected_cap) END,
+        n_cap_known := coalesce(n_cap, 0), n_cap_missing := coalesce(n_expected - n_cap, 0),
+        n_unclassified_in_market := coalesce(market_n_expected - market_n_classified, 0),
+        classification_count_coverage := divide_if_positive(market_n_classified, market_n_expected),
+        count_coverage := CASE WHEN membership_complete THEN {count_coverage} END,
+        known_count_coverage := {count_coverage},
+        cap_coverage := CASE WHEN membership_complete AND n_cap = n_expected THEN {known_cap_coverage} END,
+        known_cap_coverage := {known_cap_coverage},
+        known_prior_cap := expected_cap, valid_prior_cap := coalesce({cap}, 0),
+        effective_members := {effective_members},
         suspension_valuation_weight := CASE WHEN membership_complete AND n_cap = n_expected
             THEN divide_if_positive(coalesce({value}_suspended_cap, 0), expected_cap) END,
+        known_suspension_valuation_weight := divide_if_positive(coalesce({value}_suspended_cap, 0), expected_cap),
         status := CASE WHEN n_expected IS NULL OR n_expected = 0 THEN 'insufficient_history'
-                       WHEN NOT membership_complete THEN 'unverified_version'
-                       {unavailable}
-                       WHEN coalesce({criterion}, 0) < {MIN_COVERAGE} THEN 'low_coverage'
+                       {missing_cap}
+                       WHEN NOT is_market AND {value}_n_valid < {INDUSTRY_MIN_VALID_MEMBERS} THEN 'low_coverage'
+                       WHEN coalesce({count_coverage}, 0) < {MIN_COVERAGE} THEN 'low_coverage'
+                       {weighted_checks}
                        ELSE 'valid' END
     )"""
 
@@ -148,7 +163,7 @@ def _aggregate_members(con):
     coverage_aggregates = ",".join(
         f"count({v}) AS {v}_n_valid, sum(prior_cap) FILTER (WHERE {v} IS NOT NULL) AS {v}_cap, "
         f"sum(prior_cap) FILTER (WHERE {v} IS NOT NULL AND suspended) AS {v}_suspended_cap"
-        for v in METRIC_VALUES.values()
+        for v in dict.fromkeys(STATE_COVERAGE.values())
     )
     con.execute(f"""
         CREATE OR REPLACE TEMP TABLE _feature_groups AS
@@ -175,6 +190,14 @@ def _aggregate_members(con):
             SELECT market_idx + 1, industry_system, classification_version, industry_code_asof,
                    industry_name_asof, valuation_cap, false, false, NULL, NULL, NULL, NULL, NULL, NULL
             FROM lagged WHERE next_idx IS NULL OR next_idx > market_idx + 1
+        ), eligible AS (
+            SELECT * REPLACE (CASE WHEN prior_cap > 0 AND isfinite(prior_cap) THEN prior_cap END AS prior_cap,
+                              CASE WHEN valuation_return > -1 AND isfinite(valuation_return)
+                                   THEN valuation_return END AS valuation_return)
+            FROM members
+        ), weighted AS (
+            SELECT *, CASE WHEN prior_cap IS NOT NULL THEN valuation_return END AS weighted_return
+            FROM eligible
         )
         SELECT market_idx, grouping(prior_system) = 1 AS is_market,
                prior_system AS industry_system, prior_class AS classification_version,
@@ -183,14 +206,15 @@ def _aggregate_members(con):
                count_if(prior_system = 'SW_L1' AND prior_class IS NOT NULL AND prior_code IS NOT NULL) AS n_classified,
                count_if(exchange_closed) AS exchange_closed_count,
                sum(prior_cap) FILTER (WHERE exchange_closed) AS exchange_closed_cap,
-               sum(prior_cap * valuation_return) AS return_num,
+               sum(prior_cap * weighted_return) AS return_num,
+               sum(prior_cap * prior_cap) FILTER (WHERE weighted_return IS NOT NULL) AS return_cap_squares,
                stddev_pop(valuation_return) AS return_dispersion_1d,
                avg((valuation_return > 0)::INTEGER) AS advance_ratio,
                avg(above_ma20) AS above_ma20_ratio, avg(above_ma60) AS above_ma60_ratio,
                sum(amount_proxy) AS activity_sum, median(turnover_total) AS turnover_total_median,
                avg(suspension_value) AS suspension_ratio,
                {coverage_aggregates}
-        FROM members
+        FROM weighted
         GROUP BY GROUPING SETS ((market_idx), (market_idx, prior_system, prior_class, prior_code))
         HAVING is_market OR (prior_system = 'SW_L1' AND prior_class IS NOT NULL AND prior_code IS NOT NULL)
     """)
@@ -201,6 +225,12 @@ def _states(con):
     coverage_columns = ",".join(
         f"{_coverage_struct(value, by_count=metric in COUNT_GATED)} AS cov_{metric}"
         for metric, value in STATE_COVERAGE.items()
+    )
+    reliability_columns = ",".join(
+        f"struct_insert(cov_{metric}, reliability := CASE WHEN NOT ({ratio_valid[metric]}) THEN 'unavailable' "
+        f"WHEN membership_complete AND cov_{metric}.known_count_coverage = 1 "
+        f"{'AND n_cap = n_expected' if metric not in COUNT_GATED else ''} THEN 'complete' ELSE 'partial' END) "
+        f"AS cov_{metric}" for metric in STATE_COVERAGE
     )
     keep_columns = [
         "advance_ratio", "return_dispersion_1d", "above_ma20_ratio", "above_ma60_ratio",
@@ -231,6 +261,7 @@ def _states(con):
             SELECT i.group_id, i.is_market, i.industry_system, i.classification_version, i.industry_code,
                    c.market_idx, c.local_trade_date, i.is_market OR coalesce(m.n_classified = m.n_expected, false)
                        AS membership_complete,
+                   m.n_expected AS market_n_expected, m.n_classified AS market_n_classified,
                    g.* EXCLUDE (is_market, industry_system, classification_version, industry_code, market_idx)
             FROM index_set i JOIN _feature_market_calendar c ON c.market_idx BETWEEN i.first_idx AND i.last_idx
             LEFT JOIN _feature_groups g ON c.market_idx = g.market_idx AND i.is_market = g.is_market
@@ -242,12 +273,11 @@ def _states(con):
             SELECT *, {coverage_columns} FROM dense_groups
         ), usable AS (
             SELECT group_id, is_market, industry_system, classification_version, industry_code, industry_name,
-                   membership_complete,
                    market_idx, local_trade_date, {gated},
-                   CASE WHEN {ratio_valid['return_1d']} THEN divide_if_positive(return_num, valuation_return_cap)
+                   CASE WHEN {ratio_valid['return_1d']} THEN divide_if_positive(return_num, weighted_return_cap)
                         END AS return_1d,
                    CASE WHEN {ratio_valid['activity_proxy_ratio_20d']} THEN activity_sum END AS activity_sum,
-                   {','.join(f'cov_{metric}' for metric in STATE_COVERAGE)},
+                   {reliability_columns},
                    coalesce(exchange_closed_count, 0) AS exchange_closed_count,
                    CASE WHEN membership_complete AND n_cap = n_expected THEN
                        divide_if_positive(coalesce(exchange_closed_cap, 0), expected_cap) END AS exchange_closed_weight
@@ -285,15 +315,14 @@ def _aligned_benchmarks(con):
             QUALIFY row_number() OVER (PARTITION BY group_id ORDER BY market_idx) = 1
         ), endpoints AS (
             SELECT group_id, is_market, industry_system, classification_version, industry_code,
-                   market_idx, local_trade_date, log_prefix, valid_prefix, membership_complete
+                   market_idx, local_trade_date, log_prefix, valid_prefix
             FROM _feature_state
             UNION ALL
             SELECT s.group_id, s.is_market, s.industry_system, s.classification_version, s.industry_code,
-                   s.market_idx, c.local_trade_date, 0::DOUBLE, 0::BIGINT, false
+                   s.market_idx, c.local_trade_date, 0::DOUBLE, 0::BIGINT
             FROM first_states s JOIN _feature_market_calendar c USING (market_idx)
         )
         SELECT exchange, local_trade_date, is_market, industry_system, classification_version, industry_code,
-               membership_complete,
                {horizons}
         FROM endpoints s JOIN market_calendar e USING (local_trade_date)
         WINDOW w AS (PARTITION BY group_id, exchange ORDER BY session_idx)
@@ -449,8 +478,7 @@ def _stock_factors(con):
         )
     for n in (5, 20):
         for group in ("market", "industry"):
-            industry = ("WHEN industry_code_asof IS NULL OR NOT coalesce(industry_membership_complete, false) "
-                        "THEN 'unverified_version' " if group == "industry" else "")
+            industry = "WHEN industry_code_asof IS NULL THEN 'unverified_version' " if group == "industry" else ""
             factor_reasons[f"excess_{group}_{n}d"] = (
                 f"CASE WHEN history_sessions < {n + 1} THEN 'insufficient_history' "
                 f"WHEN return_{n}d IS NULL THEN 'missing_source' {industry}ELSE 'low_coverage' END"
@@ -468,7 +496,6 @@ def _stock_factors(con):
                    (f.parent_equity + f.parent_equity_4q_ago) / 2 AS mean_equity,
                    m.aligned_1d AS market_1d, m.aligned_5d AS market_5d, m.aligned_20d AS market_20d,
                    i.aligned_5d AS industry_5d, i.aligned_20d AS industry_20d,
-                   i.membership_complete AS industry_membership_complete,
                    CASE WHEN s.security_market_cap_local > 0 THEN s.security_market_cap_local END AS cap_for_rank,
                    kurumi_log1p(m.aligned_1d) AS market_log
             FROM _feature_stock_windows s
@@ -536,7 +563,7 @@ def _output_states(con, market_benchmark):
         coverage_fields = [f"{metric} := cov_{metric}" for metric in required]
         reasons = {metric: f"cov_{metric}.status" for metric in required}
         for metric in set(metric_fields) - set(reasons):
-            reasons[metric] = "CASE WHEN NOT membership_complete THEN 'unverified_version' WHEN market_idx - first_idx + 1 < "
+            reasons[metric] = "CASE WHEN market_idx - first_idx + 1 < "
             reasons[metric] += "60" if "60" in metric else "5" if "5d" in metric else "20"
             reasons[metric] += " THEN 'insufficient_history' ELSE 'low_coverage' END"
         reasons["activity_proxy_ratio_20d"] = (
@@ -636,18 +663,36 @@ def feature_quality(con):
         for field in fields:
             coverage_ref = coverage_groups.get(field)
             gate = "false"
-            count_coverage = cap_coverage = suspension = "NULL::DOUBLE"
+            count_coverage = cap_coverage = suspension = known_count = known_cap = "NULL::DOUBLE"
             if coverage_ref:
                 member = f"coverage.{coverage_ref}"
                 count_coverage = f"{member}.count_coverage"
                 cap_coverage = f"{member}.cap_coverage"
                 suspension = f"{member}.suspension_valuation_weight"
-                gate = f"""{member}.n_valid < 0 OR {member}.n_valid > {member}.n_expected
-                          OR {count_coverage} < 0 OR {count_coverage} > 1
-                          OR {cap_coverage} < 0 OR {cap_coverage} > 1 + 1e-12
-                          OR {suspension} < 0 OR {suspension} > {cap_coverage} + 1e-12"""
-                threshold_basis = count_coverage if field in COUNT_GATED else cap_coverage
-                gate += f" OR ({field} IS NOT NULL AND coalesce({threshold_basis}, 0) < {MIN_COVERAGE})"
+                known_count = f"{member}.known_count_coverage"
+                known_cap = f"{member}.known_cap_coverage"
+                gate = f"""{member}.n_valid NOT BETWEEN 0 AND {member}.n_known_expected
+                          OR {member}.n_cap_known NOT BETWEEN 0 AND {member}.n_known_expected
+                          OR {member}.n_cap_known + {member}.n_cap_missing <> {member}.n_known_expected
+                          OR {known_count} IS DISTINCT FROM CASE WHEN {member}.n_known_expected > 0
+                             THEN {member}.n_valid / {member}.n_known_expected END
+                          OR {known_cap} < 0 OR {known_cap} > 1 + 1e-12
+                          OR {known_cap} IS DISTINCT FROM CASE WHEN {member}.known_prior_cap > 0
+                             THEN {member}.valid_prior_cap / {member}.known_prior_cap END
+                          OR {count_coverage} IS DISTINCT FROM CASE WHEN {member}.membership_complete THEN {known_count} END
+                          OR {cap_coverage} IS DISTINCT FROM CASE WHEN {member}.membership_complete
+                             AND {member}.n_cap_missing = 0 THEN {known_cap} END
+                          OR {suspension} < 0 OR {suspension} > {cap_coverage} + 1e-12
+                          OR {member}.known_suspension_valuation_weight < 0
+                          OR {member}.known_suspension_valuation_weight > {known_cap} + 1e-12"""
+                thresholds = [f"coalesce({known_count}, 0) < {MIN_COVERAGE}", f"{member}.status <> 'valid'"]
+                if field not in COUNT_GATED:
+                    thresholds.append(f"coalesce({known_cap}, 0) < {MIN_COVERAGE}")
+                if table == "industry_daily":
+                    thresholds.append(f"{member}.n_valid < {INDUSTRY_MIN_VALID_MEMBERS}")
+                    if field not in COUNT_GATED:
+                        thresholds.append(f"coalesce({member}.effective_members, 0) < {INDUSTRY_MIN_EFFECTIVE_MEMBERS}")
+                gate += f" OR ({field} IS NOT NULL AND ({' OR '.join(thresholds)}))"
             reason = f"missing_reasons['{field}']"
             metrics.append(f"""struct_pack(
                 field := '{field}', n_valid := count({field}),
@@ -656,7 +701,8 @@ def feature_quality(con):
                 reason_on_valid := coalesce(count_if({field} IS NOT NULL AND {reason} IS NOT NULL), 0),
                 coverage_violations := coalesce(count_if({gate}), 0),
                 mean_count_coverage := avg({count_coverage}), mean_cap_coverage := avg({cap_coverage}),
-                min_cap_coverage := min({cap_coverage}), mean_suspension_valuation_weight := avg({suspension})
+                min_cap_coverage := min({cap_coverage}), mean_suspension_valuation_weight := avg({suspension}),
+                mean_known_count_coverage := avg({known_count}), mean_known_cap_coverage := avg({known_cap})
             )""")
         queries.append(f"""
             SELECT '{table}' AS dataset_table, stratum, year, n_rows, metric.* FROM (

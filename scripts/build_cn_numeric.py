@@ -55,7 +55,8 @@ def finish_stage(con, name, signature):
 def build(root: Path, prices_only: bool, evidence_dir: Path | None = None,
           prehistory: Path | None = None, suspension_evidence: Path | None = None,
           resume_export: Path | None = None, compute_only: bool = False,
-          karpo_assets: Path | None = None, spill_dir: Path | None = None, memory_limit_gib: int = 10):
+          karpo_assets: Path | None = None, spill_dir: Path | None = None, memory_limit_gib: int = 10,
+          industry_training_history: Path | None = None):
     workspace = root / "numeric" / ".build-cn"
     workspace.mkdir(parents=True, exist_ok=True)
     supplements = workspace / "sources"
@@ -136,13 +137,15 @@ def build(root: Path, prices_only: bool, evidence_dir: Path | None = None,
             from kurumi.cn_publish import complete_build
 
             complete_build(con, workspace, inputs, evidence_dir, prehistory, suspension_evidence,
-                           resume_export, compute_only, karpo_assets)
+                           resume_export, compute_only, karpo_assets, industry_training_history)
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--data-root", type=Path, default=Path("E:/QuantData"))
     parser.add_argument("--pit-evidence", type=Path, help="Directory containing verified PIT evidence streams")
+    parser.add_argument("--industry-training-history", type=Path,
+                        help="Verified historical industry intervals for the optional train-only profile")
     parser.add_argument("--calendar-prehistory", type=Path, help="Earlier SSE/SZSE calendar partitions")
     parser.add_argument("--suspension-evidence", type=Path, help="Verified official suspension intervals")
     parser.add_argument("--karpo-assets", type=Path, default=REPO / "artifacts/karpo-b8e6fd7",
@@ -158,7 +161,7 @@ def main():
         parser.error("--memory-limit-gib must be positive")
     build(args.data_root.resolve(), args.prices_only, args.pit_evidence, args.calendar_prehistory,
           args.suspension_evidence, args.resume_export, args.compute_only, args.karpo_assets, args.spill_dir,
-          args.memory_limit_gib)
+          args.memory_limit_gib, args.industry_training_history)
 
 
 if __name__ == "__main__":
