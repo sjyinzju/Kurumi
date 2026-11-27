@@ -27,7 +27,7 @@ from .numeric_loader import TASK_IDS
 
 CPU = torch.device("cpu")
 FORMATS = ("baseline", "compact")
-CACHE_VERSION = "cn-blocks-2"
+CACHE_VERSION = "cn-blocks-3"
 HEADER = struct.Struct("<IB")
 
 
@@ -62,6 +62,15 @@ def validate_plan(parts):
             ))
         ):
             raise ValueError("Expected a 7-option, text-only native Gemma block layout")
+
+
+def plan_tokens(parts):
+    """Effective and physical tokens for one original, even when native branches split."""
+    physical = sum(part.length for part in parts)
+    if len(parts) == 1:
+        return physical, physical
+    shared = int((parts[0].segment_ids == 0).sum())
+    return physical - (len(parts) - 1) * shared, physical
 
 
 def serialize(parts):
@@ -182,6 +191,14 @@ def transform_identity():
     )}
 
 
+def native_source_hashes():
+    import karpo_decision
+
+    code = Path(karpo_decision.__file__).resolve().parent
+    return {p.relative_to(code).as_posix(): hashlib.sha256(p.read_text(encoding="utf-8").encode()).hexdigest()
+            for p in sorted(code.rglob("*.py"))}
+
+
 def validate_prepared_recipe(manifest, cfg):
     from .cn_efficiency_data_v2 import PORTABLE_VERSION
 
@@ -190,16 +207,25 @@ def validate_prepared_recipe(manifest, cfg):
         if (provenance.get("dataset_version") != PORTABLE_VERSION
                 or provenance.get("input_recipe") != cfg["input_recipe"]
                 or provenance.get("transform_sha256") != transform_identity()
-                or manifest.get("max_length") != cfg["max_length"]):
+                or manifest.get("max_length") != min(cfg["max_length"], cfg["pack_tokens"])):
             raise ValueError("Prepare the view with the current V3 pool, input recipe and native length first")
+        if cfg.get("repair_revision") and (
+            manifest.get("cache_version") != CACHE_VERSION
+            or provenance.get("repair_revision") != cfg["repair_revision"]
+            or provenance.get("pack_tokens") != cfg["pack_tokens"]
+            or provenance.get("configured_max_length") != cfg["max_length"]
+            or manifest.get("native_source_files_sha256") != native_source_hashes()
+        ):
+            raise ValueError("Rebuild the repaired V3 cache for this revision, native source and pack limit")
 
 
 def prepare_parquet(pool, date_view, confirmation_view, destination, tokenizer, formats, max_length,
-                    native_revision, seed=17, *, recipe="compact", batch_size=4096, token_cache=True):
+                    native_revision, seed=17, *, recipe="compact", batch_size=4096, token_cache=True,
+                    pack_tokens=None):
     """Prepare from frozen dated views, with no corpus or unmasked label path in between."""
     import pyarrow.parquet as pq
 
-    from .cn_efficiency_data_v2 import ColumnarDataset, file_sha, target_record, verify_view, view_batches
+    from .cn_efficiency_data_v2 import CLASSES, ENDS, ColumnarDataset, file_sha, target_record, verify_view, view_batches
     from .cn_efficiency_recipes import RECIPES, dated_renderer
     from .karpo_numeric import request_from_input
 
@@ -207,7 +233,9 @@ def prepare_parquet(pool, date_view, confirmation_view, destination, tokenizer, 
     if confirmation_view is not None:
         views.append((confirmation_view, "confirm"))
     render = dated_renderer(recipe)
-    array_history = formats == ("compact",) and RECIPES[recipe].field_units
+    formats = tuple(formats)
+    array_history = formats == ("compact",) and recipe != "compact"
+    pack_tokens = max_length if pack_tokens is None else pack_tokens
     destination.parent.mkdir(parents=True, exist_ok=True)
     with TemporaryDirectory(prefix=".cn-prepare-", dir=destination.parent) as work, ColumnarDataset(
         pool, preload_context=True, trim_history=True, scratch=work,
@@ -231,14 +259,19 @@ def prepare_parquet(pool, date_view, confirmation_view, destination, tokenizer, 
             date_view_sha256={segment: file_sha(path) for path, segment in views},
         )
 
-        if RECIPES[recipe].field_units:
+        if RECIPES[recipe].field_units or dataset.manifest.get("repair_revision"):
             provenance["transform_sha256"] = transform_identity()
+        if dataset.manifest.get("repair_revision"):
+            provenance.update(repair_revision=dataset.manifest["repair_revision"], pack_tokens=pack_tokens,
+                              configured_max_length=max_length)
 
         def records():
             for path, segment in views:
                 for batch in view_batches(path, batch_size):
                     inputs = dataset.native_inputs(batch, array_history=array_history)
-                    for anchor, x in zip(batch.to_pylist(), inputs, strict=True):
+                    targets = batch.select(("sample_id", "local_trade_date", "horizon_mask", "view_label_end",
+                                            "weight", *ENDS, *CLASSES))
+                    for anchor, x in zip(targets.to_pylist(), inputs, strict=True):
                         row = target_record(anchor, segment)
                         if "baseline" in formats:
                             row["baseline"] = request_from_input(x)
@@ -247,7 +280,7 @@ def prepare_parquet(pool, date_view, confirmation_view, destination, tokenizer, 
                         yield row
 
         digest = hashlib.sha256(json.dumps(provenance, sort_keys=True).encode("utf-8"))
-        return prepare_records(records(), destination, tokenizer, formats, max_length, native_revision,
+        return prepare_records(records(), destination, tokenizer, formats, min(max_length, pack_tokens), native_revision,
                                seed, digest=digest, provenance=provenance, token_cache=token_cache, native_fast=True,
                                expected_rows=sum(span[2] for span in spans))
 
@@ -271,6 +304,8 @@ def prepare_records(records, destination, tokenizer, formats, max_length, native
         "max_length": max_length,
         "seed": seed,
     }
+    if provenance and provenance.get("repair_revision"):
+        identity["native_source_files_sha256"] = native_source_hashes()
     use_cache = token_cache and getattr(native.encoder, "blocks", None) is not None
     fast_backend = use_cache and native_fast and hasattr(native.encoder.processor.tokenizer, "backend_tokenizer")
     token_context = (cached_native_tokens(native, use_backend=fast_backend, fast_escape=native_fast)
@@ -287,7 +322,9 @@ def prepare_records(records, destination, tokenizer, formats, max_length, native
         raise
     try:
         db.executescript("""
-            CREATE TABLE plans (key BLOB PRIMARY KEY, tokens INTEGER NOT NULL, data BLOB NOT NULL);
+            CREATE TABLE plans (
+                key BLOB PRIMARY KEY, tokens INTEGER NOT NULL, effective_tokens INTEGER NOT NULL, data BLOB NOT NULL
+            );
             CREATE TABLE rows (
                 n INTEGER PRIMARY KEY, id TEXT UNIQUE NOT NULL, segment TEXT NOT NULL, day TEXT NOT NULL,
                 targets TEXT NOT NULL, weight REAL NOT NULL, baseline BLOB, compact BLOB,
@@ -296,7 +333,7 @@ def prepare_records(records, destination, tokenizer, formats, max_length, native
             CREATE INDEX rows_segment ON rows(segment, draw_order, n);
             CREATE TABLE manifest (data TEXT NOT NULL);
         """)
-        encoded_tokens = Counter()
+        encoded_tokens, effective_tokens = Counter(), Counter()
         with token_context as cache_info:
             for ordinal, row in enumerate(records):
                 weight = validate_row(row)
@@ -311,16 +348,17 @@ def prepare_records(records, destination, tokenizer, formats, max_length, native
                     payload = json.dumps(request, ensure_ascii=False, separators=(",", ":"), allow_nan=False)
                     key = hashlib.sha256(payload.encode()).digest()
                     keys[name] = key
-                    known = db.execute("SELECT tokens FROM plans WHERE key=?", (key,)).fetchone()
+                    known = db.execute("SELECT tokens,effective_tokens FROM plans WHERE key=?", (key,)).fetchone()
                     if known is None:
                         parts = native.encoder.plan(request, max_length)
-                        tokens = sum(p.length for p in parts)
-                        db.execute("INSERT INTO plans VALUES (?, ?, ?)",
-                                   (key, tokens, serialize(parts)))
+                        effective, tokens = plan_tokens(parts)
+                        db.execute("INSERT INTO plans VALUES (?, ?, ?, ?)",
+                                   (key, tokens, effective, serialize(parts)))
                         counts["distinct_plans"] += 1
                     else:
-                        (tokens,) = known
+                        tokens, effective = known
                     encoded_tokens[name] += tokens
+                    effective_tokens[name] += effective
                 draw_order = hashlib.sha256(f"{seed}/{row['id']}".encode()).digest()
                 db.execute("INSERT INTO rows VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
                            (ordinal, row["id"], segment, day, json.dumps(targets), weight,
@@ -349,6 +387,7 @@ def prepare_records(records, destination, tokenizer, formats, max_length, native
         manifest = {
             **identity, "counts": dict(counts), "supervision": supervision,
             "source_sha256": digest.hexdigest(), "encoded_tokens": dict(encoded_tokens),
+            "effective_tokens": dict(effective_tokens),
             "short_token_cache": cache_stats, "fast_tokenizer_backend": fast_backend,
             "mean_fit_weight": fit_weight / fit_count, "last_fit_anchor": max_fit_day,
             "last_fit_target": max_fit_end or None, "first_confirm_anchor": min_confirm_day if counts["confirm"] else None,
@@ -372,7 +411,8 @@ class View:
         # The prefetch worker is the sole reader while processing a window.
         self.db = sqlite3.connect(f"{uri}?mode=ro&immutable=1", uri=True, check_same_thread=False)
         self.manifest = json.loads(self.db.execute("SELECT data FROM manifest").fetchone()[0])
-        if self.manifest["cache_version"] != CACHE_VERSION:
+        if self.manifest["cache_version"] not in ("cn-blocks-2", CACHE_VERSION):
+            self.db.close()
             raise ValueError("Prepared token cache format changed; rebuild it from the rendered view")
 
     def rows(self, segment, size, *, start=-1):
@@ -405,21 +445,24 @@ class View:
         for n, sid, target, weight, *keys in rows:
             key = keys[index]
             records.append((n, sid, json.loads(target), weight, key, lengths[key]))
-        groups, sizes = [], []
-        # Original identifiers, labels and weights stay in the update even when repacking.
-        for record in sorted(records, key=lambda record: -record[-1]) if optimize else records:
-            length = record[-1]
-            if length > limit:
-                # Keep a split original in one optimizer batch; physical_packs bounds each forward.
-                group = len(groups)
-            else:
+        def pack_records(ordered):
+            groups, sizes = [], []
+            for record in ordered:
+                length = record[-1]
+                # An oversized original stays together in the update while physical_packs splits its forwards.
                 group = next((i for i, used in enumerate(sizes) if used + length <= limit), len(groups))
-            if group == len(groups):
-                groups.append([])
-                sizes.append(0)
-            groups[group].append(record)
-            sizes[group] += length
-        return groups
+                if group == len(groups):
+                    groups.append([])
+                    sizes.append(0)
+                groups[group].append(record)
+                sizes[group] += length
+            return groups
+
+        normal = pack_records(records)
+        if not optimize or len(normal) < 2 or all(record[-1] > limit / 2 for record in records):
+            return normal
+        reordered = pack_records(sorted(records, key=lambda record: -record[-1]))
+        return reordered if len(reordered) < len(normal) else normal
 
     def decode(self, group):
         keys = list(dict.fromkeys(record[4] for record in group))

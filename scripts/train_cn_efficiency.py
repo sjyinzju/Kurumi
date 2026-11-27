@@ -13,6 +13,7 @@ import socket
 import subprocess
 import time
 from concurrent.futures import ThreadPoolExecutor
+from contextlib import nullcontext
 from itertools import chain
 from pathlib import Path
 
@@ -26,6 +27,8 @@ from kurumi.cn_efficiency_train import (
     View,
     cpu_pack,
     losses,
+    native_source_hashes,
+    plan_tokens,
     physical_packs,
     prepare_parquet,
     prepare_view,
@@ -98,9 +101,22 @@ def prepare_batch(view, ckpt, packed, group, optimized, limit):
     start = time.monotonic()
     targets = torch.tensor([r[2] for r in group], dtype=torch.long)
     weights = torch.tensor([r[3] for r in group], dtype=torch.float32)
-    result = [(horizons, cpu_pack(ckpt, packed, sequences) if optimized else sequences)
-              for horizons, sequences in physical_packs(view.decode(group), limit)]
-    return targets, weights, result, time.monotonic() - start
+    decoded = view.decode(group)
+    work = {"effective_tokens": sum(plan_tokens(parts)[0] for parts in decoded),
+            "physical_tokens": sum(row[-1] for row in group),
+            "global_extra_kv_tokens_per_layer": 0, "whole_layer_recompute_tokens": 0}
+    result = []
+    for horizons, sequences in physical_packs(decoded, limit):
+        length = sum(part.length for part in sequences)
+        work["global_extra_kv_tokens_per_layer"] += sum(
+            int((p.segment_ids == 0).sum()) * len(p.keys) for p in sequences
+        )
+        if packed.recompute in ("layer", "selective"):
+            work["whole_layer_recompute_tokens"] += length * sum(
+                packed.recomputed_whole(i, length) for i in range(len(packed.layers))
+            )
+        result.append((horizons, cpu_pack(ckpt, packed, sequences) if optimized else sequences))
+    return targets, weights, result, time.monotonic() - start, work
 
 
 def batches(view, ckpt, packed, groups, optimized, limit):
@@ -148,7 +164,7 @@ def evaluate(view, ckpt, packed, fmt, limit, optimized):
     ckpt.readout.eval()
     for rows in stream:
         groups = view.batches(rows, fmt, limit, optimize=optimized)
-        for group, (target, weight, plans, _), _ in batches(view, ckpt, packed, groups, optimized, limit):
+        for group, (target, weight, plans, _, _), _ in batches(view, ckpt, packed, groups, optimized, limit):
             y, w = target.to(device, non_blocking=True), weight.to(device, non_blocking=True)
             logits = [forward(ckpt, packed, plan, len(group), take.stop - take.start, optimized)
                       for take, plan in plans]
@@ -179,16 +195,22 @@ def update(view, ckpt, packed, optimizer, schedule, params, cfg, rows, fmt, opti
     trainables = list(params.values()) + list(ckpt.readout.parameters())
     # The global fit mean weight preserves inverse inclusion weighting even in singleton microbatches.
     denominator = len(rows) * view.manifest["mean_fit_weight"]
-    scores, loading, waiting = [], 0.0, 0.0
+    scores, probabilities, loading, waiting = [], [], 0.0, 0.0
+    work_done = dict(effective_tokens=0, physical_tokens=0, global_extra_kv_tokens_per_layer=0,
+                     whole_layer_recompute_tokens=0)
     objective = torch.zeros((), device=device)
     before_id = ckpt.readout.weight._version
     events = []
-    for group, (targets, weights, plans, preparation), wait in batches(view, ckpt, packed, groups, optimized, limit):
+    for group, (targets, weights, plans, preparation, work), wait in batches(
+        view, ckpt, packed, groups, optimized, limit
+    ):
+        for name, value in work.items():
+            work_done[name] += value
         loading += preparation
         waiting += wait
         y, w = targets.to(device, non_blocking=True), weights.to(device, non_blocking=True)
         full_counts = (y >= 0).sum(-1) if len(plans) > 1 else None
-        pack_scores = []
+        pack_scores, pack_probabilities = [], []
         for take, plan in plans:
             start, after_forward, after_backward = (torch.cuda.Event(enable_timing=True) for _ in range(3))
             start.record()
@@ -202,10 +224,14 @@ def update(view, ckpt, packed, optimizer, schedule, params, cfg, rows, fmt, opti
             objective += loss.detach()
             if details or not optimized:
                 pack_scores.append(item_score.detach())
+            if details:
+                pack_probabilities.append(logits.detach().float().softmax(-1))
         if pack_scores:
             item_score = sum(pack_scores[1:], pack_scores[0])
         if details:
-            scores.append(([r[1] for r in group], item_score))
+            ids = [r[1] for r in group]
+            scores.append((ids, item_score))
+            probabilities.append((group, torch.cat(pack_probabilities, dim=1)))
         if not optimized:
             # The old synchronous path copies detached losses out on every pack.
             item_score.cpu()
@@ -216,11 +242,27 @@ def update(view, ckpt, packed, optimizer, schedule, params, cfg, rows, fmt, opti
     norm = torch.nn.utils.clip_grad_norm_(
         trainables, cfg["optimizer"]["gradient_clip"], error_if_nonfinite=True
     )
-    gradient_sample = None
+    detail = None
     if details:
-        gradient_sample = torch.cat([p.grad.detach().flatten()[::max(1, p.numel() // 32)][:32] for p in trainables])
+        def sample(tensors):
+            return torch.cat([p.detach().reshape(-1)[::max(1, p.numel() // 32)][:32] for p in tensors])
+
+        gradient_sample = sample(p.grad for p in trainables)
+        parameters_before = sample(trainables)
+    optim_start, optim_done = (torch.cuda.Event(enable_timing=True) for _ in range(2))
+    optim_start.record()
     optimizer.step()
     schedule.step()
+    optim_done.record()
+    if details:
+        detail = {
+            "gradient": gradient_sample.cpu(),
+            "parameter_delta": (sample(trainables) - parameters_before).cpu(),
+            "examples": {sid: {"target": y, "weight": w, "probabilities": prob}
+                         for group, tensor in probabilities
+                         for (_, sid, y, w, *_), prob in zip(group, tensor.tolist(), strict=True)},
+            "draw_order": [r[1] for r in rows],
+        }
     optimizer.zero_grad(set_to_none=True)
     torch.cuda.synchronize(device)
     elapsed = time.monotonic() - started
@@ -231,14 +273,21 @@ def update(view, ckpt, packed, optimizer, schedule, params, cfg, rows, fmt, opti
         raise RuntimeError("Invalid native loss or gradient")
     stats = {
         "seconds": elapsed, "loss": objective_value, "grad_norm": grad_norm,
-        "originals": len(rows), "packs": len(events), "tokens": sum(r[-1] for g in groups for r in g),
+        "originals": len(rows), "packs": len(events), "padding_tokens": 0,
+        "tokens": work_done["effective_tokens"], **work_done,
+        "split_prefix_tokens": work_done["physical_tokens"] - work_done["effective_tokens"],
         "supervision": [sum(json.loads(r[2])[i] >= 0 for r in rows) for i in range(3)],
         "cpu_staging_seconds": loading, "cpu_staging_wait_seconds": waiting,
         "forward_gpu_seconds": sum(a.elapsed_time(b) for a, b, _ in events) / 1000,
         "backward_gpu_seconds": sum(b.elapsed_time(c) for _, b, c in events) / 1000,
+        "optimizer_gpu_seconds": optim_start.elapsed_time(optim_done) / 1000,
     }
+    if cfg.get("record_update_identity", False):
+        stats["draw_sha256"] = hashlib.sha256(
+            json.dumps([r[:4] for r in rows], separators=(",", ":")).encode()
+        ).hexdigest()
     item_scores = {sid: v for ids, group_score in scores for sid, v in zip(ids, group_score.tolist(), strict=True)}
-    return stats, item_scores, None if gradient_sample is None else gradient_sample.cpu()
+    return stats, item_scores, detail
 
 
 def execute(view, ckpt, packed, adapters, cfg, identity, fmt, optimized, out, max_updates, resume=False):
@@ -257,29 +306,61 @@ def execute(view, ckpt, packed, adapters, cfg, identity, fmt, optimized, out, ma
     torch.cuda.empty_cache()
     torch.cuda.reset_peak_memory_stats(device)
     # Full-layer checkpointing stays the fallback for the long A-share branches.
-    set_execution(packed, adapters, {**BASELINE, "fused_lora_add": optimized})
+    execution = {**BASELINE, "fused_lora_add": optimized, **cfg.get("execution", {})}
+    if cfg["lora"].get("dropout", 0):
+        raise ValueError("Native recomputation requires the inherited zero-dropout adapter layout")
+    set_execution(packed, adapters, execution)
     packed.train()
     ckpt.readout.train()
-    first_scores = first_grads = None
+    first_scores = first_detail = None
     host_available = available_bytes()
+    save_time = 0.0
+    started = last_save_time = time.monotonic()
+    save_every = cfg.get("save_every_updates", 0)
+    save_seconds = cfg.get("save_every_seconds", 0)
+    log_every = cfg.get("log_every_updates", 1)
+    operator_sample = None
     for rows in view.rows("fit", cfg["originals_per_update"], start=cursor):
         if STOP or (max_updates is not None and count >= max_updates):
             break
-        stats, scores, grads = update(view, ckpt, packed, opt, sched, params, cfg, rows, fmt, optimized, details=count == 0)
+        profiler = None
+        if cfg.get("profile_update") == count + 1:
+            profiler = torch.profiler.profile(activities=[torch.profiler.ProfilerActivity.CPU,
+                                                           torch.profiler.ProfilerActivity.CUDA])
+        with profiler if profiler is not None else nullcontext():
+            stats, scores, detail = update(
+                view, ckpt, packed, opt, sched, params, cfg, rows, fmt, optimized, details=count == 0
+            )
+        if profiler is not None:
+            operator_sample = [
+                {"op": event.key, "count": event.count,
+                 "self_device_seconds": event.self_device_time_total / 1e6,
+                 "self_cpu_seconds": event.self_cpu_time_total / 1e6}
+                for event in sorted(profiler.key_averages(), key=lambda x: -x.self_device_time_total)[:32]
+            ]
         if first_scores is None:
-            first_scores, first_grads = scores, grads
+            first_scores, first_detail = scores, detail
         cursor = rows[-1][0]
         count += 1
         records.append(stats)
         host_available = min(host_available, available_bytes())
-        print(json.dumps({"phase": out.name, "update": count, **stats}), flush=True)
-        if count % cfg["save_every_updates"] == 0:
+        if identity.get("artifact_role") == "PERF_EXPERIMENT" and swap_bytes():
+            raise RuntimeError("Performance experiment began swapping")
+        if count == 1 or log_every and count % log_every == 0:
+            print(json.dumps({"phase": out.name, "update": count, **stats}), flush=True)
+        now = time.monotonic()
+        if (save_every and count % save_every == 0) or (save_seconds and now - last_save_time >= save_seconds):
             checkpoint(last, identity, params, ckpt.readout, opt, sched, cursor, count)
+            last_save_time = time.monotonic()
+            save_time += last_save_time - now
     if not records:
         raise RuntimeError("No training update was executed")
     peak_allocated = torch.cuda.max_memory_allocated(device)
     peak_reserved = torch.cuda.max_memory_reserved(device)
+    save_start = time.monotonic()
     checkpoint(last, identity, params, ckpt.readout, opt, sched, cursor, count)
+    save_time += time.monotonic() - save_start
+    wall_train = time.monotonic() - started
     # Verify reloaded optimizer state into fresh objects, including schedule and draw cursor.
     fresh, fresh_schedule, _ = optimizer_and_schedule(params, ckpt.readout, cfg, total_updates)
     with torch.no_grad():
@@ -288,24 +369,39 @@ def execute(view, ckpt, packed, adapters, cfg, identity, fmt, optimized, out, ma
     if restore(last, identity, params, ckpt.readout, fresh, fresh_schedule, verify=True) != (cursor, count):
         raise ValueError("Recovery did not restore the correct update boundary")
     # First update can include new attention-kernel compilation. Report it alongside the rest of the run.
-    steady = records[1:]
+    steady = records[cfg.get("measure_warmup_updates", 1):]
+    if identity.get("artifact_role") == "PERF_EXPERIMENT" and first_detail is not None:
+        atomic_save(out / "first_update.pt", dict(first_detail, original_scores=first_scores))
     report = {
-        "format": fmt, "optimized": optimized, "records": records, "updates": count, "cursor": cursor,
+        "format": fmt, "optimized": optimized, "execution": execution, "records": records,
+        "artifact_role": identity.get("artifact_role"), "updates": count, "cursor": cursor,
         "checkpoint_verified": True, "peak_allocated_bytes": peak_allocated, "peak_reserved_bytes": peak_reserved,
         "min_host_available_bytes": host_available, "process_swap_bytes": swap_bytes(),
+        "checkpoint_save_seconds": save_time, "training_wall_with_checkpoint_seconds": wall_train,
+        "operator_sample": operator_sample,
+        "training_end_to_end": throughput(records, wall_train),
         "throughput_with_first": throughput(records), "throughput_after_first": throughput(steady) if steady else None,
-        "confirmation": evaluate(view, ckpt, packed, fmt, cfg["pack_tokens"], optimized) if not STOP else None,
+        "confirmation": (evaluate(view, ckpt, packed, fmt, cfg["pack_tokens"], optimized)
+                         if not STOP and cfg.get("evaluate_confirmation", True) else None),
     }
     write_json(out / "metrics.json", report)
-    return report, first_scores, first_grads
+    return report, first_scores, None if first_detail is None else first_detail["gradient"]
 
 
-def throughput(records):
-    seconds = math.fsum(r["seconds"] for r in records)
+def throughput(records, seconds=None):
+    seconds = math.fsum(r["seconds"] for r in records) if seconds is None else seconds
     originals = sum(r["originals"] for r in records)
     supervision = [sum(r["supervision"][i] for r in records) for i in range(3)]
     return {
         "seconds": seconds, "originals": originals, "supervision": supervision,
+        "updates": len(records), "seconds_per_update": seconds / len(records),
+        "effective_token_per_second": sum(r["effective_tokens"] for r in records) / seconds,
+        "originals_per_second": originals / seconds, "supervision_per_second": sum(supervision) / seconds,
+        "accounting": {key: math.fsum(r[key] for r in records) for key in (
+            "effective_tokens", "physical_tokens", "padding_tokens", "split_prefix_tokens",
+            "global_extra_kv_tokens_per_layer", "whole_layer_recompute_tokens", "cpu_staging_seconds",
+            "cpu_staging_wait_seconds", "forward_gpu_seconds", "backward_gpu_seconds", "optimizer_gpu_seconds",
+        )},
         "effective_originals_per_hour": 3600 * originals / seconds,
         "effective_horizons_per_hour": 3600 * sum(supervision) / seconds,
     }
@@ -338,10 +434,17 @@ def load_training(args, view, cfg):
     if encoder.tokenizer_revision != manifest["tokenizer_revision"]:
         raise ValueError("Prepared view tokenizer differs from the native checkpoint")
     del encoder
-    device = torch.device("cuda:0")
+    device = torch.device(args.device)
+    if device.type != "cuda" or not torch.cuda.is_available():
+        raise RuntimeError("Native training requires an allocated CUDA device with BF16 support")
+    if device.index is None or device.index >= torch.cuda.device_count():
+        raise ValueError("Select a visible CUDA ordinal explicitly")
+    with torch.cuda.device(device):
+        if not torch.cuda.is_bf16_supported(including_emulation=False):
+            raise RuntimeError("Native training requires hardware BF16 support")
     gpu = torch.cuda.get_device_properties(device)
-    if "GB10" not in gpu.name:
-        raise RuntimeError(f"Expected the existing GB10 Slurm device, got {gpu.name}")
+    configured_cap = cfg.get("memory_limit_gib")
+    cap = bound_training_memory(device, int(configured_cap * GIB) if configured_cap else gpu.total_memory)
     frozen = None
     if mode == "frozen_m1":
         from kurumi.m1_model import frozen_identity
@@ -362,17 +465,28 @@ def load_training(args, view, cfg):
             raise ValueError("Frozen M1 projections or Readout soft cap differ from the mounted model")
         load_weights(frozen["weights"], adapters, ckpt.readout, verify=True)
     packed = ckpt.family.Packed(ckpt.backbone, ckpt.config.attention)
-    cap = bound_training_memory(device, cfg["memory_limit_gib"] * GIB)
+    from karpo_decision.families.gemma import global_attention, sliding_attention
+
+    def supports(kernel):
+        query = torch.empty((1, 1, kernel.HEAD), device=device, dtype=torch.bfloat16)
+        return kernel.usable(query)
+
     identity = {
         "base_revision": base["revision"], "base_provenance": base["provenance_sha256"],
         "original_readout": base["readout_sha256"], "native_revision": native["revision"],
         "native_source_files_sha256": native["source_files_sha256"],
         "view": manifest, "config": cfg,
     }
+    if args.perf_experiment:
+        identity["artifact_role"] = "PERF_EXPERIMENT"
     if initializer is not None:
         identity["initialization"] = initializer
     return ckpt, packed, adapters, identity, {
         "gpu": gpu.name, "node": socket.gethostname(), "slurm_job": os.environ.get("SLURM_JOB_ID"),
+        "capability": torch.cuda.get_device_capability(device), "device": str(device),
+        "cuda_visible_devices": os.environ.get("CUDA_VISIBLE_DEVICES"),
+        "attention": {"global": "cudnn_frost" if supports(global_attention) else "native_efficient_sdpa",
+                      "sliding": "fa4" if supports(sliding_attention) else "native_varlen"},
         "torch": str(torch.__version__), "cuda": torch.version.cuda, "allocator_cap_bytes": cap,
     }
 
@@ -384,12 +498,15 @@ def training(args, cfg):
     view = View(args.view)
     if args.stage == "probe" and not view.manifest["counts"].get("confirm"):
         raise ValueError("Probe needs a separate chronological confirmation block")
+    load_start = time.monotonic()
     ckpt, packed, adapters, identity, execution = load_training(args, view, cfg)
+    execution["load_seconds"] = time.monotonic() - load_start
     identity["prepared_file_sha256"] = sha(args.view)
     if args.stage == "train":
         recipe = {"format": args.format, "optimized": not args.baseline_execution}
-        execute(view, ckpt, packed, adapters, cfg, {**identity, **recipe}, args.format,
-                recipe["optimized"], args.output, args.max_updates, resume=args.resume)
+        result, _, _ = execute(view, ckpt, packed, adapters, cfg, {**identity, **recipe}, args.format,
+                               recipe["optimized"], args.output, args.max_updates, resume=args.resume)
+        write_json(args.output / "metrics.json", {**result, "runtime": execution})
         return
     args.output.mkdir(parents=True, exist_ok=False)
     report = {"identity": identity, "execution": execution, "arms": {}}
@@ -451,7 +568,7 @@ def native_identity():
 
     package = Path(karpo_decision.__file__).resolve().parent
     revision = subprocess.check_output(["git", "-C", str(package), "rev-parse", "HEAD"], text=True).strip()
-    files = {p.relative_to(package).as_posix(): sha(p) for p in sorted(package.rglob("*.py"))}
+    files = native_source_hashes()
     return {"package": str(package), "revision": revision, "source_files_sha256": files}
 
 
@@ -477,6 +594,8 @@ def main():
         command.add_argument("--provenance", required=True, type=Path)
         command.add_argument("--m1-frozen", type=Path, help="Sealed M1 manifest for new LoRA/Readout initialization")
         command.add_argument("--output", required=True, type=Path)
+        command.add_argument("--device", default="cuda:0", help="Visible CUDA ordinal within the allocation")
+        command.add_argument("--perf-experiment", action="store_true", help="Mark isolated experimental weights")
         command.add_argument("--max-updates", type=int, required=stage == "train")
         if stage == "probe":
             command.add_argument("--arms", nargs="+", choices=tuple(ARMS), default=list(ARMS))
@@ -499,7 +618,8 @@ def main():
                 parser.error("A CN columnar pool, available recipe and positive batch size are required")
             result = prepare_parquet(args.pool, args.date_view, args.confirmation_date_view, args.view,
                                      args.tokenizer, args.formats, cfg["max_length"], cfg["native_revision"],
-                                     cfg["seed"], recipe=recipe, batch_size=args.batch_size)
+                                     cfg["seed"], recipe=recipe, batch_size=args.batch_size,
+                                     pack_tokens=cfg["pack_tokens"])
         else:
             if args.pool or args.confirmation_date_view or args.recipe:
                 parser.error("--pool, --confirmation-date-view and --recipe require --date-view")
@@ -514,6 +634,8 @@ def main():
         parser.error(str(error))
     if args.max_updates is not None and args.max_updates <= 0:
         parser.error("--max-updates must be positive")
+    if args.perf_experiment and (not os.environ.get("SLURM_JOB_ID") or not args.m1_frozen):
+        parser.error("Performance experiments require an allocated Slurm job and the sealed M1 initializer")
     for signum in (signal.SIGTERM, getattr(signal, "SIGUSR1", signal.SIGTERM)):
         signal.signal(signum, lambda s, _: STOP.append(s))
     training(args, cfg)

@@ -9,7 +9,9 @@ import numpy as np
 
 from .cn_efficiency_display import (
     context_table,
+    decimal_value,
     decision_table,
+    display_value,
     older_price_ranges,
     round_ticks,
     scalar_table,
@@ -58,9 +60,11 @@ class Recipe:
     delta_prices: bool = False
     shared_bounds: bool = False
     field_units: bool = False
+    full_precision: bool = False
 
 
 RECIPES = {
+    "v3_repair_full60": Recipe(repeat_prices=True, field_units=True, full_precision=True),
     "compact": Recipe(),
     "lossless": Recipe(repeat_prices=True),
     "precision6": Recipe(precision=6, repeat_prices=True),
@@ -124,7 +128,7 @@ def summarised_blocks(values, recipe):
 
 def proxy_history(values, name):
     recipe = RECIPES[name]
-    if recipe.field_units:
+    if recipe.field_units and not recipe.full_precision:
         scales = tick_scales(recipe)
         ticks = tick_values(values, scales)
         boundary = -recipe.recent
@@ -230,7 +234,50 @@ def _range_history_lines(values, recipe):
     return lines
 
 
+def _full_history_lines(values, recipe):
+    present = np.isfinite(values).any(axis=0)
+    kept = np.flatnonzero(present).tolist()
+    rows = values.tolist()
+    price_text, owners = {}, {}
+    for row in rows:
+        for value in row[:4]:
+            if math.isfinite(value) and value not in price_text:
+                text = _value(value)
+                other = owners.setdefault(text, value)
+                if other != value:
+                    # Preserve distinct prices, including small close-to-open gaps.
+                    price_text[other] = _value(other, precision=17)
+                    text = _value(value, precision=17)
+                price_text[value] = text
+    lines = [
+        "[Daily history. Consecutive exchange sessions -59 to 0, oldest first.]",
+        "Adjusted OHLC divided by current adjusted close. Daily log return in decimal. "
+        "Volume divided by the 60-session median in current share units. "
+        "Volume is NA throughout if incomplete or the median is nonpositive.",
+    ]
+    if (~present).any():
+        lines.append("NA throughout history: " + ",".join(CHANNELS[i] for i in np.flatnonzero(~present)))
+    if recipe.repeat_prices:
+        lines.append("In OHLC, = repeats the preceding price in the row.")
+    lines.append(",".join(CHANNELS[i] for i in kept))
+    for row in rows:
+        rendered = []
+        for j, i in enumerate(kept):
+            value = row[i]
+            if not math.isfinite(value):
+                rendered.append("NA")
+            elif i < 4:
+                repeat = recipe.repeat_prices and j > 0 and value == row[kept[j - 1]]
+                rendered.append("=" if repeat else price_text[value])
+            else:
+                rendered.append(_value(value))
+        lines.append(",".join(rendered))
+    return lines
+
+
 def _history_lines(values, recipe):
+    if recipe.full_precision:
+        return _full_history_lines(values, recipe)
     if recipe.field_units:
         return _range_history_lines(values, recipe)
     present = np.isfinite(values).any(axis=0)
@@ -289,7 +336,9 @@ def _history_lines(values, recipe):
 
 def _market_sections(recipe, market):
     if recipe.field_units:
-        return context_table("Market", market, MARKET_FIELDS)
+        return context_table("Market", market, MARKET_FIELDS,
+                             formatter=decimal_value if recipe.full_precision else display_value,
+                             derive_count=not recipe.full_precision)
     if recipe.terse:
         lines = _table("Market", market, MARKET_FIELDS) + _context("Market", market, MARKET_FIELDS)[1:]
     else:
@@ -299,7 +348,9 @@ def _market_sections(recipe, market):
 
 def _industry_sections(recipe, industry):
     if recipe.field_units:
-        return context_table("Industry", industry, INDUSTRY_FIELDS)
+        return context_table("Industry", industry, INDUSTRY_FIELDS,
+                             formatter=decimal_value if recipe.full_precision else display_value,
+                             derive_count=not recipe.full_precision)
     if recipe.terse:
         return _table("Industry", industry, INDUSTRY_FIELDS) + _context("Industry", industry, INDUSTRY_FIELDS)[1:]
     return _context("Industry", industry, INDUSTRY_FIELDS)
@@ -307,8 +358,11 @@ def _industry_sections(recipe, industry):
 
 def _benchmark_sections(recipe, market):
     if MARKET_BENCHMARK_FIELDS[0] in market:
-        table = scalar_table if recipe.field_units else _table
-        return table("CSI All Share gross total return H00985", market, MARKET_BENCHMARK_FIELDS)
+        title = "CSI All Share gross total return H00985"
+        if recipe.field_units:
+            return scalar_table(title, market, MARKET_BENCHMARK_FIELDS,
+                                formatter=decimal_value if recipe.full_precision else display_value)
+        return _table(title, market, MARKET_BENCHMARK_FIELDS)
     return []
 
 
@@ -360,7 +414,10 @@ def native_request(model_input, name, *, context=None):
         raise ValueError("Numeric recipe requires 60 consecutive exchange sessions")
     fields = tuple(f for f in FACTORS if f != "volatility_60d_daily"
                    and (not recipe.thin_factors or f not in RECONSTRUCTIBLE))
-    if recipe.field_units:
+    if recipe.full_precision:
+        units = ("NA or omitted columns mean missing. Returns, ratios, ranks, volatility and turnover "
+                 "are decimals except the decision bounds (%).")
+    elif recipe.field_units:
         units = ("NA/omitted means missing. Scalar returns, volatility, drawdown, moving-average gaps, dispersion "
                  "and turnover are in bp (0.0001). Signed quarter bp preserves direction near zero. "
                  "Ratios, yields and ranks are decimal. Omitted count_coverage = n_valid/n_expected if n_expected "
@@ -370,8 +427,9 @@ def native_request(model_input, name, *, context=None):
     lines = [units]
     lines += _table("Identity", stock["identity"], IDENTITY_FIELDS)
     current_title = "Current. Prices in quote currency/share, volume in million shares, cap in million quote currency"
+    formatter = decimal_value if recipe.full_precision else display_value
     if recipe.field_units:
-        lines += scalar_table(current_title, stock["current"], CURRENT_FIELDS)
+        lines += scalar_table(current_title, stock["current"], CURRENT_FIELDS, formatter=formatter)
     else:
         lines += _table(current_title, stock["current"], CURRENT_FIELDS,
                         million=("volume_shares", "security_market_cap_local"))
@@ -379,8 +437,9 @@ def native_request(model_input, name, *, context=None):
     finance_title = "As-of financials in million reporting currency"
     if recipe.field_units:
         lines += scalar_table("Stock factors. volatility_60d_daily is the daily decision sigma",
-                              stock["factors"], fields)
-        lines += scalar_table(finance_title, stock["fundamentals"], (*FINANCIALS, *FINANCIAL_CONTEXT))
+                              stock["factors"], fields, formatter=formatter)
+        lines += scalar_table(finance_title, stock["fundamentals"], (*FINANCIALS, *FINANCIAL_CONTEXT),
+                              formatter=formatter)
     else:
         lines += _table("Stock factors. volatility_60d_daily equals the daily sigma in each question",
                         stock["factors"], fields)

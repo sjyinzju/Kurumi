@@ -16,6 +16,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 
 import psutil
+import pyarrow.parquet as pq
 import torch
 from karpo_decision.model.packed import pack as native_pack
 from render_cn_efficiency_view import records as legacy_records
@@ -28,6 +29,7 @@ from kurumi.cn_efficiency_train import (
     cached_native_tokens,
     losses,
     physical_packs,
+    plan_tokens,
     prepare_parquet,
     prepare_records,
     serialize,
@@ -164,12 +166,16 @@ def accept(pool, previous, tokenizer, output, recipe):
     parts = native.encoder.plan(sample_request, limit)
     split = physical_packs([parts], limit)
     assert len(split) == 3
+    assert plan_tokens(parts) == (whole.length, sum(part.length for part in parts))
     for i, (horizon, sequences) in enumerate(split):
         part, = sequences
         assert horizon == slice(i, i + 1) and part.keys == whole.keys[i:i + 1]
         for field in ("input_ids", "positions"):
             torch.testing.assert_close(getattr(part, field), getattr(whole, field)[shared | branches[i]])
         assert part.markers.tolist() == [part.length - 1]
+        split_pack = native_pack(sequences, None, torch.device("cpu"))
+        assert split_pack.markers.tolist() == [part.length - 1]
+        assert split_pack.cu_cpu.tolist() == [0, part.length]
     return dict(records=count, restored_samples=restored, masked_pool_valid_horizons=masked,
                 view_spec=spec, packed=packed_count, multi_original_packs=packed_multi,
                 native_pack_test="karpo_decision.model.packed.pack including real split requests",
@@ -256,12 +262,16 @@ def context_bench(args):
 
 
 def end_to_end_bench(args):
-    view = args.output / "matched.parquet"
-    spec = build_view(args.pool / "pool.parquet", view, start=date(2021, 1, 1), end=date(2021, 12, 31),
-                      budget=args.samples, seed=29)
+    if args.matched_view:
+        view = args.matched_view
+        spec = {"view_sha256": file_sha(view), "selected_samples": pq.ParquetFile(view).metadata.num_rows}
+    else:
+        view = args.output / "matched.parquet"
+        spec = build_view(args.pool / "pool.parquet", view, start=date(2021, 1, 1), end=date(2021, 12, 31),
+                          budget=args.samples, seed=29)
     details = []
 
-    def prepare(arm):
+    def prepare(arm, recipe, **options):
         with TemporaryDirectory(prefix=".trial-", dir=args.output) as work:
             out = Path(work) / "view.sqlite"
             if arm == "v1_compact":
@@ -272,7 +282,7 @@ def end_to_end_bench(args):
                 )
             else:
                 manifest = prepare_parquet(args.pool, view, None, out, args.tokenizer, ("compact",), 8192,
-                                           KARPO_CODE_REVISION, recipe=args.recipe)
+                                           KARPO_CODE_REVISION, recipe=recipe, **options)
             digest = hashlib.sha256()
             db = sqlite3.connect(out)
             try:
@@ -281,10 +291,18 @@ def end_to_end_bench(args):
             finally:
                 db.close()
             details.append(dict(arm=arm, encoded_tokens=manifest["encoded_tokens"]["compact"],
-                                supervision=manifest["supervision"]["fit"], sqlite_bytes=out.stat().st_size))
+                                supervision=manifest["supervision"]["fit"], sqlite_bytes=out.stat().st_size,
+                                cache_sha256=file_sha(out)))
             return digest.hexdigest(), manifest["counts"]["fit"]
 
-    arms = {"v1_compact": lambda: prepare("v1_compact"), "v2_recommended": lambda: prepare("v2_recommended")}
+    if args.compare_recipes:
+        arms = {name: lambda name=name: prepare(name, name) for name in args.compare_recipes}
+        if args.compare_cpu_routes:
+            arms["repair_no_token_cache"] = lambda: prepare("repair_no_token_cache", args.recipe, token_cache=False)
+            arms["repair_batch_512"] = lambda: prepare("repair_batch_512", args.recipe, batch_size=512)
+    else:
+        arms = {"v1_compact": lambda: prepare("v1_compact", args.recipe),
+                "v2_recommended": lambda: prepare("v2_recommended", args.recipe)}
     medians = compare(arms, args.repeats, args.output, "prepare_sqlite")
     results = dict(selection=spec, recipe=args.recipe, comparable_output="same target, mask and weight bytes",
                    prepare_medians=medians, details=details)
@@ -300,6 +318,9 @@ def main():
     parser.add_argument("--recipe", choices=RECIPES, default="basis_points")
     parser.add_argument("--samples", type=int, default=1600)
     parser.add_argument("--repeats", type=int, default=3)
+    parser.add_argument("--matched-view", type=Path)
+    parser.add_argument("--compare-recipes", nargs="+", choices=RECIPES)
+    parser.add_argument("--compare-cpu-routes", action="store_true")
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument("--acceptance-only", action="store_true")
     mode.add_argument("--context-only", action="store_true")

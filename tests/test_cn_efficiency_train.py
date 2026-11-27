@@ -44,11 +44,12 @@ def test_inverse_probability_weighted_accumulation_with_missing_horizons():
 
 def test_oversize_native_request_keeps_each_branch_and_its_original_loss_weight():
     torch = pytest.importorskip("torch")
-    from kurumi.cn_efficiency_train import losses, physical_packs
+    from kurumi.cn_efficiency_train import losses, physical_packs, plan_tokens
     from kurumi.numeric_loader import TASK_IDS
 
-    first = SimpleNamespace(length=6, keys=TASK_IDS[:1])
+    first = SimpleNamespace(length=6, keys=TASK_IDS[:1], segment_ids=torch.tensor([0, 0, 1, 1, 1, 1]))
     second = SimpleNamespace(length=9, keys=TASK_IDS[1:])
+    assert plan_tokens([first, second]) == (13, 15)
     whole = physical_packs([[first, second]], 15)
     assert whole == [(slice(0, 3), (first, second))]
     parts = physical_packs([[first, second]], 9)
@@ -137,6 +138,7 @@ def test_prepared_view_shares_immutable_plan_but_retains_conflicting_labels(tmp_
     manifest = prepare_view(source, database, tmp_path, ["compact"], 8192, "native")
     assert manifest["counts"] == {"distinct_plans": 1, "fit": 2, "confirm": 1}
     assert manifest["supervision"]["fit"] == [2, 2, 1]
+    assert manifest["effective_tokens"]["compact"] == 15
     view = View(database)
     fit = next(view.rows("fit", 2))
     assert next(view.rows("fit", 2, start=fit[0][0])) == fit[1:]

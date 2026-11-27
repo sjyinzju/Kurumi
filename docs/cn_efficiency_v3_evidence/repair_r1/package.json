@@ -1,0 +1,103 @@
+{
+  "manifest_sha256": "7efd0a9688db76b4b9a9a12c88177f8f03395f902e983e8f6e48eb1f8cd1727a",
+  "repair_revision": "r1",
+  "input_recipe": "v3_repair_full60",
+  "samples": 10376684,
+  "supervision": {
+    "1": 10369918,
+    "5": 10347081,
+    "20": 10310226
+  },
+  "logical_data_bytes": 2142802856,
+  "linked_files": 42,
+  "portability": {
+    "manifest_sha256": "7efd0a9688db76b4b9a9a12c88177f8f03395f902e983e8f6e48eb1f8cd1727a",
+    "repair_revision": "r1",
+    "input_recipe": "v3_repair_full60",
+    "samples": 10376684,
+    "supervision": {
+      "1": 10369918,
+      "5": 10347081,
+      "20": 10310226
+    },
+    "logical_data_bytes": 2142802856,
+    "linked_files": 0,
+    "cache_sha256": "580a0484a461b62690b940526cb16f97ab27e78f8dca23a55c0180feb3a88f52",
+    "supervision_by_segment": {
+      "fit": [
+        48,
+        47,
+        43
+      ],
+      "confirm": [
+        8,
+        7,
+        6
+      ]
+    },
+    "isolated_cache_exact": true
+  },
+  "previous_v3_release_manifest_sha256": "768a0679c18f5a5ffce60e766a3f2b81cf927a1c959615ce59a8db995e1a1c91",
+  "gpu_bundle": {
+    "bundle_sha256": "ca388d8955a591597c3877325656b31a50d7a730ab3882384e22ef620ab4bb3e",
+    "bytes": 3366095,
+    "members": {
+      "input/prior-v3.json": "2645acc376140eb948db77cfea1da88827119fd951fbca57890aab0f756e1e53",
+      "input/prior-v3.sqlite": "65c3c1e7f2508c6fd7d069edfd39897929311cf6e89dd83732452cc7c0e349f0",
+      "input/repair-wide.json": "2f8812f8f5ca158982feb6dc81cc5358752a31f2dbdb6785521e0adb380acd35",
+      "input/repair-wide.sqlite": "b558f22638cfb3792da568018cb76930e0b51f586cb7992b4077a28096c0e270",
+      "input/repair.json": "c1c0dc739dbcaee6dc1707bef93f558468cdc8f66c0343fb4f700478d0aafffe",
+      "input/repair.sqlite": "580a0484a461b62690b940526cb16f97ab27e78f8dca23a55c0180feb3a88f52",
+      "input/v2.json": "4d073d01030853c5c9c854ea0e8ea4750943b7dda0ecf8b5c7aa85784ef8ecb2",
+      "input/v2.sqlite": "79744e09ddeaeb72f4053d126607cfb4af72e2e45915cb69fe76d223aadfd9ad",
+      "input/views.json": "7b64be5f5172850b373643e23732dc97e3f9f193b0289778f72cfe6911d734df",
+      "source/scripts/cn_efficiency_v3_perf.slurm": "c26af4ce63f7fe2e33eea9731ba7a4b681d4255fb6cffb18145c551f2f476d4a",
+      "source/scripts/run_cn_efficiency_v3_perf.py": "1bc1214c6161354ab7148c3e27c7004f01d8777b1fb8998776bf60f0b862c2d1",
+      "source/scripts/train_cn_efficiency.py": "929e57bd2d3627cb2c73e0188917d58b04328b0ddd129125f815c4f0715183fa",
+      "source/scripts/watch_cn_efficiency_m1.py": "1ec55e2dd9fd9fa360a279c0dd7cc7363bb8d9a0ddf5d71a858173d0a562902d",
+      "source/src/kurumi/__init__.py": "a1b28a98bcd42878855873b8d0ea17d47fde7bbe6178dad1901e928fd7f45eae",
+      "source/src/kurumi/cn_acceptance.py": "8c2813b1ecf474396e509a6d2b17fe03dde4f32b0f195572edcc1861c5daca6a",
+      "source/src/kurumi/cn_capital_sources.py": "ba505b02af80d4b4bb94705457e5be743a621dc86ec97ed5a734f8efd1aa2873",
+      "source/src/kurumi/cn_capital_stage_check.py": "3a65c7daa231ca98e488c68bbf10919f0d32a120c58fe20f58f9fb09554193ce",
+      "source/src/kurumi/cn_class_quotes.py": "f9e51d7ac4d2bf0c07de2239c17f769868dfbf4b88852c7a0aec8fa0af848306",
+      "source/src/kurumi/cn_disclosures.py": "90ed4b7e3f724afabb8d429f1d2855d6482aeb244b556b6e5b2118a90f6a7bc2",
+      "source/src/kurumi/cn_efficiency_data_v2.py": "7018350027e65480e603a4dd3bf2d70e167e7336ea2775aed82a81aed0b8d1a3",
+      "source/src/kurumi/cn_efficiency_display.py": "4239c459e19942445155f578cd3ba8da5e668f76bca2b506eee30ff4931ad311",
+      "source/src/kurumi/cn_efficiency_init.py": "3c1c0b7b93d652517c264b794b1305eb95e9c9f27be30934cd63ab3969923e45",
+      "source/src/kurumi/cn_efficiency_metrics.py": "fee16797f5386fc6437f229eec8e660e48ead6bcb52677ebc73acc4b8735bed4",
+      "source/src/kurumi/cn_efficiency_pool.py": "8381db34c27b57b4c328eaadc8f7c368218c6ef927423cb81284675d06cae6a1",
+      "source/src/kurumi/cn_efficiency_recipes.py": "66147d4f4d1f0476dfc565a93bd5d012968e01b9d0041450a078a460a4311e66",
+      "source/src/kurumi/cn_efficiency_render.py": "92dca453ef5fda0a3efb43097fd023a0239a4f3820b15e3e0bb4c2e94d3e4504",
+      "source/src/kurumi/cn_efficiency_train.py": "f9e9aa4b7b0ef65aadbdac0ec753d3f8be90895220c5aec5af3a2320270f4f60",
+      "source/src/kurumi/cn_efficiency_view.py": "048f51e0066141805971feaf5b09aa7ab96732e2c35dd7a25c72abd1eb9b0797",
+      "source/src/kurumi/cn_equity_candidates.py": "6ae262badf252dffa58e9bd27c1e0cae2963589a564bc6e5846796010c39644f",
+      "source/src/kurumi/cn_features.py": "6f82f4eadc8235a1c94d81382548060a991d87f270565d7442a11217d6820b82",
+      "source/src/kurumi/cn_financial_audit.py": "fb1097d1e5a60e0a39b147065278acf9d7eb03f032689584827abec60bc7fe81",
+      "source/src/kurumi/cn_hkex_monthly.py": "eaf369398f194d1d20425b59587a0c19a1123f37c7da93c959bdf2fc593d7973",
+      "source/src/kurumi/cn_identity.py": "ab2c5a675bedbe6e70636e0c8f4a3f9da6828a56b87e1e8fd6ebf5d8859d1742",
+      "source/src/kurumi/cn_industry_training.py": "820f7521c6385cac7770707a9f99e074d9dd76ad68e24bf8f3c61cf022d8ea62",
+      "source/src/kurumi/cn_issuer_caps.py": "184dc0e44b6aabc173741b3243529fce1f9510ba93a423d9a8579c9474a3ac4d",
+      "source/src/kurumi/cn_issuer_continuity.py": "2dc808dd95675af812369e1cb8c8a14be12c53dae2a6474926106d9239e074d3",
+      "source/src/kurumi/cn_limit_pit.py": "7cb4816b1c36c2e646570e28d743b9a3f73da1d72ce7f68a5d5636df38e0a21e",
+      "source/src/kurumi/cn_mainland_capital_chronology.py": "300be0b9c2f9a3ca016b0cdcafd99f18cfa5b0ded2f02e9266c7613f9fb71bd5",
+      "source/src/kurumi/cn_mainland_share_intervals.py": "6e9c76905feb9419fb4d277ba754b2a8c99ca8ae12702037212af90c5e4b6898",
+      "source/src/kurumi/cn_mainland_share_monthly.py": "a931fa2c00ca61ee47702acc71af2ae2a3c6dcea94b76f78a4f3cdaa7adfb0ce",
+      "source/src/kurumi/cn_name_pit.py": "85c92da1ace3cdc090c258ef1902204cd22e8cbc01cfdf8e84848c5cfbf603cf",
+      "source/src/kurumi/cn_pit.py": "96d750853e6584637d7cd98f0e727fce82e88bb93c4696f818b486b4f50d02e6",
+      "source/src/kurumi/cn_price_refresh.py": "bb61fbe244843d21ab1a9ca9495050c4816d28d8c6de9c5f6b122d33f9bc327c",
+      "source/src/kurumi/cn_prices.py": "ed13b27813812b7b4ffdbe1d37cfefdb852ce2226725322b15be62adaf181891",
+      "source/src/kurumi/cn_publish.py": "08717b209310e727ca0cf7c0f8510e22b0bb1d7329d592e41183cb9f8a8bf02d",
+      "source/src/kurumi/cn_retired_b_siblings.py": "10e5cb1c4605812871d3b0ed6be792ff5144706096115cd62a9b702313fed55d",
+      "source/src/kurumi/cn_security_name_audit.py": "b1118faab12425b63c52d145bd421481489bb658fba5356a36e6e5667d5afc39",
+      "source/src/kurumi/cn_split_coverage.py": "9a5d84096ce78cb92561bb924417ab2a9cdd50a313d34ca1ae244cca42b7a420",
+      "source/src/kurumi/cn_split_notices.py": "80d7b96edab0ef2c201352d00444c8aa896fbdd435e9cacd0a02aaa5de474239",
+      "source/src/kurumi/cn_suspension_clock.py": "0ac1eb65b30e54dddd7fd356a2c0cc66362258f16eae39ac1d86e19a47225a21",
+      "source/src/kurumi/cn_sws_membership.py": "6ad2356b0e0e7b55881c99a2df6c449ecddff08d46611bc20101fbfd93d14db6",
+      "source/src/kurumi/encoding_cache.py": "37335c0e84c77c26d65e460987cc2124a34ab839b2741a6a7afc01ba1ff82db7",
+      "source/src/kurumi/karpo_numeric.py": "0684cdc2e61aa4552ce2de4b6bcf93696b86ad361faaa5754c3f70a5ba520afe",
+      "source/src/kurumi/numeric_loader.py": "3c60d4ed20c61fc70c121bedd017ba6fdf0c6aa3f432709cb08cc21223044bcb",
+      "source/src/kurumi/numeric_math.py": "b2ecdf23248dd6231052486fdbbea47f18c40b37bfbccfe3c17df3d3a2893b4a",
+      "source/src/kurumi/paths.py": "63a9d0f02428adc52fb6567234f2f823b3dbae0f7fd77b040f2b40dbfac458a1"
+    }
+  }
+}

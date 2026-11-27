@@ -1,0 +1,366 @@
+{
+  "fit": {
+    "n": 48,
+    "sha256": "d675ede943b2a4564161e20661cce9cca73c27f49214340341d8ab2140dd1ba8",
+    "min_tokens": 5781,
+    "max_tokens": 6375,
+    "supervision": [
+      48,
+      47,
+      43
+    ],
+    "industries": 12,
+    "ids": [
+      {
+        "id": "CN|CN-300055.SZ|2021-01-25",
+        "full_tokens": 6021,
+        "mask": 7,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-002551.SZ|2021-04-01",
+        "full_tokens": 5872,
+        "mask": 7,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-002311.SZ|2021-12-21",
+        "full_tokens": 5977,
+        "mask": 3,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-300185.SZ|2021-09-01",
+        "full_tokens": 5851,
+        "mask": 7,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-000421.SZ|2021-05-12",
+        "full_tokens": 6004,
+        "mask": 7,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-603922.SH|2021-07-23",
+        "full_tokens": 6228,
+        "mask": 7,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-600637.SH|2021-09-30",
+        "full_tokens": 6034,
+        "mask": 7,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-688058.SH|2021-01-26",
+        "full_tokens": 5984,
+        "mask": 7,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-688017.SH|2021-09-01",
+        "full_tokens": 5844,
+        "mask": 7,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-600180.SH|2021-02-25",
+        "full_tokens": 5863,
+        "mask": 7,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-000633.SZ|2021-12-28",
+        "full_tokens": 6041,
+        "mask": 1,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-000019.SZ|2021-06-25",
+        "full_tokens": 6189,
+        "mask": 7,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-600562.SH|2021-01-12",
+        "full_tokens": 5994,
+        "mask": 7,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-002002.SZ|2021-11-25",
+        "full_tokens": 5847,
+        "mask": 7,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-300703.SZ|2021-02-26",
+        "full_tokens": 6256,
+        "mask": 7,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-002555.SZ|2021-11-05",
+        "full_tokens": 5922,
+        "mask": 7,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-002474.SZ|2021-01-11",
+        "full_tokens": 6277,
+        "mask": 7,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-600758.SH|2021-09-24",
+        "full_tokens": 5824,
+        "mask": 7,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-000584.SZ|2021-10-28",
+        "full_tokens": 6046,
+        "mask": 7,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-002340.SZ|2021-08-17",
+        "full_tokens": 5958,
+        "mask": 7,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-603128.SH|2021-10-29",
+        "full_tokens": 6075,
+        "mask": 7,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-002778.SZ|2021-04-07",
+        "full_tokens": 6114,
+        "mask": 7,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-601688.SH|2021-04-21",
+        "full_tokens": 6331,
+        "mask": 7,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-603895.SH|2021-12-14",
+        "full_tokens": 5891,
+        "mask": 3,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-002895.SZ|2021-05-25",
+        "full_tokens": 6158,
+        "mask": 7,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-000421.SZ|2021-07-26",
+        "full_tokens": 5965,
+        "mask": 7,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-603998.SH|2021-04-06",
+        "full_tokens": 6089,
+        "mask": 7,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-002194.SZ|2021-02-25",
+        "full_tokens": 6263,
+        "mask": 7,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-002935.SZ|2021-05-12",
+        "full_tokens": 6375,
+        "mask": 7,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-600741.SH|2021-12-20",
+        "full_tokens": 6017,
+        "mask": 3,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-300741.SZ|2021-08-03",
+        "full_tokens": 6076,
+        "mask": 7,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-601991.SH|2021-10-08",
+        "full_tokens": 5781,
+        "mask": 7,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-002389.SZ|2021-03-31",
+        "full_tokens": 6268,
+        "mask": 7,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-603657.SH|2021-04-19",
+        "full_tokens": 6162,
+        "mask": 7,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-688501.SH|2021-12-08",
+        "full_tokens": 5904,
+        "mask": 3,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-300034.SZ|2021-08-30",
+        "full_tokens": 5914,
+        "mask": 7,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-605199.SH|2021-10-22",
+        "full_tokens": 5945,
+        "mask": 7,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-600373.SH|2021-07-13",
+        "full_tokens": 6272,
+        "mask": 7,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-603927.SH|2021-10-22",
+        "full_tokens": 6004,
+        "mask": 7,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-603656.SH|2021-08-02",
+        "full_tokens": 6074,
+        "mask": 7,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-002615.SZ|2021-08-02",
+        "full_tokens": 5839,
+        "mask": 7,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-000498.SZ|2021-05-06",
+        "full_tokens": 6231,
+        "mask": 7,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-688229.SH|2021-04-30",
+        "full_tokens": 5960,
+        "mask": 7,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-300308.SZ|2021-07-19",
+        "full_tokens": 6077,
+        "mask": 7,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-002988.SZ|2021-09-06",
+        "full_tokens": 5889,
+        "mask": 7,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-600619.SH|2021-09-10",
+        "full_tokens": 6003,
+        "mask": 7,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-002614.SZ|2021-05-14",
+        "full_tokens": 5948,
+        "mask": 7,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-300513.SZ|2021-12-02",
+        "full_tokens": 5978,
+        "mask": 7,
+        "weight": 1201.615
+      }
+    ]
+  },
+  "confirm": {
+    "n": 8,
+    "sha256": "c7a79fe0da7bd6e4da3ff0a7efcd1516cb1b316bb8a0efbb7e72bcbd303a8e3e",
+    "min_tokens": 5747,
+    "max_tokens": 6223,
+    "supervision": [
+      8,
+      7,
+      6
+    ],
+    "industries": 3,
+    "ids": [
+      {
+        "id": "CN|CN-603666.SH|2022-02-23",
+        "full_tokens": 5972,
+        "mask": 7,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-603603.SH|2022-03-21",
+        "full_tokens": 6223,
+        "mask": 3,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-600882.SH|2022-01-26",
+        "full_tokens": 5994,
+        "mask": 7,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-002180.SZ|2022-02-14",
+        "full_tokens": 6063,
+        "mask": 7,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-002967.SZ|2022-01-11",
+        "full_tokens": 5980,
+        "mask": 7,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-002728.SZ|2022-01-10",
+        "full_tokens": 5747,
+        "mask": 7,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-002519.SZ|2022-03-28",
+        "full_tokens": 5957,
+        "mask": 1,
+        "weight": 1201.615
+      },
+      {
+        "id": "CN|CN-600827.SH|2022-02-08",
+        "full_tokens": 5891,
+        "mask": 7,
+        "weight": 1201.615
+      }
+    ]
+  }
+}

@@ -8,7 +8,7 @@ import pyarrow.parquet as pq
 import pytest
 
 from kurumi.cn_efficiency_data_v2 import target_record, verify_view
-from kurumi.cn_efficiency_recipes import delta_prices
+from kurumi.cn_efficiency_recipes import RECIPES, _full_history_lines, delta_prices
 from kurumi.cn_efficiency_view import build_view
 
 
@@ -51,6 +51,18 @@ def test_price_deltas_replay_the_display_ticks_with_nulls():
     source = np.array([[25.25, 47, np.nan, 40, 1, 0.25], [1, 13, -10, 2.25, 0, np.nan],
                        [-0.25, 10, -5, 0, 1, 43]])
     np.testing.assert_array_equal(delta_prices(delta_prices(source), inverse=True), source)
+
+
+def test_repair_keeps_small_ohlc_gaps_and_oldest_daily_values():
+    history = np.ones((60, 6))
+    history[:, 4:] = 0
+    history[0] = (1.0000000001, 1.0000000001, np.nan, 1, -1e-12, 3)
+    lines = _full_history_lines(history, RECIPES["v3_repair_full60"])
+    opening, high, low, close, daily_return, volume = lines[-60].split(",")
+    assert float(opening) == history[0, 0] > float(close)
+    assert high == "=" and low == "NA"
+    assert float(daily_return) == -1e-12 and float(volume) == 3
+    assert lines[-1].endswith(",0,0")
 
 
 def test_proxy_keeps_a_rare_target_when_probability_underflows(monkeypatch):

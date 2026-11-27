@@ -1,5 +1,7 @@
 # A 股数值训练数据 V3
 
+本页是初版 V3 的发布记录。当前 V3 使用修复修订 r1 的完整逐日输入与训练配置，见 [V3 r1 修复报告](cn_efficiency_v3_repair_r1.md)。
+
 **CPU_READY / KARPO_VALIDATION_PENDING**
 
 推荐 `v3_anchors10_volume` + `security_first`。V3 从已发布的 `3d62394f2e6ceb89d39f6c6b74e8ac6093296db7` 继续。正式训练日期由调用者提供。四个冻结 benchmark 的执行次数为 0，M2/M3 的训练启动次数为 0。

@@ -72,27 +72,32 @@ def project_scalar(values, name):
     return np.rint(displayed * scale) / scale * divisor
 
 
-def scalar_table(title, row, fields):
+def decimal_value(field, value):
+    """Render V2 scalar precision in source units, or millions for amounts."""
+    return _value(value, divisor=1e6 if field in AMOUNTS else 1)
+
+
+def scalar_table(title, row, fields, *, formatter=display_value):
     # Column order is reused by the tabular formatter and audit.
     present = [field for field in fields if row[field] is not None]
     if not present:
         return [f"[{title}]", "NA"]
-    return [f"[{title}]", "\t".join(present), "\t".join(display_value(f, row[f]) for f in present)]
+    return [f"[{title}]", "\t".join(present), "\t".join(formatter(f, row[f]) for f in present)]
 
 
-def context_table(title, row, fields):
-    lines = scalar_table(title, row, fields)
+def context_table(title, row, fields, *, formatter=display_value, derive_count=True):
+    lines = scalar_table(title, row, fields, formatter=formatter)
     groups = row["coverage"]
     def count_ratio(c):
         expected, valid = c["n_expected"], c["n_valid"]
         return valid / expected if expected and valid is not None else None
 
-    derive_count = all(c["count_coverage"] == count_ratio(c) for c in groups.values())
+    derive_count = derive_count and all(c["count_coverage"] == count_ratio(c) for c in groups.values())
     fields = tuple(f for f in COVERAGE_FIELDS if (f != "count_coverage" or not derive_count)
                    and any(row[f] is not None for row in groups.values()))
     by_row = {}
     for group, coverage in groups.items():
-        values = tuple(display_value(f, coverage[f]) for f in fields)
+        values = tuple(formatter(f, coverage[f]) for f in fields)
         by_row.setdefault(values, []).append(group)
     if not by_row:
         return lines

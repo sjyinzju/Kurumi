@@ -47,7 +47,7 @@ def matrix(cache, features, indices, recipe):
     for a in range(0, len(indices), 8192):
         ids = indices[a:a + 8192]
         state = p[ids][:, columns]
-        if details.field_units:
+        if details.field_units and not details.full_precision:
             for j, i in enumerate(columns):
                 state[:, j] = project_scalar(state[:, j], features[i])
         out[a:a + len(ids), :n_scalar] = state
@@ -125,6 +125,27 @@ def compare_arms(arms, refs, frame, ev, thresholds):
     return report
 
 
+def replay_probabilities(path, expected_sha, frame, ev):
+    if file_sha(path) != expected_sha:
+        raise ValueError(f"Reference probabilities differ from their receipt: {path}")
+    stored = pq.read_table(path)
+    repeat = np.arange(len(frame)).repeat(len(HORIZONS))
+    if (not stored["sample_id"].combine_chunks().equals(frame["sample_id"].take(repeat).combine_chunks())
+            or not stored["local_trade_date"].combine_chunks().equals(
+                frame["local_trade_date"].take(repeat).combine_chunks())
+            or not np.array_equal(stored["horizon"].to_numpy(), np.tile(HORIZONS, len(frame)))
+            or not np.array_equal(stored["weight"].to_numpy(), ev["weights"][repeat])
+            or not np.array_equal(stored["valid"].to_numpy(), (ev["targets"] >= 0).ravel())
+            or not np.array_equal(stored["target_class"].to_numpy()[stored["valid"].to_numpy()],
+                                  ev["targets"][ev["targets"] >= 0])):
+        raise ValueError(f"Reference probabilities differ from the ordered evaluation view: {path}")
+    probabilities = np.column_stack([stored[f"p_{i}"].to_numpy() for i in range(7)])
+    if (not np.isfinite(probabilities).all() or (probabilities <= 0).any()
+            or not np.allclose(probabilities.sum(axis=-1), 1, atol=1e-6, rtol=0)):
+        raise ValueError(f"Invalid reference probability distribution: {path}")
+    return np.log(probabilities).reshape(len(frame), len(HORIZONS), 7)
+
+
 def run(pool, spec_file, output, threads, feature_run=None):
     spec = json.loads(spec_file.read_bytes())
     root = spec_file.parent
@@ -135,6 +156,33 @@ def run(pool, spec_file, output, threads, feature_run=None):
     cases = spec["cases"]
     fit_views = {view(c["fit_view"]) for c in cases}
     test = view(spec["eval_view"])
+    reference_cases, reference, probability_root = {}, None, None
+    if reuse := spec.get("reference"):
+        ref_spec_path = view(reuse["spec"])
+        ref_spec = json.loads(ref_spec_path.read_bytes())
+        reference = json.loads(view(reuse["report"]).read_bytes())
+        probability_root = view(reuse["probabilities"])
+        recorded_pool = reference["pool_manifest_sha256"]
+        pool_manifest = pool / "manifest.json"
+        same_pool = recorded_pool == file_sha(pool_manifest)
+        if not same_pool and "pool" in reuse:
+            predecessor = view(reuse["pool"]) / "manifest.json"
+            current, previous = (json.loads(p.read_bytes()) for p in (pool_manifest, predecessor))
+            states = {name for name in current["files"] if name.startswith(("history/", "points/"))}
+            same_pool = (states and file_sha(predecessor) == recorded_pool == current["previous_v2_manifest_sha256"]
+                         and current["source_manifest_sha256"] == previous["source_manifest_sha256"]
+                         and all(current["files"][name]["sha256"] == previous["files"][name]["sha256"]
+                                 for name in states))
+        if (reference["spec_sha256"] != file_sha(ref_spec_path)
+                or not same_pool
+                or reference["eval_view_sha256"] != file_sha(test)
+                or reference["estimator"] != spec["estimator"]
+                or any(ref_spec.get(key) != spec.get(key) for key in ("estimator", "model", "thresholds"))):
+            raise ValueError("Reference run differs from the fixed pool, evaluation, or estimator contract")
+        reference_cases = {
+            (c["arm"], c["seed"]): dict(c, fit_view=(ref_spec_path.parent / c["fit_view"]).resolve())
+            for c in ref_spec["cases"]
+        }
     with duckdb.connect(config={"threads": 2, "memory_limit": "768MB"}) as db:
         first, _, _ = verify_view(db, pool / "pool.parquet", test)
         for path in sorted(fit_views):
@@ -166,7 +214,19 @@ def run(pool, spec_file, output, threads, feature_run=None):
                 started = time.perf_counter()
                 f = view(case["fit_view"])
                 fit = load_view(f, positions)
-                if case.get("prior"):
+                name = f"{arm}-{seed}"
+                reused = (arm, seed) in reference_cases
+                prob_path = output / f"{name}.parquet"
+                if reused:
+                    prior_result = reference["results"][name]
+                    if (dict(case, fit_view=f) != reference_cases[arm, seed]
+                            or prior_result["fit_sha256"] != file_sha(f)
+                            or prior_result["fit_rows"] != len(fit["indices"])):
+                        raise ValueError(f"Reference arm differs from the fixed fit view: {name}")
+                    prob_path = probability_root / prob_path.name
+                    logs = replay_probabilities(prob_path, prior_result["probabilities_sha256"], frame, ev)
+                    n_features = prior_result["features"]
+                elif case.get("prior"):
                     logs = prior_log_probabilities(fit, len(ev["indices"]))
                     n_features = 0
                 else:
@@ -179,18 +239,22 @@ def run(pool, spec_file, output, threads, feature_run=None):
                     del x, vx, models
                 scores = probability_scores(logs, ev["targets"])
                 scores_by_arm.setdefault(arm, []).append(scores[:, :, -1])
-                name = f"{arm}-{seed}"
-                prob_path = output / f"{name}.parquet"
-                save_probability(prob_path, frame, logs, case)
+                if not reused:
+                    save_probability(prob_path, frame, logs, case)
                 report["results"][name] = dict(
                     arm=arm, recipe=case["recipe"], seed=seed, fit_rows=len(fit["indices"]), features=n_features,
                     fit_sha256=file_sha(f), probabilities_sha256=file_sha(prob_path),
                     seconds=time.perf_counter()-started, quality=quality(logs, scores, ev),
                 )
+                if reused:
+                    report["results"][name]["reused_probability_file"] = str(prob_path)
                 write_json(output / "report.json", report)
                 print(f"{case['window']} {name}: J={report['results'][name]['quality']['original']['objective']:.6f}"
                       f" in {report['results'][name]['seconds']:.1f}s", flush=True)
-    arms = {name: (scores_by_arm[name], ref) for name, ref in spec["compare"].items()}
+    arms = {}
+    for name, comparison in spec["compare"].items():
+        arm, ref = (name, comparison) if isinstance(comparison, str) else comparison
+        arms[name] = (scores_by_arm[arm], ref)
     report["paired"] = compare_arms(arms, scores_by_arm, frame, ev, spec["thresholds"])
     write_json(output / "report.json", report)
 

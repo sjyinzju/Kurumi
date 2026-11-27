@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import shutil
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -24,6 +25,52 @@ CONTEXT_MANIFEST_FIELDS = (
 
 def parquet(path):
     return f"read_parquet({_sql_path(path)})"
+
+
+def repair_metadata(config):
+    cfg = json.loads(config.read_bytes())
+    if ("repair_revision" not in cfg or cfg.get("version") != PORTABLE_VERSION
+            or cfg.get("expected_input_tokens_per_original", 0) <= 0):
+        raise ValueError("A V3 repair configuration with measured native length is required")
+    return {"repair_revision": cfg["repair_revision"], "input_recipe": cfg["input_recipe"]}
+
+
+def publish_repair(previous, config, output, *, copy_data=False):
+    """Package a display-only repair over the verified, immutable V3 tables."""
+    previous, output = previous.resolve(), output.resolve()
+    if output.exists() or output.is_relative_to(previous):
+        raise ValueError("Choose a new output directory outside of the previous V3 pool")
+    original = previous / "manifest.json"
+    manifest = json.loads(original.read_bytes())
+    if manifest["dataset_version"] != PORTABLE_VERSION:
+        raise ValueError("A released V3 pool is required")
+    manifest.update(repair_metadata(config), previous_v3_manifest_sha256=file_sha(original),
+                    repair_builder_sha256=file_sha(__file__))
+    config_name = manifest["config"]
+    output.parent.mkdir(parents=True, exist_ok=True)
+    materialize = shutil.copyfile if copy_data else os.link
+    with TemporaryDirectory(prefix=".v3-repair-", dir=output.parent) as scratch:
+        result = Path(scratch) / "pool"
+        result.mkdir()
+        for name, expected in manifest["files"].items():
+            if name == config_name:
+                continue
+            source = previous / name
+            target = result / name
+            if not source.resolve().is_relative_to(previous) or not target.resolve().is_relative_to(result):
+                raise ValueError(f"V3 data path escapes its package: {name}")
+            if fingerprint(source) != expected:
+                raise ValueError(f"Previous V3 data changed: {name}")
+            target.parent.mkdir(parents=True, exist_ok=True)
+            materialize(source, target)
+        shutil.copyfile(config, result / config_name)
+        manifest["files"][config_name] = fingerprint(result / config_name)
+        (result / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+        result.rename(output)
+    return {"manifest_sha256": file_sha(output / "manifest.json"), **repair_metadata(config),
+            "samples": manifest["samples"], "supervision": manifest["supervision"],
+            "logical_data_bytes": sum(item["bytes"] for item in manifest["files"].values()),
+            "linked_files": 0 if copy_data else len(manifest["files"]) - 1}
 
 
 def make_index(db, v2, years, output):
@@ -179,6 +226,8 @@ def build(v2, config, output):
             source_files=tables, builder_sha256=file_sha(__file__),
             files={p.relative_to(result).as_posix(): fingerprint(p) for p in sorted(result.rglob("*")) if p.is_file()},
         )
+        if "repair_revision" in json.loads(config.read_bytes()):
+            manifest.update(repair_metadata(config))
         (result / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
         result.rename(output)
     print(json.dumps({k: manifest[k] for k in ("dataset_version", "samples", "supervision")}, indent=2), flush=True)
@@ -186,11 +235,17 @@ def build(v2, config, output):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--v2", type=Path, required=True)
+    source = parser.add_mutually_exclusive_group(required=True)
+    source.add_argument("--v2", type=Path)
+    source.add_argument("--from-v3", type=Path, help="Publish a repair over an existing portable V3 pool")
+    parser.add_argument("--copy-data", action="store_true", help="Copy instead of hard-linking on another filesystem")
     parser.add_argument("--config", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
-    build(args.v2, args.config, args.output)
+    if args.from_v3 is not None:
+        print(json.dumps(publish_repair(args.from_v3, args.config, args.output, copy_data=args.copy_data), indent=2))
+    else:
+        build(args.v2, args.config, args.output)
 
 
 if __name__ == "__main__":

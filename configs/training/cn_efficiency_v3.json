@@ -3,15 +3,19 @@
   "base_repo": "MachinePulseAI/karpo-decision-31B",
   "base_revision": "b8e6fd7463cea8662c556d6257955d7ef9c10d19",
   "native_revision": "6600011eb5cf46232d056ec0717dc726146d29de",
-  "input_recipe": "v3_anchors10_volume",
+  "repair_revision": "r1",
+  "input_recipe": "v3_repair_full60",
   "sampling_order": "security_first",
-  "expected_input_tokens_per_original": 2975.228515625,
+  "expected_input_tokens_per_original": 6066.4935,
   "seed": 17,
   "max_length": 8192,
   "pack_tokens": 8192,
   "originals_per_update": 4,
-  "memory_limit_gib": 105,
-  "save_every_updates": 16,
+  "memory_limit_gib": null,
+  "save_every_updates": 0,
+  "save_every_seconds": 3600,
+  "log_every_updates": 20,
+  "measure_warmup_updates": 1,
   "lora": {
     "targets": [
       "q_proj",
@@ -49,31 +53,18 @@
   "display": {
     "history": {
       "sessions": 60,
-      "recent_dense_sessions": 10,
-      "older_block_sessions": 25,
-      "older_daily": [
-        "log_return_1d"
-      ],
-      "older_block": [
-        "extreme_prices_timing",
-        "signed_largest_open_gap_timing",
-        "endpoint_closes",
-        "observed_OHL_counts",
-        "volume_min_median_max_timing_last_and_zeros"
-      ],
-      "price_tick_bp": 1,
-      "log_return_tick_bp": 1,
-      "volume_ratio_resolution": 0.001,
-      "centered_volume": true,
-      "near_zero_signed_quarter_tick": true
+      "channels": ["open_relative", "high_relative", "low_relative", "close_relative", "log_return_1d", "volume_relative"],
+      "precision": "8 significant decimal digits; 17 digits for OHLC values that would otherwise become equal",
+      "price_unit": "ratio to current adjusted close",
+      "return_unit": "decimal log return",
+      "volume_unit": "ratio to the 60-session median in current share units"
     },
     "scalar": {
-      "amounts": "million quote/reporting currency or million shares, 4 significant digits",
-      "returns_vol_drawdown_gap_dispersion_turnover": "basis points, sign preserved",
-      "multiples_ratios_ranks": "decimal, 3 significant digits",
-      "current_quote_prices": "unchanged display precision",
-      "count_coverage": "exact n_valid / n_expected when algebraically verified",
-      "omitted_fields": "missing unless explicitly derived"
+      "precision": "8 significant decimal digits",
+      "amounts": "million quote/reporting currency or million shares",
+      "returns_vol_drawdown_gap_dispersion_turnover": "decimal",
+      "count_coverage": "decimal from the PIT source",
+      "omitted_fields": "missing; daily sigma shown in the decision table"
     },
     "choice_bounds": "native seven ordered intervals, 12 significant digits in percent, exact zero bin"
   },
