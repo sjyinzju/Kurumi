@@ -181,10 +181,13 @@ def census(con, numeric, text, manifest, budget):
         if invalid_evidence or invalid_versions:
             raise AssertionError(f"Invalid model evidence or prior-event lineage: {invalid_evidence}, {invalid_versions}")
     original_locations = con.execute(
-        "SELECT DISTINCT raw_ref FROM docs WHERE input_text IS NOT NULL").fetchall()
-    missing_originals = [ref for ref, in original_locations if not (capture.root / Path(ref)).is_file()]
-    if missing_originals:
-        raise AssertionError(f"Original location missing for {len(missing_originals)} eligible source files")
+        "SELECT DISTINCT raw_ref,raw_hash FROM docs WHERE input_text IS NOT NULL").fetchall()
+    for ref, digest in original_locations:
+        path = capture.root / Path(ref)
+        if path.suffix == ".gz":
+            capture.read({"raw_ref": ref, "raw_hash": digest})
+        elif file_hash(path) != digest:
+            raise AssertionError(f"Eligible original bytes changed for {ref}")
     edits = con.execute("""
         WITH chosen AS MATERIALIZED (
             SELECT doc_version_id,provider,title,published_local_day,raw_ref,raw_hash,
@@ -250,7 +253,8 @@ def census(con, numeric, text, manifest, budget):
             "model_eligible_stats": eligible_summary, "associations": vendors, "supervised_monthly": count_stats,
             "distinct_native_sections_verified": len(plans),
             "distinct_eligible_original_paths_verified": len(original_locations), "fact_and_source_spot_checks": fact_audit,
-            "for_all_index_rows": "numeric keys, cutoff, document versions, eligible entity and modality budgets"}
+            "for_all_index_rows": "numeric keys, cutoff, document versions, eligible entity and modality budgets",
+            "eligible_original_bytes_sha256_checked": True}
 
 
 def example_ids(con, numeric, text):

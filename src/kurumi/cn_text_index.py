@@ -248,9 +248,9 @@ class PartitionWriter:
             file.close()
 
 
-def model_evidence(row, body, identity, day, relations, budget, cache, profile, rule_hash):
+def model_evidence(row, body, body_hash, identity, day, relations, budget, cache, profile, rule_hash):
     signature = [rule_hash, budget.revision, profile, row["kind"], row["document_class"], row["raw_hash"],
-                 row["title"], row.get("publisher"), row["provider"], row["published_raw"], relations]
+                 body_hash, row["title"], row.get("publisher"), row["provider"], row["published_raw"], relations]
     key = sha(json.dumps(signature, ensure_ascii=False).encode())
     path = cache / "company-evidence" / key[:2] / (key + ".json")
     if path.is_file():
@@ -363,7 +363,7 @@ def normalize(con, numeric, capture, scopes, project, external, known, budget, c
             duplicate_group, duplicate_method = duplicates.group(version, row["kind"], row["title"], body, relations, day)
             choices = []
             if status == "ok" and available:
-                choices = model_evidence(row, body, identity, day, relations, budget, cache, profile, rule_hash)
+                choices = model_evidence(row, body, body_hash, identity, day, relations, budget, cache, profile, rule_hash)
             events[f"parse.{status}"] += 1
             events["body_input_chars"] += len(body)
             events["body_storage_chars"] += len(body) if body_owner == version else 0

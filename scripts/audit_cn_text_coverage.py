@@ -98,7 +98,7 @@ def publication_inventory(con, manifest, raw_audit):
                                     unobserved_days=days-len(day_status), partition_outcomes=dict(status)))
     # Count original documents across repeated categories and carriers with observed duplicates reconciled.
     # Rows without bytes cannot be merged across publishers based solely on their headlines.
-    inventory = con.execute("""
+    inventory_sql = """
         WITH per_doc AS (
             SELECT CASE WHEN provider='CNINFO' THEN 'announcement' ELSE 'news' END AS catalogue,
                 coalesce(min(duplicate_group) OVER (PARTITION BY doc_id),doc_id) AS identity,
@@ -110,7 +110,7 @@ def publication_inventory(con, manifest, raw_audit):
                 parse_status NOT IN ('ok','download_failed','body_missing','outside_anchored_listing') AS failed_parse,
                 parse_status='ok' AND available_at IS NOT NULL
                   AND evidence_issuer_id IS NULL AND relation_status<>'background' AS association_open
-            FROM all_docs WHERE directory_member
+            FROM all_docs WHERE directory_member OR (? AND provider='CNINFO' AND in_round_capture)
         ), groups AS (
             SELECT catalogue,identity,
                 bool_or(processed) AS processed,bool_or(fetched) AS fetched,bool_or(bad_time) AS bad_time,
@@ -124,10 +124,11 @@ def publication_inventory(con, manifest, raw_audit):
             count(*) FILTER(NOT processed AND failed_parse),count(*) FILTER(NOT processed AND association_open),
             count(*) FILTER(NOT fetched AND NOT failed_download)
         FROM groups GROUP BY ALL ORDER BY 1
-    """).fetchall()
-    by_kind = [dict(zip(("modality", "known_unique_directory_docs", "processed", "acquired", "parsed_with_clock",
-                       "unresolved_publication", "failed_download", "failed_parse", "association_unresolved",
-                       "no_attempted_body"), row, strict=True)) for row in inventory]
+    """
+    fields = ("modality", "known_unique_directory_docs", "processed", "acquired", "parsed_with_clock",
+              "unresolved_publication", "failed_download", "failed_parse", "association_unresolved", "no_attempted_body")
+    inventory = [dict(zip(fields, row, strict=True)) for row in con.execute(inventory_sql, [True]).fetchall()]
+    broad_only = [dict(zip(fields, row, strict=True)) for row in con.execute(inventory_sql, [False]).fetchall()]
     source = con.execute("""
         SELECT provider,doc_kind,count(DISTINCT doc_id),count(DISTINCT doc_id) FILTER(raw_hash IS NOT NULL),
                count(DISTINCT doc_id) FILTER(parse_status='ok'),count(DISTINCT doc_id) FILTER(evidence_issuer_id IS NOT NULL),
@@ -137,7 +138,8 @@ def publication_inventory(con, manifest, raw_audit):
                max(published_local_day) FILTER(is_new AND parse_status='ok')
         FROM all_docs GROUP BY ALL ORDER BY ALL
     """).fetchall()
-    return {"directories": directories, "observed_catalogue_counts": by_kind, "source_originals": source,
+    return {"directories": directories, "observed_catalogue_counts": inventory,
+            "broad_directory_only": broad_only, "source_originals": source,
             "publication_probes": raw_audit}
 
 

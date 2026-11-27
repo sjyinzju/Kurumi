@@ -6,13 +6,15 @@ from types import SimpleNamespace
 
 from kurumi.cn_text_corpus import Deduplicator, IdentityHistory, choose_spans, html_body, publication
 from kurumi.cn_text_facts import company_facts, fact_key, fragments, periodic_table, pick_facts, substantive
-from kurumi.cn_text_index import Selector
+from kurumi.cn_text_index import Selector, model_evidence
+from kurumi.cn_text_sources import sha
 from kurumi.encoding_cache import EncodingCache
 from kurumi.text_input import text_condition
 
 
 class TestBudget:
     __test__ = False
+    revision = "test-tokenizer"
 
     @staticmethod
     def count(text):
@@ -164,3 +166,15 @@ def test_truncated_pdf_clause_and_market_cap_lack_complete_evidence():
     pdf = "若尚未收到合同款项，预计损失约1.4亿元；如所有抵押资产全部无法使"
     assert not list(fragments(pdf, complete_prose=True))
     assert not substantive("而市值最高的为大恒科技，停牌前也不超过45亿元。")
+
+
+def test_evidence_cache_distinguishes_normalized_body_revisions(tmp_path):
+    row = {"kind": "news", "document_class": "news", "publisher": "报纸", "provider": "paper",
+           "title": "需求与供给", "published_raw": "2025-02-17", "raw_hash": "original-bytes"}
+    identity = SimpleNamespace(mentions=lambda text, day: ())
+    links = [("market", "CN", "market_background", "original")]
+    bodies = ("全年行业需求增加11%，新增订单增长。",
+              "全年行业需求增加12%，新增订单增长。")
+    choices = [model_evidence(row, body, sha(body.encode()), identity, date(2025, 2, 17), links,
+                              TestBudget(), tmp_path, "conservative", "fixed-rules") for body in bodies]
+    assert "11%" in choices[0][0][2] and "12%" in choices[1][0][2]

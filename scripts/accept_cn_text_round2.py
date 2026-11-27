@@ -42,6 +42,7 @@ def accept(text, coverage, evidence, native):
                              explicit_noise_reduction=noise_reduction,
                              noise_target_pass=noise_reduction is not None and noise_reduction >= .50)
     native_flag = (verified["indexed_rows"] == manifest["sample_count"] and
+                   verified["eligible_original_bytes_sha256_checked"] and
                    verified["native"]["numerics_choices_and_supervision_identical"] and
                    verified["native"]["cpu_readout_backprop_with_tiny_standin"] and
                    comparison["native_cpu_benchmark"]["tensor_equality"])
