@@ -1,0 +1,107 @@
+{
+  "records": 97,
+  "restored_samples": 14,
+  "masked_pool_valid_horizons": 66,
+  "view_spec": {
+    "pool": "E:/Kurumi/artifacts/cn-efficiency-v2/pool.parquet",
+    "view": "E:/Kurumi/artifacts/cn-efficiency-v2-work/cpu-final-acceptance/boundary.parquet",
+    "split": null,
+    "start": "2023-11-20",
+    "end": "2023-12-29",
+    "label_end": "2024-01-03",
+    "budget": 97,
+    "seed": 17,
+    "token_budget": null,
+    "tokens_per_sample": null,
+    "estimated_selected_tokens": null,
+    "coverage_order": "security",
+    "systematic_offset": 136834,
+    "eligible_samples": 156615,
+    "selected_samples": 97,
+    "eligible_supervision": {
+      "1": 156593,
+      "5": 140882,
+      "20": 62551
+    },
+    "selected_supervision": {
+      "1": 97,
+      "5": 88,
+      "20": 40
+    },
+    "inclusion_probability": 0.0006193531909459502,
+    "weight": 1614.5876288659795,
+    "selected_coverage": {
+      "months": 2,
+      "known_sectors": 29,
+      "market_states": 3,
+      "securities": 97,
+      "trading_dates": 29
+    }
+  },
+  "packed": 49,
+  "multi_original_packs": 24,
+  "native_pack_test": "karpo_decision.model.packed.pack including real split requests",
+  "split_lengths": [
+    3832,
+    3838,
+    3839
+  ],
+  "sqlite_sha256": "568cc1c8fe1ac39f96b4b305ce755db811214f812590050f91d82f9b3077c778",
+  "native": {
+    "cache_version": "cn-blocks-2",
+    "tokenizer_revision": "b36640b5450552ac96f908c71664932e4fa79485a9a5422436a779230eeb1bff",
+    "native_revision": "6600011eb5cf46232d056ec0717dc726146d29de",
+    "runtime": {
+      "transformers": "5.23.0",
+      "tokenizers": "0.23.3",
+      "jinja2": "3.1.6",
+      "torch": "2.15.0"
+    },
+    "formats": [
+      "compact"
+    ],
+    "max_length": 8192,
+    "seed": 17,
+    "counts": {
+      "distinct_plans": 97,
+      "fit": 97
+    },
+    "supervision": {
+      "fit": [
+        97,
+        88,
+        40
+      ],
+      "confirm": [
+        0,
+        0,
+        0
+      ]
+    },
+    "source_sha256": "9c5deec22e1963a393c6b1e33b9a86f7a36c99a399541e5b99517d000f60f762",
+    "encoded_tokens": {
+      "compact": 429436
+    },
+    "short_token_cache": {
+      "hits": 581,
+      "misses": 2038,
+      "maxsize": 4096,
+      "currsize": 2038
+    },
+    "fast_tokenizer_backend": true,
+    "mean_fit_weight": 1614.5876288659808,
+    "last_fit_anchor": "2023-12-29",
+    "last_fit_target": "2024-01-03",
+    "first_confirm_anchor": null,
+    "provenance": {
+      "input_recipe": "basis_points_delta",
+      "dataset_version": "cn-efficiency-v2",
+      "pool_manifest_sha256": "25f51bf874f3e202aecb33c1c663ab6aa31d39e556ef141ba4fbf04177a15818",
+      "pool_index_sha256": "e5150a196e365b5ff1f4e886b3f438d683b4d7a7d03b4440440723f42147b22e",
+      "source_manifest_sha256": "b5dedb67575a45fa2203a7bac4f11ad785c1e271c187cceb1eaba8f043336637",
+      "date_view_sha256": {
+        "fit": "b8f67072e6a40244b8554b00c66315c52c9d84f3bab62ba62104e077da7cc380"
+      }
+    }
+  }
+}

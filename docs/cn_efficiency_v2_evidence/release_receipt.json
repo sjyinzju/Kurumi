@@ -1,0 +1,136 @@
+{
+  "status": "CPU_READY",
+  "gpu_status": "GPU_VALIDATION_PENDING",
+  "research_cutoff": "2023-12-31",
+  "recommended_input": "basis_points_delta",
+  "sampling_order": "security_first",
+  "pool_manifest_sha256": "25f51bf874f3e202aecb33c1c663ab6aa31d39e556ef141ba4fbf04177a15818",
+  "pool_parquet_bytes": 1693187623,
+  "samples": 10376684,
+  "effective_supervision": {
+    "1": 10369918,
+    "5": 10347081,
+    "20": 10310226
+  },
+  "verified_prediction_windows": [
+    {
+      "stage": "native_200k_combo",
+      "window": "2020",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "month_bootstrap_upper": 0.008599263317738897
+    },
+    {
+      "stage": "native_200k_combo",
+      "window": "2021",
+      "seeds": [
+        17
+      ],
+      "month_bootstrap_upper": -0.001142574431976266
+    },
+    {
+      "stage": "native_200k_combo",
+      "window": "2022_2023",
+      "seeds": [
+        17
+      ],
+      "month_bootstrap_upper": 0.009116817091900454
+    },
+    {
+      "stage": "native_equal_token_sampler",
+      "window": "2020",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "month_bootstrap_upper": 0.0019699110701775365
+    },
+    {
+      "stage": "native_equal_token_sampler",
+      "window": "2021",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "month_bootstrap_upper": 0.004742084373853656
+    },
+    {
+      "stage": "native_equal_token_sampler",
+      "window": "2022_2023",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "month_bootstrap_upper": 0.0043790713966366255
+    },
+    {
+      "stage": "native_sampler_vs_v1",
+      "window": "2020",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "month_bootstrap_upper": 0.0036186398593315953
+    },
+    {
+      "stage": "native_sampler_vs_v1",
+      "window": "2021",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "month_bootstrap_upper": 0.00532836303282363
+    },
+    {
+      "stage": "native_sampler_vs_v1",
+      "window": "2022_2023",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "month_bootstrap_upper": 0.007701043662596149
+    }
+  ],
+  "max_logistic_iterations": 29,
+  "native_pack_fixture_rows": 97,
+  "target_cutoff_suppressed": 66,
+  "fitted_proxy_arms": 206,
+  "targeted_tests_passed": 28,
+  "local_gpu_visible_count": 0,
+  "stopping_rounds": [
+    "shared interval bounds and wider history aggregation",
+    "volume precision and centering"
+  ],
+  "evidence_sha256": {
+    "cpu_cli_smoke.json": "cd6bfb6ffe9b23b706db0025f0db425b49200ab81c927f6f1cfbe89907322305",
+    "cpu_context_reuse.json": "18cf2214173e9dd4b6f7c6c68bf68fa96bad69fdf4605f9564d62b5bcc51471d",
+    "cpu_context_reuse_trials.json": "752172456d80505dabe61db47d644cd47335e1469e3f38916c1d27fbe068b384",
+    "cpu_native_acceptance.json": "e1cc036cfa5285378bbb691d23817fa22d8af8f57c46e4768316661c4648bef0",
+    "cpu_prepare.json": "41dc75beaa17f8923428949f6431621e7f5429dc31213442994bf9d4e2757a07",
+    "cpu_prepare_trials.json": "7ef28084c9f15e10876798a468be100a311d5161a4803cd0a2a89c5ce562eb14",
+    "cpu_read_render_trials.json": "f066a4c59407d20e57ce721dba7e52360a23e380eea74cff92bde3fca0173b1c",
+    "cpu_tokenizer_trials.json": "b489d353a3e66aeaf29ae7b9218e110befce635f53de3469e90b7aaa5923a5c3",
+    "data_quality.json": "b5b91857d945f2ff9100d28e48d61124829f0675f4b540c4ae635b17be9dd361",
+    "forward_comparisons.json": "8e2b852f963688ba16cee4b9e86a436b107477420139fabf16694b66123b0f55",
+    "model_metrics.csv": "a1f140f6f33ebe8b05870e5224dd0db27f58afa1693a332aafac09dca54418d9",
+    "native_token_samples.csv": "d4dd81c7d7aa4e17117c069be034aac72ce04016e46f5cd67bfcd6e3c8603054",
+    "native_token_summary.json": "4fb9988a272ef6cff8dee2f2feeae62a88560bddbeb97d889c59758f5b332fb8",
+    "native_tokens.json": "def7bc386390006fdbcf80e89e7416d18d87b7c491714fe487b926e28861dd8a",
+    "sample_coverage.csv": "2c9ac504512a42caf82e04e9d35fee3c5789d18e6979bdfc60079f5a35fc2829",
+    "token_bounds_table.json": "f0d9d837ae8499b61e040fbcbdb803718946bb66ca9c4a4fb2827a23a270264d",
+    "token_price_deltas.json": "ec8ddf1878816acf6d7d5404bf114f77a44e62736d72f684d7f0e04ca23ef2c5",
+    "token_volume_precision.json": "7147cd9746586bd579df9e40c96f6bda585cf0b648f9e8791643f2140bed747e",
+    "v1_replay.json": "8b25da7e08707af366983942eca58cb6aa5eee9cc634ae03de4d4d82a2705c40",
+    "v2_pool_manifest.json": "25f51bf874f3e202aecb33c1c663ab6aa31d39e556ef141ba4fbf04177a15818",
+    "version_lock.json": "aa97b1deda2c13579f061f7abdf1b61e635c0dffb87f987f46645078689d95a0"
+  }
+}

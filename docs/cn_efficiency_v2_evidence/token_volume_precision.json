@@ -1,0 +1,289 @@
+{
+  "samples": 576,
+  "selection": {
+    "pool": "E:/Kurumi/artifacts/cn-efficiency-v2/pool.parquet",
+    "view": "E:/Kurumi/artifacts/cn-efficiency-v2-work/tokens-refine3/matched.parquet",
+    "split": null,
+    "start": "2015-01-01",
+    "end": "2023-12-31",
+    "label_end": "2023-12-31",
+    "budget": 576,
+    "seed": 43,
+    "token_budget": null,
+    "tokens_per_sample": null,
+    "estimated_selected_tokens": null,
+    "coverage_order": "security",
+    "systematic_offset": 323396,
+    "eligible_samples": 7209690,
+    "selected_samples": 576,
+    "eligible_supervision": {
+      "1": 7204031,
+      "5": 7162408,
+      "20": 7049692
+    },
+    "selected_supervision": {
+      "1": 575,
+      "5": 571,
+      "20": 560
+    },
+    "inclusion_probability": 7.98924780399712e-05,
+    "weight": 12516.822916666666,
+    "selected_coverage": {
+      "months": 105,
+      "known_sectors": 52,
+      "market_states": 9,
+      "securities": 546,
+      "trading_dates": 507
+    }
+  },
+  "view_sha256": "a6f40ff219016e46dcb795f363d0be3dc67b9b6726aa56e3b524efb72849c2d1",
+  "native_revision": "6600011eb5cf46232d056ec0717dc726146d29de",
+  "tokenizer_sha256": "b36640b5450552ac96f908c71664932e4fa79485a9a5422436a779230eeb1bff",
+  "runtime": {
+    "transformers": "5.23.0",
+    "tokenizers": "0.23.3",
+    "jinja2": "3.1.6",
+    "torch": "2.15.0"
+  },
+  "native_setup_seconds": 12.254567000083625,
+  "formats": {
+    "baseline": {
+      "total": 4216788,
+      "mean": 7320.8125,
+      "median": 7328.0,
+      "p95": 7522.25,
+      "min": 6239,
+      "max": 7558,
+      "reduction_vs_compact": -0.151157876805446,
+      "seconds": {
+        "render": 0.20336910034529865,
+        "encode": 3.1939156990265474
+      }
+    },
+    "compact": {
+      "total": 3663084,
+      "mean": 6359.520833333333,
+      "median": 6361.0,
+      "p95": 6534.0,
+      "min": 5400,
+      "max": 6626,
+      "reduction_vs_compact": 0.0,
+      "seconds": {
+        "render": 0.32288849959149957,
+        "encode": 2.8528757985914126
+      },
+      "numeric_encoding_error": {
+        "open_relative": {
+          "max_absolute": 1.1890722406704413e-07,
+          "mask_differences": 0,
+          "stationary_sign_differences": 0
+        },
+        "high_relative": {
+          "max_absolute": 1.1535351163161067e-07,
+          "mask_differences": 0,
+          "stationary_sign_differences": 0
+        },
+        "low_relative": {
+          "max_absolute": 1.0959649676678396e-07,
+          "mask_differences": 0,
+          "stationary_sign_differences": 0
+        },
+        "close_relative": {
+          "max_absolute": 1.16597310917399e-07,
+          "mask_differences": 0,
+          "stationary_sign_differences": 0
+        },
+        "log_return_1d": {
+          "max_absolute": 7.382851607840024e-09,
+          "mask_differences": 0,
+          "stationary_sign_differences": 0
+        },
+        "volume_relative": {
+          "max_absolute": 8.869574159575677e-07,
+          "mask_differences": 0,
+          "stationary_sign_differences": 0
+        }
+      }
+    },
+    "basis_points_delta": {
+      "total": 2529165,
+      "mean": 4390.911458333333,
+      "median": 4388.5,
+      "p95": 4517.0,
+      "min": 4149,
+      "max": 4637,
+      "reduction_vs_compact": 0.30955309788145724,
+      "seconds": {
+        "render": 0.45098300219979137,
+        "encode": 2.3534913003677502
+      },
+      "numeric_encoding_error": {
+        "open_relative": {
+          "max_absolute": 5.002799269560043e-05,
+          "mask_differences": 0,
+          "stationary_sign_differences": 0
+        },
+        "high_relative": {
+          "max_absolute": 5.004659560547964e-05,
+          "mask_differences": 0,
+          "stationary_sign_differences": 0
+        },
+        "low_relative": {
+          "max_absolute": 5.002799269560043e-05,
+          "mask_differences": 0,
+          "stationary_sign_differences": 0
+        },
+        "close_relative": {
+          "max_absolute": 5.0053734287347496e-05,
+          "mask_differences": 0,
+          "stationary_sign_differences": 0
+        },
+        "log_return_1d": {
+          "max_absolute": 4.999567830883157e-05,
+          "mask_differences": 0,
+          "stationary_sign_differences": 0
+        },
+        "volume_relative": {
+          "max_absolute": 0.0004999939017286126,
+          "mask_differences": 0,
+          "stationary_sign_differences": 0
+        }
+      }
+    },
+    "basis_points_volume_centered": {
+      "total": 2510592,
+      "mean": 4358.666666666667,
+      "median": 4358.0,
+      "p95": 4486.25,
+      "min": 4112,
+      "max": 4588,
+      "reduction_vs_compact": 0.31462341567924723,
+      "seconds": {
+        "render": 0.43421429954469204,
+        "encode": 2.322537099244073
+      },
+      "numeric_encoding_error": {
+        "open_relative": {
+          "max_absolute": 5.002799269560043e-05,
+          "mask_differences": 0,
+          "stationary_sign_differences": 0
+        },
+        "high_relative": {
+          "max_absolute": 5.004659560547964e-05,
+          "mask_differences": 0,
+          "stationary_sign_differences": 0
+        },
+        "low_relative": {
+          "max_absolute": 5.002799269560043e-05,
+          "mask_differences": 0,
+          "stationary_sign_differences": 0
+        },
+        "close_relative": {
+          "max_absolute": 5.0053734287347496e-05,
+          "mask_differences": 0,
+          "stationary_sign_differences": 0
+        },
+        "log_return_1d": {
+          "max_absolute": 4.999567830883157e-05,
+          "mask_differences": 0,
+          "stationary_sign_differences": 0
+        },
+        "volume_relative": {
+          "max_absolute": 0.0004999939017286126,
+          "mask_differences": 0,
+          "stationary_sign_differences": 0
+        }
+      }
+    },
+    "basis_points_volume100": {
+      "total": 2494279,
+      "mean": 4330.345486111111,
+      "median": 4328.0,
+      "p95": 4456.25,
+      "min": 4088,
+      "max": 4576,
+      "reduction_vs_compact": 0.31907676700834586,
+      "seconds": {
+        "render": 0.43277539999689907,
+        "encode": 2.3015611986629665
+      },
+      "numeric_encoding_error": {
+        "open_relative": {
+          "max_absolute": 5.002799269560043e-05,
+          "mask_differences": 0,
+          "stationary_sign_differences": 0
+        },
+        "high_relative": {
+          "max_absolute": 5.004659560547964e-05,
+          "mask_differences": 0,
+          "stationary_sign_differences": 0
+        },
+        "low_relative": {
+          "max_absolute": 5.002799269560043e-05,
+          "mask_differences": 0,
+          "stationary_sign_differences": 0
+        },
+        "close_relative": {
+          "max_absolute": 5.0053734287347496e-05,
+          "mask_differences": 0,
+          "stationary_sign_differences": 0
+        },
+        "log_return_1d": {
+          "max_absolute": 4.999567830883157e-05,
+          "mask_differences": 0,
+          "stationary_sign_differences": 0
+        },
+        "volume_relative": {
+          "max_absolute": 0.005000003353143101,
+          "mask_differences": 0,
+          "stationary_sign_differences": 0
+        }
+      }
+    },
+    "basis_points_volume10": {
+      "total": 2460636,
+      "mean": 4271.9375,
+      "median": 4269.0,
+      "p95": 4396.0,
+      "min": 4029,
+      "max": 4518,
+      "reduction_vs_compact": 0.3282611045774544,
+      "seconds": {
+        "render": 0.42972900334279984,
+        "encode": 2.286889000213705
+      },
+      "numeric_encoding_error": {
+        "open_relative": {
+          "max_absolute": 5.002799269560043e-05,
+          "mask_differences": 0,
+          "stationary_sign_differences": 0
+        },
+        "high_relative": {
+          "max_absolute": 5.004659560547964e-05,
+          "mask_differences": 0,
+          "stationary_sign_differences": 0
+        },
+        "low_relative": {
+          "max_absolute": 5.002799269560043e-05,
+          "mask_differences": 0,
+          "stationary_sign_differences": 0
+        },
+        "close_relative": {
+          "max_absolute": 5.0053734287347496e-05,
+          "mask_differences": 0,
+          "stationary_sign_differences": 0
+        },
+        "log_return_1d": {
+          "max_absolute": 4.999567830883157e-05,
+          "mask_differences": 0,
+          "stationary_sign_differences": 0
+        },
+        "volume_relative": {
+          "max_absolute": 0.0499994649186809,
+          "mask_differences": 0,
+          "stationary_sign_differences": 0
+        }
+      }
+    }
+  }
+}

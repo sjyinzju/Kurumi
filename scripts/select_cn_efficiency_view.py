@@ -16,12 +16,15 @@ def main() -> None:
     parser.add_argument("--label-end", type=date.fromisoformat, help="Latest target endpoint allowed; defaults to --end")
     parser.add_argument("--split", choices=SPLITS, help="Keep the original package split and its supervision mask")
     parser.add_argument("--budget", type=int)
+    parser.add_argument("--token-budget", type=int, help="Budget for expected native input tokens")
+    parser.add_argument("--tokens-per-sample", type=float, help="Measured mean or conservative per-original estimate")
     parser.add_argument("--seed", type=int, default=17)
     parser.add_argument("--coverage-order", choices=COVERAGE_ORDERS, default="security")
     args = parser.parse_args()
     result = build_view(
         args.pool, args.output, start=args.start, end=args.end, label_end=args.label_end,
         split=args.split, budget=args.budget, seed=args.seed, coverage_order=args.coverage_order,
+        token_budget=args.token_budget, tokens_per_sample=args.tokens_per_sample,
     )
     print(format_view_report(result))
 

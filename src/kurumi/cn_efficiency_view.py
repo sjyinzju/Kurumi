@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import math
 import random
 from datetime import date
 from pathlib import Path
@@ -22,6 +23,12 @@ COVERAGE_ORDERS = {
         "date_trunc('month', local_trade_date), market_id, market_state NULLS LAST, "
         "sector NULLS LAST, security_id, local_trade_date, sample_id"
     ),
+    "bimonth": (
+        "year(local_trade_date), (month(local_trade_date)-1)//2, market_id, sector NULLS LAST, "
+        "security_id, local_trade_date, sample_id"
+    ),
+    "security_first": ("market_id, security_id, local_trade_date, sample_id"),
+    "random": None,
 }
 
 
@@ -32,7 +39,8 @@ def _sql_path(path: Path) -> str:
 def build_view(
     pool: Path, output: Path, *, start: date | None = None, end: date | None = None,
     label_end: date | None = None, split: str | None = None, budget: int | None = None,
-    seed: int = 17, coverage_order: str = "security",
+    seed: int = 17, coverage_order: str = "security", token_budget: int | None = None,
+    tokens_per_sample: float | None = None,
 ) -> dict:
     """Select dates inclusively and apply a probability sample if a budget is set."""
     if output.exists():
@@ -45,6 +53,13 @@ def build_view(
         raise ValueError("budget must be positive")
     if coverage_order not in COVERAGE_ORDERS:
         raise ValueError(f"Unknown coverage order: {coverage_order}")
+    if tokens_per_sample is not None and (not math.isfinite(tokens_per_sample) or tokens_per_sample < 1):
+        raise ValueError("Tokens per sample must be finite and at least one")
+    if token_budget is not None:
+        if tokens_per_sample is None or tokens_per_sample > token_budget:
+            raise ValueError("The token budget must cover at least one estimated sample")
+        token_size = math.floor(token_budget / tokens_per_sample)
+        budget = min(budget, token_size) if budget is not None else token_size
     cutoff = label_end or end
     output.parent.mkdir(parents=True, exist_ok=True)
     with TemporaryDirectory(prefix=".cn-view-", dir=output.parent) as temp, duckdb.connect() as db:
@@ -66,9 +81,12 @@ def build_view(
                 f"THEN {pool_mask} & {1 << i} ELSE 0 END"
                 for i, horizon in enumerate(HORIZONS)
             )
+        split_metadata = "NULL" if split is None else f"'{split}'"
+        cutoff_metadata = "NULL::DATE" if cutoff is None else f"DATE '{cutoff.isoformat()}'"
         db.execute(f"""
             CREATE TEMP VIEW eligible AS
-            SELECT * REPLACE (CAST(({mask}) AS UTINYINT) AS horizon_mask)
+            SELECT * REPLACE (CAST(({mask}) AS UTINYINT) AS horizon_mask),
+                   {cutoff_metadata} AS view_label_end, {split_metadata}::VARCHAR AS view_split
             FROM read_parquet({_sql_path(pool)})
             WHERE ({' AND '.join(conditions) or 'true'}) AND ({mask}) > 0
         """)
@@ -81,6 +99,12 @@ def build_view(
         offset = None
         if size == population:
             selected = "SELECT *, 1.0::DOUBLE AS inclusion_probability, 1.0::DOUBLE AS weight FROM eligible"
+        elif coverage_order == "random":
+            selected = f"""
+                SELECT *, {size}::DOUBLE/{population} AS inclusion_probability,
+                          {population}::DOUBLE/{size} AS weight
+                FROM eligible ORDER BY hash(sample_id, {int(seed)}), sample_id LIMIT {size}
+            """
         else:
             offset = random.Random(seed).randrange(population)
             # Uniform offset modulo population yields exactly size/population inclusion probability
@@ -101,7 +125,10 @@ def build_view(
                 FROM ordered SEMI JOIN draws USING (sample_rank)
             """
         staged = Path(temp) / "view.parquet"
-        db.execute(f"COPY ({selected}) TO {_sql_path(staged)} (FORMAT parquet, COMPRESSION zstd)")
+        db.execute(f"""
+            COPY (SELECT * FROM ({selected}) ORDER BY local_trade_date, sample_id)
+            TO {_sql_path(staged)} (FORMAT parquet, COMPRESSION zstd)
+        """)
         observed, *selected_supervision, months, sectors, states, securities, dates = db.execute(f"""
             SELECT count(*), {counts}, count(DISTINCT date_trunc('month', local_trade_date)),
                    count(DISTINCT sector), count(DISTINCT market_state),
@@ -114,6 +141,8 @@ def build_view(
     return {
         "pool": pool.resolve().as_posix(), "view": output.resolve().as_posix(), "split": split,
         "start": start, "end": end, "label_end": cutoff, "budget": budget, "seed": seed,
+        "token_budget": token_budget, "tokens_per_sample": tokens_per_sample,
+        "estimated_selected_tokens": size * tokens_per_sample if tokens_per_sample is not None else None,
         "coverage_order": coverage_order,
         "systematic_offset": offset, "eligible_samples": population, "selected_samples": size,
         "eligible_supervision": dict(zip(HORIZONS, eligible_supervision, strict=True)),

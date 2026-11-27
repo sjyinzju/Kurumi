@@ -318,7 +318,7 @@ COVERAGE_COUNTS = """
 )
 
 
-def publish(source, output):
+def publish(source, output, *, threads=4, memory_limit="4GB"):
     output.mkdir(parents=True, exist_ok=False)
     staging = output / ".staging"
     staging.mkdir()
@@ -327,9 +327,10 @@ def publish(source, output):
     source_manifest = json.loads(source_manifest_bytes)
     if source_manifest["status"] != "NUMERIC_READY":
         raise ValueError("Source must be a formally accepted immutable release")
-    con = duckdb.connect(config={"threads": 4, "memory_limit": "4GB", "temp_directory": str(staging / "tmp")})
+    con = duckdb.connect(config={"threads": threads, "memory_limit": memory_limit,
+                                 "temp_directory": str(staging / "tmp")})
     setup(con, source)
-    keys = check_keys(con)
+    key_audit = check_keys(con)
     validations = {}
     for name, query in CHECKS.items():
         validations[name] = single(con, query)
@@ -343,8 +344,8 @@ def publish(source, output):
         print(f"materialized {year}: {yearly_checks[year]}", flush=True)
     for table in ("pool", "quarantine", "label_overlay"):
         read_view(con, "fragments", staging / f"{table}-*.parquet")
-        keys = "local_trade_date,sample_id,horizon" if table == "label_overlay" else "local_trade_date,sample_id"
-        copy(con, f"FROM fragments ORDER BY {keys}", output / f"{table}.parquet")
+        order = "local_trade_date,sample_id,horizon" if table == "label_overlay" else "local_trade_date,sample_id"
+        copy(con, f"FROM fragments ORDER BY {order}", output / f"{table}.parquet")
     read_view(con, "coverage", staging / "cohort-*.parquet")
     coverage_dims = {
         "monthly": "date_trunc('month',local_trade_date)::DATE AS month",
@@ -368,9 +369,9 @@ def publish(source, output):
             or totals["raw_samples"] != single(con, "SELECT count(*) FROM samples")
             or label_totals != totals["raw_samples"] * 3):
         raise ValueError("Source and published accounting disagree")
-    report = dict(full_table_key_audit=keys, full_table_validations=validations, yearly_label_checks=yearly_checks,
+    report = dict(full_table_key_audit=key_audit, full_table_validations=validations, yearly_label_checks=yearly_checks,
                   raw_label_rows=label_totals, totals=totals, quarantined_reasons=quarantine,
-                  exact_duplicate_samples=keys["samples"]["exact_duplicate_rows"],
+                  exact_duplicate_samples=key_audit["samples"]["exact_duplicate_rows"],
                   definitions=dict(low_volatility="sigma_60d <= 0.01",
                                    low_liquidity="PIT activity percentile <= 0.1",
                                    extreme_return="abs(log return) >= ln(1.2), reporting only",
@@ -405,11 +406,15 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--threads", type=int, default=4)
+    parser.add_argument("--memory-limit", default="4GB")
     args = parser.parse_args()
     source, output = args.source.resolve(), args.output.resolve()
     if output.is_relative_to(source.parent) or source.is_relative_to(output):
         parser.error("Output must be separate from the formal release tree")
-    publish(source, output)
+    if args.threads < 1:
+        parser.error("--threads must be positive")
+    publish(source, output, threads=args.threads, memory_limit=args.memory_limit)
 
 
 if __name__ == "__main__":

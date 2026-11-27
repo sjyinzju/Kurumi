@@ -1,0 +1,577 @@
+{
+  "pool_manifest_sha256": "25f51bf874f3e202aecb33c1c663ab6aa31d39e556ef141ba4fbf04177a15818",
+  "coverage": [
+    {
+      "year": 2015,
+      "samples": 269271,
+      "days": 184,
+      "securities": 2662,
+      "known_industries": 28,
+      "market_states": 6,
+      "low_volatility": 0,
+      "low_liquidity": 28591,
+      "pre_delisting_90d": 0,
+      "zero_labels": 3602,
+      "extreme_labels": 146810,
+      "supervised_1": 268026,
+      "supervised_5": 262371,
+      "supervised_20": 253299
+    },
+    {
+      "year": 2016,
+      "samples": 513582,
+      "days": 244,
+      "securities": 2915,
+      "known_industries": 28,
+      "market_states": 9,
+      "low_volatility": 6538,
+      "low_liquidity": 54250,
+      "pre_delisting_90d": 0,
+      "zero_labels": 19454,
+      "extreme_labels": 51430,
+      "supervised_1": 512634,
+      "supervised_5": 507748,
+      "supervised_20": 498405
+    },
+    {
+      "year": 2017,
+      "samples": 626014,
+      "days": 244,
+      "securities": 3348,
+      "known_industries": 28,
+      "market_states": 4,
+      "low_volatility": 21694,
+      "low_liquidity": 65765,
+      "pre_delisting_90d": 7,
+      "zero_labels": 29000,
+      "extreme_labels": 46345,
+      "supervised_1": 625194,
+      "supervised_5": 621168,
+      "supervised_20": 613434
+    },
+    {
+      "year": 2018,
+      "samples": 734420,
+      "days": 243,
+      "securities": 3538,
+      "known_industries": 28,
+      "market_states": 7,
+      "low_volatility": 5236,
+      "low_liquidity": 74669,
+      "pre_delisting_90d": 0,
+      "zero_labels": 35468,
+      "extreme_labels": 98582,
+      "supervised_1": 733876,
+      "supervised_5": 731397,
+      "supervised_20": 726979
+    },
+    {
+      "year": 2019,
+      "samples": 840652,
+      "days": 244,
+      "securities": 3687,
+      "known_industries": 28,
+      "market_states": 8,
+      "low_volatility": 9846,
+      "low_liquidity": 83944,
+      "pre_delisting_90d": 45,
+      "zero_labels": 45217,
+      "extreme_labels": 116624,
+      "supervised_1": 840139,
+      "supervised_5": 839234,
+      "supervised_20": 838409
+    },
+    {
+      "year": 2020,
+      "samples": 891212,
+      "days": 243,
+      "securities": 4042,
+      "known_industries": 28,
+      "market_states": 8,
+      "low_volatility": 6964,
+      "low_liquidity": 87739,
+      "pre_delisting_90d": 91,
+      "zero_labels": 41815,
+      "extreme_labels": 140979,
+      "supervised_1": 890730,
+      "supervised_5": 889899,
+      "supervised_20": 889062
+    },
+    {
+      "year": 2021,
+      "samples": 1000246,
+      "days": 243,
+      "securities": 4496,
+      "known_industries": 58,
+      "market_states": 5,
+      "low_volatility": 15587,
+      "low_liquidity": 100544,
+      "pre_delisting_90d": 133,
+      "zero_labels": 46569,
+      "extreme_labels": 152620,
+      "supervised_1": 999780,
+      "supervised_5": 999103,
+      "supervised_20": 998621
+    },
+    {
+      "year": 2022,
+      "samples": 1119877,
+      "days": 242,
+      "securities": 4981,
+      "known_industries": 31,
+      "market_states": 8,
+      "low_volatility": 7392,
+      "low_liquidity": 110625,
+      "pre_delisting_90d": 863,
+      "zero_labels": 45434,
+      "extreme_labels": 173965,
+      "supervised_1": 1119495,
+      "supervised_5": 1118713,
+      "supervised_20": 1117653
+    },
+    {
+      "year": 2023,
+      "samples": 1219648,
+      "days": 242,
+      "securities": 5328,
+      "known_industries": 31,
+      "market_states": 5,
+      "low_volatility": 38324,
+      "low_liquidity": 119625,
+      "pre_delisting_90d": 680,
+      "zero_labels": 64033,
+      "extreme_labels": 104427,
+      "supervised_1": 1219376,
+      "supervised_5": 1218865,
+      "supervised_20": 1218189
+    },
+    {
+      "year": 2024,
+      "samples": 1269785,
+      "days": 242,
+      "securities": 5399,
+      "known_industries": 31,
+      "market_states": 8,
+      "low_volatility": 4710,
+      "low_liquidity": 126642,
+      "pre_delisting_90d": 578,
+      "zero_labels": 45978,
+      "extreme_labels": 314017,
+      "supervised_1": 1269487,
+      "supervised_5": 1268919,
+      "supervised_20": 1267986
+    },
+    {
+      "year": 2025,
+      "samples": 1277242,
+      "days": 243,
+      "securities": 5459,
+      "known_industries": 31,
+      "market_states": 7,
+      "low_volatility": 23074,
+      "low_liquidity": 127415,
+      "pre_delisting_90d": 521,
+      "zero_labels": 53046,
+      "extreme_labels": 174856,
+      "supervised_1": 1276754,
+      "supervised_5": 1275665,
+      "supervised_20": 1274629
+    },
+    {
+      "year": 2026,
+      "samples": 614735,
+      "days": 116,
+      "securities": 5492,
+      "known_industries": 31,
+      "market_states": 5,
+      "low_volatility": 9254,
+      "low_liquidity": 61489,
+      "pre_delisting_90d": 273,
+      "zero_labels": 17152,
+      "extreme_labels": 137940,
+      "supervised_1": 614427,
+      "supervised_5": 613999,
+      "supervised_20": 613560
+    }
+  ],
+  "v1_mask_and_target_dates": [
+    {
+      "year": 2015,
+      "mask_or_date_changes": 0
+    },
+    {
+      "year": 2016,
+      "mask_or_date_changes": 0
+    },
+    {
+      "year": 2017,
+      "mask_or_date_changes": 0
+    },
+    {
+      "year": 2018,
+      "mask_or_date_changes": 0
+    },
+    {
+      "year": 2019,
+      "mask_or_date_changes": 0
+    },
+    {
+      "year": 2020,
+      "mask_or_date_changes": 0
+    },
+    {
+      "year": 2021,
+      "mask_or_date_changes": 0
+    },
+    {
+      "year": 2022,
+      "mask_or_date_changes": 0
+    },
+    {
+      "year": 2023,
+      "mask_or_date_changes": 0
+    },
+    {
+      "year": 2024,
+      "mask_or_date_changes": 0
+    },
+    {
+      "year": 2025,
+      "mask_or_date_changes": 0
+    },
+    {
+      "year": 2026,
+      "mask_or_date_changes": 0
+    }
+  ],
+  "history_keys": [
+    {
+      "year": 2015,
+      "rows": 665178,
+      "duplicates": 0,
+      "unusable_closes": 95480
+    },
+    {
+      "year": 2016,
+      "rows": 704145,
+      "duplicates": 0,
+      "unusable_closes": 62599
+    },
+    {
+      "year": 2017,
+      "rows": 799064,
+      "duplicates": 0,
+      "unusable_closes": 55825
+    },
+    {
+      "year": 2018,
+      "rows": 856800,
+      "duplicates": 0,
+      "unusable_closes": 39812
+    },
+    {
+      "year": 2019,
+      "rows": 890251,
+      "duplicates": 0,
+      "unusable_closes": 5384
+    },
+    {
+      "year": 2020,
+      "rows": 951940,
+      "duplicates": 0,
+      "unusable_closes": 6024
+    },
+    {
+      "year": 2021,
+      "rows": 1064990,
+      "duplicates": 0,
+      "unusable_closes": 3627
+    },
+    {
+      "year": 2022,
+      "rows": 1174104,
+      "duplicates": 0,
+      "unusable_closes": 3308
+    },
+    {
+      "year": 2023,
+      "rows": 1260742,
+      "duplicates": 0,
+      "unusable_closes": 2482
+    },
+    {
+      "year": 2024,
+      "rows": 1296501,
+      "duplicates": 0,
+      "unusable_closes": 3092
+    },
+    {
+      "year": 2025,
+      "rows": 1317070,
+      "duplicates": 0,
+      "unusable_closes": 3441
+    },
+    {
+      "year": 2026,
+      "rows": 764988,
+      "duplicates": 0,
+      "unusable_closes": 1826
+    }
+  ],
+  "development_quote_domain": [
+    {
+      "year": 2015,
+      "rows": 665178,
+      "valid_quotes": 569698,
+      "invalid_ohlc": 0,
+      "invalid_volume": 0,
+      "invalid_factor": 0,
+      "valid_flat_ohlc": 9302,
+      "upper_limit": 35217,
+      "lower_limit": 31468,
+      "unusable_share_unit_rows": 6,
+      "nontraded_input_valid": 0,
+      "duplicate_sigma_conflicts": 0
+    },
+    {
+      "year": 2016,
+      "rows": 704145,
+      "valid_quotes": 641546,
+      "invalid_ohlc": 0,
+      "invalid_volume": 0,
+      "invalid_factor": 0,
+      "valid_flat_ohlc": 4180,
+      "upper_limit": 11857,
+      "lower_limit": 10104,
+      "unusable_share_unit_rows": 3,
+      "nontraded_input_valid": 0,
+      "duplicate_sigma_conflicts": 0
+    },
+    {
+      "year": 2017,
+      "rows": 799064,
+      "valid_quotes": 743239,
+      "invalid_ohlc": 0,
+      "invalid_volume": 0,
+      "invalid_factor": 0,
+      "valid_flat_ohlc": 5051,
+      "upper_limit": 10402,
+      "lower_limit": 3286,
+      "unusable_share_unit_rows": 4,
+      "nontraded_input_valid": 0,
+      "duplicate_sigma_conflicts": 0
+    },
+    {
+      "year": 2018,
+      "rows": 856800,
+      "valid_quotes": 816988,
+      "invalid_ohlc": 0,
+      "invalid_volume": 0,
+      "invalid_factor": 0,
+      "valid_flat_ohlc": 3558,
+      "upper_limit": 11488,
+      "lower_limit": 8336,
+      "unusable_share_unit_rows": 8,
+      "nontraded_input_valid": 0,
+      "duplicate_sigma_conflicts": 0
+    },
+    {
+      "year": 2019,
+      "rows": 890251,
+      "valid_quotes": 884867,
+      "invalid_ohlc": 0,
+      "invalid_volume": 0,
+      "invalid_factor": 0,
+      "valid_flat_ohlc": 3526,
+      "upper_limit": 16024,
+      "lower_limit": 6261,
+      "unusable_share_unit_rows": 8,
+      "nontraded_input_valid": 0,
+      "duplicate_sigma_conflicts": 0
+    },
+    {
+      "year": 2020,
+      "rows": 951940,
+      "valid_quotes": 945916,
+      "invalid_ohlc": 0,
+      "invalid_volume": 0,
+      "invalid_factor": 0,
+      "valid_flat_ohlc": 5958,
+      "upper_limit": 19700,
+      "lower_limit": 9254,
+      "unusable_share_unit_rows": 12,
+      "nontraded_input_valid": 0,
+      "duplicate_sigma_conflicts": 0
+    },
+    {
+      "year": 2021,
+      "rows": 1064990,
+      "valid_quotes": 1061363,
+      "invalid_ohlc": 0,
+      "invalid_volume": 0,
+      "invalid_factor": 0,
+      "valid_flat_ohlc": 2890,
+      "upper_limit": 20906,
+      "lower_limit": 5726,
+      "unusable_share_unit_rows": 13,
+      "nontraded_input_valid": 0,
+      "duplicate_sigma_conflicts": 0
+    },
+    {
+      "year": 2022,
+      "rows": 1174104,
+      "valid_quotes": 1170796,
+      "invalid_ohlc": 0,
+      "invalid_volume": 0,
+      "invalid_factor": 0,
+      "valid_flat_ohlc": 2534,
+      "upper_limit": 18490,
+      "lower_limit": 6591,
+      "unusable_share_unit_rows": 30,
+      "nontraded_input_valid": 0,
+      "duplicate_sigma_conflicts": 0
+    },
+    {
+      "year": 2023,
+      "rows": 1260742,
+      "valid_quotes": 1258260,
+      "invalid_ohlc": 0,
+      "invalid_volume": 0,
+      "invalid_factor": 0,
+      "valid_flat_ohlc": 1873,
+      "upper_limit": 10666,
+      "lower_limit": 3471,
+      "unusable_share_unit_rows": 20,
+      "nontraded_input_valid": 0,
+      "duplicate_sigma_conflicts": 0
+    }
+  ],
+  "development_financial_replay": [
+    {
+      "year": 2015,
+      "samples": 269271,
+      "not_yet_reported_or_unmatched": 257,
+      "financial_clock_or_issuer_errors": 0,
+      "market_clock_errors": 0,
+      "industry_clock_errors": 0,
+      "nonpositive_equity": 976,
+      "small_positive_revenue": 0,
+      "extreme_net_margin": 181,
+      "net_margin_replayable": 261965,
+      "net_margin_replay_max_abs": 3.8860722639810774e-07,
+      "net_margin_replay_conflicts": 0
+    },
+    {
+      "year": 2016,
+      "samples": 513582,
+      "not_yet_reported_or_unmatched": 355,
+      "financial_clock_or_issuer_errors": 0,
+      "market_clock_errors": 0,
+      "industry_clock_errors": 0,
+      "nonpositive_equity": 1083,
+      "small_positive_revenue": 0,
+      "extreme_net_margin": 385,
+      "net_margin_replayable": 505139,
+      "net_margin_replay_max_abs": 1.5796650529864564e-06,
+      "net_margin_replay_conflicts": 0
+    },
+    {
+      "year": 2017,
+      "samples": 626014,
+      "not_yet_reported_or_unmatched": 1248,
+      "financial_clock_or_issuer_errors": 0,
+      "market_clock_errors": 0,
+      "industry_clock_errors": 0,
+      "nonpositive_equity": 956,
+      "small_positive_revenue": 0,
+      "extreme_net_margin": 397,
+      "net_margin_replayable": 611308,
+      "net_margin_replay_max_abs": 8.901245038828165e-07,
+      "net_margin_replay_conflicts": 0
+    },
+    {
+      "year": 2018,
+      "samples": 734420,
+      "not_yet_reported_or_unmatched": 766,
+      "financial_clock_or_issuer_errors": 0,
+      "market_clock_errors": 0,
+      "industry_clock_errors": 0,
+      "nonpositive_equity": 1521,
+      "small_positive_revenue": 0,
+      "extreme_net_margin": 692,
+      "net_margin_replayable": 722479,
+      "net_margin_replay_max_abs": 0.0002555842002038844,
+      "net_margin_replay_conflicts": 0
+    },
+    {
+      "year": 2019,
+      "samples": 840652,
+      "not_yet_reported_or_unmatched": 232,
+      "financial_clock_or_issuer_errors": 0,
+      "market_clock_errors": 0,
+      "industry_clock_errors": 0,
+      "nonpositive_equity": 4265,
+      "small_positive_revenue": 0,
+      "extreme_net_margin": 1749,
+      "net_margin_replayable": 834224,
+      "net_margin_replay_max_abs": 0.0002555842002038844,
+      "net_margin_replay_conflicts": 0
+    },
+    {
+      "year": 2020,
+      "samples": 891212,
+      "not_yet_reported_or_unmatched": 818,
+      "financial_clock_or_issuer_errors": 0,
+      "market_clock_errors": 0,
+      "industry_clock_errors": 0,
+      "nonpositive_equity": 5483,
+      "small_positive_revenue": 0,
+      "extreme_net_margin": 2712,
+      "net_margin_replayable": 874855,
+      "net_margin_replay_max_abs": 1.3767360144356644e-05,
+      "net_margin_replay_conflicts": 0
+    },
+    {
+      "year": 2021,
+      "samples": 1000246,
+      "not_yet_reported_or_unmatched": 474,
+      "financial_clock_or_issuer_errors": 0,
+      "market_clock_errors": 0,
+      "industry_clock_errors": 0,
+      "nonpositive_equity": 7541,
+      "small_positive_revenue": 0,
+      "extreme_net_margin": 2939,
+      "net_margin_replayable": 967296,
+      "net_margin_replay_max_abs": 0.00022632193031313363,
+      "net_margin_replay_conflicts": 0
+    },
+    {
+      "year": 2022,
+      "samples": 1119877,
+      "not_yet_reported_or_unmatched": 647,
+      "financial_clock_or_issuer_errors": 0,
+      "market_clock_errors": 0,
+      "industry_clock_errors": 0,
+      "nonpositive_equity": 6649,
+      "small_positive_revenue": 8,
+      "extreme_net_margin": 1958,
+      "net_margin_replayable": 1074326,
+      "net_margin_replay_max_abs": 0.0008110868438961916,
+      "net_margin_replay_conflicts": 0
+    },
+    {
+      "year": 2023,
+      "samples": 1219648,
+      "not_yet_reported_or_unmatched": 396,
+      "financial_clock_or_issuer_errors": 0,
+      "market_clock_errors": 0,
+      "industry_clock_errors": 0,
+      "nonpositive_equity": 5836,
+      "small_positive_revenue": 0,
+      "extreme_net_margin": 2082,
+      "net_margin_replayable": 1191264,
+      "net_margin_replay_max_abs": 0.00018536758943810128,
+      "net_margin_replay_conflicts": 0
+    }
+  ]
+}

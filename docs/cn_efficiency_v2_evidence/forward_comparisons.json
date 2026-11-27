@@ -1,0 +1,5028 @@
+{
+  "runs": [
+    {
+      "stage": "screen_aug",
+      "directory": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\screen",
+      "sha256": "a85272ed7cebe264d745c7cc1274fe41f1867c3aa58958260ab3d46d60a58f87",
+      "settings": {
+        "train_budget": 30000,
+        "eval_budget": 8000,
+        "arms": [
+          "compact:security",
+          "precision6:security",
+          "basis_points:security",
+          "recent30:security",
+          "recent20:security",
+          "causal_median:security",
+          "conditional_factors:security",
+          "compact:bimonth",
+          "compact:security_first",
+          "compact:random"
+        ],
+        "seeds": [
+          17
+        ],
+        "estimator": "hgb",
+        "threads": 4,
+        "hgb": {
+          "learning_rate": 0.08,
+          "max_iter": 18,
+          "max_leaf_nodes": 15,
+          "min_samples_leaf": 40,
+          "l2_regularization": 2.0,
+          "early_stopping": false,
+          "random_state": 17,
+          "max_bins": 63,
+          "max_features": 0.55
+        },
+        "sklearn": "1.9.1",
+        "tokens": {}
+      },
+      "preprocess_seconds": 49.502297900035046,
+      "unique_feature_rows": 325753,
+      "model_runs": 30
+    },
+    {
+      "stage": "refine_screen_aug",
+      "directory": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\refine-screen",
+      "sha256": "da38ab5b14375a1eb484f671144347ee17b29a5f01061b31d58ddcb51622d808",
+      "settings": {
+        "train_budget": 30000,
+        "eval_budget": 8000,
+        "arms": [
+          "recent20_wide:security",
+          "basis_points_volume100:security",
+          "basis_points_volume10:security"
+        ],
+        "seeds": [
+          17
+        ],
+        "windows": [
+          "2020",
+          "2021",
+          "2022_2023"
+        ],
+        "estimator": "hgb",
+        "threads": 2,
+        "hgb": {
+          "learning_rate": 0.08,
+          "max_iter": 18,
+          "max_leaf_nodes": 15,
+          "min_samples_leaf": 40,
+          "l2_regularization": 2.0,
+          "early_stopping": false,
+          "random_state": 17,
+          "max_bins": 63,
+          "max_features": 0.55
+        },
+        "sklearn": "1.9.1",
+        "tokens": {
+          "baseline": 7320.8125,
+          "compact": 6359.520833333333,
+          "basis_points_delta": 4390.911458333333,
+          "basis_points_volume_centered": 4358.666666666667,
+          "basis_points_volume100": 4330.345486111111,
+          "basis_points_volume10": 4271.9375
+        },
+        "reference_run": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\screen",
+        "reference_arm": "basis_points:security"
+      },
+      "preprocess_seconds": 49.502297900035046,
+      "unique_feature_rows": 325753,
+      "model_runs": 9
+    },
+    {
+      "stage": "aug_200k",
+      "directory": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\deep-followup-2020",
+      "sha256": "0b714ba2184d91061dd9ed88692cc15afa9751c3f413a8c2a3765deb64f0286f",
+      "settings": {
+        "train_budget": 200000,
+        "eval_budget": 12000,
+        "arms": [
+          "basis_points_delta:security_first"
+        ],
+        "seeds": [
+          29,
+          43
+        ],
+        "windows": [
+          "2020"
+        ],
+        "estimator": "hgb",
+        "threads": 2,
+        "hgb": {
+          "learning_rate": 0.08,
+          "max_iter": 18,
+          "max_leaf_nodes": 15,
+          "min_samples_leaf": 40,
+          "l2_regularization": 2.0,
+          "early_stopping": false,
+          "random_state": 17,
+          "max_bins": 63,
+          "max_features": 0.55
+        },
+        "sklearn": "1.9.1",
+        "tokens": {
+          "baseline": 7320.8125,
+          "compact": 6359.520833333333,
+          "basis_points": 4517.3125,
+          "basis_points_delta": 4390.911458333333,
+          "recent20": 4261.244791666667,
+          "recent20_delta": 4259.340277777777,
+          "recent20_wide": 3890.1805555555557
+        }
+      },
+      "preprocess_seconds": 64.91006119991653,
+      "unique_feature_rows": 758877,
+      "model_runs": 4
+    },
+    {
+      "stage": "aug_100k",
+      "directory": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\expanded-2020",
+      "sha256": "59b17e46865e051c09be07e21aee50d63d78289b9fda24499778fe1e4fba4516",
+      "settings": {
+        "train_budget": 100000,
+        "eval_budget": 12000,
+        "arms": [
+          "basis_points:security",
+          "recent20:security",
+          "recent20:security_first",
+          "recent20:security_first:tokens"
+        ],
+        "seeds": [
+          17,
+          29,
+          43
+        ],
+        "windows": [
+          "2020"
+        ],
+        "estimator": "hgb",
+        "threads": 3,
+        "hgb": {
+          "learning_rate": 0.08,
+          "max_iter": 18,
+          "max_leaf_nodes": 15,
+          "min_samples_leaf": 40,
+          "l2_regularization": 2.0,
+          "early_stopping": false,
+          "random_state": 17,
+          "max_bins": 63,
+          "max_features": 0.55
+        },
+        "sklearn": "1.9.1",
+        "tokens": {
+          "baseline": 7320.8125,
+          "compact": 6359.520833333333,
+          "lossless": 6354.253472222223,
+          "precision6": 5662.078125,
+          "basis_points": 4517.3125,
+          "recent30": 4328.763888888889,
+          "recent20": 4261.244791666667,
+          "causal_median": 4327.682291666667,
+          "conditional_factors": 6211.0,
+          "basis_points_thin": 4374.059027777777,
+          "basis_points_terse": 4531.204861111111,
+          "sub_basis_points": 4882.052083333333
+        }
+      },
+      "preprocess_seconds": 51.32216330000665,
+      "unique_feature_rows": 911924,
+      "model_runs": 15
+    },
+    {
+      "stage": "aug_200k",
+      "directory": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\deep-2020",
+      "sha256": "abfb8ee3c4991e0829b2fe6ce704834e5ba2f447a9b80aa86811f99b19941673",
+      "settings": {
+        "train_budget": 200000,
+        "eval_budget": 12000,
+        "arms": [
+          "basis_points_delta:security",
+          "basis_points_delta:security_first"
+        ],
+        "seeds": [
+          17
+        ],
+        "windows": [
+          "2020"
+        ],
+        "estimator": "hgb",
+        "threads": 3,
+        "hgb": {
+          "learning_rate": 0.08,
+          "max_iter": 18,
+          "max_leaf_nodes": 15,
+          "min_samples_leaf": 40,
+          "l2_regularization": 2.0,
+          "early_stopping": false,
+          "random_state": 17,
+          "max_bins": 63,
+          "max_features": 0.55
+        },
+        "sklearn": "1.9.1",
+        "tokens": {
+          "baseline": 7320.8125,
+          "compact": 6359.520833333333,
+          "basis_points": 4517.3125,
+          "basis_points_delta": 4390.911458333333,
+          "recent20": 4261.244791666667,
+          "recent20_delta": 4259.340277777777,
+          "recent20_wide": 3890.1805555555557
+        }
+      },
+      "preprocess_seconds": 26.592447800096124,
+      "unique_feature_rows": 398552,
+      "model_runs": 3
+    },
+    {
+      "stage": "aug_refine_100k",
+      "directory": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\final-paired-2020",
+      "sha256": "75461e13fbf16345e20c8af13c74111e93869d16113d1da53a261c93323057b1",
+      "settings": {
+        "train_budget": 100000,
+        "eval_budget": 12000,
+        "arms": [
+          "basis_points_delta:security_first",
+          "basis_points_volume100:security"
+        ],
+        "seeds": [
+          17,
+          29,
+          43
+        ],
+        "windows": [
+          "2020"
+        ],
+        "estimator": "hgb",
+        "threads": 3,
+        "hgb": {
+          "learning_rate": 0.08,
+          "max_iter": 18,
+          "max_leaf_nodes": 15,
+          "min_samples_leaf": 40,
+          "l2_regularization": 2.0,
+          "early_stopping": false,
+          "random_state": 17,
+          "max_bins": 63,
+          "max_features": 0.55
+        },
+        "sklearn": "1.9.1",
+        "tokens": {
+          "baseline": 7320.8125,
+          "compact": 6359.520833333333,
+          "basis_points_delta": 4390.911458333333,
+          "basis_points_volume_centered": 4358.666666666667,
+          "basis_points_volume100": 4330.345486111111,
+          "basis_points_volume10": 4271.9375
+        },
+        "reference_run": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\expanded-2020",
+        "reference_arm": "compact:security"
+      },
+      "preprocess_seconds": 51.32216330000665,
+      "unique_feature_rows": 911924,
+      "model_runs": 6
+    },
+    {
+      "stage": "aug_equal_token",
+      "directory": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\token-matched-2020",
+      "sha256": "e49dae2c8bdac6bb578a89eeafceb326e154f7f6852a0e124b4bbf7a6fcddd91",
+      "settings": {
+        "train_budget": 100000,
+        "eval_budget": 12000,
+        "arms": [
+          "basis_points_delta:security:tokens"
+        ],
+        "seeds": [
+          17,
+          29,
+          43
+        ],
+        "windows": [
+          "2020"
+        ],
+        "estimator": "hgb",
+        "threads": 3,
+        "hgb": {
+          "learning_rate": 0.08,
+          "max_iter": 18,
+          "max_leaf_nodes": 15,
+          "min_samples_leaf": 40,
+          "l2_regularization": 2.0,
+          "early_stopping": false,
+          "random_state": 17,
+          "max_bins": 63,
+          "max_features": 0.55
+        },
+        "sklearn": "1.9.1",
+        "tokens": {
+          "baseline": 7320.8125,
+          "compact": 6359.520833333333,
+          "basis_points": 4517.3125,
+          "basis_points_delta": 4390.911458333333,
+          "recent20": 4261.244791666667,
+          "recent20_delta": 4259.340277777777,
+          "recent20_wide": 3890.1805555555557
+        },
+        "reference_run": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\expanded-2020",
+        "reference_arm": "compact:security"
+      },
+      "preprocess_seconds": 32.959451899980195,
+      "unique_feature_rows": 411284,
+      "model_runs": 3
+    },
+    {
+      "stage": "aug_equal_token_sampler",
+      "directory": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\token-security-first-2020",
+      "sha256": "0724162479c309d1f84ae44c54f11d4f97fef5fe67db2017f156f5606b9d3a88",
+      "settings": {
+        "train_budget": 100000,
+        "eval_budget": 12000,
+        "arms": [
+          "basis_points_delta:security_first:tokens"
+        ],
+        "seeds": [
+          17,
+          29,
+          43
+        ],
+        "windows": [
+          "2020"
+        ],
+        "estimator": "hgb",
+        "threads": 3,
+        "hgb": {
+          "learning_rate": 0.08,
+          "max_iter": 18,
+          "max_leaf_nodes": 15,
+          "min_samples_leaf": 40,
+          "l2_regularization": 2.0,
+          "early_stopping": false,
+          "random_state": 17,
+          "max_bins": 63,
+          "max_features": 0.55
+        },
+        "sklearn": "1.9.1",
+        "tokens": {
+          "baseline": 7320.8125,
+          "compact": 6359.520833333333,
+          "basis_points": 4517.3125,
+          "basis_points_delta": 4390.911458333333,
+          "recent20": 4261.244791666667,
+          "recent20_delta": 4259.340277777777,
+          "recent20_wide": 3890.1805555555557
+        },
+        "reference_run": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\expanded-2020",
+        "reference_arm": "compact:security"
+      },
+      "preprocess_seconds": 30.087220099987462,
+      "unique_feature_rows": 411284,
+      "model_runs": 3
+    },
+    {
+      "stage": "native_100k",
+      "directory": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\native-paired-2020",
+      "sha256": "0b497e3424611bc9179d0236fecfce0b7f685d672d458599959c9b029b6af03d",
+      "settings": {
+        "train_budget": 100000,
+        "eval_budget": 12000,
+        "arms": [
+          "basis_points_delta:security"
+        ],
+        "seeds": [
+          17,
+          29,
+          43
+        ],
+        "windows": [
+          "2020"
+        ],
+        "estimator": "hgb",
+        "threads": 3,
+        "hgb": {
+          "learning_rate": 0.08,
+          "max_iter": 18,
+          "max_leaf_nodes": 15,
+          "min_samples_leaf": 40,
+          "l2_regularization": 2.0,
+          "early_stopping": false,
+          "random_state": 17,
+          "max_bins": 63,
+          "max_features": 0.55
+        },
+        "sklearn": "1.9.1",
+        "tokens": {
+          "baseline": 7320.8125,
+          "compact": 6359.520833333333,
+          "basis_points": 4517.3125,
+          "basis_points_delta": 4390.911458333333,
+          "recent20": 4261.244791666667,
+          "recent20_delta": 4259.340277777777,
+          "recent20_wide": 3890.1805555555557
+        },
+        "coverage_profile": "native",
+        "feature_run": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\expanded-2020"
+      },
+      "preprocess_seconds": 51.32216330000665,
+      "unique_feature_rows": 911924,
+      "model_runs": 6
+    },
+    {
+      "stage": "native_equal_token",
+      "directory": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\native-token-2020",
+      "sha256": "82eaf0cc0934b67a078fcb2e8f7030c9c2611df85c05aabaf91513938d5bf7ee",
+      "settings": {
+        "train_budget": 100000,
+        "eval_budget": 12000,
+        "arms": [
+          "basis_points_delta:security:tokens"
+        ],
+        "seeds": [
+          17,
+          29,
+          43
+        ],
+        "windows": [
+          "2020"
+        ],
+        "estimator": "hgb",
+        "threads": 3,
+        "hgb": {
+          "learning_rate": 0.08,
+          "max_iter": 18,
+          "max_leaf_nodes": 15,
+          "min_samples_leaf": 40,
+          "l2_regularization": 2.0,
+          "early_stopping": false,
+          "random_state": 17,
+          "max_bins": 63,
+          "max_features": 0.55
+        },
+        "sklearn": "1.9.1",
+        "tokens": {
+          "baseline": 7320.8125,
+          "compact": 6359.520833333333,
+          "basis_points": 4517.3125,
+          "basis_points_delta": 4390.911458333333,
+          "recent20": 4261.244791666667,
+          "recent20_delta": 4259.340277777777,
+          "recent20_wide": 3890.1805555555557
+        },
+        "coverage_profile": "native",
+        "reference_run": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\native-paired-2020",
+        "reference_arm": "compact:security",
+        "feature_run": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\token-matched-2020"
+      },
+      "preprocess_seconds": 32.959451899980195,
+      "unique_feature_rows": 411284,
+      "model_runs": 3
+    },
+    {
+      "stage": "native_200k",
+      "directory": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\native-deep-2020",
+      "sha256": "35cbdb48f49f8abd902645bddcb4858baa950ae85a8f3bc06661ce883a03e768",
+      "settings": {
+        "train_budget": 200000,
+        "eval_budget": 12000,
+        "arms": [
+          "basis_points_delta:security"
+        ],
+        "seeds": [
+          17
+        ],
+        "windows": [
+          "2020"
+        ],
+        "estimator": "hgb",
+        "threads": 3,
+        "hgb": {
+          "learning_rate": 0.08,
+          "max_iter": 18,
+          "max_leaf_nodes": 15,
+          "min_samples_leaf": 40,
+          "l2_regularization": 2.0,
+          "early_stopping": false,
+          "random_state": 17,
+          "max_bins": 63,
+          "max_features": 0.55
+        },
+        "sklearn": "1.9.1",
+        "tokens": {
+          "baseline": 7320.8125,
+          "compact": 6359.520833333333,
+          "basis_points": 4517.3125,
+          "basis_points_delta": 4390.911458333333,
+          "recent20": 4261.244791666667,
+          "recent20_delta": 4259.340277777777,
+          "recent20_wide": 3890.1805555555557
+        },
+        "coverage_profile": "native",
+        "feature_run": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\deep-2020"
+      },
+      "preprocess_seconds": 26.592447800096124,
+      "unique_feature_rows": 398552,
+      "model_runs": 2
+    },
+    {
+      "stage": "native_refine",
+      "directory": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\native-refine-2020",
+      "sha256": "4632e5ad449d94552963e1a47de5ef2a5b5f67f48bc5dcdca0074e606dab118f",
+      "settings": {
+        "train_budget": 100000,
+        "eval_budget": 12000,
+        "arms": [
+          "basis_points_volume100:security",
+          "recent20_wide:security"
+        ],
+        "seeds": [
+          17
+        ],
+        "windows": [
+          "2020"
+        ],
+        "estimator": "hgb",
+        "threads": 3,
+        "hgb": {
+          "learning_rate": 0.08,
+          "max_iter": 18,
+          "max_leaf_nodes": 15,
+          "min_samples_leaf": 40,
+          "l2_regularization": 2.0,
+          "early_stopping": false,
+          "random_state": 17,
+          "max_bins": 63,
+          "max_features": 0.55
+        },
+        "sklearn": "1.9.1",
+        "tokens": {
+          "baseline": 7320.8125,
+          "compact": 6359.520833333333,
+          "basis_points_delta": 4390.911458333333,
+          "basis_points_volume_centered": 4358.666666666667,
+          "basis_points_volume100": 4330.345486111111,
+          "basis_points_volume10": 4271.9375
+        },
+        "coverage_profile": "native",
+        "reference_run": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\native-paired-2020",
+        "reference_arm": "basis_points_delta:security",
+        "feature_run": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\expanded-2020"
+      },
+      "preprocess_seconds": 51.32216330000665,
+      "unique_feature_rows": 911924,
+      "model_runs": 2
+    },
+    {
+      "stage": "native_sampler",
+      "directory": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\native-sampler-2020",
+      "sha256": "d6d4ff34a331d741e63057bac355bec2ca77695628d0eb9dd945383a6deeff73",
+      "settings": {
+        "train_budget": 100000,
+        "eval_budget": 12000,
+        "arms": [
+          "basis_points_delta:security_first"
+        ],
+        "seeds": [
+          17,
+          29,
+          43
+        ],
+        "windows": [
+          "2020"
+        ],
+        "estimator": "hgb",
+        "threads": 2,
+        "hgb": {
+          "learning_rate": 0.08,
+          "max_iter": 18,
+          "max_leaf_nodes": 15,
+          "min_samples_leaf": 40,
+          "l2_regularization": 2.0,
+          "early_stopping": false,
+          "random_state": 17,
+          "max_bins": 63,
+          "max_features": 0.55
+        },
+        "sklearn": "1.9.1",
+        "tokens": {
+          "baseline": 7320.8125,
+          "compact": 6359.520833333333,
+          "basis_points": 4517.3125,
+          "basis_points_delta": 4390.911458333333,
+          "recent20": 4261.244791666667,
+          "recent20_delta": 4259.340277777777,
+          "recent20_wide": 3890.1805555555557
+        },
+        "coverage_profile": "native",
+        "reference_run": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\native-paired-2020",
+        "reference_arm": "basis_points_delta:security",
+        "feature_run": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\expanded-2020"
+      },
+      "preprocess_seconds": 51.32216330000665,
+      "unique_feature_rows": 911924,
+      "model_runs": 3
+    },
+    {
+      "stage": "native_equal_token_sampler",
+      "directory": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\native-token-sampler-2020",
+      "sha256": "caee216c462249d37a894c3024713d2f5d940c2fff194462f83ddcbb8b58cf83",
+      "settings": {
+        "train_budget": 100000,
+        "eval_budget": 12000,
+        "arms": [
+          "basis_points_delta:security_first:tokens"
+        ],
+        "seeds": [
+          17,
+          29,
+          43
+        ],
+        "windows": [
+          "2020"
+        ],
+        "estimator": "hgb",
+        "threads": 2,
+        "hgb": {
+          "learning_rate": 0.08,
+          "max_iter": 18,
+          "max_leaf_nodes": 15,
+          "min_samples_leaf": 40,
+          "l2_regularization": 2.0,
+          "early_stopping": false,
+          "random_state": 17,
+          "max_bins": 63,
+          "max_features": 0.55
+        },
+        "sklearn": "1.9.1",
+        "tokens": {
+          "baseline": 7320.8125,
+          "compact": 6359.520833333333,
+          "basis_points": 4517.3125,
+          "basis_points_delta": 4390.911458333333,
+          "recent20": 4261.244791666667,
+          "recent20_delta": 4259.340277777777,
+          "recent20_wide": 3890.1805555555557
+        },
+        "coverage_profile": "native",
+        "reference_run": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\native-paired-2020",
+        "reference_arm": "compact:security",
+        "feature_run": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\token-security-first-2020"
+      },
+      "preprocess_seconds": 30.087220099987462,
+      "unique_feature_rows": 411284,
+      "model_runs": 3
+    },
+    {
+      "stage": "native_logistic",
+      "directory": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\native-logistic-2020",
+      "sha256": "a542a2b0b604e60276d919c331e0c06f1e8deb0cc24f533dfd189eab2452cf53",
+      "settings": {
+        "train_budget": 100000,
+        "eval_budget": 12000,
+        "arms": [
+          "basis_points_delta:security",
+          "basis_points_delta:security_first"
+        ],
+        "seeds": [
+          17
+        ],
+        "windows": [
+          "2020"
+        ],
+        "estimator": "logistic",
+        "threads": 2,
+        "hgb": {
+          "learning_rate": 0.08,
+          "max_iter": 18,
+          "max_leaf_nodes": 15,
+          "min_samples_leaf": 40,
+          "l2_regularization": 2.0,
+          "early_stopping": false,
+          "random_state": 17,
+          "max_bins": 63,
+          "max_features": 0.55
+        },
+        "sklearn": "1.9.1",
+        "tokens": {
+          "baseline": 7320.8125,
+          "compact": 6359.520833333333,
+          "basis_points": 4517.3125,
+          "basis_points_delta": 4390.911458333333,
+          "recent20": 4261.244791666667,
+          "recent20_delta": 4259.340277777777,
+          "recent20_wide": 3890.1805555555557
+        },
+        "coverage_profile": "native",
+        "logistic": {
+          "C": 0.03,
+          "max_iter": 160,
+          "tol": 0.0001,
+          "pca_whitened_components": 64
+        },
+        "feature_run": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\expanded-2020"
+      },
+      "preprocess_seconds": 51.32216330000665,
+      "unique_feature_rows": 911924,
+      "model_runs": 3
+    },
+    {
+      "stage": "native_200k_combo",
+      "directory": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\native-deep-sampler-2020",
+      "sha256": "6d4841ddfaa5f88b0bce79f6d91cf34075c944c15873be43628152877e7a2eb2",
+      "settings": {
+        "train_budget": 200000,
+        "eval_budget": 12000,
+        "arms": [
+          "basis_points_delta:security_first"
+        ],
+        "seeds": [
+          17
+        ],
+        "windows": [
+          "2020"
+        ],
+        "estimator": "hgb",
+        "threads": 4,
+        "hgb": {
+          "learning_rate": 0.08,
+          "max_iter": 18,
+          "max_leaf_nodes": 15,
+          "min_samples_leaf": 40,
+          "l2_regularization": 2.0,
+          "early_stopping": false,
+          "random_state": 17,
+          "max_bins": 63,
+          "max_features": 0.55
+        },
+        "sklearn": "1.9.1",
+        "tokens": {
+          "baseline": 7320.8125,
+          "compact": 6359.520833333333,
+          "basis_points": 4517.3125,
+          "basis_points_delta": 4390.911458333333,
+          "recent20": 4261.244791666667,
+          "recent20_delta": 4259.340277777777,
+          "recent20_wide": 3890.1805555555557
+        },
+        "coverage_profile": "native",
+        "reference_run": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\native-deep-2020",
+        "reference_arm": "compact:security",
+        "feature_run": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\deep-2020"
+      },
+      "preprocess_seconds": 26.592447800096124,
+      "unique_feature_rows": 398552,
+      "model_runs": 1
+    },
+    {
+      "stage": "aug_100k",
+      "directory": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\expanded-2021",
+      "sha256": "c646ab77f271fd05df0decffe84bf7e9f8a4d8dd67dd143d58731a6a898a673f",
+      "settings": {
+        "train_budget": 100000,
+        "eval_budget": 12000,
+        "arms": [
+          "basis_points:security",
+          "recent20:security",
+          "recent20:security_first",
+          "recent20:security_first:tokens"
+        ],
+        "seeds": [
+          17,
+          29,
+          43
+        ],
+        "windows": [
+          "2021"
+        ],
+        "estimator": "hgb",
+        "threads": 3,
+        "hgb": {
+          "learning_rate": 0.08,
+          "max_iter": 18,
+          "max_leaf_nodes": 15,
+          "min_samples_leaf": 40,
+          "l2_regularization": 2.0,
+          "early_stopping": false,
+          "random_state": 17,
+          "max_bins": 63,
+          "max_features": 0.55
+        },
+        "sklearn": "1.9.1",
+        "tokens": {
+          "baseline": 7320.8125,
+          "compact": 6359.520833333333,
+          "lossless": 6354.253472222223,
+          "precision6": 5662.078125,
+          "basis_points": 4517.3125,
+          "recent30": 4328.763888888889,
+          "recent20": 4261.244791666667,
+          "causal_median": 4327.682291666667,
+          "conditional_factors": 6211.0,
+          "basis_points_thin": 4374.059027777777,
+          "basis_points_terse": 4531.204861111111,
+          "sub_basis_points": 4882.052083333333
+        }
+      },
+      "preprocess_seconds": 54.43390159995761,
+      "unique_feature_rows": 935788,
+      "model_runs": 15
+    },
+    {
+      "stage": "aug_200k",
+      "directory": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\deep-2021",
+      "sha256": "0057119f75bb406a657bf43d400ef9fa6d5b4cc6a617dce36ba40b0854956c78",
+      "settings": {
+        "train_budget": 200000,
+        "eval_budget": 12000,
+        "arms": [
+          "basis_points_delta:security",
+          "basis_points_delta:security_first"
+        ],
+        "seeds": [
+          17
+        ],
+        "windows": [
+          "2021"
+        ],
+        "estimator": "hgb",
+        "threads": 3,
+        "hgb": {
+          "learning_rate": 0.08,
+          "max_iter": 18,
+          "max_leaf_nodes": 15,
+          "min_samples_leaf": 40,
+          "l2_regularization": 2.0,
+          "early_stopping": false,
+          "random_state": 17,
+          "max_bins": 63,
+          "max_features": 0.55
+        },
+        "sklearn": "1.9.1",
+        "tokens": {
+          "baseline": 7320.8125,
+          "compact": 6359.520833333333,
+          "basis_points": 4517.3125,
+          "basis_points_delta": 4390.911458333333,
+          "recent20": 4261.244791666667,
+          "recent20_delta": 4259.340277777777,
+          "recent20_wide": 3890.1805555555557
+        }
+      },
+      "preprocess_seconds": 27.767088299966417,
+      "unique_feature_rows": 401658,
+      "model_runs": 3
+    },
+    {
+      "stage": "aug_refine_100k",
+      "directory": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\final-paired-2021",
+      "sha256": "3c3e260ae568ec1fd0c3f63a41bacca8642a942c37935fb91b2b504a4373a734",
+      "settings": {
+        "train_budget": 100000,
+        "eval_budget": 12000,
+        "arms": [
+          "basis_points_delta:security_first",
+          "basis_points_volume100:security"
+        ],
+        "seeds": [
+          17,
+          29,
+          43
+        ],
+        "windows": [
+          "2021"
+        ],
+        "estimator": "hgb",
+        "threads": 3,
+        "hgb": {
+          "learning_rate": 0.08,
+          "max_iter": 18,
+          "max_leaf_nodes": 15,
+          "min_samples_leaf": 40,
+          "l2_regularization": 2.0,
+          "early_stopping": false,
+          "random_state": 17,
+          "max_bins": 63,
+          "max_features": 0.55
+        },
+        "sklearn": "1.9.1",
+        "tokens": {
+          "baseline": 7320.8125,
+          "compact": 6359.520833333333,
+          "basis_points_delta": 4390.911458333333,
+          "basis_points_volume_centered": 4358.666666666667,
+          "basis_points_volume100": 4330.345486111111,
+          "basis_points_volume10": 4271.9375
+        },
+        "reference_run": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\expanded-2021",
+        "reference_arm": "compact:security"
+      },
+      "preprocess_seconds": 54.43390159995761,
+      "unique_feature_rows": 935788,
+      "model_runs": 6
+    },
+    {
+      "stage": "aug_equal_token",
+      "directory": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\token-matched-2021",
+      "sha256": "8650f137a1018f1c891f6730e9ae6fc329e68ee22c2d6278a54630bb0f75f8d2",
+      "settings": {
+        "train_budget": 100000,
+        "eval_budget": 12000,
+        "arms": [
+          "basis_points_delta:security:tokens"
+        ],
+        "seeds": [
+          17,
+          29,
+          43
+        ],
+        "windows": [
+          "2021"
+        ],
+        "estimator": "hgb",
+        "threads": 3,
+        "hgb": {
+          "learning_rate": 0.08,
+          "max_iter": 18,
+          "max_leaf_nodes": 15,
+          "min_samples_leaf": 40,
+          "l2_regularization": 2.0,
+          "early_stopping": false,
+          "random_state": 17,
+          "max_bins": 63,
+          "max_features": 0.55
+        },
+        "sklearn": "1.9.1",
+        "tokens": {
+          "baseline": 7320.8125,
+          "compact": 6359.520833333333,
+          "basis_points": 4517.3125,
+          "basis_points_delta": 4390.911458333333,
+          "recent20": 4261.244791666667,
+          "recent20_delta": 4259.340277777777,
+          "recent20_wide": 3890.1805555555557
+        },
+        "reference_run": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\expanded-2021",
+        "reference_arm": "compact:security"
+      },
+      "preprocess_seconds": 36.85796279995702,
+      "unique_feature_rows": 411284,
+      "model_runs": 3
+    },
+    {
+      "stage": "aug_equal_token_sampler",
+      "directory": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\token-security-first-2021",
+      "sha256": "a5d44db5229d9aec6569f5929b0e826ba8c1bc9ed018b5023d4d5773fbea71d7",
+      "settings": {
+        "train_budget": 100000,
+        "eval_budget": 12000,
+        "arms": [
+          "basis_points_delta:security_first:tokens"
+        ],
+        "seeds": [
+          17,
+          29,
+          43
+        ],
+        "windows": [
+          "2021"
+        ],
+        "estimator": "hgb",
+        "threads": 3,
+        "hgb": {
+          "learning_rate": 0.08,
+          "max_iter": 18,
+          "max_leaf_nodes": 15,
+          "min_samples_leaf": 40,
+          "l2_regularization": 2.0,
+          "early_stopping": false,
+          "random_state": 17,
+          "max_bins": 63,
+          "max_features": 0.55
+        },
+        "sklearn": "1.9.1",
+        "tokens": {
+          "baseline": 7320.8125,
+          "compact": 6359.520833333333,
+          "basis_points": 4517.3125,
+          "basis_points_delta": 4390.911458333333,
+          "recent20": 4261.244791666667,
+          "recent20_delta": 4259.340277777777,
+          "recent20_wide": 3890.1805555555557
+        },
+        "reference_run": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\expanded-2021",
+        "reference_arm": "compact:security"
+      },
+      "preprocess_seconds": 30.457280899980105,
+      "unique_feature_rows": 411284,
+      "model_runs": 3
+    },
+    {
+      "stage": "native_100k",
+      "directory": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\native-paired-2021",
+      "sha256": "e925a08cad67ca1b8a00f203a315f59941716d2e93f1214fac9d35564d8dd69e",
+      "settings": {
+        "train_budget": 100000,
+        "eval_budget": 12000,
+        "arms": [
+          "basis_points_delta:security"
+        ],
+        "seeds": [
+          17,
+          29,
+          43
+        ],
+        "windows": [
+          "2021"
+        ],
+        "estimator": "hgb",
+        "threads": 3,
+        "hgb": {
+          "learning_rate": 0.08,
+          "max_iter": 18,
+          "max_leaf_nodes": 15,
+          "min_samples_leaf": 40,
+          "l2_regularization": 2.0,
+          "early_stopping": false,
+          "random_state": 17,
+          "max_bins": 63,
+          "max_features": 0.55
+        },
+        "sklearn": "1.9.1",
+        "tokens": {
+          "baseline": 7320.8125,
+          "compact": 6359.520833333333,
+          "basis_points": 4517.3125,
+          "basis_points_delta": 4390.911458333333,
+          "recent20": 4261.244791666667,
+          "recent20_delta": 4259.340277777777,
+          "recent20_wide": 3890.1805555555557
+        },
+        "coverage_profile": "native",
+        "feature_run": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\expanded-2021"
+      },
+      "preprocess_seconds": 54.43390159995761,
+      "unique_feature_rows": 935788,
+      "model_runs": 6
+    },
+    {
+      "stage": "native_equal_token",
+      "directory": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\native-token-2021",
+      "sha256": "d4ff2cdc20dfbb720f0e59bc1399e1060ab42f1b16e8094c92f31b2cff0797a9",
+      "settings": {
+        "train_budget": 100000,
+        "eval_budget": 12000,
+        "arms": [
+          "basis_points_delta:security:tokens"
+        ],
+        "seeds": [
+          17,
+          29,
+          43
+        ],
+        "windows": [
+          "2021"
+        ],
+        "estimator": "hgb",
+        "threads": 3,
+        "hgb": {
+          "learning_rate": 0.08,
+          "max_iter": 18,
+          "max_leaf_nodes": 15,
+          "min_samples_leaf": 40,
+          "l2_regularization": 2.0,
+          "early_stopping": false,
+          "random_state": 17,
+          "max_bins": 63,
+          "max_features": 0.55
+        },
+        "sklearn": "1.9.1",
+        "tokens": {
+          "baseline": 7320.8125,
+          "compact": 6359.520833333333,
+          "basis_points": 4517.3125,
+          "basis_points_delta": 4390.911458333333,
+          "recent20": 4261.244791666667,
+          "recent20_delta": 4259.340277777777,
+          "recent20_wide": 3890.1805555555557
+        },
+        "coverage_profile": "native",
+        "reference_run": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\native-paired-2021",
+        "reference_arm": "compact:security",
+        "feature_run": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\token-matched-2021"
+      },
+      "preprocess_seconds": 36.85796279995702,
+      "unique_feature_rows": 411284,
+      "model_runs": 3
+    },
+    {
+      "stage": "native_200k",
+      "directory": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\native-deep-2021",
+      "sha256": "1ccc7849ad86ef38e6f34d049f3332e2a2d935b04945061fd9dbe03f166353c0",
+      "settings": {
+        "train_budget": 200000,
+        "eval_budget": 12000,
+        "arms": [
+          "basis_points_delta:security"
+        ],
+        "seeds": [
+          17
+        ],
+        "windows": [
+          "2021"
+        ],
+        "estimator": "hgb",
+        "threads": 3,
+        "hgb": {
+          "learning_rate": 0.08,
+          "max_iter": 18,
+          "max_leaf_nodes": 15,
+          "min_samples_leaf": 40,
+          "l2_regularization": 2.0,
+          "early_stopping": false,
+          "random_state": 17,
+          "max_bins": 63,
+          "max_features": 0.55
+        },
+        "sklearn": "1.9.1",
+        "tokens": {
+          "baseline": 7320.8125,
+          "compact": 6359.520833333333,
+          "basis_points": 4517.3125,
+          "basis_points_delta": 4390.911458333333,
+          "recent20": 4261.244791666667,
+          "recent20_delta": 4259.340277777777,
+          "recent20_wide": 3890.1805555555557
+        },
+        "coverage_profile": "native",
+        "feature_run": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\deep-2021"
+      },
+      "preprocess_seconds": 27.767088299966417,
+      "unique_feature_rows": 401658,
+      "model_runs": 2
+    },
+    {
+      "stage": "native_refine",
+      "directory": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\native-refine-2021",
+      "sha256": "de80b3f87c29ff90cde35771685ca196500b992b81910bd4c0715b787b160c69",
+      "settings": {
+        "train_budget": 100000,
+        "eval_budget": 12000,
+        "arms": [
+          "basis_points_volume100:security",
+          "recent20_wide:security"
+        ],
+        "seeds": [
+          17
+        ],
+        "windows": [
+          "2021"
+        ],
+        "estimator": "hgb",
+        "threads": 3,
+        "hgb": {
+          "learning_rate": 0.08,
+          "max_iter": 18,
+          "max_leaf_nodes": 15,
+          "min_samples_leaf": 40,
+          "l2_regularization": 2.0,
+          "early_stopping": false,
+          "random_state": 17,
+          "max_bins": 63,
+          "max_features": 0.55
+        },
+        "sklearn": "1.9.1",
+        "tokens": {
+          "baseline": 7320.8125,
+          "compact": 6359.520833333333,
+          "basis_points_delta": 4390.911458333333,
+          "basis_points_volume_centered": 4358.666666666667,
+          "basis_points_volume100": 4330.345486111111,
+          "basis_points_volume10": 4271.9375
+        },
+        "coverage_profile": "native",
+        "reference_run": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\native-paired-2021",
+        "reference_arm": "basis_points_delta:security",
+        "feature_run": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\expanded-2021"
+      },
+      "preprocess_seconds": 54.43390159995761,
+      "unique_feature_rows": 935788,
+      "model_runs": 2
+    },
+    {
+      "stage": "native_sampler",
+      "directory": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\native-sampler-2021",
+      "sha256": "5b599ecbbb10ca4dda9c6cef06f8e334672603280472c01aa0e9bfcf5e1206d7",
+      "settings": {
+        "train_budget": 100000,
+        "eval_budget": 12000,
+        "arms": [
+          "basis_points_delta:security_first"
+        ],
+        "seeds": [
+          17,
+          29,
+          43
+        ],
+        "windows": [
+          "2021"
+        ],
+        "estimator": "hgb",
+        "threads": 2,
+        "hgb": {
+          "learning_rate": 0.08,
+          "max_iter": 18,
+          "max_leaf_nodes": 15,
+          "min_samples_leaf": 40,
+          "l2_regularization": 2.0,
+          "early_stopping": false,
+          "random_state": 17,
+          "max_bins": 63,
+          "max_features": 0.55
+        },
+        "sklearn": "1.9.1",
+        "tokens": {
+          "baseline": 7320.8125,
+          "compact": 6359.520833333333,
+          "basis_points": 4517.3125,
+          "basis_points_delta": 4390.911458333333,
+          "recent20": 4261.244791666667,
+          "recent20_delta": 4259.340277777777,
+          "recent20_wide": 3890.1805555555557
+        },
+        "coverage_profile": "native",
+        "reference_run": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\native-paired-2021",
+        "reference_arm": "basis_points_delta:security",
+        "feature_run": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\expanded-2021"
+      },
+      "preprocess_seconds": 54.43390159995761,
+      "unique_feature_rows": 935788,
+      "model_runs": 3
+    },
+    {
+      "stage": "native_equal_token_sampler",
+      "directory": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\native-token-sampler-2021",
+      "sha256": "d5bbc63fb736099f5cdfad0eaa49f275ddd73d6ac40e97f48d8f80eb3a562cc2",
+      "settings": {
+        "train_budget": 100000,
+        "eval_budget": 12000,
+        "arms": [
+          "basis_points_delta:security_first:tokens"
+        ],
+        "seeds": [
+          17,
+          29,
+          43
+        ],
+        "windows": [
+          "2021"
+        ],
+        "estimator": "hgb",
+        "threads": 2,
+        "hgb": {
+          "learning_rate": 0.08,
+          "max_iter": 18,
+          "max_leaf_nodes": 15,
+          "min_samples_leaf": 40,
+          "l2_regularization": 2.0,
+          "early_stopping": false,
+          "random_state": 17,
+          "max_bins": 63,
+          "max_features": 0.55
+        },
+        "sklearn": "1.9.1",
+        "tokens": {
+          "baseline": 7320.8125,
+          "compact": 6359.520833333333,
+          "basis_points": 4517.3125,
+          "basis_points_delta": 4390.911458333333,
+          "recent20": 4261.244791666667,
+          "recent20_delta": 4259.340277777777,
+          "recent20_wide": 3890.1805555555557
+        },
+        "coverage_profile": "native",
+        "reference_run": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\native-paired-2021",
+        "reference_arm": "compact:security",
+        "feature_run": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\token-security-first-2021"
+      },
+      "preprocess_seconds": 30.457280899980105,
+      "unique_feature_rows": 411284,
+      "model_runs": 3
+    },
+    {
+      "stage": "native_logistic",
+      "directory": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\native-logistic-2021",
+      "sha256": "bf364995060f4028aca4b1e71c8a5bc6491eeb3f9c5bd63610830804d373c970",
+      "settings": {
+        "train_budget": 100000,
+        "eval_budget": 12000,
+        "arms": [
+          "basis_points_delta:security",
+          "basis_points_delta:security_first"
+        ],
+        "seeds": [
+          17
+        ],
+        "windows": [
+          "2021"
+        ],
+        "estimator": "logistic",
+        "threads": 2,
+        "hgb": {
+          "learning_rate": 0.08,
+          "max_iter": 18,
+          "max_leaf_nodes": 15,
+          "min_samples_leaf": 40,
+          "l2_regularization": 2.0,
+          "early_stopping": false,
+          "random_state": 17,
+          "max_bins": 63,
+          "max_features": 0.55
+        },
+        "sklearn": "1.9.1",
+        "tokens": {
+          "baseline": 7320.8125,
+          "compact": 6359.520833333333,
+          "basis_points": 4517.3125,
+          "basis_points_delta": 4390.911458333333,
+          "recent20": 4261.244791666667,
+          "recent20_delta": 4259.340277777777,
+          "recent20_wide": 3890.1805555555557
+        },
+        "coverage_profile": "native",
+        "logistic": {
+          "C": 0.03,
+          "max_iter": 160,
+          "tol": 0.0001,
+          "pca_whitened_components": 64
+        },
+        "feature_run": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\expanded-2021"
+      },
+      "preprocess_seconds": 54.43390159995761,
+      "unique_feature_rows": 935788,
+      "model_runs": 3
+    },
+    {
+      "stage": "native_200k_combo",
+      "directory": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\native-deep-sampler-2021",
+      "sha256": "7dd0c0371e2044b5a160b19e5bbaeaa27a82c85011e771ffb348808bd71128ed",
+      "settings": {
+        "train_budget": 200000,
+        "eval_budget": 12000,
+        "arms": [
+          "basis_points_delta:security_first"
+        ],
+        "seeds": [
+          17
+        ],
+        "windows": [
+          "2021"
+        ],
+        "estimator": "hgb",
+        "threads": 4,
+        "hgb": {
+          "learning_rate": 0.08,
+          "max_iter": 18,
+          "max_leaf_nodes": 15,
+          "min_samples_leaf": 40,
+          "l2_regularization": 2.0,
+          "early_stopping": false,
+          "random_state": 17,
+          "max_bins": 63,
+          "max_features": 0.55
+        },
+        "sklearn": "1.9.1",
+        "tokens": {
+          "baseline": 7320.8125,
+          "compact": 6359.520833333333,
+          "basis_points": 4517.3125,
+          "basis_points_delta": 4390.911458333333,
+          "recent20": 4261.244791666667,
+          "recent20_delta": 4259.340277777777,
+          "recent20_wide": 3890.1805555555557
+        },
+        "coverage_profile": "native",
+        "reference_run": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\native-deep-2021",
+        "reference_arm": "compact:security",
+        "feature_run": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\deep-2021"
+      },
+      "preprocess_seconds": 27.767088299966417,
+      "unique_feature_rows": 401658,
+      "model_runs": 1
+    },
+    {
+      "stage": "aug_100k",
+      "directory": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\expanded-2022_2023",
+      "sha256": "a877c2390c5e828cb0449f99c09a075e7b93f6dd3711bb60d96532650b27f2ff",
+      "settings": {
+        "train_budget": 100000,
+        "eval_budget": 12000,
+        "arms": [
+          "basis_points:security",
+          "recent20:security",
+          "recent20:security_first",
+          "recent20:security_first:tokens"
+        ],
+        "seeds": [
+          17,
+          29,
+          43
+        ],
+        "windows": [
+          "2022_2023"
+        ],
+        "estimator": "hgb",
+        "threads": 3,
+        "hgb": {
+          "learning_rate": 0.08,
+          "max_iter": 18,
+          "max_leaf_nodes": 15,
+          "min_samples_leaf": 40,
+          "l2_regularization": 2.0,
+          "early_stopping": false,
+          "random_state": 17,
+          "max_bins": 63,
+          "max_features": 0.55
+        },
+        "sklearn": "1.9.1",
+        "tokens": {
+          "baseline": 7320.8125,
+          "compact": 6359.520833333333,
+          "lossless": 6354.253472222223,
+          "precision6": 5662.078125,
+          "basis_points": 4517.3125,
+          "recent30": 4328.763888888889,
+          "recent20": 4261.244791666667,
+          "causal_median": 4327.682291666667,
+          "conditional_factors": 6211.0,
+          "basis_points_thin": 4374.059027777777,
+          "basis_points_terse": 4531.204861111111,
+          "sub_basis_points": 4882.052083333333
+        }
+      },
+      "preprocess_seconds": 58.665371599956416,
+      "unique_feature_rows": 987574,
+      "model_runs": 15
+    },
+    {
+      "stage": "aug_200k",
+      "directory": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\deep-2022_2023",
+      "sha256": "c3afa91e07e5a9bc01949f81f0b3437a4770a94ca6ca1fd8059141663daa7427",
+      "settings": {
+        "train_budget": 200000,
+        "eval_budget": 12000,
+        "arms": [
+          "basis_points_delta:security",
+          "basis_points_delta:security_first"
+        ],
+        "seeds": [
+          17
+        ],
+        "windows": [
+          "2022_2023"
+        ],
+        "estimator": "hgb",
+        "threads": 3,
+        "hgb": {
+          "learning_rate": 0.08,
+          "max_iter": 18,
+          "max_leaf_nodes": 15,
+          "min_samples_leaf": 40,
+          "l2_regularization": 2.0,
+          "early_stopping": false,
+          "random_state": 17,
+          "max_bins": 63,
+          "max_features": 0.55
+        },
+        "sklearn": "1.9.1",
+        "tokens": {
+          "baseline": 7320.8125,
+          "compact": 6359.520833333333,
+          "basis_points": 4517.3125,
+          "basis_points_delta": 4390.911458333333,
+          "recent20": 4261.244791666667,
+          "recent20_delta": 4259.340277777777,
+          "recent20_wide": 3890.1805555555557
+        }
+      },
+      "preprocess_seconds": 30.53313750005327,
+      "unique_feature_rows": 403891,
+      "model_runs": 3
+    },
+    {
+      "stage": "aug_refine_100k",
+      "directory": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\final-paired-2022_2023",
+      "sha256": "14352b4e68390609379e9571a3b8dc9b67319ce1e755166db751bd37080c6f1f",
+      "settings": {
+        "train_budget": 100000,
+        "eval_budget": 12000,
+        "arms": [
+          "basis_points_delta:security_first",
+          "basis_points_volume100:security"
+        ],
+        "seeds": [
+          17,
+          29,
+          43
+        ],
+        "windows": [
+          "2022_2023"
+        ],
+        "estimator": "hgb",
+        "threads": 3,
+        "hgb": {
+          "learning_rate": 0.08,
+          "max_iter": 18,
+          "max_leaf_nodes": 15,
+          "min_samples_leaf": 40,
+          "l2_regularization": 2.0,
+          "early_stopping": false,
+          "random_state": 17,
+          "max_bins": 63,
+          "max_features": 0.55
+        },
+        "sklearn": "1.9.1",
+        "tokens": {
+          "baseline": 7320.8125,
+          "compact": 6359.520833333333,
+          "basis_points_delta": 4390.911458333333,
+          "basis_points_volume_centered": 4358.666666666667,
+          "basis_points_volume100": 4330.345486111111,
+          "basis_points_volume10": 4271.9375
+        },
+        "reference_run": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\expanded-2022_2023",
+        "reference_arm": "compact:security"
+      },
+      "preprocess_seconds": 58.665371599956416,
+      "unique_feature_rows": 987574,
+      "model_runs": 6
+    },
+    {
+      "stage": "aug_equal_token",
+      "directory": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\token-matched-2022_2023",
+      "sha256": "bffc11298374afef8f6cfd0b5908ecc743719896758613875019a9c9dc6cb6cd",
+      "settings": {
+        "train_budget": 100000,
+        "eval_budget": 12000,
+        "arms": [
+          "basis_points_delta:security:tokens"
+        ],
+        "seeds": [
+          17,
+          29,
+          43
+        ],
+        "windows": [
+          "2022_2023"
+        ],
+        "estimator": "hgb",
+        "threads": 3,
+        "hgb": {
+          "learning_rate": 0.08,
+          "max_iter": 18,
+          "max_leaf_nodes": 15,
+          "min_samples_leaf": 40,
+          "l2_regularization": 2.0,
+          "early_stopping": false,
+          "random_state": 17,
+          "max_bins": 63,
+          "max_features": 0.55
+        },
+        "sklearn": "1.9.1",
+        "tokens": {
+          "baseline": 7320.8125,
+          "compact": 6359.520833333333,
+          "basis_points": 4517.3125,
+          "basis_points_delta": 4390.911458333333,
+          "recent20": 4261.244791666667,
+          "recent20_delta": 4259.340277777777,
+          "recent20_wide": 3890.1805555555557
+        },
+        "reference_run": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\expanded-2022_2023",
+        "reference_arm": "compact:security"
+      },
+      "preprocess_seconds": 39.12524150009267,
+      "unique_feature_rows": 446499,
+      "model_runs": 3
+    },
+    {
+      "stage": "aug_equal_token_sampler",
+      "directory": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\token-security-first-2022_2023",
+      "sha256": "d04b4893d24155a79b113e83808111bdec195b0f2cc290161b32e620fee9f29b",
+      "settings": {
+        "train_budget": 100000,
+        "eval_budget": 12000,
+        "arms": [
+          "basis_points_delta:security_first:tokens"
+        ],
+        "seeds": [
+          17,
+          29,
+          43
+        ],
+        "windows": [
+          "2022_2023"
+        ],
+        "estimator": "hgb",
+        "threads": 3,
+        "hgb": {
+          "learning_rate": 0.08,
+          "max_iter": 18,
+          "max_leaf_nodes": 15,
+          "min_samples_leaf": 40,
+          "l2_regularization": 2.0,
+          "early_stopping": false,
+          "random_state": 17,
+          "max_bins": 63,
+          "max_features": 0.55
+        },
+        "sklearn": "1.9.1",
+        "tokens": {
+          "baseline": 7320.8125,
+          "compact": 6359.520833333333,
+          "basis_points": 4517.3125,
+          "basis_points_delta": 4390.911458333333,
+          "recent20": 4261.244791666667,
+          "recent20_delta": 4259.340277777777,
+          "recent20_wide": 3890.1805555555557
+        },
+        "reference_run": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\expanded-2022_2023",
+        "reference_arm": "compact:security"
+      },
+      "preprocess_seconds": 33.38002429995686,
+      "unique_feature_rows": 446499,
+      "model_runs": 3
+    },
+    {
+      "stage": "native_100k",
+      "directory": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\native-paired-2022_2023",
+      "sha256": "89b0ee9adb7ce45a5f93d73fe10795e4cbe31307826adbff03f89f6f63398b04",
+      "settings": {
+        "train_budget": 100000,
+        "eval_budget": 12000,
+        "arms": [
+          "basis_points_delta:security"
+        ],
+        "seeds": [
+          17,
+          29,
+          43
+        ],
+        "windows": [
+          "2022_2023"
+        ],
+        "estimator": "hgb",
+        "threads": 3,
+        "hgb": {
+          "learning_rate": 0.08,
+          "max_iter": 18,
+          "max_leaf_nodes": 15,
+          "min_samples_leaf": 40,
+          "l2_regularization": 2.0,
+          "early_stopping": false,
+          "random_state": 17,
+          "max_bins": 63,
+          "max_features": 0.55
+        },
+        "sklearn": "1.9.1",
+        "tokens": {
+          "baseline": 7320.8125,
+          "compact": 6359.520833333333,
+          "basis_points": 4517.3125,
+          "basis_points_delta": 4390.911458333333,
+          "recent20": 4261.244791666667,
+          "recent20_delta": 4259.340277777777,
+          "recent20_wide": 3890.1805555555557
+        },
+        "coverage_profile": "native",
+        "feature_run": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\expanded-2022_2023"
+      },
+      "preprocess_seconds": 58.665371599956416,
+      "unique_feature_rows": 987574,
+      "model_runs": 6
+    },
+    {
+      "stage": "native_equal_token",
+      "directory": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\native-token-2022_2023",
+      "sha256": "67e528893772e6125dd86306ef9a832e73bd0e6372da6f4313cbc14e797804f4",
+      "settings": {
+        "train_budget": 100000,
+        "eval_budget": 12000,
+        "arms": [
+          "basis_points_delta:security:tokens"
+        ],
+        "seeds": [
+          17,
+          29,
+          43
+        ],
+        "windows": [
+          "2022_2023"
+        ],
+        "estimator": "hgb",
+        "threads": 3,
+        "hgb": {
+          "learning_rate": 0.08,
+          "max_iter": 18,
+          "max_leaf_nodes": 15,
+          "min_samples_leaf": 40,
+          "l2_regularization": 2.0,
+          "early_stopping": false,
+          "random_state": 17,
+          "max_bins": 63,
+          "max_features": 0.55
+        },
+        "sklearn": "1.9.1",
+        "tokens": {
+          "baseline": 7320.8125,
+          "compact": 6359.520833333333,
+          "basis_points": 4517.3125,
+          "basis_points_delta": 4390.911458333333,
+          "recent20": 4261.244791666667,
+          "recent20_delta": 4259.340277777777,
+          "recent20_wide": 3890.1805555555557
+        },
+        "coverage_profile": "native",
+        "reference_run": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\native-paired-2022_2023",
+        "reference_arm": "compact:security",
+        "feature_run": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\token-matched-2022_2023"
+      },
+      "preprocess_seconds": 39.12524150009267,
+      "unique_feature_rows": 446499,
+      "model_runs": 3
+    },
+    {
+      "stage": "native_200k",
+      "directory": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\native-deep-2022_2023",
+      "sha256": "12b5a3445b2b3918c7dbba466727acbfc3c411bd7efb195070b4f5cf88369e11",
+      "settings": {
+        "train_budget": 200000,
+        "eval_budget": 12000,
+        "arms": [
+          "basis_points_delta:security"
+        ],
+        "seeds": [
+          17
+        ],
+        "windows": [
+          "2022_2023"
+        ],
+        "estimator": "hgb",
+        "threads": 3,
+        "hgb": {
+          "learning_rate": 0.08,
+          "max_iter": 18,
+          "max_leaf_nodes": 15,
+          "min_samples_leaf": 40,
+          "l2_regularization": 2.0,
+          "early_stopping": false,
+          "random_state": 17,
+          "max_bins": 63,
+          "max_features": 0.55
+        },
+        "sklearn": "1.9.1",
+        "tokens": {
+          "baseline": 7320.8125,
+          "compact": 6359.520833333333,
+          "basis_points": 4517.3125,
+          "basis_points_delta": 4390.911458333333,
+          "recent20": 4261.244791666667,
+          "recent20_delta": 4259.340277777777,
+          "recent20_wide": 3890.1805555555557
+        },
+        "coverage_profile": "native",
+        "feature_run": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\deep-2022_2023"
+      },
+      "preprocess_seconds": 30.53313750005327,
+      "unique_feature_rows": 403891,
+      "model_runs": 2
+    },
+    {
+      "stage": "native_refine",
+      "directory": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\native-refine-2022_2023",
+      "sha256": "a0cf696bc43fe34d32ef950bc0ca33e5ea77fbcecdafcca8bbc882dd67930cdb",
+      "settings": {
+        "train_budget": 100000,
+        "eval_budget": 12000,
+        "arms": [
+          "basis_points_volume100:security",
+          "recent20_wide:security"
+        ],
+        "seeds": [
+          17
+        ],
+        "windows": [
+          "2022_2023"
+        ],
+        "estimator": "hgb",
+        "threads": 3,
+        "hgb": {
+          "learning_rate": 0.08,
+          "max_iter": 18,
+          "max_leaf_nodes": 15,
+          "min_samples_leaf": 40,
+          "l2_regularization": 2.0,
+          "early_stopping": false,
+          "random_state": 17,
+          "max_bins": 63,
+          "max_features": 0.55
+        },
+        "sklearn": "1.9.1",
+        "tokens": {
+          "baseline": 7320.8125,
+          "compact": 6359.520833333333,
+          "basis_points_delta": 4390.911458333333,
+          "basis_points_volume_centered": 4358.666666666667,
+          "basis_points_volume100": 4330.345486111111,
+          "basis_points_volume10": 4271.9375
+        },
+        "coverage_profile": "native",
+        "reference_run": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\native-paired-2022_2023",
+        "reference_arm": "basis_points_delta:security",
+        "feature_run": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\expanded-2022_2023"
+      },
+      "preprocess_seconds": 58.665371599956416,
+      "unique_feature_rows": 987574,
+      "model_runs": 2
+    },
+    {
+      "stage": "native_sampler",
+      "directory": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\native-sampler-2022_2023",
+      "sha256": "f1c453c9d9bfe62b847ac90323ef76e5707afeb330c4592bfdcfd0bb422413da",
+      "settings": {
+        "train_budget": 100000,
+        "eval_budget": 12000,
+        "arms": [
+          "basis_points_delta:security_first"
+        ],
+        "seeds": [
+          17,
+          29,
+          43
+        ],
+        "windows": [
+          "2022_2023"
+        ],
+        "estimator": "hgb",
+        "threads": 2,
+        "hgb": {
+          "learning_rate": 0.08,
+          "max_iter": 18,
+          "max_leaf_nodes": 15,
+          "min_samples_leaf": 40,
+          "l2_regularization": 2.0,
+          "early_stopping": false,
+          "random_state": 17,
+          "max_bins": 63,
+          "max_features": 0.55
+        },
+        "sklearn": "1.9.1",
+        "tokens": {
+          "baseline": 7320.8125,
+          "compact": 6359.520833333333,
+          "basis_points": 4517.3125,
+          "basis_points_delta": 4390.911458333333,
+          "recent20": 4261.244791666667,
+          "recent20_delta": 4259.340277777777,
+          "recent20_wide": 3890.1805555555557
+        },
+        "coverage_profile": "native",
+        "reference_run": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\native-paired-2022_2023",
+        "reference_arm": "basis_points_delta:security",
+        "feature_run": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\expanded-2022_2023"
+      },
+      "preprocess_seconds": 58.665371599956416,
+      "unique_feature_rows": 987574,
+      "model_runs": 3
+    },
+    {
+      "stage": "native_equal_token_sampler",
+      "directory": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\native-token-sampler-2022_2023",
+      "sha256": "5083bd56e17ccf0148bd9187387a05231ab39918454f6e800f769a6ac720fa95",
+      "settings": {
+        "train_budget": 100000,
+        "eval_budget": 12000,
+        "arms": [
+          "basis_points_delta:security_first:tokens"
+        ],
+        "seeds": [
+          17,
+          29,
+          43
+        ],
+        "windows": [
+          "2022_2023"
+        ],
+        "estimator": "hgb",
+        "threads": 2,
+        "hgb": {
+          "learning_rate": 0.08,
+          "max_iter": 18,
+          "max_leaf_nodes": 15,
+          "min_samples_leaf": 40,
+          "l2_regularization": 2.0,
+          "early_stopping": false,
+          "random_state": 17,
+          "max_bins": 63,
+          "max_features": 0.55
+        },
+        "sklearn": "1.9.1",
+        "tokens": {
+          "baseline": 7320.8125,
+          "compact": 6359.520833333333,
+          "basis_points": 4517.3125,
+          "basis_points_delta": 4390.911458333333,
+          "recent20": 4261.244791666667,
+          "recent20_delta": 4259.340277777777,
+          "recent20_wide": 3890.1805555555557
+        },
+        "coverage_profile": "native",
+        "reference_run": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\native-paired-2022_2023",
+        "reference_arm": "compact:security",
+        "feature_run": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\token-security-first-2022_2023"
+      },
+      "preprocess_seconds": 33.38002429995686,
+      "unique_feature_rows": 446499,
+      "model_runs": 3
+    },
+    {
+      "stage": "native_logistic",
+      "directory": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\native-logistic-2022_2023",
+      "sha256": "36c6ac9f2fc758c4c0ca744cbc90ecb0ac51628e2975b73b13ce1f985e2f661f",
+      "settings": {
+        "train_budget": 100000,
+        "eval_budget": 12000,
+        "arms": [
+          "basis_points_delta:security",
+          "basis_points_delta:security_first"
+        ],
+        "seeds": [
+          17
+        ],
+        "windows": [
+          "2022_2023"
+        ],
+        "estimator": "logistic",
+        "threads": 2,
+        "hgb": {
+          "learning_rate": 0.08,
+          "max_iter": 18,
+          "max_leaf_nodes": 15,
+          "min_samples_leaf": 40,
+          "l2_regularization": 2.0,
+          "early_stopping": false,
+          "random_state": 17,
+          "max_bins": 63,
+          "max_features": 0.55
+        },
+        "sklearn": "1.9.1",
+        "tokens": {
+          "baseline": 7320.8125,
+          "compact": 6359.520833333333,
+          "basis_points": 4517.3125,
+          "basis_points_delta": 4390.911458333333,
+          "recent20": 4261.244791666667,
+          "recent20_delta": 4259.340277777777,
+          "recent20_wide": 3890.1805555555557
+        },
+        "coverage_profile": "native",
+        "logistic": {
+          "C": 0.03,
+          "max_iter": 160,
+          "tol": 0.0001,
+          "pca_whitened_components": 64
+        },
+        "feature_run": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\expanded-2022_2023"
+      },
+      "preprocess_seconds": 58.665371599956416,
+      "unique_feature_rows": 987574,
+      "model_runs": 3
+    },
+    {
+      "stage": "native_200k_combo",
+      "directory": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\native-deep-sampler-2022_2023",
+      "sha256": "171a64504ca6d6656fe00039e8c29243873aa10683c2f1e7c6ece199cbbb4f4a",
+      "settings": {
+        "train_budget": 200000,
+        "eval_budget": 12000,
+        "arms": [
+          "basis_points_delta:security_first"
+        ],
+        "seeds": [
+          17
+        ],
+        "windows": [
+          "2022_2023"
+        ],
+        "estimator": "hgb",
+        "threads": 4,
+        "hgb": {
+          "learning_rate": 0.08,
+          "max_iter": 18,
+          "max_leaf_nodes": 15,
+          "min_samples_leaf": 40,
+          "l2_regularization": 2.0,
+          "early_stopping": false,
+          "random_state": 17,
+          "max_bins": 63,
+          "max_features": 0.55
+        },
+        "sklearn": "1.9.1",
+        "tokens": {
+          "baseline": 7320.8125,
+          "compact": 6359.520833333333,
+          "basis_points": 4517.3125,
+          "basis_points_delta": 4390.911458333333,
+          "recent20": 4261.244791666667,
+          "recent20_delta": 4259.340277777777,
+          "recent20_wide": 3890.1805555555557
+        },
+        "coverage_profile": "native",
+        "reference_run": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\native-deep-2022_2023",
+        "reference_arm": "compact:security",
+        "feature_run": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\deep-2022_2023"
+      },
+      "preprocess_seconds": 30.53313750005327,
+      "unique_feature_rows": 403891,
+      "model_runs": 1
+    },
+    {
+      "stage": "native_200k_combo",
+      "directory": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\native-deep-followup-2020-29",
+      "sha256": "836b449488fb49fb4edd9f8335e76fca9a96d5e6338112803c938d25dfa3ffa2",
+      "settings": {
+        "train_budget": 200000,
+        "eval_budget": 12000,
+        "arms": [
+          "basis_points_delta:security_first"
+        ],
+        "seeds": [
+          29
+        ],
+        "windows": [
+          "2020"
+        ],
+        "estimator": "hgb",
+        "threads": 5,
+        "hgb": {
+          "learning_rate": 0.08,
+          "max_iter": 18,
+          "max_leaf_nodes": 15,
+          "min_samples_leaf": 40,
+          "l2_regularization": 2.0,
+          "early_stopping": false,
+          "random_state": 17,
+          "max_bins": 63,
+          "max_features": 0.55
+        },
+        "sklearn": "1.9.1",
+        "tokens": {
+          "baseline": 7320.8125,
+          "compact": 6359.520833333333,
+          "basis_points": 4517.3125,
+          "basis_points_delta": 4390.911458333333,
+          "recent20": 4261.244791666667,
+          "recent20_delta": 4259.340277777777,
+          "recent20_wide": 3890.1805555555557
+        },
+        "coverage_profile": "native",
+        "feature_run": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\deep-followup-2020"
+      },
+      "preprocess_seconds": 64.91006119991653,
+      "unique_feature_rows": 758877,
+      "model_runs": 2
+    },
+    {
+      "stage": "native_200k_combo",
+      "directory": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\native-deep-followup-2020-43",
+      "sha256": "f61fc82ac01d88b9ba2298afaa6f533e8307690a0643b4d0f9c340a73c7671e7",
+      "settings": {
+        "train_budget": 200000,
+        "eval_budget": 12000,
+        "arms": [
+          "basis_points_delta:security_first"
+        ],
+        "seeds": [
+          43
+        ],
+        "windows": [
+          "2020"
+        ],
+        "estimator": "hgb",
+        "threads": 5,
+        "hgb": {
+          "learning_rate": 0.08,
+          "max_iter": 18,
+          "max_leaf_nodes": 15,
+          "min_samples_leaf": 40,
+          "l2_regularization": 2.0,
+          "early_stopping": false,
+          "random_state": 17,
+          "max_bins": 63,
+          "max_features": 0.55
+        },
+        "sklearn": "1.9.1",
+        "tokens": {
+          "baseline": 7320.8125,
+          "compact": 6359.520833333333,
+          "basis_points": 4517.3125,
+          "basis_points_delta": 4390.911458333333,
+          "recent20": 4261.244791666667,
+          "recent20_delta": 4259.340277777777,
+          "recent20_wide": 3890.1805555555557
+        },
+        "coverage_profile": "native",
+        "feature_run": "E:\\Kurumi\\artifacts\\cn-efficiency-v2-work\\deep-followup-2020"
+      },
+      "preprocess_seconds": 64.91006119991653,
+      "unique_feature_rows": 758877,
+      "model_runs": 2
+    }
+  ],
+  "windows": [
+    {
+      "stage": "aug_100k",
+      "arm": "basis_points:security",
+      "window": "2020",
+      "reference": "compact:security",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "eaac263bf45a97107694ed7975ccc347f40d453552b2df2e69fb832ec0b07ab4",
+      "baseline_objective": 2.2869350648248017,
+      "relative_delta": -0.002174359467199817,
+      "equal_horizon_objective_delta": -0.0049726189090730346,
+      "equal_horizon_month_bootstrap_95": [
+        -0.00939808233596939,
+        0.00015657882258542484
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.00018615773162738292,
+        "5": -0.005450030001293004,
+        "20": -0.009281668994298718
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "aug_100k",
+      "arm": "basis_points:security",
+      "window": "2021",
+      "reference": "compact:security",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "d29c60a78047cb714cb30a4f4fe87e213d544f94d1473a5c9e7f73f1365e35e5",
+      "baseline_objective": 2.203732592270383,
+      "relative_delta": -0.002869115017180299,
+      "equal_horizon_objective_delta": -0.006322762274332625,
+      "equal_horizon_month_bootstrap_95": [
+        -0.009195592069333978,
+        -0.004006072915542014
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.002282588559878951,
+        "5": -0.006343731384249741,
+        "20": -0.010341966878869183
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "aug_100k",
+      "arm": "basis_points:security",
+      "window": "2022_2023",
+      "reference": "compact:security",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "68085d45b3481764f53687444009ed0cc80ed59db573dbcc4c80ca754e1d29bd",
+      "baseline_objective": 2.1877639912621785,
+      "relative_delta": 0.0008500841760736936,
+      "equal_horizon_objective_delta": 0.0018597835499558043,
+      "equal_horizon_month_bootstrap_95": [
+        -0.0016295842065221751,
+        0.005362982904189293
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.000338143379855621,
+        "5": 0.000509644004098948,
+        "20": 0.005407850025624086
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "aug_100k",
+      "arm": "compact:security",
+      "window": "2020",
+      "reference": "compact:security",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "eaac263bf45a97107694ed7975ccc347f40d453552b2df2e69fb832ec0b07ab4",
+      "baseline_objective": 2.2869350648248017,
+      "relative_delta": 0.0,
+      "equal_horizon_objective_delta": 0.0,
+      "equal_horizon_month_bootstrap_95": [
+        0.0,
+        0.0
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.0,
+        "5": 0.0,
+        "20": 0.0
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "aug_100k",
+      "arm": "compact:security",
+      "window": "2021",
+      "reference": "compact:security",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "d29c60a78047cb714cb30a4f4fe87e213d544f94d1473a5c9e7f73f1365e35e5",
+      "baseline_objective": 2.203732592270383,
+      "relative_delta": 0.0,
+      "equal_horizon_objective_delta": 0.0,
+      "equal_horizon_month_bootstrap_95": [
+        0.0,
+        0.0
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.0,
+        "5": 0.0,
+        "20": 0.0
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "aug_100k",
+      "arm": "compact:security",
+      "window": "2022_2023",
+      "reference": "compact:security",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "68085d45b3481764f53687444009ed0cc80ed59db573dbcc4c80ca754e1d29bd",
+      "baseline_objective": 2.1877639912621785,
+      "relative_delta": 0.0,
+      "equal_horizon_objective_delta": 0.0,
+      "equal_horizon_month_bootstrap_95": [
+        0.0,
+        0.0
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.0,
+        "5": 0.0,
+        "20": 0.0
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "aug_100k",
+      "arm": "recent20:security",
+      "window": "2020",
+      "reference": "compact:security",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "eaac263bf45a97107694ed7975ccc347f40d453552b2df2e69fb832ec0b07ab4",
+      "baseline_objective": 2.2869350648248017,
+      "relative_delta": 0.003459141332961543,
+      "equal_horizon_objective_delta": 0.007910831608534558,
+      "equal_horizon_month_bootstrap_95": [
+        5.80465500134384e-05,
+        0.015866222294484363
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.002280557489117073,
+        "5": 0.030061885170216126,
+        "20": -0.008609947833729526
+      },
+      "passes_cpu_noninferiority": false
+    },
+    {
+      "stage": "aug_100k",
+      "arm": "recent20:security",
+      "window": "2021",
+      "reference": "compact:security",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "d29c60a78047cb714cb30a4f4fe87e213d544f94d1473a5c9e7f73f1365e35e5",
+      "baseline_objective": 2.203732592270383,
+      "relative_delta": -0.001984015360292628,
+      "equal_horizon_objective_delta": -0.004372239313041932,
+      "equal_horizon_month_bootstrap_95": [
+        -0.009462415420788184,
+        0.00024331047998756402
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.005954850944268552,
+        "5": -0.0008570197650521583,
+        "20": -0.006304847229805084
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "aug_100k",
+      "arm": "recent20:security",
+      "window": "2022_2023",
+      "reference": "compact:security",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "68085d45b3481764f53687444009ed0cc80ed59db573dbcc4c80ca754e1d29bd",
+      "baseline_objective": 2.1877639912621785,
+      "relative_delta": 0.001042794826803865,
+      "equal_horizon_objective_delta": 0.0022813889723559758,
+      "equal_horizon_month_bootstrap_95": [
+        -0.0014835847482157405,
+        0.005807811427092486
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.00083397867547264,
+        "5": 0.003464114843791206,
+        "20": 0.0025460733978040803
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "aug_100k",
+      "arm": "recent20:security_first",
+      "window": "2020",
+      "reference": "compact:security",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "eaac263bf45a97107694ed7975ccc347f40d453552b2df2e69fb832ec0b07ab4",
+      "baseline_objective": 2.2869350648248017,
+      "relative_delta": 0.001959766090839878,
+      "equal_horizon_objective_delta": 0.004481857791996345,
+      "equal_horizon_month_bootstrap_95": [
+        -0.007968487609612863,
+        0.01775213185346646
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.007424336323351541,
+        "5": 0.03710874401015831,
+        "20": -0.016238834310817737
+      },
+      "passes_cpu_noninferiority": false
+    },
+    {
+      "stage": "aug_100k",
+      "arm": "recent20:security_first",
+      "window": "2021",
+      "reference": "compact:security",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "d29c60a78047cb714cb30a4f4fe87e213d544f94d1473a5c9e7f73f1365e35e5",
+      "baseline_objective": 2.203732592270383,
+      "relative_delta": -0.0009647181467675389,
+      "equal_horizon_objective_delta": -0.0021259808223863083,
+      "equal_horizon_month_bootstrap_95": [
+        -0.005821879648050241,
+        0.0016029000031683408
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.006311308792808021,
+        "5": 0.0007387117629003677,
+        "20": -0.0008053454372512714
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "aug_100k",
+      "arm": "recent20:security_first",
+      "window": "2022_2023",
+      "reference": "compact:security",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "68085d45b3481764f53687444009ed0cc80ed59db573dbcc4c80ca754e1d29bd",
+      "baseline_objective": 2.1877639912621785,
+      "relative_delta": 0.0035729031829045284,
+      "equal_horizon_objective_delta": 0.007816668927824552,
+      "equal_horizon_month_bootstrap_95": [
+        0.00245416753902218,
+        0.013128101689451211
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.006770131908764199,
+        "5": 0.011069761504693416,
+        "20": 0.019150377187544438
+      },
+      "passes_cpu_noninferiority": false
+    },
+    {
+      "stage": "aug_100k",
+      "arm": "recent20:security_first:tokens",
+      "window": "2020",
+      "reference": "compact:security",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "eaac263bf45a97107694ed7975ccc347f40d453552b2df2e69fb832ec0b07ab4",
+      "baseline_objective": 2.2869350648248017,
+      "relative_delta": 0.0001634009793778267,
+      "equal_horizon_objective_delta": 0.0003736874293658662,
+      "equal_horizon_month_bootstrap_95": [
+        -0.008720606449186116,
+        0.01081148665819868
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.014664518586902138,
+        "5": 0.0014418330031408292,
+        "20": 0.014343747871858907
+      },
+      "passes_cpu_noninferiority": false
+    },
+    {
+      "stage": "aug_100k",
+      "arm": "recent20:security_first:tokens",
+      "window": "2021",
+      "reference": "compact:security",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "d29c60a78047cb714cb30a4f4fe87e213d544f94d1473a5c9e7f73f1365e35e5",
+      "baseline_objective": 2.203732592270383,
+      "relative_delta": 0.0015338094944638584,
+      "equal_horizon_objective_delta": 0.0033801059732837643,
+      "equal_horizon_month_bootstrap_95": [
+        -5.605650320471112e-05,
+        0.006297200563635996
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.0006341678171675594,
+        "5": 0.007462446501483411,
+        "20": 0.0033120392355354415
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "aug_100k",
+      "arm": "recent20:security_first:tokens",
+      "window": "2022_2023",
+      "reference": "compact:security",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "68085d45b3481764f53687444009ed0cc80ed59db573dbcc4c80ca754e1d29bd",
+      "baseline_objective": 2.1877639912621785,
+      "relative_delta": 0.002920653020466037,
+      "equal_horizon_objective_delta": 0.006389699509146714,
+      "equal_horizon_month_bootstrap_95": [
+        0.003098504679062152,
+        0.010261010010339902
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.0015680898154810813,
+        "5": 0.005656235205150284,
+        "20": 0.011944773506808778
+      },
+      "passes_cpu_noninferiority": false
+    },
+    {
+      "stage": "aug_200k",
+      "arm": "basis_points_delta:security",
+      "window": "2020",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "eaac263bf45a97107694ed7975ccc347f40d453552b2df2e69fb832ec0b07ab4",
+      "baseline_objective": 2.278353598361216,
+      "relative_delta": -0.005867525797869151,
+      "equal_horizon_objective_delta": -0.013368298515052446,
+      "equal_horizon_month_bootstrap_95": [
+        -0.023523186670537495,
+        -0.004784742718778807
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.019064743441624375,
+        "5": -0.015216162464382385,
+        "20": -0.04395347652239933
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "aug_200k",
+      "arm": "basis_points_delta:security",
+      "window": "2021",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "d29c60a78047cb714cb30a4f4fe87e213d544f94d1473a5c9e7f73f1365e35e5",
+      "baseline_objective": 2.2068055508261804,
+      "relative_delta": 0.00018506634314400993,
+      "equal_horizon_objective_delta": 0.00040840543332130373,
+      "equal_horizon_month_bootstrap_95": [
+        -0.0036999024121456316,
+        0.005135484186583871
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.0002866779602691611,
+        "5": 0.003086256949135803,
+        "20": -0.0015743626889027306
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "aug_200k",
+      "arm": "basis_points_delta:security",
+      "window": "2022_2023",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "68085d45b3481764f53687444009ed0cc80ed59db573dbcc4c80ca754e1d29bd",
+      "baseline_objective": 2.1872173778592656,
+      "relative_delta": -0.0011868281040979462,
+      "equal_horizon_objective_delta": -0.0025958510538147935,
+      "equal_horizon_month_bootstrap_95": [
+        -0.007507375207276867,
+        0.0017662403409775484
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.000854893694247021,
+        "5": -0.0031610717535341766,
+        "20": -0.005481375102157225
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "aug_200k",
+      "arm": "basis_points_delta:security_first",
+      "window": "2020",
+      "reference": "compact:security",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "eaac263bf45a97107694ed7975ccc347f40d453552b2df2e69fb832ec0b07ab4",
+      "baseline_objective": 2.2813283402319424,
+      "relative_delta": -0.004845298061869387,
+      "equal_horizon_objective_delta": -0.011053715785413537,
+      "equal_horizon_month_bootstrap_95": [
+        -0.01964304798608749,
+        -0.002052940994647252
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.0065125659145221955,
+        "5": -0.03739417606499321,
+        "20": 0.010745594623274802
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "aug_200k",
+      "arm": "basis_points_delta:security_first",
+      "window": "2021",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "d29c60a78047cb714cb30a4f4fe87e213d544f94d1473a5c9e7f73f1365e35e5",
+      "baseline_objective": 2.2068055508261804,
+      "relative_delta": -0.0008766473334148919,
+      "equal_horizon_objective_delta": -0.0019345902014969527,
+      "equal_horizon_month_bootstrap_95": [
+        -0.01012352623542025,
+        0.005040851942563433
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.00918453759855438,
+        "5": -0.01743317439934247,
+        "20": 0.002444866196297234
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "aug_200k",
+      "arm": "basis_points_delta:security_first",
+      "window": "2022_2023",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "68085d45b3481764f53687444009ed0cc80ed59db573dbcc4c80ca754e1d29bd",
+      "baseline_objective": 2.1872173778592656,
+      "relative_delta": 0.0012873885356551626,
+      "equal_horizon_objective_delta": 0.0028157985772417644,
+      "equal_horizon_month_bootstrap_95": [
+        -0.0011017735909390127,
+        0.007232498430441241
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.00488444123887744,
+        "5": 0.0073327666750950425,
+        "20": -0.003769812182247189
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "aug_200k",
+      "arm": "compact:security",
+      "window": "2020",
+      "reference": "compact:security",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "eaac263bf45a97107694ed7975ccc347f40d453552b2df2e69fb832ec0b07ab4",
+      "baseline_objective": 2.2813283402319424,
+      "relative_delta": 0.0,
+      "equal_horizon_objective_delta": 0.0,
+      "equal_horizon_month_bootstrap_95": [
+        0.0,
+        0.0
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.0,
+        "5": 0.0,
+        "20": 0.0
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "aug_200k",
+      "arm": "compact:security",
+      "window": "2021",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "d29c60a78047cb714cb30a4f4fe87e213d544f94d1473a5c9e7f73f1365e35e5",
+      "baseline_objective": 2.2068055508261804,
+      "relative_delta": 0.0,
+      "equal_horizon_objective_delta": 0.0,
+      "equal_horizon_month_bootstrap_95": [
+        0.0,
+        0.0
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.0,
+        "5": 0.0,
+        "20": 0.0
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "aug_200k",
+      "arm": "compact:security",
+      "window": "2022_2023",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "68085d45b3481764f53687444009ed0cc80ed59db573dbcc4c80ca754e1d29bd",
+      "baseline_objective": 2.1872173778592656,
+      "relative_delta": 0.0,
+      "equal_horizon_objective_delta": 0.0,
+      "equal_horizon_month_bootstrap_95": [
+        0.0,
+        0.0
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.0,
+        "5": 0.0,
+        "20": 0.0
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "aug_equal_token",
+      "arm": "basis_points_delta:security:tokens",
+      "window": "2020",
+      "reference": "compact:security",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "eaac263bf45a97107694ed7975ccc347f40d453552b2df2e69fb832ec0b07ab4",
+      "baseline_objective": 2.2869350648248017,
+      "relative_delta": -0.008384997827610017,
+      "equal_horizon_objective_delta": -0.019175945550441137,
+      "equal_horizon_month_bootstrap_95": [
+        -0.025108914106890975,
+        -0.01258980648656728
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.0018037079844041163,
+        "5": -0.022724192522099448,
+        "20": -0.03299993614481985
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "aug_equal_token",
+      "arm": "basis_points_delta:security:tokens",
+      "window": "2021",
+      "reference": "compact:security",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "d29c60a78047cb714cb30a4f4fe87e213d544f94d1473a5c9e7f73f1365e35e5",
+      "baseline_objective": 2.203732592270383,
+      "relative_delta": -0.0016338501333299032,
+      "equal_horizon_objective_delta": -0.0036005687897044183,
+      "equal_horizon_month_bootstrap_95": [
+        -0.007698292181815988,
+        -0.00046976413740456685
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.002562435325999548,
+        "5": -0.009821773990602252,
+        "20": -0.0035423677045105526
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "aug_equal_token",
+      "arm": "basis_points_delta:security:tokens",
+      "window": "2022_2023",
+      "reference": "compact:security",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "68085d45b3481764f53687444009ed0cc80ed59db573dbcc4c80ca754e1d29bd",
+      "baseline_objective": 2.1877639912621785,
+      "relative_delta": -0.00032147768224138125,
+      "equal_horizon_objective_delta": -0.0007033172972021186,
+      "equal_horizon_month_bootstrap_95": [
+        -0.0035097962832794987,
+        0.002098405036850586
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.002966604741390559,
+        "5": 0.0008888255407861731,
+        "20": -3.217269100196962e-05
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "aug_equal_token_sampler",
+      "arm": "basis_points_delta:security_first:tokens",
+      "window": "2020",
+      "reference": "compact:security",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "eaac263bf45a97107694ed7975ccc347f40d453552b2df2e69fb832ec0b07ab4",
+      "baseline_objective": 2.2869350648248017,
+      "relative_delta": -0.00639048871379661,
+      "equal_horizon_objective_delta": -0.014614632720948614,
+      "equal_horizon_month_bootstrap_95": [
+        -0.022665893700090395,
+        -0.005672355598351545
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.00024202009196474752,
+        "5": -0.02734242779093229,
+        "20": -0.016259450279948805
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "aug_equal_token_sampler",
+      "arm": "basis_points_delta:security_first:tokens",
+      "window": "2021",
+      "reference": "compact:security",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "d29c60a78047cb714cb30a4f4fe87e213d544f94d1473a5c9e7f73f1365e35e5",
+      "baseline_objective": 2.203732592270383,
+      "relative_delta": 0.0028573583765274953,
+      "equal_horizon_objective_delta": 0.00629685378215043,
+      "equal_horizon_month_bootstrap_95": [
+        0.002567031032738522,
+        0.009180982606361382
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.007005029010701618,
+        "5": 0.006738596258684352,
+        "20": 0.005146936077065321
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "aug_equal_token_sampler",
+      "arm": "basis_points_delta:security_first:tokens",
+      "window": "2022_2023",
+      "reference": "compact:security",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "68085d45b3481764f53687444009ed0cc80ed59db573dbcc4c80ca754e1d29bd",
+      "baseline_objective": 2.1877639912621785,
+      "relative_delta": 0.001745253611660829,
+      "equal_horizon_objective_delta": 0.003818203007211827,
+      "equal_horizon_month_bootstrap_95": [
+        0.0006290676958338707,
+        0.00703948219731369
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.0036964316073338993,
+        "5": 0.0015063696383158958,
+        "20": 0.006251807775985685
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "aug_refine_100k",
+      "arm": "basis_points_delta:security_first",
+      "window": "2020",
+      "reference": "compact:security",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "eaac263bf45a97107694ed7975ccc347f40d453552b2df2e69fb832ec0b07ab4",
+      "baseline_objective": 2.2869350648248017,
+      "relative_delta": -0.006667544025102969,
+      "equal_horizon_objective_delta": -0.015248240227271078,
+      "equal_horizon_month_bootstrap_95": [
+        -0.021349523803305646,
+        -0.008959822682552647
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.009596826841981085,
+        "5": -0.0037308068959196086,
+        "20": -0.03241708694391254
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "aug_refine_100k",
+      "arm": "basis_points_delta:security_first",
+      "window": "2021",
+      "reference": "compact:security",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "d29c60a78047cb714cb30a4f4fe87e213d544f94d1473a5c9e7f73f1365e35e5",
+      "baseline_objective": 2.203732592270383,
+      "relative_delta": -0.001749451230117267,
+      "equal_horizon_objective_delta": -0.003855322694396935,
+      "equal_horizon_month_bootstrap_95": [
+        -0.00740896219295869,
+        -0.0008093543988367527
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.008123300048415709,
+        "5": -0.00633502540496286,
+        "20": 0.0028923573701877645
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "aug_refine_100k",
+      "arm": "basis_points_delta:security_first",
+      "window": "2022_2023",
+      "reference": "compact:security",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "68085d45b3481764f53687444009ed0cc80ed59db573dbcc4c80ca754e1d29bd",
+      "baseline_objective": 2.1877639912621785,
+      "relative_delta": 0.0017646863712802532,
+      "equal_horizon_objective_delta": 0.003860717298958057,
+      "equal_horizon_month_bootstrap_95": [
+        -0.0010829088424130868,
+        0.008637837403630203
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.004324223205726323,
+        "5": 0.0030876568919878623,
+        "20": 0.012818718210612631
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "aug_refine_100k",
+      "arm": "basis_points_volume100:security",
+      "window": "2020",
+      "reference": "compact:security",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "eaac263bf45a97107694ed7975ccc347f40d453552b2df2e69fb832ec0b07ab4",
+      "baseline_objective": 2.2869350648248017,
+      "relative_delta": 0.00020276513516790404,
+      "equal_horizon_objective_delta": 0.0004637106975394203,
+      "equal_horizon_month_bootstrap_95": [
+        -0.005654377948020222,
+        0.006449268933959376
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.00621828055322198,
+        "5": 0.014359564557035976,
+        "20": -0.006750151911195735
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "aug_refine_100k",
+      "arm": "basis_points_volume100:security",
+      "window": "2021",
+      "reference": "compact:security",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "d29c60a78047cb714cb30a4f4fe87e213d544f94d1473a5c9e7f73f1365e35e5",
+      "baseline_objective": 2.203732592270383,
+      "relative_delta": -0.0005772010073707985,
+      "equal_horizon_objective_delta": -0.0012719966722343262,
+      "equal_horizon_month_bootstrap_95": [
+        -0.004311508278397244,
+        0.0017147637724415836
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.0023547094423329662,
+        "5": 0.0018523859329089144,
+        "20": -0.0033136665072789266
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "aug_refine_100k",
+      "arm": "basis_points_volume100:security",
+      "window": "2022_2023",
+      "reference": "compact:security",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "68085d45b3481764f53687444009ed0cc80ed59db573dbcc4c80ca754e1d29bd",
+      "baseline_objective": 2.1877639912621785,
+      "relative_delta": 0.0008762843794897449,
+      "equal_horizon_objective_delta": 0.0019171034115531857,
+      "equal_horizon_month_bootstrap_95": [
+        -0.0012394261171064446,
+        0.005132716312202604
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.0006704582127716635,
+        "5": 0.00042911522492645185,
+        "20": 0.005992653222504769
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "aug_volume_vs_basis",
+      "arm": "basis_points_volume100:security",
+      "window": "2020",
+      "reference": "basis_points:security",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "eaac263bf45a97107694ed7975ccc347f40d453552b2df2e69fb832ec0b07ab4",
+      "baseline_objective": 2.2819624459157284,
+      "relative_delta": 0.0023823045889043637,
+      "equal_horizon_objective_delta": 0.005436329606612465,
+      "equal_horizon_month_bootstrap_95": [
+        -0.001911319718979214,
+        0.012268923721016666
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.0060321228215945944,
+        "5": 0.019809594558329008,
+        "20": 0.0025315170831029838
+      },
+      "passes_cpu_noninferiority": false
+    },
+    {
+      "stage": "aug_volume_vs_basis",
+      "arm": "basis_points_volume100:security",
+      "window": "2021",
+      "reference": "basis_points:security",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "d29c60a78047cb714cb30a4f4fe87e213d544f94d1473a5c9e7f73f1365e35e5",
+      "baseline_objective": 2.197409829996051,
+      "relative_delta": 0.0022985086956252383,
+      "equal_horizon_objective_delta": 0.0050507656020983,
+      "equal_horizon_month_bootstrap_95": [
+        0.0026908494968666138,
+        0.007568507346480648
+      ],
+      "objective_delta_by_horizon": {
+        "1": -7.212088245401109e-05,
+        "5": 0.008196117317158661,
+        "20": 0.007028300371590249
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "aug_volume_vs_basis",
+      "arm": "basis_points_volume100:security",
+      "window": "2022_2023",
+      "reference": "basis_points:security",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "68085d45b3481764f53687444009ed0cc80ed59db573dbcc4c80ca754e1d29bd",
+      "baseline_objective": 2.189623774812134,
+      "relative_delta": 2.6177949955032656e-05,
+      "equal_horizon_objective_delta": 5.731986159738174e-05,
+      "equal_horizon_month_bootstrap_95": [
+        -0.0018970598773693944,
+        0.002133138860506713
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.0003323148329160394,
+        "5": -8.052877917250021e-05,
+        "20": 0.0005848031968806849
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "native_100k",
+      "arm": "basis_points_delta:security",
+      "window": "2020",
+      "reference": "compact:security",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "eaac263bf45a97107694ed7975ccc347f40d453552b2df2e69fb832ec0b07ab4",
+      "baseline_objective": 2.2181369867346423,
+      "relative_delta": -0.0003546997758416513,
+      "equal_horizon_objective_delta": -0.0007867726919808535,
+      "equal_horizon_month_bootstrap_95": [
+        -0.005748188350630337,
+        0.00433627477338721
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.0007285560942181003,
+        "5": -0.006315048977075232,
+        "20": 0.0046832869953507715
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "native_100k",
+      "arm": "basis_points_delta:security",
+      "window": "2021",
+      "reference": "compact:security",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "d29c60a78047cb714cb30a4f4fe87e213d544f94d1473a5c9e7f73f1365e35e5",
+      "baseline_objective": 2.1950519605683634,
+      "relative_delta": 0.0006603388974004943,
+      "equal_horizon_objective_delta": 0.0014494781913785063,
+      "equal_horizon_month_bootstrap_95": [
+        -0.000900804492310962,
+        0.0037145466977098617
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.0031965469971068222,
+        "5": 0.002681033368669436,
+        "20": -0.0015291457916407395
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "native_100k",
+      "arm": "basis_points_delta:security",
+      "window": "2022_2023",
+      "reference": "compact:security",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "68085d45b3481764f53687444009ed0cc80ed59db573dbcc4c80ca754e1d29bd",
+      "baseline_objective": 2.1894516286349575,
+      "relative_delta": 0.0007199963480160384,
+      "equal_horizon_objective_delta": 0.001576397176774937,
+      "equal_horizon_month_bootstrap_95": [
+        -0.00040031211768940927,
+        0.003530832071182431
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.002768300717271782,
+        "5": -0.0005832592611071388,
+        "20": 0.002544150074160168
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "native_100k",
+      "arm": "compact:security",
+      "window": "2020",
+      "reference": "compact:security",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "eaac263bf45a97107694ed7975ccc347f40d453552b2df2e69fb832ec0b07ab4",
+      "baseline_objective": 2.2181369867346423,
+      "relative_delta": 0.0,
+      "equal_horizon_objective_delta": 0.0,
+      "equal_horizon_month_bootstrap_95": [
+        0.0,
+        0.0
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.0,
+        "5": 0.0,
+        "20": 0.0
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "native_100k",
+      "arm": "compact:security",
+      "window": "2021",
+      "reference": "compact:security",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "d29c60a78047cb714cb30a4f4fe87e213d544f94d1473a5c9e7f73f1365e35e5",
+      "baseline_objective": 2.1950519605683634,
+      "relative_delta": 0.0,
+      "equal_horizon_objective_delta": 0.0,
+      "equal_horizon_month_bootstrap_95": [
+        0.0,
+        0.0
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.0,
+        "5": 0.0,
+        "20": 0.0
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "native_100k",
+      "arm": "compact:security",
+      "window": "2022_2023",
+      "reference": "compact:security",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "68085d45b3481764f53687444009ed0cc80ed59db573dbcc4c80ca754e1d29bd",
+      "baseline_objective": 2.1894516286349575,
+      "relative_delta": 0.0,
+      "equal_horizon_objective_delta": 0.0,
+      "equal_horizon_month_bootstrap_95": [
+        0.0,
+        0.0
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.0,
+        "5": 0.0,
+        "20": 0.0
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "native_200k",
+      "arm": "basis_points_delta:security",
+      "window": "2020",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "eaac263bf45a97107694ed7975ccc347f40d453552b2df2e69fb832ec0b07ab4",
+      "baseline_objective": 2.2213703736543766,
+      "relative_delta": -0.001850890967170778,
+      "equal_horizon_objective_delta": -0.004111514359337661,
+      "equal_horizon_month_bootstrap_95": [
+        -0.008166897499824313,
+        0.00048511440268040983
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.0012582463505842153,
+        "5": 0.0007426116406418688,
+        "20": -0.011818908368070638
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "native_200k",
+      "arm": "basis_points_delta:security",
+      "window": "2021",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "d29c60a78047cb714cb30a4f4fe87e213d544f94d1473a5c9e7f73f1365e35e5",
+      "baseline_objective": 2.1963998126827193,
+      "relative_delta": -0.0013348181059254177,
+      "equal_horizon_objective_delta": -0.0029317942378200897,
+      "equal_horizon_month_bootstrap_95": [
+        -0.006936413422052429,
+        0.001766576753238113
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.0010732850633486854,
+        "5": -0.0014484650250111803,
+        "20": -0.008420202751797775
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "native_200k",
+      "arm": "basis_points_delta:security",
+      "window": "2022_2023",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "68085d45b3481764f53687444009ed0cc80ed59db573dbcc4c80ca754e1d29bd",
+      "baseline_objective": 2.1884418095562226,
+      "relative_delta": -0.001217092378380641,
+      "equal_horizon_objective_delta": -0.0026635358469404165,
+      "equal_horizon_month_bootstrap_95": [
+        -0.005849181003494012,
+        0.0006931525370133993
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.0037706808506974793,
+        "5": -0.004332758662864838,
+        "20": -0.007428529728653891
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "native_200k",
+      "arm": "compact:security",
+      "window": "2020",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "eaac263bf45a97107694ed7975ccc347f40d453552b2df2e69fb832ec0b07ab4",
+      "baseline_objective": 2.2213703736543766,
+      "relative_delta": 0.0,
+      "equal_horizon_objective_delta": 0.0,
+      "equal_horizon_month_bootstrap_95": [
+        0.0,
+        0.0
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.0,
+        "5": 0.0,
+        "20": 0.0
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "native_200k",
+      "arm": "compact:security",
+      "window": "2021",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "d29c60a78047cb714cb30a4f4fe87e213d544f94d1473a5c9e7f73f1365e35e5",
+      "baseline_objective": 2.1963998126827193,
+      "relative_delta": 0.0,
+      "equal_horizon_objective_delta": 0.0,
+      "equal_horizon_month_bootstrap_95": [
+        0.0,
+        0.0
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.0,
+        "5": 0.0,
+        "20": 0.0
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "native_200k",
+      "arm": "compact:security",
+      "window": "2022_2023",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "68085d45b3481764f53687444009ed0cc80ed59db573dbcc4c80ca754e1d29bd",
+      "baseline_objective": 2.1884418095562226,
+      "relative_delta": 0.0,
+      "equal_horizon_objective_delta": 0.0,
+      "equal_horizon_month_bootstrap_95": [
+        0.0,
+        0.0
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.0,
+        "5": 0.0,
+        "20": 0.0
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "native_200k_combo",
+      "arm": "basis_points_delta:security_first",
+      "window": "2020",
+      "reference": "compact:security",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "eaac263bf45a97107694ed7975ccc347f40d453552b2df2e69fb832ec0b07ab4",
+      "baseline_objective": 2.2201893676877833,
+      "relative_delta": -0.00020645096949942129,
+      "equal_horizon_objective_delta": -0.00045836024743145,
+      "equal_horizon_month_bootstrap_95": [
+        -0.008584555334285194,
+        0.008599263317738897
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.004342617836602554,
+        "5": 0.008629640579255317,
+        "20": -0.005662103484947113
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "native_200k_combo",
+      "arm": "basis_points_delta:security_first",
+      "window": "2021",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "d29c60a78047cb714cb30a4f4fe87e213d544f94d1473a5c9e7f73f1365e35e5",
+      "baseline_objective": 2.1963998126827193,
+      "relative_delta": -0.0026921185813383194,
+      "equal_horizon_objective_delta": -0.0059129687477711525,
+      "equal_horizon_month_bootstrap_95": [
+        -0.01036145191356258,
+        -0.001142574431976266
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.008017297622024938,
+        "5": 0.0003575318487828924,
+        "20": -0.010079140470071413
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "native_200k_combo",
+      "arm": "basis_points_delta:security_first",
+      "window": "2022_2023",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "68085d45b3481764f53687444009ed0cc80ed59db573dbcc4c80ca754e1d29bd",
+      "baseline_objective": 2.1884418095562226,
+      "relative_delta": 0.001375008785079015,
+      "equal_horizon_objective_delta": 0.003009126713774023,
+      "equal_horizon_month_bootstrap_95": [
+        -0.0020800028597426855,
+        0.009116817091900454
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.0020343955883723665,
+        "5": 0.002352460614315806,
+        "20": 0.008709315115378629
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "native_200k_combo",
+      "arm": "compact:security",
+      "window": "2020",
+      "reference": "compact:security",
+      "seeds": [
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "eaac263bf45a97107694ed7975ccc347f40d453552b2df2e69fb832ec0b07ab4",
+      "baseline_objective": 2.2195988647044866,
+      "relative_delta": 0.0,
+      "equal_horizon_objective_delta": 0.0,
+      "equal_horizon_month_bootstrap_95": [
+        0.0,
+        0.0
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.0,
+        "5": 0.0,
+        "20": 0.0
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "native_equal_token",
+      "arm": "basis_points_delta:security:tokens",
+      "window": "2020",
+      "reference": "compact:security",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "eaac263bf45a97107694ed7975ccc347f40d453552b2df2e69fb832ec0b07ab4",
+      "baseline_objective": 2.2181369867346423,
+      "relative_delta": 0.0018700184891448804,
+      "equal_horizon_objective_delta": 0.004147957176649893,
+      "equal_horizon_month_bootstrap_95": [
+        -0.0008227475397459835,
+        0.009087960894984983
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.0010086754633529596,
+        "5": 0.00623160858418068,
+        "20": 0.005203587482416039
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "native_equal_token",
+      "arm": "basis_points_delta:security:tokens",
+      "window": "2021",
+      "reference": "compact:security",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "d29c60a78047cb714cb30a4f4fe87e213d544f94d1473a5c9e7f73f1365e35e5",
+      "baseline_objective": 2.1950519605683634,
+      "relative_delta": 0.004703487917706867,
+      "equal_horizon_objective_delta": 0.010324400375272068,
+      "equal_horizon_month_bootstrap_95": [
+        0.0018718502902089942,
+        0.01888504514769919
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.0339001804550626,
+        "5": 0.00040951769539749667,
+        "20": -0.003336497024643893
+      },
+      "passes_cpu_noninferiority": false
+    },
+    {
+      "stage": "native_equal_token",
+      "arm": "basis_points_delta:security:tokens",
+      "window": "2022_2023",
+      "reference": "compact:security",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "68085d45b3481764f53687444009ed0cc80ed59db573dbcc4c80ca754e1d29bd",
+      "baseline_objective": 2.1894516286349575,
+      "relative_delta": 0.0004667928386576527,
+      "equal_horizon_objective_delta": 0.0010220203408341326,
+      "equal_horizon_month_bootstrap_95": [
+        -0.0010240147746499876,
+        0.003208506989932157
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.003570014862695262,
+        "5": -0.0013853134726220801,
+        "20": 0.000881359632429216
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "native_equal_token_sampler",
+      "arm": "basis_points_delta:security_first:tokens",
+      "window": "2020",
+      "reference": "compact:security",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "eaac263bf45a97107694ed7975ccc347f40d453552b2df2e69fb832ec0b07ab4",
+      "baseline_objective": 2.2181369867346423,
+      "relative_delta": -0.0020048066959245992,
+      "equal_horizon_objective_delta": -0.004446935883483625,
+      "equal_horizon_month_bootstrap_95": [
+        -0.011580877676654602,
+        0.0019699110701775365
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.0006434177865635693,
+        "5": -0.0026616841474347694,
+        "20": -0.010035705716452537
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "native_equal_token_sampler",
+      "arm": "basis_points_delta:security_first:tokens",
+      "window": "2021",
+      "reference": "compact:security",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "d29c60a78047cb714cb30a4f4fe87e213d544f94d1473a5c9e7f73f1365e35e5",
+      "baseline_objective": 2.1950519605683634,
+      "relative_delta": 0.00020606228433674715,
+      "equal_horizon_objective_delta": 0.00045231742123257235,
+      "equal_horizon_month_bootstrap_95": [
+        -0.003687739008488454,
+        0.004742084373853656
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.010817385999434721,
+        "5": -0.0026441823657011873,
+        "20": -0.006816251370035818
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "native_equal_token_sampler",
+      "arm": "basis_points_delta:security_first:tokens",
+      "window": "2022_2023",
+      "reference": "compact:security",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "68085d45b3481764f53687444009ed0cc80ed59db573dbcc4c80ca754e1d29bd",
+      "baseline_objective": 2.1894516286349575,
+      "relative_delta": 0.0008427531335069811,
+      "equal_horizon_objective_delta": 0.0018451672206940735,
+      "equal_horizon_month_bootstrap_95": [
+        -0.0010523853162345803,
+        0.0043790713966366255
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.0020907401091315786,
+        "5": -0.0017404754230162813,
+        "20": 0.00936671719423008
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "native_logistic",
+      "arm": "basis_points_delta:security",
+      "window": "2020",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "eaac263bf45a97107694ed7975ccc347f40d453552b2df2e69fb832ec0b07ab4",
+      "baseline_objective": 2.2115431258041744,
+      "relative_delta": 2.6616980471515297e-07,
+      "equal_horizon_objective_delta": 5.886460019144361e-07,
+      "equal_horizon_month_bootstrap_95": [
+        -1.3387259739684018e-06,
+        2.5765845082861148e-06
+      ],
+      "objective_delta_by_horizon": {
+        "1": 5.639997213244161e-08,
+        "5": 1.9581071031156416e-06,
+        "20": -2.4856906950477475e-07
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "native_logistic",
+      "arm": "basis_points_delta:security",
+      "window": "2021",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "d29c60a78047cb714cb30a4f4fe87e213d544f94d1473a5c9e7f73f1365e35e5",
+      "baseline_objective": 2.2052367543696096,
+      "relative_delta": 4.3409393653187277e-07,
+      "equal_horizon_objective_delta": 9.572799036890744e-07,
+      "equal_horizon_month_bootstrap_95": [
+        -3.7144964533056053e-07,
+        2.185199243226468e-06
+      ],
+      "objective_delta_by_horizon": {
+        "1": 6.934806170803356e-07,
+        "5": 1.1358407985950808e-06,
+        "20": 1.0425182953918067e-06
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "native_logistic",
+      "arm": "basis_points_delta:security",
+      "window": "2022_2023",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "68085d45b3481764f53687444009ed0cc80ed59db573dbcc4c80ca754e1d29bd",
+      "baseline_objective": 2.2314823659173197,
+      "relative_delta": -1.9046376867150322e-07,
+      "equal_horizon_objective_delta": -4.2501654113661506e-07,
+      "equal_horizon_month_bootstrap_95": [
+        -3.4308658674199047e-06,
+        2.2943672482870012e-06
+      ],
+      "objective_delta_by_horizon": {
+        "1": 8.02525466996619e-07,
+        "5": 7.720643512232054e-07,
+        "20": -2.8496394416296695e-06
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "native_logistic",
+      "arm": "basis_points_delta:security_first",
+      "window": "2020",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "eaac263bf45a97107694ed7975ccc347f40d453552b2df2e69fb832ec0b07ab4",
+      "baseline_objective": 2.2115431258041744,
+      "relative_delta": -0.00021028387978064378,
+      "equal_horizon_objective_delta": -0.0004650518687963142,
+      "equal_horizon_month_bootstrap_95": [
+        -0.003154516954148622,
+        0.0019352600926815682
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.001274260936225821,
+        "5": -0.0015143787029316689,
+        "20": 0.0013934840327685472
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "native_logistic",
+      "arm": "basis_points_delta:security_first",
+      "window": "2021",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "d29c60a78047cb714cb30a4f4fe87e213d544f94d1473a5c9e7f73f1365e35e5",
+      "baseline_objective": 2.2052367543696096,
+      "relative_delta": -0.0003034347607703097,
+      "equal_horizon_objective_delta": -0.0006691454870040367,
+      "equal_horizon_month_bootstrap_95": [
+        -0.002470637118520157,
+        0.0012028283999577641
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.004827124081803987,
+        "5": 0.0036489079063774517,
+        "20": -0.0008292202855855748
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "native_logistic",
+      "arm": "basis_points_delta:security_first",
+      "window": "2022_2023",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "68085d45b3481764f53687444009ed0cc80ed59db573dbcc4c80ca754e1d29bd",
+      "baseline_objective": 2.2314823659173197,
+      "relative_delta": -0.0033686956126504383,
+      "equal_horizon_objective_delta": -0.007517184855772495,
+      "equal_horizon_month_bootstrap_95": [
+        -0.014897028765511387,
+        -0.002087705499445347
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.0038628933864852688,
+        "5": -0.0013586762680448104,
+        "20": -0.017329984912787408
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "native_logistic",
+      "arm": "compact:security",
+      "window": "2020",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "eaac263bf45a97107694ed7975ccc347f40d453552b2df2e69fb832ec0b07ab4",
+      "baseline_objective": 2.2115431258041744,
+      "relative_delta": 0.0,
+      "equal_horizon_objective_delta": 0.0,
+      "equal_horizon_month_bootstrap_95": [
+        0.0,
+        0.0
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.0,
+        "5": 0.0,
+        "20": 0.0
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "native_logistic",
+      "arm": "compact:security",
+      "window": "2021",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "d29c60a78047cb714cb30a4f4fe87e213d544f94d1473a5c9e7f73f1365e35e5",
+      "baseline_objective": 2.2052367543696096,
+      "relative_delta": 0.0,
+      "equal_horizon_objective_delta": 0.0,
+      "equal_horizon_month_bootstrap_95": [
+        0.0,
+        0.0
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.0,
+        "5": 0.0,
+        "20": 0.0
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "native_logistic",
+      "arm": "compact:security",
+      "window": "2022_2023",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "68085d45b3481764f53687444009ed0cc80ed59db573dbcc4c80ca754e1d29bd",
+      "baseline_objective": 2.2314823659173197,
+      "relative_delta": 0.0,
+      "equal_horizon_objective_delta": 0.0,
+      "equal_horizon_month_bootstrap_95": [
+        0.0,
+        0.0
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.0,
+        "5": 0.0,
+        "20": 0.0
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "native_refine",
+      "arm": "basis_points_volume100:security",
+      "window": "2020",
+      "reference": "basis_points_delta:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "eaac263bf45a97107694ed7975ccc347f40d453552b2df2e69fb832ec0b07ab4",
+      "baseline_objective": 2.217173315884146,
+      "relative_delta": 0.0008082275017621136,
+      "equal_horizon_objective_delta": 0.0017919804500706649,
+      "equal_horizon_month_bootstrap_95": [
+        -0.0070440281281588316,
+        0.00909395678975192
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.0026015366300851063,
+        "5": -0.0010326061730898135,
+        "20": 0.009010084153386914
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "native_refine",
+      "arm": "basis_points_volume100:security",
+      "window": "2021",
+      "reference": "basis_points_delta:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "d29c60a78047cb714cb30a4f4fe87e213d544f94d1473a5c9e7f73f1365e35e5",
+      "baseline_objective": 2.1997315576623073,
+      "relative_delta": 0.0011900747049686546,
+      "equal_horizon_objective_delta": 0.0026178448844952095,
+      "equal_horizon_month_bootstrap_95": [
+        -0.004049508321486796,
+        0.010348348773981865
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.022988827860820637,
+        "5": -0.0030673178785321402,
+        "20": -0.012067975328802868
+      },
+      "passes_cpu_noninferiority": false
+    },
+    {
+      "stage": "native_refine",
+      "arm": "basis_points_volume100:security",
+      "window": "2022_2023",
+      "reference": "basis_points_delta:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "68085d45b3481764f53687444009ed0cc80ed59db573dbcc4c80ca754e1d29bd",
+      "baseline_objective": 2.188461462721232,
+      "relative_delta": -0.001518608424504129,
+      "equal_horizon_objective_delta": -0.003323416013991092,
+      "equal_horizon_month_bootstrap_95": [
+        -0.006381899753415257,
+        5.47784530201337e-05
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.0035126550889796413,
+        "5": -0.01126986141686629,
+        "20": 0.0048122684638726545
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "native_refine",
+      "arm": "recent20_wide:security",
+      "window": "2020",
+      "reference": "basis_points_delta:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "eaac263bf45a97107694ed7975ccc347f40d453552b2df2e69fb832ec0b07ab4",
+      "baseline_objective": 2.217173315884146,
+      "relative_delta": 0.0007000166467039813,
+      "equal_horizon_objective_delta": 0.0015520582297467668,
+      "equal_horizon_month_bootstrap_95": [
+        -0.00692336516222252,
+        0.010474708328250176
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.0017395652834888303,
+        "5": 0.013434564136117336,
+        "20": -0.007038824163388206
+      },
+      "passes_cpu_noninferiority": false
+    },
+    {
+      "stage": "native_refine",
+      "arm": "recent20_wide:security",
+      "window": "2021",
+      "reference": "basis_points_delta:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "d29c60a78047cb714cb30a4f4fe87e213d544f94d1473a5c9e7f73f1365e35e5",
+      "baseline_objective": 2.1997315576623073,
+      "relative_delta": -0.002243875084721996,
+      "equal_horizon_objective_delta": -0.004935922835315159,
+      "equal_horizon_month_bootstrap_95": [
+        -0.011287263324348528,
+        0.0016343022791616636
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.005091995011103629,
+        "5": -0.002241899634721214,
+        "20": -0.01765786388232789
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "native_refine",
+      "arm": "recent20_wide:security",
+      "window": "2022_2023",
+      "reference": "basis_points_delta:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "68085d45b3481764f53687444009ed0cc80ed59db573dbcc4c80ca754e1d29bd",
+      "baseline_objective": 2.188461462721232,
+      "relative_delta": 0.0016496690375307163,
+      "equal_horizon_objective_delta": 0.0036102371148803987,
+      "equal_horizon_month_bootstrap_95": [
+        -0.002569887320034989,
+        0.010009096547812475
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.0021564749305388975,
+        "5": -0.002241095874293801,
+        "20": 0.010915332288396098
+      },
+      "passes_cpu_noninferiority": false
+    },
+    {
+      "stage": "native_sampler",
+      "arm": "basis_points_delta:security_first",
+      "window": "2020",
+      "reference": "basis_points_delta:security",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "eaac263bf45a97107694ed7975ccc347f40d453552b2df2e69fb832ec0b07ab4",
+      "baseline_objective": 2.2173502140426615,
+      "relative_delta": -7.541613332531547e-05,
+      "equal_horizon_objective_delta": -0.00016722397937115815,
+      "equal_horizon_month_bootstrap_95": [
+        -0.007069832561031797,
+        0.0066439237007135405
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.003473047932347182,
+        "5": 0.00170901822761672,
+        "20": -0.005683738098077377
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "native_sampler",
+      "arm": "basis_points_delta:security_first",
+      "window": "2021",
+      "reference": "basis_points_delta:security",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "d29c60a78047cb714cb30a4f4fe87e213d544f94d1473a5c9e7f73f1365e35e5",
+      "baseline_objective": 2.1965014387597415,
+      "relative_delta": -9.808817909250739e-05,
+      "equal_horizon_objective_delta": -0.00021545082650201568,
+      "equal_horizon_month_bootstrap_95": [
+        -0.003267687079310317,
+        0.003004371919635079
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.006850491458382277,
+        "5": -0.005043133148088803,
+        "20": -0.0024537107897995205
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "native_sampler",
+      "arm": "basis_points_delta:security_first",
+      "window": "2022_2023",
+      "reference": "basis_points_delta:security",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "68085d45b3481764f53687444009ed0cc80ed59db573dbcc4c80ca754e1d29bd",
+      "baseline_objective": 2.1910280258117325,
+      "relative_delta": 0.0006172145024296982,
+      "equal_horizon_objective_delta": 0.0013523342727609123,
+      "equal_horizon_month_bootstrap_95": [
+        -0.003264960608522043,
+        0.005817033399233494
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.005885159822347361,
+        "5": -0.0014889894408601603,
+        "20": 0.011431152081490259
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "native_sampler_vs_v1",
+      "arm": "basis_points_delta:security_first",
+      "window": "2020",
+      "reference": "compact:security",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "eaac263bf45a97107694ed7975ccc347f40d453552b2df2e69fb832ec0b07ab4",
+      "baseline_objective": 2.2181369867346423,
+      "relative_delta": -0.0004300891590813811,
+      "equal_horizon_objective_delta": -0.0009539966713520109,
+      "equal_horizon_month_bootstrap_95": [
+        -0.005294190935523808,
+        0.0036186398593315953
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.002744491838129079,
+        "5": -0.0046060307494585175,
+        "20": -0.0010004511027265944
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "native_sampler_vs_v1",
+      "arm": "basis_points_delta:security_first",
+      "window": "2021",
+      "reference": "compact:security",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "d29c60a78047cb714cb30a4f4fe87e213d544f94d1473a5c9e7f73f1365e35e5",
+      "baseline_objective": 2.1950519605683634,
+      "relative_delta": 0.0005621859468679576,
+      "equal_horizon_objective_delta": 0.001234027364876492,
+      "equal_horizon_month_bootstrap_95": [
+        -0.003246417986337634,
+        0.00532836303282363
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.010047038455489104,
+        "5": -0.002362099779419368,
+        "20": -0.00398285658144026
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "native_sampler_vs_v1",
+      "arm": "basis_points_delta:security_first",
+      "window": "2022_2023",
+      "reference": "compact:security",
+      "seeds": [
+        17,
+        29,
+        43
+      ],
+      "evaluation_view_sha256": "68085d45b3481764f53687444009ed0cc80ed59db573dbcc4c80ca754e1d29bd",
+      "baseline_objective": 2.1894516286349575,
+      "relative_delta": 0.0013376552426334302,
+      "equal_horizon_objective_delta": 0.002928731449535853,
+      "equal_horizon_month_bootstrap_95": [
+        -0.0019769710849806515,
+        0.007701043662596149
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.0031168591050755754,
+        "5": -0.0020722487019672964,
+        "20": 0.01397530215565043
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "refine_screen_aug",
+      "arm": "basis_points_volume100:security",
+      "window": "2020",
+      "reference": "basis_points:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "12b4a1a1f447135f41c7f17a2d5a4932dcde4fbf73f3a5c8c621264ec19e0675",
+      "baseline_objective": 2.269611487280805,
+      "relative_delta": 0.005537256862642959,
+      "equal_horizon_objective_delta": 0.012567421783478928,
+      "equal_horizon_month_bootstrap_95": [
+        0.001212792590566659,
+        0.024984648964360718
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.008378320060554561,
+        "5": 0.04530980543943635,
+        "20": 0.0007707799715549971
+      },
+      "passes_cpu_noninferiority": false
+    },
+    {
+      "stage": "refine_screen_aug",
+      "arm": "basis_points_volume100:security",
+      "window": "2021",
+      "reference": "basis_points:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "c4aa8a1a8060fb0ea35e08c157f7d1216a1da222ec4400469dde23ec35038d9a",
+      "baseline_objective": 2.2135898492597987,
+      "relative_delta": -0.0007465234666749195,
+      "equal_horizon_objective_delta": -0.0016524967680658375,
+      "equal_horizon_month_bootstrap_95": [
+        -0.0069393632566510845,
+        0.0038680191103201153
+      ],
+      "objective_delta_by_horizon": {
+        "1": -5.561089068638593e-05,
+        "5": -0.012268372845031864,
+        "20": 0.007366493431520736
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "refine_screen_aug",
+      "arm": "basis_points_volume100:security",
+      "window": "2022_2023",
+      "reference": "basis_points:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "c229aa4af9be67b3ac082277c085dffe0456700063440c87272ad2c34d17473d",
+      "baseline_objective": 2.1920941292954583,
+      "relative_delta": -0.00033764123893070537,
+      "equal_horizon_objective_delta": -0.0007401413776680444,
+      "equal_horizon_month_bootstrap_95": [
+        -0.005096128355499231,
+        0.003749428471431798
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.000506335871147891,
+        "5": -0.0029924761913084083,
+        "20": 0.0002657161871563841
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "refine_screen_aug",
+      "arm": "basis_points_volume10:security",
+      "window": "2020",
+      "reference": "basis_points:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "12b4a1a1f447135f41c7f17a2d5a4932dcde4fbf73f3a5c8c621264ec19e0675",
+      "baseline_objective": 2.269611487280805,
+      "relative_delta": 0.013287282438476563,
+      "equal_horizon_objective_delta": 0.030156968857110913,
+      "equal_horizon_month_bootstrap_95": [
+        0.014238541307841518,
+        0.04886716866946632
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.0052192665121582,
+        "5": 0.0728083633726327,
+        "20": 0.022881809710858233
+      },
+      "passes_cpu_noninferiority": false
+    },
+    {
+      "stage": "refine_screen_aug",
+      "arm": "basis_points_volume10:security",
+      "window": "2021",
+      "reference": "basis_points:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "c4aa8a1a8060fb0ea35e08c157f7d1216a1da222ec4400469dde23ec35038d9a",
+      "baseline_objective": 2.2135898492597987,
+      "relative_delta": 0.0004827187486140496,
+      "equal_horizon_objective_delta": 0.0010685413219794528,
+      "equal_horizon_month_bootstrap_95": [
+        -0.004896150993191365,
+        0.00663356351475801
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.007271852822674035,
+        "5": -0.010595328266544836,
+        "20": 0.006529099409809159
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "refine_screen_aug",
+      "arm": "basis_points_volume10:security",
+      "window": "2022_2023",
+      "reference": "basis_points:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "c229aa4af9be67b3ac082277c085dffe0456700063440c87272ad2c34d17473d",
+      "baseline_objective": 2.1920941292954583,
+      "relative_delta": 0.0009028546144979818,
+      "equal_horizon_objective_delta": 0.00197914230004834,
+      "equal_horizon_month_bootstrap_95": [
+        -0.0046156356439812805,
+        0.008130412914313098
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.0019038002342775832,
+        "5": 0.002131422200795558,
+        "20": 0.0019022044650718792
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "refine_screen_aug",
+      "arm": "recent20_wide:security",
+      "window": "2020",
+      "reference": "basis_points:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "12b4a1a1f447135f41c7f17a2d5a4932dcde4fbf73f3a5c8c621264ec19e0675",
+      "baseline_objective": 2.269611487280805,
+      "relative_delta": 0.0031111372202633214,
+      "equal_horizon_objective_delta": 0.007061072773616506,
+      "equal_horizon_month_bootstrap_95": [
+        -0.006790057068044239,
+        0.019572656994068544
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.005444937249417076,
+        "5": 0.03933654496874918,
+        "20": -0.012708389398482586
+      },
+      "passes_cpu_noninferiority": false
+    },
+    {
+      "stage": "refine_screen_aug",
+      "arm": "recent20_wide:security",
+      "window": "2021",
+      "reference": "basis_points:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "c4aa8a1a8060fb0ea35e08c157f7d1216a1da222ec4400469dde23ec35038d9a",
+      "baseline_objective": 2.2135898492597987,
+      "relative_delta": -0.0009897213653541545,
+      "equal_horizon_objective_delta": -0.002190837167943505,
+      "equal_horizon_month_bootstrap_95": [
+        -0.008015147208188496,
+        0.003142011699069695
+      ],
+      "objective_delta_by_horizon": {
+        "1": 3.0471376629502942e-05,
+        "5": -0.014776871227379211,
+        "20": 0.008173888346919194
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "refine_screen_aug",
+      "arm": "recent20_wide:security",
+      "window": "2022_2023",
+      "reference": "basis_points:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "c229aa4af9be67b3ac082277c085dffe0456700063440c87272ad2c34d17473d",
+      "baseline_objective": 2.1920941292954583,
+      "relative_delta": -0.0006066886532988778,
+      "equal_horizon_objective_delta": -0.0013299186352066375,
+      "equal_horizon_month_bootstrap_95": [
+        -0.007047798929772564,
+        0.004398213359933362
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.001063579389199756,
+        "5": -0.0050731458541351795,
+        "20": 0.002146969337715023
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "screen_aug",
+      "arm": "basis_points:security",
+      "window": "2020",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "12b4a1a1f447135f41c7f17a2d5a4932dcde4fbf73f3a5c8c621264ec19e0675",
+      "baseline_objective": 2.2771283697617526,
+      "relative_delta": -0.0033010358927346084,
+      "equal_horizon_objective_delta": -0.00751688248094779,
+      "equal_horizon_month_bootstrap_95": [
+        -0.01357779093364722,
+        -0.0005980770534013255
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.0008205504184614553,
+        "5": -0.019182037264028538,
+        "20": -0.004189160597276288
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "screen_aug",
+      "arm": "basis_points:security",
+      "window": "2021",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "c4aa8a1a8060fb0ea35e08c157f7d1216a1da222ec4400469dde23ec35038d9a",
+      "baseline_objective": 2.214775664965738,
+      "relative_delta": -0.0005354112042571853,
+      "equal_horizon_objective_delta": -0.0011858157059388141,
+      "equal_horizon_month_bootstrap_95": [
+        -0.005607430897091787,
+        0.0031041249244469784
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.002663834199659506,
+        "5": 0.008109263433186412,
+        "20": -0.009002876351343348
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "screen_aug",
+      "arm": "basis_points:security",
+      "window": "2022_2023",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "c229aa4af9be67b3ac082277c085dffe0456700063440c87272ad2c34d17473d",
+      "baseline_objective": 2.1933112558502446,
+      "relative_delta": -0.0005549265073710502,
+      "equal_horizon_objective_delta": -0.001217126554786588,
+      "equal_horizon_month_bootstrap_95": [
+        -0.00498250097800922,
+        0.0023915131615163503
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.0016438357167122143,
+        "5": -0.0083480228537353,
+        "20": 0.006340478906087749
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "screen_aug",
+      "arm": "causal_median:security",
+      "window": "2020",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "12b4a1a1f447135f41c7f17a2d5a4932dcde4fbf73f3a5c8c621264ec19e0675",
+      "baseline_objective": 2.2771283697617526,
+      "relative_delta": 0.0013166448584512064,
+      "equal_horizon_objective_delta": 0.0029981693600801894,
+      "equal_horizon_month_bootstrap_95": [
+        -0.011214695258568568,
+        0.015549897047603607
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.00458545909849373,
+        "5": 0.02245515098128291,
+        "20": -0.008875183802548611
+      },
+      "passes_cpu_noninferiority": false
+    },
+    {
+      "stage": "screen_aug",
+      "arm": "causal_median:security",
+      "window": "2021",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "c4aa8a1a8060fb0ea35e08c157f7d1216a1da222ec4400469dde23ec35038d9a",
+      "baseline_objective": 2.214775664965738,
+      "relative_delta": 0.0002703927160833524,
+      "equal_horizon_objective_delta": 0.0005988592075653988,
+      "equal_horizon_month_bootstrap_95": [
+        -0.0025262321002141376,
+        0.0035469641707036315
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.0010476481075600156,
+        "5": -0.0025443025525888024,
+        "20": 0.0032932320677249833
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "screen_aug",
+      "arm": "causal_median:security",
+      "window": "2022_2023",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "c229aa4af9be67b3ac082277c085dffe0456700063440c87272ad2c34d17473d",
+      "baseline_objective": 2.1933112558502446,
+      "relative_delta": -0.0031684702340719294,
+      "equal_horizon_objective_delta": -0.006949441428216422,
+      "equal_horizon_month_bootstrap_95": [
+        -0.011843718957293674,
+        -0.0024721129104477947
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.006200242446453121,
+        "5": -0.001641535780405314,
+        "20": -0.013006546057790832
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "screen_aug",
+      "arm": "compact:bimonth",
+      "window": "2020",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "12b4a1a1f447135f41c7f17a2d5a4932dcde4fbf73f3a5c8c621264ec19e0675",
+      "baseline_objective": 2.2771283697617526,
+      "relative_delta": 0.013739311880619815,
+      "equal_horizon_objective_delta": 0.03128617686436408,
+      "equal_horizon_month_bootstrap_95": [
+        0.02262814468620982,
+        0.03932043729402805
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.0005086464146191064,
+        "5": 0.004098975246995687,
+        "20": 0.08925090893147744
+      },
+      "passes_cpu_noninferiority": false
+    },
+    {
+      "stage": "screen_aug",
+      "arm": "compact:bimonth",
+      "window": "2021",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "c4aa8a1a8060fb0ea35e08c157f7d1216a1da222ec4400469dde23ec35038d9a",
+      "baseline_objective": 2.214775664965738,
+      "relative_delta": -0.004386775840082262,
+      "equal_horizon_objective_delta": -0.009715724378273826,
+      "equal_horizon_month_bootstrap_95": [
+        -0.014909425366815297,
+        -0.005227591416735896
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.005493094271155806,
+        "5": -0.0018501512173915435,
+        "20": -0.02180392764627413
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "screen_aug",
+      "arm": "compact:bimonth",
+      "window": "2022_2023",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "c229aa4af9be67b3ac082277c085dffe0456700063440c87272ad2c34d17473d",
+      "baseline_objective": 2.1933112558502446,
+      "relative_delta": -0.002156335721182615,
+      "equal_horizon_objective_delta": -0.004729515408661784,
+      "equal_horizon_month_bootstrap_95": [
+        -0.013913477866795972,
+        0.004965570012487522
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.0031909472009203025,
+        "5": -0.0017518132226673365,
+        "20": -0.009245785802397714
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "screen_aug",
+      "arm": "compact:random",
+      "window": "2020",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "12b4a1a1f447135f41c7f17a2d5a4932dcde4fbf73f3a5c8c621264ec19e0675",
+      "baseline_objective": 2.2771283697617526,
+      "relative_delta": -0.0020628125278644,
+      "equal_horizon_objective_delta": -0.004697288928699981,
+      "equal_horizon_month_bootstrap_95": [
+        -0.024339525301503746,
+        0.016755320141023097
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.0017887645562716145,
+        "5": -0.003401718979708922,
+        "20": -0.012478912362662634
+      },
+      "passes_cpu_noninferiority": false
+    },
+    {
+      "stage": "screen_aug",
+      "arm": "compact:random",
+      "window": "2021",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "c4aa8a1a8060fb0ea35e08c157f7d1216a1da222ec4400469dde23ec35038d9a",
+      "baseline_objective": 2.214775664965738,
+      "relative_delta": -0.007309036193796277,
+      "equal_horizon_objective_delta": -0.016187875496373797,
+      "equal_horizon_month_bootstrap_95": [
+        -0.023826922690463315,
+        -0.009143382587488098
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.009244116141020579,
+        "5": -0.0026521090673774757,
+        "20": -0.03666740128072334
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "screen_aug",
+      "arm": "compact:random",
+      "window": "2022_2023",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "c229aa4af9be67b3ac082277c085dffe0456700063440c87272ad2c34d17473d",
+      "baseline_objective": 2.1933112558502446,
+      "relative_delta": -0.0011387745193643763,
+      "equal_horizon_objective_delta": -0.002497686971197339,
+      "equal_horizon_month_bootstrap_95": [
+        -0.009994628865736087,
+        0.005107712218168801
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.0011779394123944923,
+        "5": 0.00327532995288102,
+        "20": -0.01194633027886753
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "screen_aug",
+      "arm": "compact:security",
+      "window": "2020",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "12b4a1a1f447135f41c7f17a2d5a4932dcde4fbf73f3a5c8c621264ec19e0675",
+      "baseline_objective": 2.2771283697617526,
+      "relative_delta": 0.0,
+      "equal_horizon_objective_delta": 0.0,
+      "equal_horizon_month_bootstrap_95": [
+        0.0,
+        0.0
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.0,
+        "5": 0.0,
+        "20": 0.0
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "screen_aug",
+      "arm": "compact:security",
+      "window": "2021",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "c4aa8a1a8060fb0ea35e08c157f7d1216a1da222ec4400469dde23ec35038d9a",
+      "baseline_objective": 2.214775664965738,
+      "relative_delta": 0.0,
+      "equal_horizon_objective_delta": 0.0,
+      "equal_horizon_month_bootstrap_95": [
+        0.0,
+        0.0
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.0,
+        "5": 0.0,
+        "20": 0.0
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "screen_aug",
+      "arm": "compact:security",
+      "window": "2022_2023",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "c229aa4af9be67b3ac082277c085dffe0456700063440c87272ad2c34d17473d",
+      "baseline_objective": 2.1933112558502446,
+      "relative_delta": 0.0,
+      "equal_horizon_objective_delta": 0.0,
+      "equal_horizon_month_bootstrap_95": [
+        0.0,
+        0.0
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.0,
+        "5": 0.0,
+        "20": 0.0
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "screen_aug",
+      "arm": "compact:security_first",
+      "window": "2020",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "12b4a1a1f447135f41c7f17a2d5a4932dcde4fbf73f3a5c8c621264ec19e0675",
+      "baseline_objective": 2.2771283697617526,
+      "relative_delta": -0.00536010436743024,
+      "equal_horizon_objective_delta": -0.012205645719959272,
+      "equal_horizon_month_bootstrap_95": [
+        -0.026987587967740687,
+        0.002028601889951503
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.019175569095208077,
+        "5": -0.02906840357560666,
+        "20": -0.026724102679479233
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "screen_aug",
+      "arm": "compact:security_first",
+      "window": "2021",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "c4aa8a1a8060fb0ea35e08c157f7d1216a1da222ec4400469dde23ec35038d9a",
+      "baseline_objective": 2.214775664965738,
+      "relative_delta": -0.0020576399797558476,
+      "equal_horizon_objective_delta": -0.004557210954423845,
+      "equal_horizon_month_bootstrap_95": [
+        -0.01452839194555267,
+        0.0039833742861292345
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.0035281976230217985,
+        "5": 0.0045396100920440845,
+        "20": -0.014683045332293823
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "screen_aug",
+      "arm": "compact:security_first",
+      "window": "2022_2023",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "c229aa4af9be67b3ac082277c085dffe0456700063440c87272ad2c34d17473d",
+      "baseline_objective": 2.1933112558502446,
+      "relative_delta": -0.0034261598327315853,
+      "equal_horizon_objective_delta": -0.007514634925472177,
+      "equal_horizon_month_bootstrap_95": [
+        -0.013426874878080712,
+        -0.0019362038296866406
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.006346243629255855,
+        "5": -0.005149343678588521,
+        "20": -0.011048317468572154
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "screen_aug",
+      "arm": "conditional_factors:security",
+      "window": "2020",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "12b4a1a1f447135f41c7f17a2d5a4932dcde4fbf73f3a5c8c621264ec19e0675",
+      "baseline_objective": 2.2771283697617526,
+      "relative_delta": 0.0038427253673077753,
+      "equal_horizon_objective_delta": 0.008750378951099686,
+      "equal_horizon_month_bootstrap_95": [
+        -0.0016013801596313005,
+        0.019272358439087808
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.0015124164973480214,
+        "5": 0.030270919419573425,
+        "20": -0.0025073660689263412
+      },
+      "passes_cpu_noninferiority": false
+    },
+    {
+      "stage": "screen_aug",
+      "arm": "conditional_factors:security",
+      "window": "2021",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "c4aa8a1a8060fb0ea35e08c157f7d1216a1da222ec4400469dde23ec35038d9a",
+      "baseline_objective": 2.214775664965738,
+      "relative_delta": -0.0031111320315896107,
+      "equal_horizon_objective_delta": -0.006890459514060087,
+      "equal_horizon_month_bootstrap_95": [
+        -0.014483446976483875,
+        -0.00018779730034629386
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.00047299316698315306,
+        "5": -0.004420764791875171,
+        "20": -0.015777620583321935
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "screen_aug",
+      "arm": "conditional_factors:security",
+      "window": "2022_2023",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "c229aa4af9be67b3ac082277c085dffe0456700063440c87272ad2c34d17473d",
+      "baseline_objective": 2.1933112558502446,
+      "relative_delta": 0.002856602936418143,
+      "equal_horizon_objective_delta": 0.006265419373940773,
+      "equal_horizon_month_bootstrap_95": [
+        0.000337274487434291,
+        0.012243919026314793
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.0030342685279471458,
+        "5": -0.0041598626736006825,
+        "20": 0.019921852267475858
+      },
+      "passes_cpu_noninferiority": false
+    },
+    {
+      "stage": "screen_aug",
+      "arm": "precision6:security",
+      "window": "2020",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "12b4a1a1f447135f41c7f17a2d5a4932dcde4fbf73f3a5c8c621264ec19e0675",
+      "baseline_objective": 2.2771283697617526,
+      "relative_delta": -0.0006617216551412087,
+      "equal_horizon_objective_delta": -0.0015068251538077494,
+      "equal_horizon_month_bootstrap_95": [
+        -0.0038994463141285222,
+        0.0010021178633542202
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.0017022429225776038,
+        "5": 0.0003110381694482392,
+        "20": -0.003129270708293884
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "screen_aug",
+      "arm": "precision6:security",
+      "window": "2021",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "c4aa8a1a8060fb0ea35e08c157f7d1216a1da222ec4400469dde23ec35038d9a",
+      "baseline_objective": 2.214775664965738,
+      "relative_delta": 0.00016243819686233483,
+      "equal_horizon_objective_delta": 0.0003597641654716131,
+      "equal_horizon_month_bootstrap_95": [
+        -0.0013677515752129029,
+        0.0019066173971363984
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.0003593392251780703,
+        "5": -0.0018010932577367496,
+        "20": 0.0025210465289735185
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "screen_aug",
+      "arm": "precision6:security",
+      "window": "2022_2023",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "c229aa4af9be67b3ac082277c085dffe0456700063440c87272ad2c34d17473d",
+      "baseline_objective": 2.1933112558502446,
+      "relative_delta": -0.001239752044975078,
+      "equal_horizon_objective_delta": -0.002719162114707197,
+      "equal_horizon_month_bootstrap_95": [
+        -0.006468970781169535,
+        0.0008759821833275588
+      ],
+      "objective_delta_by_horizon": {
+        "1": 0.002730451623752196,
+        "5": -0.00514496287849602,
+        "20": -0.0057429750893777665
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "screen_aug",
+      "arm": "recent20:security",
+      "window": "2020",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "12b4a1a1f447135f41c7f17a2d5a4932dcde4fbf73f3a5c8c621264ec19e0675",
+      "baseline_objective": 2.2771283697617526,
+      "relative_delta": -0.00850490174660175,
+      "equal_horizon_objective_delta": -0.019366753049223123,
+      "equal_horizon_month_bootstrap_95": [
+        -0.0376058136192068,
+        -0.0017171700149598583
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.015724340648083316,
+        "5": -0.005127938355197306,
+        "20": -0.03724798014438875
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "screen_aug",
+      "arm": "recent20:security",
+      "window": "2021",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "c4aa8a1a8060fb0ea35e08c157f7d1216a1da222ec4400469dde23ec35038d9a",
+      "baseline_objective": 2.214775664965738,
+      "relative_delta": -0.0024197585556254807,
+      "equal_horizon_objective_delta": -0.005359222364091957,
+      "equal_horizon_month_bootstrap_95": [
+        -0.01044023231159141,
+        -0.0008592812521508713
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.00021581935775322392,
+        "5": -0.005335215543296571,
+        "20": -0.010526632191226078
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "screen_aug",
+      "arm": "recent20:security",
+      "window": "2022_2023",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "c229aa4af9be67b3ac082277c085dffe0456700063440c87272ad2c34d17473d",
+      "baseline_objective": 2.1933112558502446,
+      "relative_delta": -0.0013438959627060962,
+      "equal_horizon_objective_delta": -0.002947582141694981,
+      "equal_horizon_month_bootstrap_95": [
+        -0.009686155631834364,
+        0.00278103764986651
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.0041882140336447935,
+        "5": -0.00615434914598916,
+        "20": 0.0014998167545490094
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "screen_aug",
+      "arm": "recent30:security",
+      "window": "2020",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "12b4a1a1f447135f41c7f17a2d5a4932dcde4fbf73f3a5c8c621264ec19e0675",
+      "baseline_objective": 2.2771283697617526,
+      "relative_delta": 0.007298659858823124,
+      "equal_horizon_objective_delta": 0.016619985425767442,
+      "equal_horizon_month_bootstrap_95": [
+        0.00678708538283914,
+        0.02831932662079564
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.007941135792563149,
+        "5": 0.02136338240613086,
+        "20": 0.036437709663734615
+      },
+      "passes_cpu_noninferiority": false
+    },
+    {
+      "stage": "screen_aug",
+      "arm": "recent30:security",
+      "window": "2021",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "c4aa8a1a8060fb0ea35e08c157f7d1216a1da222ec4400469dde23ec35038d9a",
+      "baseline_objective": 2.214775664965738,
+      "relative_delta": -0.002020499571746224,
+      "equal_horizon_objective_delta": -0.004474953282577232,
+      "equal_horizon_month_bootstrap_95": [
+        -0.009396926715279466,
+        0.0003201143010967976
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.003168019505550126,
+        "5": -0.0020110776944508536,
+        "20": -0.008245762647730715
+      },
+      "passes_cpu_noninferiority": true
+    },
+    {
+      "stage": "screen_aug",
+      "arm": "recent30:security",
+      "window": "2022_2023",
+      "reference": "compact:security",
+      "seeds": [
+        17
+      ],
+      "evaluation_view_sha256": "c229aa4af9be67b3ac082277c085dffe0456700063440c87272ad2c34d17473d",
+      "baseline_objective": 2.1933112558502446,
+      "relative_delta": -0.004176560949314573,
+      "equal_horizon_objective_delta": -0.009160498140876236,
+      "equal_horizon_month_bootstrap_95": [
+        -0.013294052748701346,
+        -0.005120968953642062
+      ],
+      "objective_delta_by_horizon": {
+        "1": -0.0021772244174254078,
+        "5": -0.007629479692035514,
+        "20": -0.017674790313167786
+      },
+      "passes_cpu_noninferiority": true
+    }
+  ]
+}

@@ -86,29 +86,53 @@ def compact_state(model_input, *, history_precision=8):
     return "\n".join(sections)
 
 
-def _return_interval(choice):
+def _return_interval(choice, names=None):
     if choice["kind"] == "point":
         return "0% exactly"
     left, right = choice["lower_return"], choice["upper_return"]
-    lower = "-inf" if left is None else _value(left, divisor=0.01, precision=12) + "%"
-    upper = "+inf" if right is None else _value(right, divisor=0.01, precision=12) + "%"
+    labels = names or {}
+
+    def endpoint(value, missing):
+        if value is None:
+            return missing
+        return labels[value] if value in labels else _value(value, divisor=0.01, precision=12) + "%"
+
+    lower, upper = endpoint(left, "-inf"), endpoint(right, "+inf")
     return ("[" if choice["lower_closed"] else "(") + lower + "," + upper + ("]" if choice["upper_closed"] else ")")
 
 
-def compact_request(model_input, *, history_precision=8):
-    """Retain three native choice branches and seven class intervals with unchanged bounds."""
+def compact_questions(model_input, uses_bound_table=False):
     questions = {}
     for task in model_input["Xchoice"]:
         if tuple(choice["class_id"] for choice in task["choices"]) != tuple(range(7)):
             raise ValueError("Compact numeric request requires seven choices in class order")
+        names = None
+        if uses_bound_table:
+            names = dict(zip(choice_bounds(task), BOUND_NAMES, strict=True))
+        instruction = (
+            f"Predict {task['horizon']}-session local-currency adjusted close-to-close simple return. "
+            f"Daily log-return sigma={_value(task['sigma_60d'])}; horizon scale={_value(task['scale'])}."
+        )
+        if uses_bound_table:
+            instruction += " Use this horizon's b1–b4 from the return bounds table."
         questions[task["task_id"]] = {
             "type": "choice",
-            "instructions": (
-                f"Predict {task['horizon']}-session local-currency adjusted close-to-close simple return. "
-                f"Daily log-return sigma={_value(task['sigma_60d'])}; horizon scale={_value(task['scale'])}."
-            ),
-            "criteria": {str(choice["class_id"] + 1): _return_interval(choice) for choice in task["choices"]},
+            "instructions": instruction,
+            "criteria": {str(choice["class_id"] + 1): _return_interval(choice, names) for choice in task["choices"]},
         }
     if tuple(questions) != TASK_IDS:
         raise ValueError("Compact numeric request requires the 1, 5 and 20 session tasks in fixed order")
-    return {"state": compact_state(model_input, history_precision=history_precision), "questions": questions}
+    return questions
+
+
+BOUND_NAMES = ("b1", "b2", "b3", "b4")
+
+
+def choice_bounds(task):
+    return tuple(task["choices"][i]["upper_return"] for i in (0, 1, 4, 5))
+
+
+def compact_request(model_input, *, history_precision=8):
+    """Retain three native choice branches and seven class intervals with unchanged bounds."""
+    return {"state": compact_state(model_input, history_precision=history_precision),
+            "questions": compact_questions(model_input)}

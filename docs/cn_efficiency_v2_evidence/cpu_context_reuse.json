@@ -1,0 +1,51 @@
+{
+  "view": {
+    "pool": "E:/Kurumi/artifacts/cn-efficiency-v2/pool.parquet",
+    "view": "E:/Kurumi/artifacts/cn-efficiency-v2-work/cpu-context/matched.parquet",
+    "split": null,
+    "start": "2021-06-01",
+    "end": "2021-09-30",
+    "label_end": "2021-09-30",
+    "budget": 1800,
+    "seed": 29,
+    "token_budget": null,
+    "tokens_per_sample": null,
+    "estimated_selected_tokens": null,
+    "coverage_order": "security",
+    "systematic_offset": 287372,
+    "eligible_samples": 344261,
+    "selected_samples": 1800,
+    "eligible_supervision": {
+      "1": 344151,
+      "5": 326820,
+      "20": 263043
+    },
+    "selected_supervision": {
+      "1": 1798,
+      "5": 1709,
+      "20": 1374
+    },
+    "inclusion_probability": 0.005228591098033178,
+    "weight": 191.25611111111112,
+    "selected_coverage": {
+      "months": 4,
+      "known_sectors": 28,
+      "market_states": 5,
+      "securities": 1557,
+      "trading_dates": 84
+    }
+  },
+  "recipe": "recent20",
+  "read_render_tokenize_serialize_medians": {
+    "per_original": {
+      "wall_seconds": 10.97691940004006,
+      "cpu_seconds": 11.546875,
+      "rss_peak_bytes": 1417265152
+    },
+    "reuse_daily_sections": {
+      "wall_seconds": 10.033264599973336,
+      "cpu_seconds": 10.8125,
+      "rss_peak_bytes": 1391927296
+    }
+  }
+}

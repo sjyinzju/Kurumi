@@ -1,0 +1,280 @@
+{
+  "full_table_key_audit": {
+    "stock_daily": {
+      "duplicate_key_rows": 0,
+      "exact_duplicate_rows": 0
+    },
+    "stock_fundamental_asof": {
+      "duplicate_key_rows": 0,
+      "exact_duplicate_rows": 0
+    },
+    "market_daily": {
+      "duplicate_key_rows": 0,
+      "exact_duplicate_rows": 0
+    },
+    "industry_daily": {
+      "duplicate_key_rows": 0,
+      "exact_duplicate_rows": 0
+    },
+    "samples": {
+      "duplicate_key_rows": 0,
+      "exact_duplicate_rows": 0
+    },
+    "labels": {
+      "duplicate_key_rows": 0,
+      "exact_duplicate_rows": 0
+    },
+    "security_history": {
+      "duplicate_key_rows": 0,
+      "exact_duplicate_rows": 0
+    },
+    "calendars": {
+      "duplicate_key_rows": 0,
+      "exact_duplicate_rows": 0
+    },
+    "provenance": {
+      "duplicate_key_rows": 0,
+      "exact_duplicate_rows": 0
+    }
+  },
+  "full_table_validations": {
+    "quote_domain": 0,
+    "price_adjustment_and_returns": 0,
+    "valid_61_session_history": 0,
+    "security_identity_and_clock": 0,
+    "financial_snapshot_clocks": 0,
+    "financial_version_refs": 0,
+    "financial_domain_and_missing_semantics": 0,
+    "company_action_evidence": 0,
+    "share_units_and_action_clocks": 0,
+    "market_input_clocks": 0,
+    "industry_availability": 0,
+    "duplicate_display_identity": 0
+  },
+  "yearly_label_checks": {
+    "2015": {
+      "label_rows": 1995534,
+      "missing_or_extra_horizons": 0,
+      "target_and_label_math": 0,
+      "legacy_index_mask_differences": 0,
+      "overlay_by_reason": []
+    },
+    "2016": {
+      "label_rows": 2112435,
+      "missing_or_extra_horizons": 0,
+      "target_and_label_math": 0,
+      "legacy_index_mask_differences": 0,
+      "overlay_by_reason": []
+    },
+    "2017": {
+      "label_rows": 2397192,
+      "missing_or_extra_horizons": 0,
+      "target_and_label_math": 0,
+      "legacy_index_mask_differences": 0,
+      "overlay_by_reason": []
+    },
+    "2018": {
+      "label_rows": 2570400,
+      "missing_or_extra_horizons": 0,
+      "target_and_label_math": 0,
+      "legacy_index_mask_differences": 0,
+      "overlay_by_reason": []
+    },
+    "2019": {
+      "label_rows": 2670753,
+      "missing_or_extra_horizons": 0,
+      "target_and_label_math": 0,
+      "legacy_index_mask_differences": 0,
+      "overlay_by_reason": []
+    },
+    "2020": {
+      "label_rows": 2855820,
+      "missing_or_extra_horizons": 0,
+      "target_and_label_math": 0,
+      "legacy_index_mask_differences": 0,
+      "overlay_by_reason": []
+    },
+    "2021": {
+      "label_rows": 3194970,
+      "missing_or_extra_horizons": 0,
+      "target_and_label_math": 0,
+      "legacy_index_mask_differences": 0,
+      "overlay_by_reason": []
+    },
+    "2022": {
+      "label_rows": 3522312,
+      "missing_or_extra_horizons": 0,
+      "target_and_label_math": 0,
+      "legacy_index_mask_differences": 0,
+      "overlay_by_reason": []
+    },
+    "2023": {
+      "label_rows": 3782226,
+      "missing_or_extra_horizons": 0,
+      "target_and_label_math": 0,
+      "legacy_index_mask_differences": 0,
+      "overlay_by_reason": [
+        {
+          "horizon": 1,
+          "actual_invalid_reason": "target_suspended",
+          "restored": false,
+          "labels": 1
+        },
+        {
+          "horizon": 1,
+          "actual_invalid_reason": null,
+          "restored": true,
+          "labels": 5219
+        },
+        {
+          "horizon": 5,
+          "actual_invalid_reason": "target_suspended",
+          "restored": false,
+          "labels": 11
+        },
+        {
+          "horizon": 5,
+          "actual_invalid_reason": null,
+          "restored": true,
+          "labels": 26090
+        },
+        {
+          "horizon": 20,
+          "actual_invalid_reason": "target_suspended",
+          "restored": false,
+          "labels": 93
+        },
+        {
+          "horizon": 20,
+          "actual_invalid_reason": null,
+          "restored": true,
+          "labels": 104359
+        }
+      ]
+    },
+    "2024": {
+      "label_rows": 3889503,
+      "missing_or_extra_horizons": 0,
+      "target_and_label_math": 0,
+      "legacy_index_mask_differences": 0,
+      "overlay_by_reason": [
+        {
+          "horizon": 1,
+          "actual_invalid_reason": "target_suspended",
+          "restored": false,
+          "labels": 5
+        },
+        {
+          "horizon": 1,
+          "actual_invalid_reason": null,
+          "restored": true,
+          "labels": 10440
+        },
+        {
+          "horizon": 5,
+          "actual_invalid_reason": "target_suspended",
+          "restored": false,
+          "labels": 42
+        },
+        {
+          "horizon": 5,
+          "actual_invalid_reason": null,
+          "restored": true,
+          "labels": 52194
+        },
+        {
+          "horizon": 20,
+          "actual_invalid_reason": "target_suspended",
+          "restored": false,
+          "labels": 309
+        },
+        {
+          "horizon": 20,
+          "actual_invalid_reason": null,
+          "restored": true,
+          "labels": 208718
+        }
+      ]
+    },
+    "2025": {
+      "label_rows": 3951210,
+      "missing_or_extra_horizons": 0,
+      "target_and_label_math": 0,
+      "legacy_index_mask_differences": 0,
+      "overlay_by_reason": []
+    },
+    "2026": {
+      "label_rows": 1913475,
+      "missing_or_extra_horizons": 0,
+      "target_and_label_math": 0,
+      "legacy_index_mask_differences": 0,
+      "overlay_by_reason": []
+    }
+  },
+  "raw_label_rows": 34855830,
+  "totals": {
+    "raw_samples": 11618610,
+    "input_valid": 10378768,
+    "effective_samples": 10376684,
+    "legacy_effective_samples": 10360981,
+    "quarantined_samples": 1241926,
+    "repaired_samples": 313173,
+    "covered_sessions": 2730,
+    "covered_industries": 59,
+    "covered_market_states": 9,
+    "supervised_1d": 10369918,
+    "supervised_5d": 10347081,
+    "supervised_20d": 10310226,
+    "legacy_supervised_1d": 10354259,
+    "legacy_supervised_5d": 10268797,
+    "legacy_supervised_20d": 9997149,
+    "restored_horizons": 407020,
+    "zero_return_horizons": 446768,
+    "extreme_horizons": 1658595,
+    "legacy_zero_return_horizons": 444620,
+    "legacy_extreme_horizons": 1613228,
+    "low_volatility": 148619,
+    "legacy_low_volatility": 148492,
+    "low_liquidity": 1041298,
+    "legacy_low_liquidity": 1039732,
+    "pre_delisting_90d": 3191,
+    "legacy_pre_delisting_90d": 3183,
+    "unverified_share_unit_chain": 37,
+    "legacy_unverified_share_unit_chain": 33,
+    "incomplete_core_finance": 266935,
+    "legacy_incomplete_core_finance": 266776,
+    "official_market_return": 10376684,
+    "legacy_official_market_return": 10360981,
+    "industry_return": 6814259,
+    "legacy_industry_return": 6799276
+  },
+  "quarantined_reasons": [
+    {
+      "reason": "history_suspended",
+      "samples": 894377
+    },
+    {
+      "reason": "insufficient_history",
+      "samples": 345465
+    },
+    {
+      "reason": "no_valid_observed_target",
+      "samples": 2084
+    }
+  ],
+  "exact_duplicate_samples": 0,
+  "definitions": {
+    "low_volatility": "sigma_60d <= 0.01",
+    "low_liquidity": "PIT activity percentile <= 0.1",
+    "extreme_return": "abs(log return) >= ln(1.2), reporting only",
+    "pre_delisting": "within 90 calendar days of verified delisting, reporting only",
+    "market_state": "benchmark 20-session return cut at +/-5%; 20-session daily volatility cut at 1% and 2%",
+    "sector": "strict PIT industry system/classification version/industry code"
+  },
+  "existing_release_validation": {
+    "release_bytes_windows_labels_and_masks": "passed",
+    "pit_source_prefix": "passed",
+    "native_karpo": "passed",
+    "independent_stock_factor_recalculation": "passed"
+  }
+}

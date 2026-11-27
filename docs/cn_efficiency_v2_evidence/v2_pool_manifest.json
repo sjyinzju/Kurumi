@@ -1,0 +1,225 @@
+{
+  "dataset_version": "cn-efficiency-v2",
+  "source_directory": "E:\\QuantData\\numeric\\cn-612cc6625177eb8619e452f4f1de659a6177c0c449deb0c721c38b6f020172e3",
+  "source_dataset_version": "cn-612cc6625177eb8619e452f4f1de659a6177c0c449deb0c721c38b6f020172e3",
+  "source_manifest_sha256": "b5dedb67575a45fa2203a7bac4f11ad785c1e271c187cceb1eaba8f043336637",
+  "source_consulted_bytes": 3424256465,
+  "source_consulted_files": 77,
+  "previous_directory": "E:\\Kurumi\\artifacts\\cn-efficiency-v1",
+  "previous_manifest_sha256": "726add8ea11e84ccacd47125c9d942e8f350cef253410e8d1a725b9ef28c174d",
+  "previous_release_bytes": 57171658,
+  "samples": 10376684,
+  "audit": {
+    "2015": {
+      "samples": 269271,
+      "history_rows": 665178,
+      "index_key_mismatches": 0,
+      "point_state_mismatches": 0,
+      "label_mask_date_or_class_errors": 0
+    },
+    "2016": {
+      "samples": 513582,
+      "history_rows": 704145,
+      "index_key_mismatches": 0,
+      "point_state_mismatches": 0,
+      "label_mask_date_or_class_errors": 0
+    },
+    "2017": {
+      "samples": 626014,
+      "history_rows": 799064,
+      "index_key_mismatches": 0,
+      "point_state_mismatches": 0,
+      "label_mask_date_or_class_errors": 0
+    },
+    "2018": {
+      "samples": 734420,
+      "history_rows": 856800,
+      "index_key_mismatches": 0,
+      "point_state_mismatches": 0,
+      "label_mask_date_or_class_errors": 0
+    },
+    "2019": {
+      "samples": 840652,
+      "history_rows": 890251,
+      "index_key_mismatches": 0,
+      "point_state_mismatches": 0,
+      "label_mask_date_or_class_errors": 0
+    },
+    "2020": {
+      "samples": 891212,
+      "history_rows": 951940,
+      "index_key_mismatches": 0,
+      "point_state_mismatches": 0,
+      "label_mask_date_or_class_errors": 0
+    },
+    "2021": {
+      "samples": 1000246,
+      "history_rows": 1064990,
+      "index_key_mismatches": 0,
+      "point_state_mismatches": 0,
+      "label_mask_date_or_class_errors": 0
+    },
+    "2022": {
+      "samples": 1119877,
+      "history_rows": 1174104,
+      "index_key_mismatches": 0,
+      "point_state_mismatches": 0,
+      "label_mask_date_or_class_errors": 0
+    },
+    "2023": {
+      "samples": 1219648,
+      "history_rows": 1260742,
+      "index_key_mismatches": 0,
+      "point_state_mismatches": 0,
+      "label_mask_date_or_class_errors": 0
+    },
+    "2024": {
+      "samples": 1269785,
+      "history_rows": 1296501,
+      "index_key_mismatches": 0,
+      "point_state_mismatches": 0,
+      "label_mask_date_or_class_errors": 0
+    },
+    "2025": {
+      "samples": 1277242,
+      "history_rows": 1317070,
+      "index_key_mismatches": 0,
+      "point_state_mismatches": 0,
+      "label_mask_date_or_class_errors": 0
+    },
+    "2026": {
+      "samples": 614735,
+      "history_rows": 764988,
+      "index_key_mismatches": 0,
+      "point_state_mismatches": 0,
+      "label_mask_date_or_class_errors": 0
+    }
+  },
+  "years": [
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025,
+    2026
+  ],
+  "supervision": {
+    "1": 10369918,
+    "5": 10347081,
+    "20": 10310226
+  },
+  "source_git_head": "54baa8199a52321a32fee44c2661885c9cfca3fb",
+  "builder_sha256": "ac79d72b7f232712f9246b39d5dcc4295ccdf22a5ef0fdcaa493695014cda27b",
+  "files": {
+    "history/2015.parquet": {
+      "bytes": 17707605,
+      "sha256": "13e576627df396327132bd5c55cb9ee04927a80bbaa04e1527fc5e6421f6d3a3"
+    },
+    "history/2016.parquet": {
+      "bytes": 18870747,
+      "sha256": "a9578391f041aa0b56b6b288955f9feb30a3aad8395b93c6e3c537111d7e6e2f"
+    },
+    "history/2017.parquet": {
+      "bytes": 21354586,
+      "sha256": "badedc85b3e3a506ea6144c7bc5c738c4db96f3aee143842c89ff56874cb6e75"
+    },
+    "history/2018.parquet": {
+      "bytes": 23454919,
+      "sha256": "48b07df0458f037723faee6c64f84af3777ea6ecbf162a9c8e5b8b8768887822"
+    },
+    "history/2019.parquet": {
+      "bytes": 24565174,
+      "sha256": "e4d98ef6dff873cf7ee66fc36c7a20b71ad8f2249aba3764f10f09ba886d621c"
+    },
+    "history/2020.parquet": {
+      "bytes": 26729520,
+      "sha256": "c3641c327038170a384045841e960401e5d0d9b062aef0f2bf140f4563e9b310"
+    },
+    "history/2021.parquet": {
+      "bytes": 30177958,
+      "sha256": "a7ecbc9aeac731a953a3e5df64aa2c0afe7bba755c638be8bf221f8c7ebf429c"
+    },
+    "history/2022.parquet": {
+      "bytes": 33622184,
+      "sha256": "5e04ebdd6938cb5935ac222412e57a034e477581fa2ef4b451518549c959b4fe"
+    },
+    "history/2023.parquet": {
+      "bytes": 35641031,
+      "sha256": "0ac31e05278a44717019a44e113f5dfeab02f195a2079e687421d28a4110c912"
+    },
+    "history/2024.parquet": {
+      "bytes": 39343339,
+      "sha256": "3d905b3d9e1fc0287bad753e7ac3b70b22dbb9ea21f674d9fdf37e7c02092a1a"
+    },
+    "history/2025.parquet": {
+      "bytes": 42180001,
+      "sha256": "5b70353a7442294f7a1762912e09120d2d62537442cc7fd8cb7d4568200d74bc"
+    },
+    "history/2026.parquet": {
+      "bytes": 26491520,
+      "sha256": "af1b65bea76ea9ab8d6a0d9af57af52c29c729054c8f24dd6c695fd380e88003"
+    },
+    "points/2015.parquet": {
+      "bytes": 31412623,
+      "sha256": "d72371d621c6f1a82f93d2112a257e41f11e8f0ba5ac7a34c81109e6fecb667f"
+    },
+    "points/2016.parquet": {
+      "bytes": 59248812,
+      "sha256": "bb80792fa36315b6d80ef8d1d42ae56b76efcfe9c9e3872f8b68e9fbfebe28ed"
+    },
+    "points/2017.parquet": {
+      "bytes": 72575380,
+      "sha256": "b4bc248ed227411aa859faed518cc7117bbfe36428e45a08aa69df321879bed1"
+    },
+    "points/2018.parquet": {
+      "bytes": 85863195,
+      "sha256": "0ec46aa45a813598e92e91d847d5e6fc2f2e8b222d3533a330526de76a5265b9"
+    },
+    "points/2019.parquet": {
+      "bytes": 99649399,
+      "sha256": "eead3c72388ebd8b3116f7e6dff88162cacb3d328b23c444aa3f65245c74cf19"
+    },
+    "points/2020.parquet": {
+      "bytes": 107247336,
+      "sha256": "953c78e392b5bd4a69b5896b3786625a06c9a2eaa680eb7d1e6eb239cae7a079"
+    },
+    "points/2021.parquet": {
+      "bytes": 120871778,
+      "sha256": "f420bd5386c31172a6c649f2555262b6665a236833dcc58462de702eadc0b6aa"
+    },
+    "points/2022.parquet": {
+      "bytes": 140868135,
+      "sha256": "d990cd6322b07c33f538413a686520d749b46a50eaa92fcd368c76d777bf9fea"
+    },
+    "points/2023.parquet": {
+      "bytes": 161722385,
+      "sha256": "5c436c3ebde1751b8e687ec756853791a731b21d478d45d00cf7f8e2c7ec2592"
+    },
+    "points/2024.parquet": {
+      "bytes": 168191313,
+      "sha256": "45d33cc9acadbb69c1dc2999351d7adc6a750b0917c5019b0ba3f6b7cab4d37d"
+    },
+    "points/2025.parquet": {
+      "bytes": 171087223,
+      "sha256": "dd08734cfeb88d34fb1b9dc1cb5121308a7f6e36db32d562da5b58a87618fb16"
+    },
+    "points/2026.parquet": {
+      "bytes": 82719974,
+      "sha256": "15db7874882bf8f6962ae8bddd0e77a67669547c983366e891ab6afadfa3ff3a"
+    },
+    "pool.parquet": {
+      "bytes": 51567569,
+      "sha256": "e5150a196e365b5ff1f4e886b3f438d683b4d7a7d03b4440440723f42147b22e"
+    },
+    "security_index.parquet": {
+      "bytes": 23917,
+      "sha256": "fb60ccda432f4092e267115e6b07beeb3c4eeb589ca139d32dea90de6d44c611"
+    }
+  }
+}

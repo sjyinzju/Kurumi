@@ -12,6 +12,7 @@ from pathlib import Path
 import duckdb
 import numpy as np
 import sklearn
+from scipy.special import logsumexp
 from sklearn.ensemble import HistGradientBoostingClassifier
 from sklearn.feature_extraction import DictVectorizer
 from threadpoolctl import threadpool_limits
@@ -151,7 +152,7 @@ def feature_matrix(name, data, points, names):
     return np.column_stack((points, data["history"]))
 
 
-def fit_models(x, data):
+def fit_models(x, data, params=None):
     models = []
     for y in data["targets"].T:
         valid = y >= 0
@@ -160,7 +161,7 @@ def fit_models(x, data):
         # Entirely absent columns have no split point and remain unavailable to that horizon's fit.
         columns = np.isfinite(train).any(axis=0)
         sample_weight = None if np.ptp(weights) == 0 else weights / weights.mean()
-        model = HistGradientBoostingClassifier(**MODEL)
+        model = HistGradientBoostingClassifier(**(params or MODEL))
         model.fit(train[:, columns], y[valid], sample_weight=sample_weight)
         if not np.array_equal(model.classes_, np.arange(7)):
             raise ValueError("Fitting budget did not cover all seven classes")
@@ -173,8 +174,12 @@ def evaluate(models, x, data):
     for i, ((model, columns), targets) in enumerate(zip(models, data["targets"].T, strict=True)):
         valid = targets >= 0
         y = targets[valid]
-        prob = model.predict_proba(x[valid][:, columns])
-        ce = -np.log(prob[np.arange(len(y)), y])
+        logits = model.decision_function(x[valid][:, columns])
+        log_prob = logits - logsumexp(logits, axis=-1, keepdims=True)
+        if not np.isfinite(log_prob).all():
+            raise ValueError("Proxy model produced nonfinite log probabilities")
+        ce = -log_prob[np.arange(len(y)), y]
+        prob = np.exp(log_prob)
         residual = prob - np.eye(7)[y]
         brier = (residual ** 2).sum(axis=1)
         rps = (residual.cumsum(axis=1)[:, :6] ** 2).mean(axis=1)

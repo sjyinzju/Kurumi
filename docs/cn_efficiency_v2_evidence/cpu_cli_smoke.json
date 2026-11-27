@@ -1,0 +1,59 @@
+{
+  "cache_version": "cn-blocks-2",
+  "tokenizer_revision": "b36640b5450552ac96f908c71664932e4fa79485a9a5422436a779230eeb1bff",
+  "native_revision": "6600011eb5cf46232d056ec0717dc726146d29de",
+  "runtime": {
+    "transformers": "5.23.0",
+    "tokenizers": "0.23.3",
+    "jinja2": "3.1.6",
+    "torch": "2.15.0"
+  },
+  "formats": [
+    "compact"
+  ],
+  "max_length": 8192,
+  "seed": 17,
+  "counts": {
+    "distinct_plans": 185,
+    "fit": 113,
+    "confirm": 72
+  },
+  "supervision": {
+    "fit": [
+      113,
+      102,
+      82
+    ],
+    "confirm": [
+      72,
+      66,
+      47
+    ]
+  },
+  "source_sha256": "af3b7a0aec9286a209e72c070e86db4b6edcc91ffacdb3047cc78090487c004c",
+  "encoded_tokens": {
+    "compact": 807778
+  },
+  "short_token_cache": {
+    "hits": 1109,
+    "misses": 3886,
+    "maxsize": 4096,
+    "currsize": 3886
+  },
+  "fast_tokenizer_backend": true,
+  "mean_fit_weight": 1878.2477876106211,
+  "last_fit_anchor": "2019-12-30",
+  "last_fit_target": "2019-12-31",
+  "first_confirm_anchor": "2020-01-02",
+  "provenance": {
+    "input_recipe": "basis_points_delta",
+    "dataset_version": "cn-efficiency-v2",
+    "pool_manifest_sha256": "25f51bf874f3e202aecb33c1c663ab6aa31d39e556ef141ba4fbf04177a15818",
+    "pool_index_sha256": "e5150a196e365b5ff1f4e886b3f438d683b4d7a7d03b4440440723f42147b22e",
+    "source_manifest_sha256": "b5dedb67575a45fa2203a7bac4f11ad785c1e271c187cceb1eaba8f043336637",
+    "date_view_sha256": {
+      "fit": "43ea9508be0de777bd0856a64069e35432b862a64bdc7d9eeb276ddb5ddb182e",
+      "confirm": "71cbb9c4b50059c94113f5300d25b6e1b5c4655fcaf88ff6d9ab1a8a081799a0"
+    }
+  }
+}

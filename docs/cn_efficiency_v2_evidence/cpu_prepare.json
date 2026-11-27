@@ -1,0 +1,114 @@
+{
+  "selection": {
+    "pool": "E:/Kurumi/artifacts/cn-efficiency-v2/pool.parquet",
+    "view": "E:/Kurumi/artifacts/cn-efficiency-v2-work/cpu-end-to-end/matched.parquet",
+    "split": null,
+    "start": "2021-01-01",
+    "end": "2021-12-31",
+    "label_end": "2021-12-31",
+    "budget": 1024,
+    "seed": 29,
+    "token_budget": null,
+    "tokens_per_sample": null,
+    "estimated_selected_tokens": null,
+    "coverage_order": "security",
+    "systematic_offset": 574744,
+    "eligible_samples": 995817,
+    "selected_samples": 1024,
+    "eligible_supervision": {
+      "1": 995373,
+      "5": 977087,
+      "20": 910855
+    },
+    "selected_supervision": {
+      "1": 1024,
+      "5": 997,
+      "20": 938
+    },
+    "inclusion_probability": 0.0010283013846921674,
+    "weight": 972.4775390625,
+    "selected_coverage": {
+      "months": 12,
+      "known_sectors": 34,
+      "market_states": 5,
+      "securities": 925,
+      "trading_dates": 239
+    }
+  },
+  "recipe": "basis_points_delta",
+  "comparable_output": "same target, mask and weight bytes",
+  "prepare_medians": {
+    "v1_compact": {
+      "wall_seconds": 32.91525910003111,
+      "cpu_seconds": 27.71875,
+      "rss_peak_bytes": 2729439232
+    },
+    "v2_recommended": {
+      "wall_seconds": 11.673275499953888,
+      "cpu_seconds": 12.296875,
+      "rss_peak_bytes": 1780170752
+    }
+  },
+  "details": [
+    {
+      "arm": "v1_compact",
+      "encoded_tokens": 6493571,
+      "supervision": [
+        1024,
+        997,
+        938
+      ],
+      "sqlite_bytes": 18456576
+    },
+    {
+      "arm": "v2_recommended",
+      "encoded_tokens": 4493072,
+      "supervision": [
+        1024,
+        997,
+        938
+      ],
+      "sqlite_bytes": 13340672
+    },
+    {
+      "arm": "v2_recommended",
+      "encoded_tokens": 4493072,
+      "supervision": [
+        1024,
+        997,
+        938
+      ],
+      "sqlite_bytes": 13340672
+    },
+    {
+      "arm": "v1_compact",
+      "encoded_tokens": 6493571,
+      "supervision": [
+        1024,
+        997,
+        938
+      ],
+      "sqlite_bytes": 18456576
+    },
+    {
+      "arm": "v2_recommended",
+      "encoded_tokens": 4493072,
+      "supervision": [
+        1024,
+        997,
+        938
+      ],
+      "sqlite_bytes": 13340672
+    },
+    {
+      "arm": "v1_compact",
+      "encoded_tokens": 6493571,
+      "supervision": [
+        1024,
+        997,
+        938
+      ],
+      "sqlite_bytes": 18456576
+    }
+  ]
+}
