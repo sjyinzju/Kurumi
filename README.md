@@ -126,7 +126,7 @@ flowchart TD
 
 发布包以 `manifest.json` 关联分片、字段定义与规则版本。加载器按样本清单组装 `model_input`、`supervision` 和 `audit`。任何有效期限可提供监督，类别和掩码的逻辑形状均为 `[B, 3]`。
 
-验收检查时点一致性、历史窗口、目标日及分档复算、切分、版本追溯和覆盖，并验证改变预测截止后的记录时，历史输入与原生编码保持一致。正式训练入口要求 `NUMERIC_READY`。2026-11-23 发布的沪深北 A 股 v1.1 数据包状态为 **`INCOMPLETE`**，主要依赖为历史股类资本、北交所财务组成期和申万行业母集。该版本可显式用于质检。美股和新闻公告待接入。 [完整数据契约](docs/kurumi_numeric_dataset_contract.md) · [最新发布报告](docs/cn_numeric_release_20261123.md) · [历史数据报告](docs/cn_numeric_dataset_report.md)
+验收检查时点一致性、历史窗口、目标日及分档复算、切分、版本追溯和覆盖，并验证改变预测截止后的记录时，历史输入与原生编码保持一致。正式训练入口要求 `NUMERIC_READY`。2026-11-23 发布的沪深北 A 股 v1.1 数据包状态为 **`INCOMPLETE`**，主要依赖为历史股类资本、北交所财务组成期和申万行业母集。该版本可显式用于质检。沪深北新闻与公告通过独立文本补充包接入。 [文本契约与运行命令](docs/kurumi_text_dataset_contract.md) [完整数据契约](docs/kurumi_numeric_dataset_contract.md) · [最新发布报告](docs/cn_numeric_release_20261123.md) · [历史数据报告](docs/cn_numeric_dataset_report.md)
 
 ## 未来规划与开源发布
 

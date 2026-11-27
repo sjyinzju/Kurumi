@@ -444,7 +444,8 @@ class NumericDataset:
             ))
             audits.append(dict(
                 sample_id=sample["sample_id"], split=sample["split"], dataset_version=self.dataset_version,
-                asof_utc=sample["asof_utc"], fundamental_snapshot_id=snapshot_id,
+                asof_utc=sample["asof_utc"], instrument_id=sample["instrument_id"], issuer_id=sample["issuer_id"],
+                fundamental_snapshot_id=snapshot_id,
                 fundamental_source_versions=finance.get("source_version_refs"),
                 window_provenance=tuple(r.get("provenance_id") for r in history),
                 industry_reconstruction=reconstruction or None,
@@ -454,12 +455,13 @@ class NumericDataset:
             ))
         return tuple(outputs), tuple(audits)
 
-    def load_model_inputs(self, sample_ids):
+    def load_model_inputs(self, sample_ids, *, with_audit=False):
         """Inference and training use the same assembly. This path never reads labels."""
         ids = tuple(sample_ids)
         if not ids:
             raise ValueError("At least one sample ID is required")
-        return self._assemble(ids)[0]
+        inputs, audit = self._assemble(ids)
+        return (inputs, audit) if with_audit else inputs
 
     def load_batch(self, sample_ids) -> LoadedBatch:
         ids = tuple(sample_ids)

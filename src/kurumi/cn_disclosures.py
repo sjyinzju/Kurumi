@@ -92,6 +92,17 @@ def _issuers():
     return ids
 
 
+def history_query(column, start, end, page, *, stock="", search="", category="", plate=None):
+    """Form data for the public CNINFO historical disclosure index."""
+    query = {
+        "pageNum": page, "pageSize": 30, "column": column, "tabName": "fulltext", "stock": stock,
+        "searchkey": search, "category": category, "seDate": f"{start}~{end}", "isHLtitle": "false",
+    }
+    if plate is not None:
+        query["plate"] = plate
+    return query
+
+
 def _requests_for_code(code, start, end, *, category=CATEGORIES):
     numeric, exchange = code.split(".")
     column = {"SH": "sse", "SZ": "szse", "BJ": "bse"}[exchange]
@@ -99,12 +110,10 @@ def _requests_for_code(code, start, end, *, category=CATEGORIES):
     items = {}
     for query_column in dict.fromkeys((column, "szse", "neeq" if exchange == "BJ" else column)):
         for page in range(1, 150):
-            data = _request("POST", ANNOUNCEMENTS, data={
-                "pageNum": page, "pageSize": 30, "column": query_column, "tabName": "fulltext",
-                "stock": f"{numeric},{issuer}" if issuer else "",
-                "searchkey": "" if issuer else numeric, "category": category,
-                "seDate": f"{start}~{end}", "isHLtitle": "false",
-            }).json()
+            data = _request("POST", ANNOUNCEMENTS, data=history_query(
+                query_column, start, end, page, stock=f"{numeric},{issuer}" if issuer else "",
+                search="" if issuer else numeric, category=category,
+            )).json()
             for row in data.get("announcements") or []:
                 if (issuer and row["orgId"] == issuer) or (not issuer and row["secCode"] == numeric):
                     items[row["announcementId"]] = row

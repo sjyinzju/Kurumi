@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import math
 import sqlite3
 import time
 from pathlib import Path
@@ -12,9 +13,13 @@ MAX_CACHE_BYTES = 8 * 1024**3
 class EncodingCache:
     """All namespaces and date shards in one LRU with a shared disk limit."""
 
-    def __init__(self, directory: str | Path, max_bytes: int = MAX_CACHE_BYTES):
+    def __init__(self, directory: str | Path, max_bytes: int = MAX_CACHE_BYTES, *,
+                 touch_interval_seconds: float = 0):
         if not 1024**2 <= max_bytes <= MAX_CACHE_BYTES:
             raise ValueError("Encoding cache must be between 1 MiB and 8 GiB")
+        if not math.isfinite(touch_interval_seconds) or touch_interval_seconds < 0:
+            raise ValueError("Cache touch interval must be finite and non-negative")
+        self.touch_interval_ns = int(1_000_000_000 * touch_interval_seconds)
         directory = Path(directory)
         directory.mkdir(parents=True, exist_ok=True)
         self.db = sqlite3.connect(directory / "karpo-encoded.sqlite", timeout=30)
@@ -38,12 +43,14 @@ class EncodingCache:
     def get(self, namespace, shard, sample_id, request_hash):
         key = (namespace, shard, sample_id, request_hash)
         with self.db:
-            row = self.db.execute("""SELECT payload FROM plans
+            row = self.db.execute("""SELECT payload,last_used FROM plans
                 WHERE namespace=? AND shard=? AND sample_id=? AND request_hash=?""", key).fetchone()
             if row is None:
                 return None
-            self.db.execute("""UPDATE plans SET last_used=?
-                WHERE namespace=? AND shard=? AND sample_id=? AND request_hash=?""", (time.time_ns(), *key))
+            now = time.time_ns()
+            if now - row[1] >= self.touch_interval_ns:
+                self.db.execute("""UPDATE plans SET last_used=?
+                    WHERE namespace=? AND shard=? AND sample_id=? AND request_hash=?""", (now, *key))
         return row[0]
 
     def put(self, namespace, shard, sample_id, request_hash, payload):

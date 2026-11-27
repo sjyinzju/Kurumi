@@ -27,6 +27,7 @@ from .numeric_loader import (
     MARKET_FIELDS,
     TASK_IDS,
 )
+from .text_input import section_text
 
 KARPO_REPO = "MachinePulseAI/karpo-decision-31B"
 KARPO_MODEL_REVISION = "b8e6fd7463cea8662c556d6257955d7ef9c10d19"
@@ -97,9 +98,16 @@ def render_state(model_input: dict) -> str:
         lines.append("[Market benchmark: CSI All Share gross total return, H00985]")
         lines.append(_fields(market["market"], MARKET_BENCHMARK_FIELDS))
     lines.extend(_context_state("Industry", market["industry"], INDUSTRY_FIELDS, INDUSTRY_COVERAGE_GROUPS))
-    if state["Xtext"] != {"text_ref": None, "text_status": "not_built"}:
-        raise ValueError("Numeric input template accepts only the not_built text slot")
-    lines.append("[Text slot] not_built")
+    text = state["Xtext"]
+    if text == {"text_ref": None, "text_status": "not_built"}:
+        lines.append("[Text slot] not_built")
+    elif text.keys() == {"news", "announcements"} and all(
+        isinstance(blocks, (tuple, list)) and all(isinstance(block, str) and block for block in blocks)
+        for blocks in text.values()
+    ):
+        lines.extend((section_text("news", text["news"]), section_text("announcement", text["announcements"])))
+    else:
+        raise ValueError("Expected model-facing text blocks or the original numeric text slot")
     return "\n".join(lines)
 
 
@@ -230,6 +238,8 @@ class KarpoNumericEncoder:
             key = (namespace, market + "/" + day[:7], sample_id, request_hash)
             stored = cache.get(*key)
         parts = self.encoder.plan(request, self.max_length) if stored is None else _plan_from_bytes(stored)
+        if "news" in model_input["Xstate"]["Xtext"] and len(parts) != 1:
+            raise ValueError("The full numeric and text state must fit once with all three questions")
         if tuple(key for p in parts for key in p.keys) != TASK_IDS or any(
             p.length > self.max_length or p.counts != (7,) * len(p.keys) for p in parts
         ):
