@@ -2,10 +2,19 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+import math
+from dataclasses import dataclass, replace
 
 import numpy as np
 
+from .cn_efficiency_display import (
+    context_table,
+    decision_table,
+    older_price_ranges,
+    round_ticks,
+    scalar_table,
+    volume_blocks,
+)
 from .cn_efficiency_render import (
     BOUND_NAMES,
     _context,
@@ -48,6 +57,7 @@ class Recipe:
     terse: bool = False
     delta_prices: bool = False
     shared_bounds: bool = False
+    field_units: bool = False
 
 
 RECIPES = {
@@ -76,15 +86,24 @@ RECIPES = {
 }
 
 
+# The decision scales and true labels keep their original precision.
+RECIPES["v3_anchors10_volume"] = replace(
+    RECIPES["basis_points_delta"], recent=10, block_days=25, volume_centered=True,
+    thin_factors=True, field_units=True,
+)
+
+
 def numeric_history(sequence):
+    if isinstance(sequence, np.ndarray):
+        if sequence.shape != (60, len(CHANNELS)):
+            raise ValueError("Expected the 60 by 6 normalized history array")
+        return sequence
     return np.array([[row[k] for k in CHANNELS] for row in sequence], dtype=np.float64)
 
 
 def tick_values(values, scales):
     shifted = (values - CENTERS) * scales
-    rounded = np.rint(shifted)
-    near_zero = (rounded == 0) & (shifted != 0)
-    return np.where(near_zero, np.copysign(0.25, shifted), rounded)
+    return round_ticks(shifted)
 
 
 def tick_scales(recipe):
@@ -105,6 +124,15 @@ def summarised_blocks(values, recipe):
 
 def proxy_history(values, name):
     recipe = RECIPES[name]
+    if recipe.field_units:
+        scales = tick_scales(recipe)
+        ticks = tick_values(values, scales)
+        boundary = -recipe.recent
+        recent = (ticks[:, boundary:] / scales + CENTERS).reshape(len(values), -1)
+        early_returns = ticks[:, :boundary, 4] / scales[4]
+        ranges = older_price_ranges(ticks, recipe.block_days, recipe.recent).reshape(len(values), -1)
+        flow = volume_blocks(ticks[:, :boundary, 5], recipe.block_days, scales[5]).reshape(len(values), -1)
+        return np.column_stack((recent, early_returns, ranges, flow)).astype(np.float32)
     recent = values[:, -recipe.recent:]
     if recipe.history.startswith("ticks"):
         scales = tick_scales(recipe)
@@ -129,7 +157,7 @@ def _table(title, row, fields, million=()):
 
 
 def _tick_text(value):
-    if not np.isfinite(value):
+    if not math.isfinite(value):
         return "NA"
     return str(int(value)) if value == int(value) else _value(value, precision=15)
 
@@ -146,7 +174,65 @@ def delta_prices(ticks, *, inverse=False):
     return values
 
 
+def _range_history_lines(values, recipe):
+    scales = tick_scales(recipe)
+    ticks = tick_values(values, scales)
+    early = len(ticks) - recipe.recent
+    volume_unit = int(scales[5])
+    ranges = older_price_ranges(ticks[None], recipe.block_days, recipe.recent)[0]
+    missing_volume = not np.isfinite(ticks[:, 5]).any()
+    columns = CHANNELS[:-1] if missing_volume else CHANNELS
+    kept = len(columns)
+    lines = [
+        "[Adjusted OHLC, daily log returns and median-relative volume. Ascending sessions -59 to 0]",
+        f"Price ratio to current adjusted close = 1 + ticks/{int(scales[0])}. Recent close starts absolute, then "
+        "prior-close offsets. Open/high/low are offsets from same-row close.",
+        f"Daily log return = value/{int(scales[4])}; median-relative volume = 1 + value/{volume_unit}. "
+        "Signed quarter ticks preserve nonzero near-zero changes.",
+    ]
+    if missing_volume:
+        lines.append("NA throughout history: volume_relative")
+    lines.extend((
+        f"[Earlier daily log returns. Sessions -59 to {-recipe.recent}]",
+        CHANNELS[4],
+    ))
+    lines.extend(_tick_text(v) for v in ticks[:early, 4].tolist())
+    lines.extend((
+        f"[Earlier {recipe.block_days}-session ranges, oldest first. Ties use the first observed session. "
+        "High/low use absolute price ticks. Gap is the signed open minus prior close with greatest "
+        "magnitude; the first window session has no prior close here. Counts are observed sessions."
+        " First/last closes are absolute price ticks.]",
+        "high,session,low,session,gap,session,first_close,last_close,open_count,high_count,low_count",
+    ))
+    lines.extend(",".join(_tick_text(v) for v in row) for row in ranges.tolist())
+    if not missing_volume:
+        lines.extend((
+            f"[Earlier {recipe.block_days}-session volume blocks. Volume units as above. "
+            "Ties use first occurrence; zero uses uncentered ratio.]",
+            "min,median,max,session,last,zero_count",
+        ))
+        flow = volume_blocks(ticks[None, :early, 5], recipe.block_days, volume_unit)[0]
+        lines.extend(",".join(_tick_text(v) for v in row) for row in flow.tolist())
+    lines.extend((
+        f"[Recent adjusted OHLC, log returns and volume. Sessions {-recipe.recent + 1} to 0]",
+        "Within price cells, = repeats the preceding displayed value in the row.",
+        ",".join(columns),
+    ))
+    # Recent OHLC has its own absolute close anchor. Earlier daily log returns keep their first session.
+    recent = delta_prices(ticks[early:])
+    recent[:, 5] -= volume_unit
+    for row in recent.tolist():
+        display = [_tick_text(v) for v in row[:kept]]
+        repeats = [i for i in range(1, 4) if display[i] != "NA" and display[i] == display[i - 1]]
+        for i in repeats:
+            display[i] = "="
+        lines.append(",".join(display))
+    return lines
+
+
 def _history_lines(values, recipe):
+    if recipe.field_units:
+        return _range_history_lines(values, recipe)
     present = np.isfinite(values).any(axis=0)
     kept = np.flatnonzero(present)
     names = [CHANNELS[i] for i in kept]
@@ -202,6 +288,8 @@ def _history_lines(values, recipe):
 
 
 def _market_sections(recipe, market):
+    if recipe.field_units:
+        return context_table("Market", market, MARKET_FIELDS)
     if recipe.terse:
         lines = _table("Market", market, MARKET_FIELDS) + _context("Market", market, MARKET_FIELDS)[1:]
     else:
@@ -210,19 +298,22 @@ def _market_sections(recipe, market):
 
 
 def _industry_sections(recipe, industry):
+    if recipe.field_units:
+        return context_table("Industry", industry, INDUSTRY_FIELDS)
     if recipe.terse:
         return _table("Industry", industry, INDUSTRY_FIELDS) + _context("Industry", industry, INDUSTRY_FIELDS)[1:]
     return _context("Industry", industry, INDUSTRY_FIELDS)
 
 
-def _benchmark_sections(market):
+def _benchmark_sections(recipe, market):
     if MARKET_BENCHMARK_FIELDS[0] in market:
-        return _table("CSI All Share gross total return H00985", market, MARKET_BENCHMARK_FIELDS)
+        table = scalar_table if recipe.field_units else _table
+        return table("CSI All Share gross total return H00985", market, MARKET_BENCHMARK_FIELDS)
     return []
 
 
 def _context_sections(recipe, market, industry):
-    return _market_sections(recipe, market) + _industry_sections(recipe, industry) + _benchmark_sections(market)
+    return _market_sections(recipe, market) + _industry_sections(recipe, industry) + _benchmark_sections(recipe, market)
 
 
 def dated_renderer(name):
@@ -247,7 +338,7 @@ def dated_renderer(name):
                   identity["industry_code_asof"])
         market, industry = state["Xmarket"]["market"], state["Xmarket"]["industry"]
         if mk not in market_sections:
-            market_sections[mk] = (_market_sections(recipe, market), _benchmark_sections(market))
+            market_sections[mk] = (_market_sections(recipe, market), _benchmark_sections(recipe, market))
         if sector not in industry_sections:
             industry_sections[sector] = _industry_sections(recipe, industry)
         left, right = market_sections[mk]
@@ -264,23 +355,44 @@ def native_request(model_input, name, *, context=None):
     stock = state["Xstock"]
     if state["Xtext"] != {"text_ref": None, "text_status": "not_built"}:
         raise ValueError("Numeric recipe requires the not_built text slot")
-    if tuple(row["session_offset"] for row in stock["sequence"]) != tuple(range(-59, 1)):
+    sequence = stock["sequence"]
+    if not isinstance(sequence, np.ndarray) and tuple(row["session_offset"] for row in sequence) != tuple(range(-59, 1)):
         raise ValueError("Numeric recipe requires 60 consecutive exchange sessions")
     fields = tuple(f for f in FACTORS if f != "volatility_60d_daily"
                    and (not recipe.thin_factors or f not in RECONSTRUCTIBLE))
-    lines = ["NA=missing. Returns, ratios, percentiles and volatilities are decimals except where specified."]
+    if recipe.field_units:
+        units = ("NA/omitted means missing. Scalar returns, volatility, drawdown, moving-average gaps, dispersion "
+                 "and turnover are in bp (0.0001). Signed quarter bp preserves direction near zero. "
+                 "Ratios, yields and ranks are decimal. Omitted count_coverage = n_valid/n_expected if n_expected "
+                 "is positive; otherwise NA.")
+    else:
+        units = "NA=missing. Returns, ratios, percentiles and volatilities are decimals except where specified."
+    lines = [units]
     lines += _table("Identity", stock["identity"], IDENTITY_FIELDS)
-    lines += _table("Current. Prices in quote currency/share, volume in million shares, cap in million quote currency",
-                    stock["current"], CURRENT_FIELDS, million=("volume_shares", "security_market_cap_local"))
+    current_title = "Current. Prices in quote currency/share, volume in million shares, cap in million quote currency"
+    if recipe.field_units:
+        lines += scalar_table(current_title, stock["current"], CURRENT_FIELDS)
+    else:
+        lines += _table(current_title, stock["current"], CURRENT_FIELDS,
+                        million=("volume_shares", "security_market_cap_local"))
     lines += _history_lines(numeric_history(stock["sequence"]), recipe)
-    lines += _table("Stock factors. volatility_60d_daily equals the daily sigma in each question",
-                    stock["factors"], fields)
-    lines += _table("As-of financials in million reporting currency", stock["fundamentals"],
-                    (*FINANCIALS, *FINANCIAL_CONTEXT), million=FINANCIALS)
+    finance_title = "As-of financials in million reporting currency"
+    if recipe.field_units:
+        lines += scalar_table("Stock factors. volatility_60d_daily is the daily decision sigma",
+                              stock["factors"], fields)
+        lines += scalar_table(finance_title, stock["fundamentals"], (*FINANCIALS, *FINANCIAL_CONTEXT))
+    else:
+        lines += _table("Stock factors. volatility_60d_daily equals the daily sigma in each question",
+                        stock["factors"], fields)
+        lines += _table(finance_title, stock["fundamentals"], (*FINANCIALS, *FINANCIAL_CONTEXT), million=FINANCIALS)
     if context is None:
         context = _context_sections(recipe, **state["Xmarket"])
     lines += context
     lines.append("[Text slot] not_built")
+    if recipe.field_units:
+        table, questions = decision_table(model_input)
+        lines += table
+        return {"state": "\n".join(lines), "questions": questions}
     if recipe.shared_bounds:
         lines += ["[Return bounds (%)]", "\t".join(("sessions", *BOUND_NAMES))]
         lines += ["\t".join((str(task["horizon"]),

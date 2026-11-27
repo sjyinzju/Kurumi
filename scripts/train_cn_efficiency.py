@@ -19,6 +19,7 @@ from pathlib import Path
 import numpy as np
 import torch
 
+from kurumi.cn_efficiency_init import initialization_mode, validate_frozen_m1, validate_output_path
 from kurumi.cn_efficiency_train import (
     CPU,
     FORMATS,
@@ -29,6 +30,7 @@ from kurumi.cn_efficiency_train import (
     prepare_parquet,
     prepare_view,
     staged_forward,
+    validate_prepared_recipe,
 )
 
 DEFAULT_CONFIG = Path(__file__).resolve().parents[1] / "configs/training/cn_efficiency_v1.json"
@@ -311,14 +313,17 @@ def throughput(records):
 
 def load_training(args, view, cfg):
     from karpo_decision import checkpoint as native_checkpoint
+    from kurumi.m1_model import attach
+    from kurumi.m1_performance import GIB, bound_training_memory
     from run_benchmarks import original_model
 
     from kurumi.karpo_numeric import KarpoNumericEncoder
-    from kurumi.m1_model import attach
-    from kurumi.m1_performance import GIB, bound_training_memory
 
+    mode = initialization_mode(cfg, args.m1_frozen)
+    validate_output_path(args.output, args.model, args.m1_frozen)
     native = native_identity()
     manifest = view.manifest
+    validate_prepared_recipe(manifest, cfg)
     if native["revision"] != cfg["native_revision"] or native["revision"] != manifest["native_revision"]:
         raise ValueError("Native source revision differs from the prepared view/configuration")
     base = original_model({
@@ -337,12 +342,25 @@ def load_training(args, view, cfg):
     gpu = torch.cuda.get_device_properties(device)
     if "GB10" not in gpu.name:
         raise RuntimeError(f"Expected the existing GB10 Slurm device, got {gpu.name}")
+    frozen = None
+    if mode == "frozen_m1":
+        from kurumi.m1_model import frozen_identity
+
+        frozen = frozen_identity(args.m1_frozen)
+    initializer = validate_frozen_m1(frozen, cfg, base, native["revision"]) if frozen else None
     random.seed(cfg["seed"])
     np.random.seed(cfg["seed"])
     torch.manual_seed(cfg["seed"])
     torch.cuda.manual_seed_all(cfg["seed"])
     ckpt = native_checkpoint.load(args.model, device, dtype=torch.bfloat16)
     adapters = attach(ckpt, cfg)
+    if frozen is not None:
+        from kurumi.m1_model import load_weights
+
+        if (sorted(adapters) != frozen["mounted_modules"]
+                or ckpt.readout.cap != frozen["readout_soft_cap"]):
+            raise ValueError("Frozen M1 projections or Readout soft cap differ from the mounted model")
+        load_weights(frozen["weights"], adapters, ckpt.readout, verify=True)
     packed = ckpt.family.Packed(ckpt.backbone, ckpt.config.attention)
     cap = bound_training_memory(device, cfg["memory_limit_gib"] * GIB)
     identity = {
@@ -351,6 +369,8 @@ def load_training(args, view, cfg):
         "native_source_files_sha256": native["source_files_sha256"],
         "view": manifest, "config": cfg,
     }
+    if initializer is not None:
+        identity["initialization"] = initializer
     return ckpt, packed, adapters, identity, {
         "gpu": gpu.name, "node": socket.gethostname(), "slurm_job": os.environ.get("SLURM_JOB_ID"),
         "torch": str(torch.__version__), "cuda": torch.version.cuda, "allocator_cap_bytes": cap,
@@ -442,8 +462,8 @@ def main():
     prepare = stages.add_parser("prepare")
     source = prepare.add_mutually_exclusive_group(required=True)
     source.add_argument("--input", type=Path, help="Rendered JSONL, or '-' for the renderer's stream")
-    source.add_argument("--date-view", type=Path, help="Parquet supervision view from a V2 pool")
-    prepare.add_argument("--pool", type=Path, help="V2 pool for --date-view")
+    source.add_argument("--date-view", type=Path, help="Parquet supervision view from a CN columnar pool")
+    prepare.add_argument("--pool", type=Path, help="CN columnar pool for --date-view")
     prepare.add_argument("--confirmation-date-view", type=Path)
     prepare.add_argument("--recipe", help="Numeric display recipe used by the compact format")
     prepare.add_argument("--batch-size", type=int, default=4096)
@@ -455,6 +475,7 @@ def main():
         command.add_argument("--view", required=True, type=Path)
         command.add_argument("--model", required=True, type=Path)
         command.add_argument("--provenance", required=True, type=Path)
+        command.add_argument("--m1-frozen", type=Path, help="Sealed M1 manifest for new LoRA/Readout initialization")
         command.add_argument("--output", required=True, type=Path)
         command.add_argument("--max-updates", type=int, required=stage == "train")
         if stage == "probe":
@@ -475,7 +496,7 @@ def main():
 
             recipe = args.recipe or cfg.get("input_recipe", "compact")
             if not args.pool or recipe not in RECIPES or args.batch_size < 1:
-                parser.error("A real V2 pool, available recipe and positive batch size are required")
+                parser.error("A CN columnar pool, available recipe and positive batch size are required")
             result = prepare_parquet(args.pool, args.date_view, args.confirmation_date_view, args.view,
                                      args.tokenizer, args.formats, cfg["max_length"], cfg["native_revision"],
                                      cfg["seed"], recipe=recipe, batch_size=args.batch_size)
@@ -486,6 +507,11 @@ def main():
                                   cfg["max_length"], cfg["native_revision"], cfg["seed"])
         print(json.dumps(result, indent=2))
         return
+    try:
+        initialization_mode(cfg, args.m1_frozen)
+        validate_output_path(args.output, args.model, args.m1_frozen)
+    except ValueError as error:
+        parser.error(str(error))
     if args.max_updates is not None and args.max_updates <= 0:
         parser.error("--max-updates must be positive")
     for signum in (signal.SIGTERM, getattr(signal, "SIGUSR1", signal.SIGTERM)):

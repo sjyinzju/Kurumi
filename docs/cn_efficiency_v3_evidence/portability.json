@@ -1,0 +1,137 @@
+{
+  "actual_opened_data": {
+    "duckdb": {
+      "context/stock_fundamental_asof/shared.parquet": 8,
+      "context/market_daily/shared.parquet": 4,
+      "context/industry_daily/shared.parquet": 7,
+      "fixture/fit.parquet": 10,
+      "pool.parquet": 16,
+      "fixture/confirm.parquet": 10,
+      "points/2020.parquet": 8,
+      "history/2019.parquet": 8,
+      "history/2020.parquet": 16,
+      "points/2021.parquet": 8,
+      "history/2021.parquet": 8,
+      "labels/2020.parquet": 3,
+      "labels/2021.parquet": 3
+    },
+    "arrow": {
+      "fixture/fit.parquet": 3,
+      "fixture/confirm.parquet": 3
+    },
+    "python": {
+      "manifest.json": 3,
+      "context/manifest.json": 4,
+      "pool.parquet": 1,
+      "fixture/fit.parquet": 1,
+      "fixture/confirm.parquet": 1
+    }
+  },
+  "fit_confirm": {
+    "fit": [
+      383,
+      324,
+      129
+    ],
+    "confirm": [
+      191,
+      169,
+      87
+    ]
+  },
+  "cutoff_masked": {
+    "fit_20": 253,
+    "fit_5": 59,
+    "confirm_20": 103,
+    "confirm_5": 22
+  },
+  "layout": {
+    "exact_cached_requests": 574,
+    "pack_originals_2": 286,
+    "pack_tokens": 1721561,
+    "split_denominator_checks": 574,
+    "pack_originals_1": 2
+  },
+  "exact_binary64_rows": {
+    "fit": 836,
+    "confirm": 447
+  },
+  "native_readout_slot_token": 568,
+  "forced_split_limit": 2596,
+  "forced_split_lengths": [
+    2595,
+    2595,
+    2596
+  ],
+  "seconds": 13.879003999987617,
+  "pack_cache_sha256": "0615b7a40e27300c11865ae8ddf9459126c6f484817f986657a9aac1ca970e5c",
+  "manifest": {
+    "cache_version": "cn-blocks-2",
+    "tokenizer_revision": "b36640b5450552ac96f908c71664932e4fa79485a9a5422436a779230eeb1bff",
+    "native_revision": "6600011eb5cf46232d056ec0717dc726146d29de",
+    "runtime": {
+      "transformers": "5.23.0",
+      "tokenizers": "0.23.3",
+      "jinja2": "3.1.6",
+      "torch": "2.15.0"
+    },
+    "formats": [
+      "compact"
+    ],
+    "max_length": 8192,
+    "seed": 17,
+    "counts": {
+      "distinct_plans": 574,
+      "fit": 383,
+      "confirm": 191
+    },
+    "supervision": {
+      "fit": [
+        383,
+        324,
+        129
+      ],
+      "confirm": [
+        191,
+        169,
+        87
+      ]
+    },
+    "source_sha256": "92516f23cc030433554943163a3ce9d3119e9630739deccd73f37746f3af0e80",
+    "encoded_tokens": {
+      "compact": 1721561
+    },
+    "short_token_cache": {
+      "hits": 15488,
+      "misses": 10,
+      "maxsize": 4096,
+      "currsize": 10
+    },
+    "fast_tokenizer_backend": true,
+    "mean_fit_weight": 281.621409921673,
+    "last_fit_anchor": "2020-12-23",
+    "last_fit_target": "2020-12-24",
+    "first_confirm_anchor": "2021-01-04",
+    "provenance": {
+      "input_recipe": "v3_anchors10_volume",
+      "dataset_version": "cn-efficiency-v3",
+      "pool_manifest_sha256": "768a0679c18f5a5ffce60e766a3f2b81cf927a1c959615ce59a8db995e1a1c91",
+      "pool_index_sha256": "36c40bc64cc02e3f06df93c1fbdf58e0db725f22a2368063571d278d920d831d",
+      "source_manifest_sha256": "b5dedb67575a45fa2203a7bac4f11ad785c1e271c187cceb1eaba8f043336637",
+      "date_view_sha256": {
+        "fit": "833fb00d3f06756ea2a456cd86614be9360fdf873d92e91b385f357000d38d9e",
+        "confirm": "ea5fbaf6090afc03743be720c1b646945964479acafbb14756e8764e79d7f71b"
+      },
+      "transform_sha256": {
+        "cn_efficiency_data_v2.py": "6f8d8cd81d944390ae1b2b9d5fdbbcdbe60ced5fbd85afde92100daabd4a38ea",
+        "cn_efficiency_display.py": "b2224e5bf761ca01cd2a616493e9f68362458a38e0f05ad02fba466e3c0af2ef",
+        "cn_efficiency_recipes.py": "fcc2f7fa45a8d35a9042a10c692aeecd52faf0e45270886816754616fef9995b",
+        "cn_efficiency_render.py": "7d8bc4ffa1a2d06768de6cacd6adb2df18520fee6648a1522e59f4fb5c804765",
+        "cn_efficiency_train.py": "85642a81b0cde1a26d32cc344aa270c1911919b36a9154203899f6cbd1df82f7",
+        "numeric_loader.py": "fc43f9cf63a0c4a0062eb09e3aabf8d24fba098182d8f18ad5a92b35931103ea"
+      }
+    }
+  },
+  "allowed_external_access": false,
+  "num_visible_gpus": 0
+}

@@ -27,6 +27,22 @@ from kurumi.numeric_loader import CHANNELS, TASK_IDS
 
 
 def compare_questions(name, request, expected):
+    if RECIPES[name].field_units:
+        lines = request["state"].split("[Decision bounds.", 1)[1].splitlines()
+        sigma = lines[1].split("=", 1)[1]
+        for task_id, row in zip(TASK_IDS, lines[3:], strict=True):
+            horizon, scale, *bounds = row.split("\t")
+            question = request["questions"][task_id]
+            if (task_id != f"return_{horizon}d"
+                    or expected[task_id]["instructions"] !=
+                    f"{question['instructions']} Daily log-return sigma={sigma}; horizon scale={scale}."):
+                raise ValueError("Decision table changes the horizon or scale")
+            for choice_id, received in question["criteria"].items():
+                for i, value in enumerate(bounds, 1):
+                    received = received.replace(f"b{i}", f"{value}%")
+                if received != expected[task_id]["criteria"][choice_id]:
+                    raise ValueError("Decision table changes a native class interval")
+        return
     if not RECIPES[name].shared_bounds:
         if request["questions"] != expected:
             raise ValueError("Candidate changes native return intervals")

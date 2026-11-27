@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import math
 import random
@@ -28,6 +29,10 @@ COVERAGE_ORDERS = {
         "security_id, local_trade_date, sample_id"
     ),
     "security_first": ("market_id, security_id, local_trade_date, sample_id"),
+    "pit_coverage": (
+        "date_trunc('month', local_trade_date), market_id, sector NULLS LAST, "
+        "market_state NULLS LAST, low_liquidity, sampling_missing, security_id, local_trade_date, sample_id"
+    ),
     "random": None,
 }
 
@@ -60,7 +65,19 @@ def build_view(
             raise ValueError("The token budget must cover at least one estimated sample")
         token_size = math.floor(token_budget / tokens_per_sample)
         budget = min(budget, token_size) if budget is not None else token_size
+    seed = int(seed)
     cutoff = label_end or end
+    release_file = pool.with_name("manifest.json")
+    release = json.loads(release_file.read_bytes()) if pool.name == "pool.parquet" and release_file.is_file() else {}
+    provenance = {}
+    if release.get("dataset_version") == "cn-efficiency-v3":
+        provenance = {
+            "dataset_version": release["dataset_version"],
+            "pool_manifest_sha256": hashlib.sha256(release_file.read_bytes()).hexdigest(),
+            "view_seed": str(seed), "coverage_order": coverage_order,
+        }
+    # All values come from the checked version, a SHA, integer seed, or an allowed order.
+    kv = ", KV_METADATA {" + ", ".join(f"{k}: '{v}'" for k, v in provenance.items()) + "}" if provenance else ""
     output.parent.mkdir(parents=True, exist_ok=True)
     with TemporaryDirectory(prefix=".cn-view-", dir=output.parent) as temp, duckdb.connect() as db:
         db.execute("SET threads = 4")
@@ -127,7 +144,7 @@ def build_view(
         staged = Path(temp) / "view.parquet"
         db.execute(f"""
             COPY (SELECT * FROM ({selected}) ORDER BY local_trade_date, sample_id)
-            TO {_sql_path(staged)} (FORMAT parquet, COMPRESSION zstd)
+            TO {_sql_path(staged)} (FORMAT parquet, COMPRESSION zstd{kv})
         """)
         observed, *selected_supervision, months, sectors, states, securities, dates = db.execute(f"""
             SELECT count(*), {counts}, count(DISTINCT date_trunc('month', local_trade_date)),
@@ -144,6 +161,7 @@ def build_view(
         "token_budget": token_budget, "tokens_per_sample": tokens_per_sample,
         "estimated_selected_tokens": size * tokens_per_sample if tokens_per_sample is not None else None,
         "coverage_order": coverage_order,
+        **provenance,
         "systematic_offset": offset, "eligible_samples": population, "selected_samples": size,
         "eligible_supervision": dict(zip(HORIZONS, eligible_supervision, strict=True)),
         "selected_supervision": dict(zip(HORIZONS, selected_supervision, strict=True)),

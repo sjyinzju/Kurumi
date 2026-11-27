@@ -26,6 +26,7 @@ from .numeric_loader import (
 )
 
 VERSION = "cn-efficiency-v2"
+PORTABLE_VERSION = "cn-efficiency-v3"
 TAPE = ("open_adj", "high_adj", "low_adj", "close_adj", "log_return_1d", "volume_shares", "split_unit_factor")
 ENDS = tuple(f"target_end_{h}" for h in HORIZONS)
 CLASSES = tuple(f"target_class_{h}" for h in HORIZONS)
@@ -113,6 +114,16 @@ def target_record(row, segment):
                 target_indices=targets, target_dates=dates)
 
 
+def context_columns(source):
+    return {
+        "stock_fundamental_asof": ("fundamental_snapshot_id", "available_at", "issuer_id", "fiscal_period_end",
+                                   "disclosure_date_local", "reporting_currency", *FINANCIALS),
+        "market_daily": ("market_id", "local_trade_date", "available_at", "coverage", *source.market_fields),
+        "industry_daily": ("market_id", "local_trade_date", "available_at", "coverage", "industry_system",
+                           "classification_version", "industry_code", *INDUSTRY_FIELDS),
+    }
+
+
 class ColumnarDataset:
     """A single two-year tape in memory and read-only Arrow projections for each requested batch."""
 
@@ -120,11 +131,18 @@ class ColumnarDataset:
         self.directory = Path(directory).resolve()
         self.index = self.directory / "pool.parquet"
         self.manifest = json.loads((self.directory / "manifest.json").read_bytes())
-        if self.manifest["dataset_version"] != VERSION:
-            raise ValueError("Expected the V2 columnar pool")
-        source = Path(self.manifest["source_directory"])
-        if file_sha(source / "manifest.json") != self.manifest["source_manifest_sha256"]:
-            raise ValueError("Shared context source no longer matches the pool")
+        version = self.manifest["dataset_version"]
+        if version == PORTABLE_VERSION:
+            source = self.directory / "context"
+            if (source.resolve().parent != self.directory or
+                    file_sha(source / "manifest.json") != self.manifest["files"]["context/manifest.json"]["sha256"]):
+                raise ValueError("Portable context manifest differs from the package")
+        elif version == VERSION:
+            source = Path(self.manifest["source_directory"])
+            if file_sha(source / "manifest.json") != self.manifest["source_manifest_sha256"]:
+                raise ValueError("Shared context source no longer matches the pool")
+        else:
+            raise ValueError(f"Unrecognized CN columnar pool version: {version}")
         self.source = NumericDataset(source)
         config = {"threads": threads, "memory_limit": "1GB", "preserve_insertion_order": False}
         if scratch is None:
@@ -132,16 +150,11 @@ class ColumnarDataset:
         else:
             config["temp_directory"] = str(scratch)
         self.db = duckdb.connect(config=config)
-        context_fields = {
-            "stock_fundamental_asof": ("fundamental_snapshot_id", "available_at", "issuer_id", "fiscal_period_end",
-                                       "disclosure_date_local", "reporting_currency", *FINANCIALS),
-            "market_daily": ("market_id", "local_trade_date", "available_at", "coverage", *self.source.market_fields),
-            "industry_daily": ("market_id", "local_trade_date", "available_at", "coverage", "industry_system",
-                               "classification_version", "industry_code", *INDUSTRY_FIELDS),
-        }
         kind = "TABLE" if preload_context else "VIEW"
-        for name, columns in context_fields.items():
-            path = source / name / "**/*.parquet"
+        for name, columns in context_columns(self.source).items():
+            path = source / name / ("shared.parquet" if version == PORTABLE_VERSION else "**/*.parquet")
+            if version == PORTABLE_VERSION and not path.resolve().is_relative_to(self.directory):
+                raise ValueError(f"Context path escapes the package: {path}")
             self.db.execute(f"""
                 CREATE TEMP {kind} {name} AS SELECT {", ".join(columns)} FROM read_parquet({_sql_path(path)})
             """)
@@ -229,7 +242,7 @@ class ColumnarDataset:
             out[chosen] = native_history(self.tape_values[indices])
         return out
 
-    def native_inputs(self, anchors):
+    def native_inputs(self, anchors, *, array_history=False):
         points = self.point_rows(anchors)
         for point, values in zip(points.to_pylist(), self.history(points), strict=True):
             day, clock = point["local_trade_date"], point["asof_utc"]
@@ -241,7 +254,7 @@ class ColumnarDataset:
                         or point["finance_at"] > clock))):
                 raise ValueError(f"Point data exceeds the as-of clock: {point['sample_id']}")
             identity = dict(point["identity"], local_trade_date=day)
-            sequence = tuple(
+            sequence = values if array_history else tuple(
                 dict(session_offset=i - 59, **dict(zip(CHANNELS, vals, strict=True)),
                      value_mask=tuple(value is not None for value in vals))
                 for i, row in enumerate(values.tolist())

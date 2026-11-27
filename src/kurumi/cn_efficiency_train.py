@@ -174,17 +174,40 @@ def prepare_view(source, destination, tokenizer, formats, max_length, native_rev
                            native_revision, seed, digest=digest)
 
 
+def transform_identity():
+    code = Path(__file__).resolve().parent
+    return {name: hashlib.sha256((code / name).read_text(encoding="utf-8").encode("utf-8")).hexdigest() for name in (
+        "cn_efficiency_data_v2.py", "cn_efficiency_display.py", "cn_efficiency_recipes.py",
+        "cn_efficiency_render.py", "cn_efficiency_train.py", "numeric_loader.py",
+    )}
+
+
+def validate_prepared_recipe(manifest, cfg):
+    from .cn_efficiency_data_v2 import PORTABLE_VERSION
+
+    if cfg.get("version") == PORTABLE_VERSION:
+        provenance = manifest.get("provenance", {})
+        if (provenance.get("dataset_version") != PORTABLE_VERSION
+                or provenance.get("input_recipe") != cfg["input_recipe"]
+                or provenance.get("transform_sha256") != transform_identity()
+                or manifest.get("max_length") != cfg["max_length"]):
+            raise ValueError("Prepare the view with the current V3 pool, input recipe and native length first")
+
+
 def prepare_parquet(pool, date_view, confirmation_view, destination, tokenizer, formats, max_length,
                     native_revision, seed=17, *, recipe="compact", batch_size=4096, token_cache=True):
     """Prepare from frozen dated views, with no corpus or unmasked label path in between."""
+    import pyarrow.parquet as pq
+
     from .cn_efficiency_data_v2 import ColumnarDataset, file_sha, target_record, verify_view, view_batches
-    from .cn_efficiency_recipes import dated_renderer
+    from .cn_efficiency_recipes import RECIPES, dated_renderer
     from .karpo_numeric import request_from_input
 
     views = [(date_view, "fit")]
     if confirmation_view is not None:
         views.append((confirmation_view, "confirm"))
     render = dated_renderer(recipe)
+    array_history = formats == ("compact",) and RECIPES[recipe].field_units
     destination.parent.mkdir(parents=True, exist_ok=True)
     with TemporaryDirectory(prefix=".cn-prepare-", dir=destination.parent) as work, ColumnarDataset(
         pool, preload_context=True, trim_history=True, scratch=work,
@@ -192,20 +215,29 @@ def prepare_parquet(pool, date_view, confirmation_view, destination, tokenizer, 
         index_sha = file_sha(dataset.index)
         if index_sha != dataset.manifest["files"]["pool.parquet"]["sha256"]:
             raise ValueError("Pool index bytes differ from its release manifest")
+        manifest_sha = file_sha(dataset.directory / "manifest.json")
+        for path, _ in views:
+            with pq.ParquetFile(path) as dated:
+                pinned = (dated.metadata.metadata or {}).get(b"pool_manifest_sha256")
+                if pinned is not None and pinned.decode("ascii") != manifest_sha:
+                    raise ValueError(f"Date view belongs to a different pool manifest: {path}")
         spans = [verify_view(dataset.db, dataset.index, path) for path, _ in views]
         if len(spans) == 2 and spans[0][1] >= spans[1][0]:
             raise ValueError("Confirmation must start after all fit samples and active target dates")
         provenance = dict(
             input_recipe=recipe, dataset_version=dataset.manifest["dataset_version"],
-            pool_manifest_sha256=file_sha(dataset.directory / "manifest.json"), pool_index_sha256=index_sha,
+            pool_manifest_sha256=manifest_sha, pool_index_sha256=index_sha,
             source_manifest_sha256=dataset.manifest["source_manifest_sha256"],
             date_view_sha256={segment: file_sha(path) for path, segment in views},
         )
 
+        if RECIPES[recipe].field_units:
+            provenance["transform_sha256"] = transform_identity()
+
         def records():
             for path, segment in views:
                 for batch in view_batches(path, batch_size):
-                    inputs = dataset.native_inputs(batch)
+                    inputs = dataset.native_inputs(batch, array_history=array_history)
                     for anchor, x in zip(batch.to_pylist(), inputs, strict=True):
                         row = target_record(anchor, segment)
                         if "baseline" in formats:
