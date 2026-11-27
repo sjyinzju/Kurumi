@@ -25,12 +25,24 @@ NBS = "https://www.stats.gov.cn/sj/zxfb/"
 PAPER = "https://paper.cnstock.com/"
 CNINFO = "CNINFO"
 PAPER_SOURCE = "CNSTOCK-paper"
+STCN_SOURCE = "STCN-paper"
+CS_SOURCE = "CS-paper"
+ZQRB_SOURCE = "ZQRB-paper"
 NBS_SOURCE = "NBS"
 CNINFO_PAGE_SIZE = 30
 # The public site resets out-of-range pages. Detect repetition as well as reported totals.
 CNINFO_PAGE_LIMIT = 90
 EXCHANGES = {"SSE": ("sse", "sh"), "SZSE": ("szse", "sz"), "BSE": ("bse", "bj")}
 PAPER_SECTION = re.compile(r"(?:^|[：:·])\s*(?:公司|上市公司|产经|产业|市场|财经新闻)(?:\s|$|[·／/])")
+STCN_SECTION = re.compile(r"^第[A-Z]\d{3}版(?:公司|上市公司\S*|产业|产经|市场|财经新闻)(?:$|[·／/])")
+COMPANY_SECTION = re.compile(r"版[：:]\s*(?:公司|上市公司|行业|产业|产经|市场|财经要闻)")
+SIGNIFICANT_ANNOUNCEMENT = re.compile(
+    r"业绩(?:预告|快报)|签订.{0,14}合同|重大合同|中标|投产|停产|"
+    r"重组|并购|资产收购|控制权|实际控制人.{0,12}变更|"
+    r"发行.{0,12}(?:股份|可转债)|募集资金.{0,12}完成|回购|利润分配|"
+    r"增持|减持|质押|诉讼|仲裁|处罚|立案|违约|逾期|计提减值|"
+    r"风险警示|终止上市|退市|停牌|复牌"
+)
 PAPER_BOARD = re.compile(r"node_\d+\.htm$")
 PAPER_ARTICLE = re.compile(r"(?:^|/)content_\d+(?:_\d+)?\.htm$")
 NBS_ARTICLE = re.compile(r"/sj/zxfb/20\d{4}/t20\d{6}_\d+\.html$")
@@ -79,9 +91,10 @@ def months(start: date, end: date):
 
 
 class Capture:
-    def __init__(self, root: Path, interval: float = 0.25):
+    def __init__(self, root: Path, interval: float = 0.25, prior: Path | None = None):
         self.root = root
         self.interval = interval
+        self.prior = prior
         self._next_request = {}
         self._lock = threading.Lock()
 
@@ -121,7 +134,8 @@ class Capture:
 
     def fetch(self, source: str, url: str, extension="html", *, data=None) -> dict:
         request_key = sha(json.dumps([VERSION, url, data], sort_keys=True).encode())
-        path = self.root / "requests" / source / request_key[:2] / (request_key + ".json")
+        relative = Path("requests") / source / request_key[:2] / (request_key + ".json")
+        path = self.root / relative
         previous = read_json(path) if path.is_file() else None
         if previous:
             if self.reusable(previous):
@@ -130,6 +144,12 @@ class Capture:
                 datetime.now(UTC) - datetime.fromisoformat(previous["retrieved_at"]) < timedelta(minutes=30)
             ):
                 return previous
+        if self.prior and (old_path := self.prior / relative).is_file():
+            old = read_json(old_path)
+            if old.get("raw_ref"):
+                old["raw_ref"] = str((self.prior / old["raw_ref"]).resolve())
+                if self.reusable(old):
+                    return old
         receipt = {"source": source, "url": url, "parameters": data, "retrieved_at": now()}
         if previous and previous.get("raw_ref"):
             receipt["previous_raw_ref"] = previous["raw_ref"]
@@ -351,6 +371,106 @@ def paper_scope(capture, day, sections=PAPER_SECTION):
     return result
 
 
+def stcn_scope(capture, day, sections=STCN_SECTION):
+    """The legacy edition index already lists the articles under each original board."""
+    base = f"https://epaper.stcn.com/paper/zqsb/html/{day:%Y-%m}/{day:%d}/"
+    key = f"sections-{day}-{sha(sections.pattern.encode())[:8]}"
+    path = capture.scope(STCN_SOURCE, key)
+    if path.is_file() and (saved := read_json(path))["pagination_complete"]:
+        return saved
+    front = capture.fetch(STCN_SOURCE, base + "node_2.htm")
+    records = {}
+    complete = False
+    reason = front.get("failure_reason")
+    if front["query_status"] == "ok":
+        boards = soup(capture, front).select("#listWrap .area")
+        complete = bool(boards)
+        reason = None if boards else "edition_navigation_missing"
+        for board in boards:
+            label = board.select_one("h2 a[href]")
+            if label is None:
+                complete, reason = False, "board_label_missing"
+                continue
+            title = label.get_text(" ", strip=True)
+            if not sections.search(re.sub(r"\s+", "", title)):
+                continue
+            articles = [a for a in board.select("li a[href]")
+                        if re.fullmatch(r"content_\d+\.htm", a["href"]) and a.get_text(strip=True)]
+            if not articles:
+                complete, reason = False, "board_article_links_missing"
+            for article in articles:
+                link = urljoin(base, article["href"])
+                records[link] = dict(kind="news", provider=STCN_SOURCE, publisher="证券时报",
+                    source_doc_id=urlsplit(link).path, source_url=link,
+                    title=article.get_text(" ", strip=True), section=title,
+                    published_raw=day.isoformat(), time_evidence="dated original Securities Times edition",
+                    index_ref=front["raw_ref"], index_hash=front["raw_hash"], retrieved_at=front["retrieved_at"])
+    status = ("ok" if records else "empty") if complete else ("partial" if records else "failed")
+    result = scope_row(STCN_SOURCE, "news", key, day, day, status, [front], list(records.values()),
+                       complete=complete, reason=reason)
+    write_json(path, result)
+    return result
+
+
+def other_paper_scope(capture, day, sections, source):
+    if source == CS_SOURCE:
+        base = f"https://epaper.cs.com.cn/zgzqb/html/{day:%Y-%m}/{day:%d}/"
+        entry, publisher = "nbs.D110000zgzqb_A01.htm", "中国证券报"
+        board_pattern = re.compile(r"nbs\.D110000zgzqb_([A-Z]\d+)\.htm$")
+        title_pattern = re.compile(r"nw\.D110000zgzqb_\d{8}_\d+-([A-Z]\d+)\.htm$")
+    else:
+        base = f"http://epaper.zqrb.cn/html/{day:%Y-%m}/{day:%d}/"
+        entry, publisher = "node_2.htm", "证券日报"
+        board_pattern, title_pattern = PAPER_BOARD, PAPER_ARTICLE
+    key = f"sections-{day}-{sha(sections.pattern.encode())[:8]}"
+    path = capture.scope(source, key)
+    if path.is_file() and (saved := read_json(path))["pagination_complete"]:
+        return saved
+    front = capture.fetch(source, base + entry)
+    receipts = [front]
+    records = {}
+    complete = False
+    reason = front.get("failure_reason")
+    if front["query_status"] == "ok":
+        root = soup(capture, front)
+        navigation = root.select("a[href]") if source == CS_SOURCE else root.select("#pgn a[href]")
+        boards = {a["href"]: a.get_text(" ", strip=True) for a in navigation
+                  if board_pattern.search(urlsplit(a["href"]).path) and a.get_text(strip=True).startswith("第")}
+        complete = bool(boards)
+        if not complete:
+            reason = "edition_navigation_missing"
+        for label_url, name in boards.items():
+            if not sections.search(name):
+                continue
+            if source == CS_SOURCE:
+                board = front
+                identifier = board_pattern.search(urlsplit(label_url).path)[1]
+                anchors = [a for a in navigation if (match := title_pattern.search(urlsplit(a["href"]).path))
+                           and match[1] == identifier]
+            else:
+                board = capture.fetch(source, urljoin(base, label_url))
+                receipts.append(board)
+                anchors = soup(capture, board).select("#pgt a[href]") if board["query_status"] == "ok" else ()
+            kept = False
+            for article in anchors:
+                href = urlsplit(article["href"]).path
+                link = urljoin(base, href)
+                if not title_pattern.search(href) or not link.startswith(base) or not article.get_text(strip=True):
+                    continue
+                records[link] = dict(kind="news", provider=source, publisher=publisher,
+                    source_doc_id=urlsplit(link).path, source_url=link, title=article.get_text(" ", strip=True),
+                    section=name, published_raw=day.isoformat(), time_evidence="dated publisher newspaper edition",
+                    index_ref=board["raw_ref"], index_hash=board["raw_hash"], retrieved_at=board["retrieved_at"])
+                kept = True
+            if not kept:
+                complete, reason = False, board.get("failure_reason") or "board_article_links_missing"
+    status = ("ok" if records else "empty") if complete else ("partial" if records else "failed")
+    result = scope_row(source, "news", key, day, day, status, receipts, list(records.values()),
+                       complete=complete, reason=reason)
+    write_json(path, result)
+    return result
+
+
 def nbs_scopes(capture, start, end, workers):
     def fetch_page(page):
         key = f"data-releases-{page:03d}"
@@ -444,41 +564,73 @@ def security_symbols(path):
 
 def acquisition_main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("source", choices=(CNINFO, PAPER_SOURCE, NBS_SOURCE))
+    parser.add_argument("source", choices=(CNINFO, PAPER_SOURCE, STCN_SOURCE, CS_SOURCE, ZQRB_SOURCE, NBS_SOURCE))
     parser.add_argument("--capture", type=Path, required=True)
+    parser.add_argument("--prior-capture", type=Path)
     parser.add_argument("--start", required=True, type=date.fromisoformat)
     parser.add_argument("--end", required=True, type=date.fromisoformat)
     parser.add_argument("--workers", type=int, choices=range(1, 5), default=3)
     parser.add_argument("--interval", type=float, default=0.25)
     parser.add_argument("--skip-bodies", action="store_true")
+    parser.add_argument("--directory-bodies", action="store_true",
+                        help="Fetch prioritized originals from already reconciled CNINFO directory partitions")
     parser.add_argument("--exchange", choices=EXCHANGES, action="append")
     parser.add_argument("--security-history", type=Path, help="Frozen security history for over-limit daily queries")
     parser.add_argument("--category", default="")
     parser.add_argument("--search", default="")
     parser.add_argument("--body-title")
     parser.add_argument("--max-pdf-kib", type=int)
-    parser.add_argument("--sections", default=PAPER_SECTION.pattern)
+    parser.add_argument("--sections")
     parser.add_argument("--dates", type=Path, help="Optional explicit archive-edition date list")
+    parser.add_argument("--parallel-scopes", type=int, choices=range(1, 9), default=1)
+    parser.add_argument("--interleave-years", action="store_true", help="Visit every year before advancing within each year")
     args = parser.parse_args()
     if args.interval < 0.15 or args.start > args.end:
         parser.error("use a valid interval and nonempty date range")
-    capture = Capture(args.capture, args.interval)
-    title_filter = re.compile(args.body_title) if args.body_title else None
+    if args.directory_bodies and (args.source != CNINFO or args.skip_bodies):
+        parser.error("directory-bodies requires CNINFO and connects completed partitions to original files")
+    capture = Capture(args.capture, args.interval, args.prior_capture)
+    title_filter = re.compile(args.body_title) if args.body_title else (
+        SIGNIFICANT_ANNOUNCEMENT if args.directory_bodies else None)
     if args.source == NBS_SOURCE:
         scopes = nbs_scopes(capture, args.start, args.end, args.workers)
-    elif args.source == PAPER_SOURCE:
+    elif args.source in (PAPER_SOURCE, STCN_SOURCE, CS_SOURCE, ZQRB_SOURCE):
         editions = list(days(args.start, args.end))
         if args.dates:
             editions = [day for day in sorted({date.fromisoformat(line) for line in
                         args.dates.read_text(encoding="utf-8-sig").splitlines() if line.strip()})
                         if args.start <= day <= args.end]
-        sections = re.compile(args.sections)
-        scopes = (paper_scope(capture, day, sections) for day in editions)
+        default = {PAPER_SOURCE: PAPER_SECTION, STCN_SOURCE: STCN_SECTION}.get(args.source, COMPANY_SECTION)
+        sections = re.compile(args.sections) if args.sections else default
+        if args.interleave_years:
+            editions.sort(key=lambda d: (d.month, d.day, d.year))
+        scopes = editions
+
+        def get_scope(day):
+            if args.source == PAPER_SOURCE:
+                return paper_scope(capture, day, sections)
+            if args.source == STCN_SOURCE:
+                return stcn_scope(capture, day, sections)
+            return other_paper_scope(capture, day, sections, args.source)
+    elif args.directory_bodies:
+        entries = []
+        for path in capture.root.glob("scopes/CNINFO/*.json"):
+            scope = read_json(path)
+            if (scope["pagination_complete"] and not any(scope.get(k) for k in ("category", "search", "symbol"))
+                    and str(args.start) <= scope["start_at"] and scope["end_at"] <= str(args.end)):
+                entries.append((scope["end_at"], path))
+        scopes = [path for _, path in sorted(entries)]
+
+        def get_scope(path):
+            return read_json(path)
     else:
         history = security_symbols(args.security_history) if args.security_history else None
-        scopes = (cninfo_scope(capture, venue, lo, hi, category=args.category, search=args.search,
-                               historical_symbols=history)
-                  for lo, hi in months(args.start, args.end) for venue in args.exchange or EXCHANGES)
+        scopes = [(venue, lo, hi) for lo, hi in months(args.start, args.end) for venue in args.exchange or EXCHANGES]
+        if args.interleave_years:
+            scopes.sort(key=lambda item: (item[1].month, item[1].day, item[1].year))
+        def get_scope(item):
+            return cninfo_scope(capture, *item, category=args.category, search=args.search,
+                                historical_symbols=history)
     def finish(scope):
         if scope["query_status"] == "split":
             for key in scope["shards"]:
@@ -489,8 +641,13 @@ def acquisition_main():
             print(scope["scope_key"], scope["query_status"], scope["returned_count"], count, success, flush=True)
         else:
             print(scope["scope_key"], scope["query_status"], scope["returned_count"], flush=True)
-    for item in scopes:
-        finish(item)
+    if args.source == NBS_SOURCE:
+        for item in scopes:
+            finish(item)
+    else:
+        with ThreadPoolExecutor(max_workers=args.parallel_scopes) as pool:
+            for _ in pool.map(lambda key: finish(get_scope(key)), scopes):
+                pass
 
 
 if __name__ == "__main__":

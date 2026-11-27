@@ -34,7 +34,7 @@ CLEANING_VERSION = "cn-original-spans.v1"
 HTML_PARSER_VERSION = "cn-archived-article-html.v2"
 PDF_CACHE_TAG = "pdf-cn-original-spans.v1"  # PyMuPDF 1.26.7
 ASSOCIATION_VERSION = "cn-historical-identity.v1"
-DEDUP_VERSION = "same-facts-shingles.v1"
+DEDUP_VERSION = "same-facts-shingles.v2"
 BUDGET_VERSION = "karpo-separated-1024.v1"
 PERIODIC = re.compile(r"(?:年度|半年度|第一季度|第三季度|中期|[一三]季)(?:报告|报)")
 CORRECTION = re.compile(r"更正|修订|补充|澄清|修正|更新")
@@ -97,6 +97,7 @@ class IdentityHistory:
         self.codes = defaultdict(list)
         self.alternate = defaultdict(list)
         self.names = defaultdict(list)
+        self.instrument_names = defaultdict(list)
         self.industries = defaultdict(set)
         rows = pq.read_table(anchor / "reference/security_history.parquet").to_pylist()
         self.issuers = {v["instrument_id"]: v["issuer_id"] for v in rows}
@@ -141,6 +142,7 @@ class IdentityHistory:
             name = self.name_key(name)
             if len(name) >= 2 and CJK.search(name):
                 self.names[name].append((lo, hi, instrument))
+                self.instrument_names[instrument].append((lo, hi, name))
         # Earlier names and exact rename bounds already supported by original disclosure evidence.
         documented_names = anchor / "reference/security_name_versions.jsonl"
         for line in documented_names.read_text(encoding="utf-8").splitlines():
@@ -152,9 +154,15 @@ class IdentityHistory:
             available = publication(d["available_at"])[0]
             lo = max(date.fromisoformat(d["effective_from"]), available)
             hi = date.fromisoformat(d["effective_to"]) - timedelta(days=1) if d.get("effective_to") else date.max
-            self.names[self.name_key(d["name_asof"])].append((lo, hi, d["instrument_id"]))
+            name = self.name_key(d["name_asof"])
+            self.names[name].append((lo, hi, d["instrument_id"]))
+            self.instrument_names[d["instrument_id"]].append((lo, hi, name))
         aliases = sorted((name for name in self.names if len(name) >= 3), key=lambda name: (-len(name), name))
-        self.aliases = re.compile("|".join(map(re.escape, aliases))) if aliases else re.compile(r"(?!)")
+        prefixes = defaultdict(list)
+        for name in aliases:
+            prefixes[name[0]].append(re.escape(name[1:]))
+        self.aliases = re.compile("|".join(re.escape(prefix) + "(?:" + "|".join(rest) + ")"
+                                           for prefix, rest in prefixes.items())) if prefixes else re.compile(r"(?!)")
         for filename in ("industry_membership", "industry_training_intervals"):
             p = anchor / "reference" / (filename + ".parquet")
             for row in pq.read_table(p, columns=["classification_version", "industry_code", "industry_name"]).to_pylist():
@@ -172,8 +180,21 @@ class IdentityHistory:
         return next(iter(matching)) if len(matching) == 1 else None
 
     def from_name(self, name, day):
-        matching = {instrument for lo, hi, instrument in self.names[name] if lo <= day <= hi}
+        matching = {instrument for lo, hi, instrument in self.names.get(name, ()) if lo <= day <= hi}
         return next(iter(matching)) if len(matching) == 1 else None
+
+    def name_at(self, instrument, day):
+        active = [(lo, name) for lo, hi, name in self.instrument_names[instrument] if lo <= day <= hi]
+        return max(active)[1] if active else None
+
+    def mentions(self, text, day):
+        matches = [(m.start(), m.end(), self.from_name(m.group(), day), m.group())
+                   for m in self.aliases.finditer(text.upper())]
+        for code in EXPLICIT_CODE.finditer(text):
+            instrument = self.from_code(next(value for value in code.groups() if value), None, day)
+            if instrument:
+                matches.append((code.start(), code.end(), instrument, self.name_at(instrument, day) or code[0]))
+        return sorted(m for m in matches if m[2])
 
     def associate(self, row, body, day):
         if day is None:
@@ -281,8 +302,9 @@ def html_body(capture, row, receipt):
                 row["time_evidence"] = "unresolved update time for historical edition"
     else:
         container = root.select_one(
-            "#content_article, .content_article, #ozoom, #ContentBody, #articleContent, .article-content")
-        title = root.select_one(".article-content h1, .article-header h1, #title h1, h1")
+            "#content_article, .content_article, #ozoom, #ContentBody, #articleContent, "
+            "#mainCon founder-content, #mainCon, .neiyee, founder-content, .article-content")
+        title = root.select_one(".article-content h1, .article-header h1, #title h1, #mainTxt h1")
         if title and title.get_text(strip=True):
             row["title"] = title.get_text(" ", strip=True)
     if not container:
@@ -312,11 +334,12 @@ def quality(body):
 
 
 def fact_signature(text):
-    return Counter(FACTS.findall(SPACE.sub("", unicodedata.normalize("NFKC", text))))
+    return Counter(FACTS.findall(normalized_body(text)))
 
 
 def normalized_body(body):
-    return SPACE.sub("", unicodedata.normalize("NFKC", body))
+    body = unicodedata.normalize("NFKC", body)
+    return re.sub(r"(?<!\d)\s+|\s+(?!\d)", "", SPACE.sub(" ", body))
 
 
 def source_metadata(row):
@@ -430,13 +453,18 @@ def document_class(row):
     return "event"
 
 
-def initial_document(row, capture, known_bodies, cache):
+def initial_document(row, capture, known_bodies, cache, prior_cache=None):
     body = ""
     parse_status = "body_missing"
     raw_hash = row.get("raw_hash")
     raw_ref = row.get("raw_ref")
     retrieved = row.get("retrieved_at")
     parser = None
+    receipt = row.get("_body_receipt")
+    if receipt and receipt["query_status"] != "ok":
+        return row | dict(body="", parse_status="download_failed", parser=None)
+    if receipt and row["kind"] == "news":
+        return parsed_html(row, capture, receipt)
     if raw_hash and raw_hash in known_bodies:
         try:
             path = Path(raw_ref) if raw_ref else None
@@ -455,9 +483,12 @@ def initial_document(row, capture, known_bodies, cache):
         pdf_version = installed_version("pymupdf")
         parser_tag = PDF_CACHE_TAG if pdf_version == "1.26.7" else f"{PDF_CACHE_TAG}-{pdf_version}"
         parser_cache = cache / parser_tag / f"{raw_hash}.txt.gz"
+        existing = parser_cache
+        if not existing.is_file() and prior_cache:
+            existing = prior_cache / parser_tag / existing.name
         try:
-            if parser_cache.is_file():
-                body = gzip.decompress(parser_cache.read_bytes()).decode("utf-8")
+            if existing.is_file():
+                body = gzip.decompress(existing.read_bytes()).decode("utf-8")
                 parser = "cached_pdf"
             else:
                 if path.is_absolute():
@@ -472,7 +503,7 @@ def initial_document(row, capture, known_bodies, cache):
             parse_status = quality(body)
         except (OSError, ValueError, RuntimeError):
             parse_status = "pdf_parse_failed"
-    else:
+    elif "_body_receipt" not in row:
         receipt_path = capture.root / "bodies" / row["provider"] / (record_key(row) + ".json")
         if receipt_path.is_file():
             receipt = read_json(receipt_path)
@@ -481,7 +512,7 @@ def initial_document(row, capture, known_bodies, cache):
             else:
                 return (
                     initial_document(row | {k: receipt[k] for k in ("raw_ref", "raw_hash", "retrieved_at")},
-                                     capture, known_bodies, cache)
+                                     capture, known_bodies, cache, prior_cache)
                     if row["kind"] == "announcement" else parsed_html(row, capture, receipt)
                 )
     return row | dict(body=body, parse_status=parse_status, raw_hash=raw_hash, raw_ref=raw_ref,
@@ -610,11 +641,15 @@ class Deduplicator:
         if not day or not relations or not (90 <= len(normalized) <= 8000):
             self.exact[digest] = doc_version_id
             return doc_version_id, None
-        key = (kind, re.sub(r"[\W_]+", "", title), tuple(sorted(x[1] for x in relations if x[0] in ("issuer", "market", "industry"))))
+        issuers = tuple(sorted(x[1] for x in relations if x[0] == "issuer"))
+        # A reprint can change its headline. Match within issuer, never across independent issuers.
+        key = (kind, issuers or re.sub(r"[\W_]+", "", title))
         signature = fact_signature(body)
         shingles = None
-        for previous, old_day, old_signature, old_body in self.near[key]:
-            if abs((day - old_day).days) > 7 or old_signature != signature:
+        nearby = [item for item in self.near[key] if abs((day - item[1]).days) <= 7]
+        self.near[key] = nearby
+        for previous, _, old_signature, old_body in nearby:
+            if old_signature != signature:
                 continue
             if shingles is None:
                 shingles = {normalized[i:i + 5] for i in range(len(normalized) - 4)}
@@ -622,8 +657,9 @@ class Deduplicator:
             if len(shingles & old_shingles) >= 0.965 * len(shingles | old_shingles):
                 self.exact[digest] = previous
                 return previous, "near"
-        if len(self.near[key]) < 30:
-            self.near[key].append((doc_version_id, day, signature, normalized))
+        nearby.append((doc_version_id, day, signature, normalized))
+        if len(nearby) > 30:
+            nearby.pop(0)
         self.exact[digest] = doc_version_id
         return doc_version_id, None
 

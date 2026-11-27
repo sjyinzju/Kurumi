@@ -3,12 +3,15 @@
 from __future__ import annotations
 
 import argparse
+import gzip
 import json
+from collections import defaultdict
 from datetime import date
 from pathlib import Path
 from time import perf_counter
 
 import duckdb
+import pyarrow.dataset as ds
 
 from kurumi.cn_text_corpus import FACTS, NativeBudget
 from kurumi.cn_text_index import checked_anchor
@@ -23,6 +26,20 @@ from kurumi.text_input import BUDGET, TRAIN_CONDITIONS, section_text
 def view(con, name, path, extra_sql="*"):
     con.execute(f"CREATE OR REPLACE TEMP VIEW {name} AS SELECT {extra_sql} FROM read_parquet("
                 "'" + Path(path).as_posix().replace("'", "''") + "', hive_partitioning=false)")
+
+
+def document_bodies(directory, references):
+    years = defaultdict(list)
+    for ref in references:
+        years[int(ref.split(":", 1)[0])].append(ref)
+    table = ds.dataset(directory / "documents", format="parquet", partitioning="hive")
+    for year, keys in sorted(years.items()):
+        where = (ds.field("year") == year) & ds.field("doc_version_id").isin(keys)
+        batches = table.to_batches(columns=["doc_version_id", "body_text"], filter=where,
+                                   batch_size=12, batch_readahead=1, fragment_readahead=1, use_threads=False)
+        for batch in batches:
+            for item in batch.to_pylist():
+                yield item["doc_version_id"], item["body_text"]
 
 
 def census(con, numeric, text, manifest, budget):
@@ -126,10 +143,13 @@ def census(con, numeric, text, manifest, budget):
     ):
         raise AssertionError("Text index does not cover the complete declared numeric sample range")
     in_docs = dict(con.execute("SELECT doc_version_id,input_text FROM docs WHERE input_text IS NOT NULL").fetchall())
-    for mode, refs, count_value in sorted(plans):
-        actual = budget.count(section_text(mode, [in_docs[k] for k in refs])) if refs else 0
-        if actual != count_value or actual > BUDGET:
-            raise AssertionError(f"Token budget mismatch for {mode} {refs}")
+    ordered = sorted(plans)
+    for start in range(0, len(ordered), 192):
+        chunk = ordered[start:start + 192]
+        texts = [section_text(mode, [in_docs[k] for k in refs]) if refs else "" for mode, refs, _ in chunk]
+        for actual, (mode, refs, count_value) in zip(budget.counts(texts), chunk, strict=True):
+            if actual != count_value or actual > BUDGET:
+                raise AssertionError(f"Token budget mismatch for {mode} {refs}")
     broken = con.execute("""
         WITH owners AS MATERIALIZED (
             SELECT doc_version_id, sha256(body_text) AS digest, length(body_text) AS chars
@@ -143,6 +163,23 @@ def census(con, numeric, text, manifest, budget):
     """).fetchone()[0]
     if broken:
         raise AssertionError(f"Body ownership, raw references, or selected offsets invalid: {broken}")
+    if "evidence" in manifest["config"]:
+        invalid_evidence = con.execute("""
+            SELECT count(*) FROM docs d WHERE input_text IS NOT NULL AND (
+                evidence_issuer_id IS NULL AND (kind='announcement' OR relation_status<>'background')
+                OR evidence_issuer_id IS NOT NULL AND (
+                    len(evidence_keys)<>len(input_spans) OR len(evidence_keys)=0 OR NOT EXISTS (
+                        SELECT 1 FROM entities e WHERE e.doc_version_id=d.doc_version_id
+                        AND e.entity_type='issuer' AND e.entity_id=d.evidence_issuer_id)))
+        """).fetchone()[0]
+        invalid_versions = con.execute("""
+            SELECT count(*) FROM docs d LEFT JOIN docs prior ON prior.doc_version_id=d.related_prior_event
+            WHERE d.related_prior_event IS NOT NULL AND
+                (prior.doc_version_id IS NULL OR prior.available_at>=d.available_at
+                 OR prior.event_thread IS DISTINCT FROM d.event_thread)
+        """).fetchone()[0]
+        if invalid_evidence or invalid_versions:
+            raise AssertionError(f"Invalid model evidence or prior-event lineage: {invalid_evidence}, {invalid_versions}")
     original_locations = con.execute(
         "SELECT DISTINCT raw_ref FROM docs WHERE input_text IS NOT NULL").fetchall()
     missing_originals = [ref for ref, in original_locations if not (capture.root / Path(ref)).is_file()]
@@ -156,19 +193,20 @@ def census(con, numeric, text, manifest, budget):
               AND (correction_or_progress OR document_class='event')
             ORDER BY correction_or_progress DESC,published_local_day DESC,doc_version_id LIMIT 12
         )
-        SELECT d.doc_version_id,d.provider,d.title,d.published_local_day,d.raw_ref,d.raw_hash,
-            o.body_text,d.input_text,d.input_spans
-        FROM chosen d JOIN docs o ON d.body_owner_ref=o.doc_version_id
+        SELECT doc_version_id,provider,title,published_local_day,raw_ref,raw_hash,
+            body_owner_ref,input_text,input_spans
+        FROM chosen
     """).fetchall()
     fact_audit = []
-    for version, provider, title, day, ref, digest, body, rendered, spans in edits:
+    owners = dict(document_bodies(text, {r[6] for r in edits}))
+    for version, provider, title, day, ref, digest, owner, rendered, spans in edits:
         absolute = Path(ref)
-        if absolute.is_absolute():
+        if absolute.is_absolute() and absolute.suffix != ".gz":
             if file_hash(absolute) != digest:
                 raise AssertionError(f"Original evidence changed for {version}")
         else:
             capture.read({"raw_ref": ref, "raw_hash": digest})
-        clean = [" ".join(body[s["start"]:s["end"]].split()) for s in spans]
+        clean = [" ".join(owners[owner][s["start"]:s["end"]].split()) for s in spans]
         if not all(text in rendered for text in clean):
             raise AssertionError(f"Selected span is not in actual rendered context: {version}")
         fact_audit.append({"doc_version_id": version, "provider": provider, "title": title, "publication": str(day),
@@ -355,7 +393,15 @@ def main():
     if manifest["config"]["tokenizer"] != budget.revision:
         raise ValueError("Tokenizer asset hashes differ")
     for key, digest in manifest.get("source_scope_receipts", {}).items():
-        if file_hash(Path(manifest["capture_root"]) / key) != digest:
+        saved = args.text / "scope_receipts" / (digest + ".json.gz")
+        actual = (saved if saved.is_file() else Path(manifest["capture_root"]) / key)
+        if saved.is_file():
+            from kurumi.cn_text_sources import sha
+
+            valid = sha(gzip.decompress(actual.read_bytes())) == digest
+        else:
+            valid = file_hash(actual) == digest
+        if not valid:
             raise AssertionError(f"Archived source scope hash mismatch {key}")
     for filename, digest in manifest.get("source_inputs", {}).items():
         if file_hash(Path(filename)) != digest:

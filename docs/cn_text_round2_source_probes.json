@@ -1,0 +1,56 @@
+[
+  {
+    "source":"BigQuant","kind":"announcement","scope_key":"sdk-flight-announcement-entitlement","start_at":"2016-04-22","end_at":"2025-04-24",
+    "query_status":"permission_denied","pagination_complete":false,"returned_count":0,
+    "failure_reason":"Authenticated SDK 0.1.11 / core 0.1.14. cn_stock_bar1d control succeeded. Minimal projections against catalogue and report_estimate, business_contract, operating_data, risk_alert, investor_relations returned FlightUnauthorizedError. Content-table metadata lookup did not resolve. Weekly quota 50000000, used 7911979 in receipt. Studio control itself failed, so Studio did not provide a second entitlement test.",
+    "sample_scope_complete":false
+  },
+  {
+    "source":"BigQuant","kind":"news","scope_key":"sdk-flight-news-entitlement","start_at":"2016-04-22","end_at":"2025-04-24",
+    "query_status":"permission_denied","pagination_complete":false,"returned_count":0,
+    "failure_reason":"news_009_flash minimal projection denied on Flight. cn_stock_news_gst_raw and cn_stock_flashnews_gst_raw did not resolve in metadata. Company news search also failed; history and body completeness unverified.",
+    "sample_scope_complete":false
+  },
+  {
+    "source":"CSMAR","kind":"news","scope_key":"cain-preview-2018-2026-and-iad-schema","start_at":"2018-04-23","end_at":"2026-05-18",
+    "query_status":"body_missing","pagination_complete":false,"returned_count":38,"body_missing_count":38,
+    "failure_reason":"CAIN_CompanyNewsInfo field catalogue has Content. Live preview on 2018-04-23 gave 4 rows and 2026-05-18 gave 34, all omit Content. Previous 2024-04-19 preview and official ZIP matched at 21 headings with no Content. IAD_NewsEmotion enumerates ReleaseTime and Title without original body.",
+    "sample_scope_complete":false
+  },
+  {
+    "source":"CSMAR","kind":"announcement","scope_key":"ann-catalogue-fields","start_at":"2014-07-09","end_at":"2026-06-30",
+    "query_status":"metadata_only","pagination_complete":false,"returned_count":0,
+    "failure_reason":"Live ANN_AnnouncementInfo schema has AnnouncementID, DeclareDate, FullDeclareDate, Title, FileSize, AnnouncementType. ANN_Classify joins catalogue IDs and fields; no source body or locator verified. No CSMAR announcement text admitted.",
+    "sample_scope_complete":false
+  },
+  {
+    "source":"FinCorpus","kind":"announcement","scope_key":"dataset-viewer-5-unstratified-offsets","start_at":"2014-07-09","end_at":"2026-06-30",
+    "query_status":"time_and_version_unverified","pagination_complete":false,"returned_count":60,
+    "failure_reason":"Read 12 real rows at each of 0, 60000, 120000, 180000 and 220000. Viewer rows have text and meta.source only. Some bodies contain issuer codes and signed notice numbers, but no original URL, precise publication evidence or independently verified original version. No rows admitted or large shards downloaded.",
+    "sample_scope_complete":false
+  },
+  {
+    "source":"TuShare","kind":"news","scope_key":"prior-news-and-major-news-entitlement","start_at":"2014-07-09","end_at":"2026-06-30",
+    "query_status":"permission_denied","pagination_complete":false,"returned_count":0,
+    "failure_reason":"Existing previous-release entitlement checks for news and major_news returned code 40203. No credential or entitlement change was available.",
+    "sample_scope_complete":false
+  },
+  {
+    "source":"TuShare","kind":"announcement","scope_key":"prior-anns-d-entitlement","start_at":"2014-07-09","end_at":"2026-06-30",
+    "query_status":"permission_denied","pagination_complete":false,"returned_count":0,
+    "failure_reason":"Existing previous-release anns_d check returned code 40203. No entitlement change was available.",
+    "sample_scope_complete":false
+  },
+  {
+    "source":"CNRDS","kind":"news","scope_key":"prior-institution-login-gate","start_at":"2014-07-09","end_at":"2026-06-30",
+    "query_status":"authentication_required","pagination_complete":false,"returned_count":0,
+    "failure_reason":"Previous access reached institutional login without an authenticated bulk export session. No new authorization provided.",
+    "sample_scope_complete":false
+  },
+  {
+    "source":"Wisers","kind":"news","scope_key":"prior-institution-bootstrap-gate","start_at":"2014-07-09","end_at":"2026-06-30",
+    "query_status":"authentication_required","pagination_complete":false,"returned_count":0,
+    "failure_reason":"Previous WiseSearch institutional connector reached bootstrap only. No body export permission or session available.",
+    "sample_scope_complete":false
+  }
+]

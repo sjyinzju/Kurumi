@@ -35,6 +35,8 @@ KARPO_CODE_REVISION = "6600011eb5cf46232d056ec0717dc726146d29de"
 KARPO_ENCODING_FILES = ("config.json", "decision_config.json", "tokenizer.json", "tokenizer_config.json",
                         "chat_template.jinja")
 DEFAULT_MAX_LENGTH = 32_768
+PLAN_MAGIC = b"KPL\x01"
+PLAN_TENSORS = ("input_ids", "markers", "mm_token_type_ids", "positions", "segment_ids")
 
 
 def _show(value, *, divisor=1, precision=8) -> str:
@@ -143,25 +145,55 @@ def request_from_input(model_input: dict) -> dict:
 
 
 def _plan_to_bytes(parts) -> bytes:
-    def to_list(tensor):
-        return None if tensor is None else tensor.tolist()
+    import torch
 
     rows = []
+    buffers = []
     for part in parts:
         if any(getattr(part, name) is not None for name in (
             "images", "pixel_values", "image_grid_thw", "image_position_ids",
         )):
             raise ValueError("Numeric encoding cache accepts text-only plans")
-        rows.append(dict(keys=part.keys, counts=part.counts, input_ids=to_list(part.input_ids),
-                         markers=to_list(part.markers), mm_token_type_ids=to_list(part.mm_token_type_ids),
-                         positions=to_list(part.positions), segment_ids=to_list(part.segment_ids)))
-    return zlib.compress(json.dumps(rows, separators=(",", ":")).encode(), level=1)
+        shapes = []
+        for name in PLAN_TENSORS:
+            tensor = getattr(part, name)
+            shapes.append(None if tensor is None else list(tensor.shape))
+            if tensor is not None:
+                dtype = torch.int16 if name == "segment_ids" else torch.long
+                array = tensor.detach().to(device="cpu", dtype=dtype).contiguous().numpy()
+                buffers.append(memoryview(array).cast("B"))
+        rows.append((part.keys, part.counts, shapes))
+    header = json.dumps(rows, separators=(",", ":")).encode()
+    return PLAN_MAGIC + zlib.compress(b"".join((len(header).to_bytes(4, "little"), header, *buffers)), level=1)
 
 
 def _plan_from_bytes(data):
     import torch
     from karpo_decision.encoding import Encoded
 
+    if data.startswith(PLAN_MAGIC):
+        payload = bytearray(zlib.decompress(data[len(PLAN_MAGIC):]))
+        offset = int.from_bytes(payload[:4], "little") + 4
+        rows = json.loads(payload[4:offset])
+        parts = []
+        for keys, counts, shapes in rows:
+            tensors = dict.fromkeys(PLAN_TENSORS)
+            for name, shape in zip(PLAN_TENSORS, shapes, strict=True):
+                if shape is None:
+                    continue
+                dtype = torch.int16 if name == "segment_ids" else torch.long
+                elements = math.prod(shape)
+                if elements:
+                    tensors[name] = torch.frombuffer(payload, dtype=dtype, count=elements, offset=offset).reshape(shape)
+                    offset += elements * (2 if dtype == torch.int16 else 8)
+                else:
+                    tensors[name] = torch.empty(shape, dtype=dtype)
+            parts.append(Encoded(keys=tuple(keys), counts=tuple(counts), **tensors))
+        if offset != len(payload):
+            raise ValueError("Cached Karpo plan tensor lengths do not match the payload")
+        return parts
+
+    # Earlier cache entries remain readable without changing the rendering namespace.
     parts = []
     for row in json.loads(zlib.decompress(data)):
         tensors = {}
@@ -231,7 +263,8 @@ class KarpoNumericEncoder:
             market = model_input["Xstate"]["Xmarket"]["market"]
             template = MARKET_BENCHMARK_INPUT_TEMPLATE if MARKET_BENCHMARK_FIELDS[0] in market else INPUT_TEMPLATE_VERSION
             namespace_parts = (dataset_version, template, self.encoder_revision,
-                               self.tokenizer_revision, text_version, text_condition, self.max_length, self.runtime)
+                               self.tokenizer_revision, text_version, text_condition, self.max_length, self.runtime,
+                               PLAN_MAGIC.hex())
             namespace = json.dumps(namespace_parts, ensure_ascii=True, sort_keys=True, separators=(",", ":"))
             market, _, day = sample_id.split("|")
             request_hash = hashlib.sha256(json.dumps(request, ensure_ascii=False, allow_nan=False).encode()).hexdigest()

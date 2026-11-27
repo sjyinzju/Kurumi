@@ -5,6 +5,7 @@ from datetime import UTC, date, datetime, timedelta
 from types import SimpleNamespace
 
 from kurumi.cn_text_corpus import Deduplicator, IdentityHistory, choose_spans, html_body, publication
+from kurumi.cn_text_facts import company_facts, fact_key, fragments, periodic_table, pick_facts, substantive
 from kurumi.cn_text_index import Selector
 from kurumi.encoding_cache import EncodingCache
 from kurumi.text_input import text_condition
@@ -115,3 +116,51 @@ def test_extracts_the_original_company_text_from_old_newspaper_markup():
     record = {"provider": "CNSTOCK-paper", "title": "公告报道", "published_raw": "2015-01-12"}
     assert html_body(capture, record, {}) == "公司签订合同，金额12亿元。\n\n合同尚待合作方批准。"
     assert record["published_raw"] == "2015-01-12"
+
+
+def test_news_facts_are_scoped_to_actor_and_keep_the_condition():
+    actors = {"甲方科技": "first", "乙方电子": "second"}
+
+    def mentions(text, day):
+        return sorted((at, at + len(name), actor, name)
+                      for name, actor in actors.items() if (at := text.find(name)) >= 0)
+
+    identity = SimpleNamespace(mentions=mentions, name_at=lambda instrument, day: None)
+    day = date(2025, 3, 11)
+    raw = ("甲方科技拟签订供货合同，金额为2亿元。若未获批准，则不得实施。"
+           "乙方电子收到采购订单，金额约750万元。"
+           "与甲方科技相比，乙方电子的股价有所上升。")
+    row = {"kind": "news", "document_class": "news", "publisher": "原报", "published_raw": str(day)}
+    facts = company_facts(row, raw, identity, day, ())
+    assert set(facts) == {("first", "甲方科技"), ("second", "乙方电子")}
+    picked, offsets, _, keys, _ = pick_facts(row, facts["first", "甲方科技"], "issuer-a", "甲方科技",
+                                             TestBudget(), "conservative")
+    assert "2亿元" in picked and "不得实施" in picked and "乙方电子" not in picked and len(keys) == 1
+    assert raw[offsets[0]["start"]:offsets[0]["end"]] in picked
+
+
+def test_full_report_metric_keeps_period_header_currency_and_source_offsets():
+    raw = ("封面\f主要财务数据\n\n单位：元 币种：人民币\n"
+           "        本报告期          上年同期      本报告期比上年同期增减\n"
+           "营业收入（元）              16,021,448.11     12,033,267.09       33.14%\n"
+           "归属于上市公司股东的净利润（元）   2,003.00         -232.03            不适用\n\n股东")
+    start, end, page, text = next(periodic_table(raw))
+    assert page == 2 and "本报告期" in text and "单位：元" in text and "上年同期" in text
+    assert "16,021,448.11" in text and "33.14%" in text
+    assert text == " ".join(raw[start:end].split())
+
+
+def test_two_carriers_share_fact_key_without_collapsing_revision_or_units():
+    def same_issuer(text):
+        return fact_key("issuer", "甲方科技", text)
+
+    base = "本公司签订合同，金额为10万元。"
+    assert same_issuer(base) == same_issuer("甲方科技公告称，签订合同，金额为10万元。")
+    assert same_issuer(base) != same_issuer(base.replace("10万元", "10亿元"))
+    assert same_issuer(base) != same_issuer(base.replace("签订", "尚未签订"))
+
+
+def test_truncated_pdf_clause_and_market_cap_lack_complete_evidence():
+    pdf = "若尚未收到合同款项，预计损失约1.4亿元；如所有抵押资产全部无法使"
+    assert not list(fragments(pdf, complete_prose=True))
+    assert not substantive("而市值最高的为大恒科技，停牌前也不超过45亿元。")

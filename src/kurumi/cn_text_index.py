@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import gzip
 import json
 import re
 import tempfile
@@ -38,7 +39,8 @@ from .cn_text_corpus import (
     publication,
     selected_text,
 )
-from .cn_text_sources import Capture, file_hash, read_json, record_key, sha, write_json
+from .cn_text_facts import EVIDENCE_VERSION, LIMITS, company_facts, pick_facts
+from .cn_text_sources import Capture, atomic, file_hash, read_json, record_key, sha, write_json
 from .karpo_numeric import KARPO_CODE_REVISION, KARPO_MODEL_REVISION
 from .text_input import BUDGET, TRAIN_CONDITIONS, section_text
 
@@ -47,14 +49,17 @@ NUMERIC_MANIFEST_HASH = "b5dedb67575a45fa2203a7bac4f11ad785c1e271c187cceb1eaba8f
 TRAINING_MANIFEST_HASH = "5e2052486bd1cef072135aa26f4e23ae017616ee613be4e41184d9aec2b80b5f"
 SUM_BYTES = 4_137_510_674
 SPLIT_COUNTS = {"train": 7_209_690, "validation": 608_311, "calibration": 651_003, "test": 1_891_977}
-INDEX_VERSION = "cn-text-index.v2"
+INDEX_VERSION = "cn-text-index.v3"
 LOOKBACK = {"company_news": 7, "background_news": 3, "event": 30, "periodic": 180}
 VERSION_RULE = "release-date-or-exact-original.v1"
+EVENT_UPDATE = re.compile(r"(?:的)?(进展|终止|取消|更正|修正|修订|补充|澄清)(?:的)?(?:公告|说明)?$")
 UTC_TS = pa.timestamp("us", tz="UTC")
 SPANS = pa.list_(pa.struct([("start", pa.int32()), ("end", pa.int32()), ("page", pa.int32())]))
 
 DOCUMENTS = pa.schema([
     ("doc_id", pa.string()), ("doc_version_id", pa.string()), ("kind", pa.string()),
+    ("original_version_id", pa.string()), ("evidence_issuer_id", pa.string()), ("evidence_keys", pa.list_(pa.string())),
+    ("directory_member", pa.bool_()), ("in_round_capture", pa.bool_()),
     ("provider", pa.string()), ("publisher", pa.string()), ("source_doc_id", pa.string()),
     ("source_url", pa.string()), ("title", pa.string()), ("published_raw", pa.string()),
     ("source_symbol", pa.string()), ("source_org_id", pa.string()), ("source_exchange", pa.string()),
@@ -66,6 +71,7 @@ DOCUMENTS = pa.schema([
     ("body_text", pa.large_string()), ("body_owner_ref", pa.string()), ("body_hash", pa.string()),
     ("parse_status", pa.string()), ("parser", pa.string()), ("relation_status", pa.string()),
     ("document_class", pa.string()), ("version_group", pa.string()), ("supersedes_ref", pa.string()),
+    ("event_thread", pa.string()), ("related_prior_event", pa.string()),
     ("duplicate_group", pa.string()), ("duplicate_method", pa.string()),
     ("input_spans", SPANS), ("input_text", pa.string()), ("input_tokens", pa.int32()),
     ("raw_tokens_measured", pa.int32()), ("body_fact_markers", pa.int32()), ("kept_fact_markers", pa.int32()),
@@ -77,6 +83,7 @@ ENTITIES = pa.schema([
 ])
 COVERAGE = pa.schema([
     ("source", pa.string()), ("kind", pa.string()), ("scope_key", pa.string()),
+    ("exchange", pa.string()), ("category", pa.string()), ("directory_scope", pa.bool_()),
     ("start_at", pa.date32()), ("end_at", pa.date32()), ("query_status", pa.string()),
     ("pagination_complete", pa.bool_()), ("returned_count", pa.int64()), ("body_success_count", pa.int64()),
     ("body_missing_count", pa.int64()), ("download_failed_count", pa.int64()), ("parse_failed_count", pa.int64()),
@@ -118,58 +125,94 @@ def glob_table(directory, name):
     return (directory / name / "**/*.parquet").as_posix()
 
 
-def snapshot_scopes(capture):
-    return [(path, read_json(path)) for path in sorted((capture.root / "scopes").glob("*/*.json"))]
+def snapshot_scopes(capture, archive):
+    snapshot = []
+    for root in filter(None, (capture.prior, capture.root)):
+        for path in sorted((root / "scopes").glob("*/*.json")):
+            payload = path.read_bytes()
+            scope = json.loads(payload)
+            digest = sha(payload)
+            if not scope["pagination_complete"]:
+                atomic(archive / (digest + ".json.gz"), gzip.compress(payload, compresslevel=3, mtime=0))
+            snapshot.append((path, scope, digest))
+    return snapshot
 
 
 def source_key(row):
     return row["provider"], row["source_doc_id"], row["source_url"]
 
 
-def collected_rows(scopes, capture, project, external):
+def rooted(root, record):
+    return record | {key: (root / record[key]).as_posix() for key in ("index_ref", "raw_ref") if record.get(key)}
+
+
+def directory_scope(path, scope, capture, news_start):
+    return (path.parents[2] == capture.root and not scope.get("category") and not scope.get("search")
+            and not scope.get("symbol") and (scope["kind"] == "announcement"
+                                            or scope["source"] in ("CNSTOCK-paper", "STCN-paper", "CS-paper", "ZQRB-paper")
+                                            and date.fromisoformat(scope["start_at"]) >= news_start))
+
+
+def collected_rows(scopes, capture, project, external, news_start):
     rows = {}
-    for _, scope in scopes:
-        for row in scope["records"]:
+    for path, scope, _ in scopes:
+        root = path.parents[2]
+        round_capture = root == capture.root
+        directory = directory_scope(path, scope, capture, news_start)
+        for record in scope["records"]:
+            row = rooted(root, record)
             key = source_key(row)
-            if key in rows:
-                continue
-            if row["kind"] == "announcement":
-                receipt = capture.root / "bodies" / row["provider"] / (record_key(row) + ".json")
-                if receipt.is_file() and (original := read_json(receipt))["query_status"] == "ok":
-                    row = row | {k: original[k] for k in ("raw_ref", "raw_hash", "retrieved_at")}
-            rows[key] = row
+            previous = rows.get(key, {})
+            row["directory_member"] = directory or previous.get("directory_member", False)
+            row["in_round_capture"] = round_capture or previous.get("in_round_capture", False)
+            claim = root / "bodies" / row["provider"] / (record_key(row) + ".json")
+            row["_body_receipt"] = None
+            if claim.is_file():
+                original = rooted(root, read_json(claim))
+                row["_body_receipt"] = original
+                if original["query_status"] == "ok":
+                    row.update({k: original[k] for k in ("raw_ref", "raw_hash", "retrieved_at")})
+            if previous.get("raw_hash") and not row.get("raw_hash"):
+                rows[key] = previous | {k: row[k] for k in ("directory_member", "in_round_capture")}
+            elif previous.get("raw_hash") and row["raw_hash"] != previous["raw_hash"]:
+                rows[key + (previous["raw_hash"],)] = previous
+                rows[key] = row
+            else:
+                rows[key] = row
     if project and external:
         for row in legacy_receipts(project, external):
             key = source_key(row)
             if key not in rows or not rows[key].get("raw_ref"):
                 fresh = rows.get(key, {})
-                rows[key] = row | {field: value for field, value in fresh.items() if value is not None} | {
+                rows[key] = row | {field: value for field, value in fresh.items()
+                                   if value is not None and field != "_body_receipt"} | {
                     "raw_ref": row["raw_ref"], "raw_hash": row["raw_hash"], "retrieved_at": row["retrieved_at"],
                     "published_raw": fresh.get("published_raw") or row["published_raw"],
                 }
             elif rows[key]["raw_hash"] != row["raw_hash"]:
                 rows[key + (row["raw_hash"],)] = row
-    for row in csmar_metadata(capture):
-        rows.setdefault(source_key(row), row)
+    for root in filter(None, (capture.prior, capture.root)):
+        for row in csmar_metadata(Capture(root)):
+            rows.setdefault(source_key(row), rooted(root, row))
     return list(rows.values())
 
 
-def _parse_job(row, root, cache):
-    return initial_document(row, Capture(root), {}, cache)
+def _parse_job(row, root, cache, prior_cache):
+    return initial_document(row, Capture(root), {}, cache, prior_cache)
 
 
-def parsed_rows(rows, capture, known, cache, workers):
+def parsed_rows(rows, capture, known, cache, prior_cache, workers):
     if workers == 1:
         for row in rows:
-            yield initial_document(row, capture, known, cache)
+            yield initial_document(row, capture, known, cache, prior_cache)
         return
     with ProcessPoolExecutor(max_workers=workers) as pool:
         source = iter(rows)
-        while group := list(islice(source, 18)):
-            futures = [pool.submit(_parse_job, row, capture.root, cache)
-                       if row.get("raw_hash") not in known else None for row in group]
+        while group := list(islice(source, 32)):
+            futures = [pool.submit(_parse_job, row, capture.root, cache, prior_cache)
+                       if row.get("raw_hash") not in known and row.get("raw_hash") else None for row in group]
             for row, future in zip(group, futures, strict=True):
-                yield future.result() if future else initial_document(row, capture, known, cache)
+                yield future.result() if future else initial_document(row, capture, known, cache, prior_cache)
 
 
 class PartitionWriter:
@@ -178,11 +221,13 @@ class PartitionWriter:
         self.schema = schema
         self.files = {}
         self.batches = defaultdict(list)
+        self.body_chars = Counter()
 
     def write(self, year, row):
         batch = self.batches[year]
         batch.append(row)
-        if len(batch) == 24:
+        self.body_chars[year] += len(row.get("body_text") or "")
+        if len(batch) >= 128 or self.body_chars[year] >= 2_000_000:
             self.flush(year)
 
     def flush(self, year):
@@ -193,6 +238,7 @@ class PartitionWriter:
             self.files[year] = pq.ParquetWriter(path, self.schema, compression="zstd")
         self.files[year].write_table(pa.Table.from_pylist(batch, self.schema))
         batch.clear()
+        self.body_chars[year] = 0
 
     def close(self):
         for year in list(self.batches) or [0]:
@@ -202,9 +248,44 @@ class PartitionWriter:
             file.close()
 
 
-def normalize(con, numeric, capture, scopes, project, external, known, budget, cache, output, start, end, workers):
+def model_evidence(row, body, identity, day, relations, budget, cache, profile, rule_hash):
+    signature = [rule_hash, budget.revision, profile, row["kind"], row["document_class"], row["raw_hash"],
+                 row["title"], row.get("publisher"), row["provider"], row["published_raw"], relations]
+    key = sha(json.dumps(signature, ensure_ascii=False).encode())
+    path = cache / "company-evidence" / key[:2] / (key + ".json")
+    if path.is_file():
+        return read_json(path)
+    choices = []
+    for (instrument, name), facts in sorted(company_facts(row, body, identity, day, relations).items()):
+        issuer = identity.issuers[instrument]
+        block, spans, tokens, keys, available = pick_facts(row, facts, issuer, name, budget, profile)
+        if block:
+            method = "actor_in_original_fact" if row["kind"] == "news" else next(
+                link[3] for link in relations if link[0] == "instrument" and link[1] == instrument)
+            choices.append([issuer, identity.issuer_links(instrument, method),
+                            block, spans, None, tokens, available, len(keys), keys])
+    if not choices:
+        background = [link for link in relations if link[0] in ("industry", "market")]
+        if background and row["kind"] == "news":
+            old = selected_text(row, body, sha(body.encode()), budget, cache)
+            if old[0]:
+                choices.append([None, background, *old, []])
+    write_json(path, choices)
+    return choices
+
+
+def event_family(title, issuer):
+    subject = re.sub(r"[\s：:，,。]", "", title)
+    subject = re.sub(r"^(?:关于|对)", "", subject)
+    subject = EVENT_UPDATE.sub("", subject)
+    subject = re.sub(r"(?:的)?公告$", "", subject).removesuffix("的")
+    return sha(f"{issuer}|{subject}".encode())[:32] if len(subject) >= 8 else None
+
+
+def normalize(con, numeric, capture, scopes, project, external, known, budget, cache, output,
+              start, end, workers, prior_cache, profile, rule_hash, news_start):
     identity = IdentityHistory(con, numeric)
-    rows = collected_rows(scopes, capture, project, external)
+    rows = collected_rows(scopes, capture, project, external, news_start)
     scoped = []
     for row in rows:
         day = publication(row.get("published_raw"))[0]
@@ -225,6 +306,7 @@ def normalize(con, numeric, capture, scopes, project, external, known, budget, c
     known_versions = set()
     seen_publication = defaultdict(set)
     prior_versions = {}
+    prior_events = {}
     for row in scoped:
         if row.get("raw_hash"):
             seen_publication[(source_key(row), publication(row.get("published_raw"))[0])].add(row["raw_hash"])
@@ -234,7 +316,8 @@ def normalize(con, numeric, capture, scopes, project, external, known, budget, c
         parseable = [row for row in scoped if not row.get("pre_listing")]
         skipped = (row | {"body": "", "parse_status": "outside_anchored_listing", "parser": None}
                    for row in scoped if row.get("pre_listing"))
-        for number, row in enumerate(chain(parsed_rows(parseable, capture, known, cache, workers), skipped), start=1):
+        parsed = parsed_rows(parseable, capture, known, cache, prior_cache, workers)
+        for number, row in enumerate(chain(parsed, skipped), start=1):
             day, released, available, precision = publication(row.get("published_raw"))
             if day and not start <= day <= end:
                 events["outside_publication_range"] += 1
@@ -246,7 +329,7 @@ def normalize(con, numeric, capture, scopes, project, external, known, budget, c
             if (row["kind"] == "news" and row["provider"] != "NBS"
                     and ANN_STYLE.search(body[:220]) and "特此公告" in body):
                 row["kind"] = "announcement"
-            relations = identity.associate(row, body, day)
+            relations = identity.associate(row, body, day) if row["parse_status"] == "ok" else []
             body_hash = sha(body.encode()) if body else None
             native_id = row["source_doc_id"] or row["source_url"] or record_key(row)
             doc_id = "doc-" + sha(json.dumps([row["provider"], native_id]).encode())[:32]
@@ -270,41 +353,54 @@ def normalize(con, numeric, capture, scopes, project, external, known, budget, c
                 version_group == doc_id or bool(CORRECTION.search(row["title"]))) else None
             if available and status == "ok":
                 prior_versions[version_group] = (version, available)
+            thread = event_family(row["title"], issuer) if issuer and row["document_class"] == "event" else None
+            earlier = prior_events.get(thread)
+            prior_event = earlier[0] if earlier and available and earlier[1] < available and earlier[2] != doc_id and (
+                EVENT_UPDATE.search(row["title"])
+            ) else None
+            if thread and available and status == "ok":
+                prior_events[thread] = (version, available, doc_id)
             duplicate_group, duplicate_method = duplicates.group(version, row["kind"], row["title"], body, relations, day)
-            selected, spans, raw_count, kept_count, n_facts, n_kept = "", [], None, 0, 0, 0
-            if status == "ok" and relations and available:
-                selected, spans, raw_count, kept_count, n_facts, n_kept = selected_text(
-                    row, body, body_hash, budget, cache)
-                if not selected:
-                    status = "no_usable_spans"
+            choices = []
+            if status == "ok" and available:
+                choices = model_evidence(row, body, identity, day, relations, budget, cache, profile, rule_hash)
             events[f"parse.{status}"] += 1
             events["body_input_chars"] += len(body)
             events["body_storage_chars"] += len(body) if body_owner == version else 0
             if duplicate_method:
                 events[f"duplicate.{duplicate_method}"] += 1
             states[source_key(row)] = (status, day)
-            out = row | dict(
-                doc_id=doc_id, doc_version_id=version, published_local_day=day, published_at=released,
+            origin = row | dict(
+                doc_id=doc_id, original_version_id=version, published_local_day=day, published_at=released,
                 source_symbol=row.get("symbol"), source_org_id=str(row["org_id"]) if row.get("org_id") else None,
                 source_exchange=row.get("exchange"), source_section=row.get("section"),
                 available_at=available, time_precision=precision, time_zone="Asia/Shanghai", parse_status=status,
                 retrieved_at=datetime.fromisoformat(row["retrieved_at"]) if row.get("retrieved_at") else None,
-                relation_status="resolved" if relations else "unresolved", body_owner_ref=body_owner,
-                body_text=body if body_owner == version else None, body_hash=body_hash, duplicate_group=duplicate_group,
+                body_owner_ref=body_owner, body_hash=body_hash, duplicate_group=duplicate_group,
                 duplicate_method=duplicate_method, version_group=version_group, supersedes_ref=supersedes,
-                input_spans=spans, input_text=selected or None,
-                input_tokens=kept_count, raw_tokens_measured=raw_count, body_fact_markers=n_facts,
-                kept_fact_markers=n_kept, processing_version=CLEANING_VERSION,
+                event_thread=thread, related_prior_event=prior_event,
+                processing_version=EVIDENCE_VERSION,
                 correction_or_progress=bool(CORRECTION.search(row["title"]) or "进展" in row["title"]),
             )
-            files.write(day.year if day else 0, out)
-            for kind, entity, relation, method in relations:
-                entities.write(day.year if day else 0, dict(doc_version_id=version, entity_type=kind,
-                    entity_id=entity, relation_type=relation, match_method=method, identity_version=ASSOCIATION_VERSION))
-            if selected:
-                summaries.append({k: out[k] for k in ("doc_version_id", "kind", "published_local_day", "available_at",
-                    "document_class", "duplicate_group", "version_group", "input_text", "input_tokens",
-                    "correction_or_progress")} | {"relations": relations, "facts": n_kept})
+            for index, choice in enumerate(choices or [(None, [], "", [], None, 0, 0, 0, [])]):
+                actor, links, selected, spans, measured, tokens, n_facts, n_kept, keys = choice
+                ref = version if index == 0 else f"{day.year}:" + sha(f"{version}|{actor}".encode())[:32]
+                resolution = ("issuer_fact" if actor else "background") if selected else (
+                    "no_attributed_fact" if relations else "unresolved")
+                out = origin | dict(
+                    doc_version_id=ref, evidence_issuer_id=actor, evidence_keys=keys, relation_status=resolution,
+                    body_text=body if ref == body_owner else None, input_spans=spans, input_text=selected or None,
+                    input_tokens=tokens, raw_tokens_measured=measured, body_fact_markers=n_facts, kept_fact_markers=n_kept,
+                )
+                files.write(day.year if day else 0, out)
+                for kind, entity, relation, method in links:
+                    entities.write(day.year if day else 0, dict(doc_version_id=ref, entity_type=kind,
+                        entity_id=entity, relation_type=relation, match_method=method, identity_version=ASSOCIATION_VERSION))
+                if selected:
+                    summaries.append({k: out[k] for k in ("doc_version_id", "kind", "published_local_day", "available_at",
+                        "document_class", "duplicate_group", "version_group", "input_text", "input_tokens",
+                        "correction_or_progress", "evidence_keys")} | {"relations": links, "facts": n_kept})
+                events[f"association.{resolution}"] += 1
             if number % 500 == 0:
                 print(f"Normalized {number:,}/{len(scoped):,}", flush=True)
     finally:
@@ -313,9 +409,9 @@ def normalize(con, numeric, capture, scopes, project, external, known, budget, c
     return summaries, states, dict(events)
 
 
-def coverage_points(scopes, states, external_audit, output):
+def coverage_points(scopes, states, external_audit, output, capture, news_start):
     coverage = []
-    for path, scope in scopes:
+    for path, scope, _ in scopes:
         outcomes = [states.get(source_key(row), ("not_processed", None)) for row in scope["records"]]
         doc_states = Counter(status for status, _ in outcomes)
         observed_days = [day for status, day in outcomes if day and status not in {"outside_publication_range"}]
@@ -327,6 +423,7 @@ def coverage_points(scopes, states, external_audit, output):
         coverage.append({k: scope[k] for k in COVERAGE.names if k in scope and k not in {"start_at", "end_at"}} |
                         counts | {"start_at": date.fromisoformat(scope["start_at"]),
                                   "end_at": date.fromisoformat(scope["end_at"]), "scope_ref": str(path),
+                                  "directory_scope": directory_scope(path, scope, capture, news_start),
                                   "sample_scope_complete": False,
                                   "first_publication": min(observed_days, default=None),
                                   "last_publication": max(observed_days, default=None)})
@@ -381,12 +478,16 @@ class Selector:
         chosen = []
         blocks = []
         groups = set()
+        seen_facts = set()
         periodic = False
         backgrounds = 0
         tokens = 0
         for doc in ranked:
             key = doc["doc_version_id"]
             if doc["duplicate_group"] in groups or (doc["document_class"] == "periodic" and periodic):
+                continue
+            facts = set(doc.get("evidence_keys", ()))
+            if facts and facts <= seen_facts:
                 continue
             is_background = key not in direct
             if is_background and backgrounds == 1:
@@ -399,6 +500,7 @@ class Selector:
             chosen.append(key)
             blocks.append(doc["input_text"])
             groups.add(doc["duplicate_group"])
+            seen_facts.update(facts)
             periodic |= doc["document_class"] == "periodic"
             backgrounds += is_background
             tokens = cost
@@ -531,43 +633,52 @@ def index_samples(con, numeric, output, selector, coverage, sample_range):
 def build(args):
     start_time = datetime.now()
     numeric, source_manifest, pinned_files = checked_anchor(args.numeric)
-    capture = Capture(args.capture.resolve())
+    capture = Capture(args.capture.resolve(), prior=args.prior_capture.resolve() if args.prior_capture else None)
+    if capture.root == capture.prior:
+        raise ValueError("The read-only prior capture and current capture must be distinct")
     args.output.mkdir(parents=True, exist_ok=True)
     args.cache.mkdir(parents=True, exist_ok=True)
     tmp = Path(tempfile.mkdtemp(prefix=".build-", dir=args.output))
     budget = NativeBudget(args.tokenizer)
     code_dir = Path(__file__).parent
     implementation = {name: file_hash(code_dir / name) for name in (
-        "cn_disclosures.py", "cn_text_sources.py", "cn_text_corpus.py", "cn_text_index.py", "text_input.py",
+        "cn_disclosures.py", "cn_text_sources.py", "cn_text_corpus.py", "cn_text_facts.py", "cn_text_index.py", "text_input.py",
         "text_dataset.py", "karpo_numeric.py", "numeric_loader.py", "encoding_cache.py")}
     config = dict(index=INDEX_VERSION, cleaning=CLEANING_VERSION, dedup=DEDUP_VERSION, budget=BUDGET_VERSION,
                   identity=ASSOCIATION_VERSION, pit=VERSION_RULE, html_parser=HTML_PARSER_VERSION,
+                  evidence=EVIDENCE_VERSION, evidence_profile=args.profile, document_limits=LIMITS[args.profile],
                   lookback=LOOKBACK, tokenizer=budget.revision,
                   encoder=KARPO_CODE_REVISION, checkpoint=KARPO_MODEL_REVISION, industry_profile="strict",
                   dependency_versions={name: package_version(name)
                                        for name in ("tokenizers", "duckdb", "pyarrow", "beautifulsoup4", "pymupdf")},
                   implementation_sha256=implementation)
+    rule_hash = sha(json.dumps([ANCHOR, {k: implementation[k] for k in (
+        "cn_text_corpus.py", "cn_text_sources.py", "cn_text_facts.py", "cn_text_index.py", "text_input.py"
+    )}, config["dependency_versions"]], sort_keys=True).encode())
     with duckdb.connect(config={"threads": 2, "memory_limit": "1400MB",
                                "temp_directory": str(args.cache / "duckdb-spill")}) as con:
         sample_start, sample_end = con.execute("SELECT min(local_trade_date),max(local_trade_date) FROM read_parquet(?)",
                                               [glob_table(numeric, "samples")]).fetchone()
         start, end = sample_start - timedelta(days=max(LOOKBACK.values())), sample_end
-        scopes = snapshot_scopes(capture)
+        scopes = snapshot_scopes(capture, tmp / "scope_receipts")
         selected_range = (args.sample_start or sample_start, args.sample_end or sample_end)
         if not (sample_start <= selected_range[0] <= selected_range[1] <= sample_end):
             raise ValueError("QA sample range must be inside the numeric anchor")
         qa_start = selected_range[0] - timedelta(days=max(LOOKBACK.values()))
         if args.sample_start or args.sample_end:
-            scopes = [(p, x) for p, x in scopes if x["start_at"] <= str(selected_range[1]) and x["end_at"] >= str(qa_start)]
+            scopes = [(p, x, digest) for p, x, digest in scopes
+                      if x["start_at"] <= str(selected_range[1]) and x["end_at"] >= str(qa_start)]
         else:
             qa_start = start
         known = prior_text(args.prior_text)
+        news_start = selected_range[0] - timedelta(days=LOOKBACK["company_news"] - 1)
         docs, states, counts = normalize(con, numeric, capture, scopes, args.project, args.external_sources, known,
-                                         budget, args.cache, tmp, qa_start, selected_range[1], args.workers)
+                                         budget, args.cache, tmp, qa_start, selected_range[1], args.workers,
+                                         args.prior_cache, args.profile, rule_hash, news_start)
         del known
-        coverage = coverage_points(scopes, states, args.source_audit, tmp)
+        coverage = coverage_points(scopes, states, args.source_audit, tmp, capture, news_start)
         corpus = {p.relative_to(tmp).as_posix(): {"sha256": file_hash(p), "bytes": p.stat().st_size}
-                  for p in sorted(tmp.rglob("*.parquet"))}
+                  for p in sorted(tmp.rglob("*")) if p.is_file()}
         params = {"numeric": source_manifest["dataset_version"], "config": config, "corpus": corpus,
                   "requested_start": args.sample_start, "requested_end": args.sample_end}
         version = "cn-text-" + sha(json.dumps(params, default=str, sort_keys=True).encode())[:24]
@@ -591,9 +702,11 @@ def build(args):
         sample_manifest_sha256=TRAINING_MANIFEST_HASH, identity_and_sample_files=pinned_files,
         sample_count=sum(row["samples"] for row in sample_stats), sample_range=[str(x) for x in selected_range],
         requested_capture_range=[str(start), str(end)], max_native_tokens_per_modality=BUDGET, config=config,
-        capture_root=str(capture.root), source_audit=str(args.source_audit) if args.source_audit else None,
+        capture_root=str(capture.root), prior_capture_root=str(capture.prior) if capture.prior else None,
+        source_audit=str(args.source_audit) if args.source_audit else None,
         source_scope_count=len(coverage), sources=sorted({row["source"] for row in coverage}),
-        source_scope_receipts={p.relative_to(capture.root).as_posix(): file_hash(p) for p, _ in scopes},
+        source_scope_receipts={(p.as_posix() if p.parents[2] != capture.root else p.relative_to(capture.root).as_posix()):
+                               digest for p, _, digest in scopes},
         source_inputs={str(p.resolve()): file_hash(p) for p in (
             args.source_audit, args.prior_text, capture.root / "paper-target-editions.txt",
             capture.root / "paper-target-more-company.txt", capture.root / "probes/csmar_fields.json",
@@ -618,6 +731,8 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--numeric", type=Path, required=True)
     p.add_argument("--capture", type=Path, required=True)
+    p.add_argument("--prior-capture", type=Path, help="Read-only earlier scopes and archived originals")
+    p.add_argument("--prior-cache", type=Path, help="Read-only cache of PyMuPDF extraction by original SHA-256")
     p.add_argument("--tokenizer", type=Path, required=True)
     p.add_argument("--output", type=Path, required=True)
     p.add_argument("--cache", type=Path, required=True)
@@ -626,6 +741,7 @@ def main():
     p.add_argument("--prior-text", type=Path, help="Read-only verified prior PDF text by original SHA-256")
     p.add_argument("--source-audit", type=Path)
     p.add_argument("--workers", type=int, choices=(1, 2), default=2)
+    p.add_argument("--profile", choices=LIMITS, default="conservative")
     p.add_argument("--sample-start", type=date.fromisoformat, help="QA only")
     p.add_argument("--sample-end", type=date.fromisoformat, help="QA only")
     build(p.parse_args())
