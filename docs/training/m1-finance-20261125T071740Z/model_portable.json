@@ -1,0 +1,25 @@
+{
+  "state": "VERIFIED",
+  "train_run_id": "m1-finance-20261125T071740Z",
+  "selected_epoch": 1,
+  "archive": "/home/shijunyu/kurumi-research/models/kurumi-m1/m1-finance-20261125T071740Z/kurumi-m1-portable.tar",
+  "archive_bytes": 495360000,
+  "archive_sha256": "7ebb637dc53b25ec092492900a5cdfecd4cedd68ab35d33aa8e56122805fcada",
+  "member_sha256": {
+    "base-model-manifest.json": "a5fd5df3146f085b516fe9088e2231a00e1c19434e4148d459360399f4a0aed7",
+    "data-manifest.json": "76f16a35e6b7e208dde14b97744ae14fe1267c50d9e95e41ce823df4454f8e3a",
+    "training-config.json": "72cafa67b2e2539d6fd2518d7abcefb5b289e0f6cf38f7459490b4b9f0409ab4",
+    "sources.lock.json": "df1f467c7903bab1661c70248799dceea647de06a0672ef1f01d7e2df23e1546",
+    "lora.safetensors": "a182cc9b865e7f8fb99eceb8bb829c786c2b35ad7448e84ecc31dba1d83e7f8e",
+    "readout.safetensors": "dcc862d86220cb3044a8e20a829575974fd259da700fb5ce9f8ad0922b0eb8cf",
+    "manifest.json": "316ca27fda50826d21955b659334e4a96b0bf6c2ec9713d4512defe60edb907a",
+    "native-identity.json": "e3ff76be6bfd9b4f7c006f8f319495ae139c5e57416eefc54f194f1776926fd9",
+    "probe.plan.zlib": "ec748d2c9ed3a9cf8def8ff07000471df386ff35c67145cccfc48d212db16be5",
+    "SHA256SUMS": "c97ed4295c1025066a74fad8707d2203fa55e7e925bca5fad5b4bdac9d48c479"
+  },
+  "base_repo": "MachinePulseAI/karpo-decision-31B",
+  "base_revision": "b8e6fd7463cea8662c556d6257955d7ef9c10d19",
+  "native_revision": "6600011eb5cf46232d056ec0717dc726146d29de",
+  "frozen_manifest": "/home/shijunyu/kurumi-research/models/kurumi-m1/m1-finance-20261125T071740Z/frozen/manifest.json",
+  "full_recovery_checkpoint": "/home/shijunyu/kurumi-research/models/kurumi-m1/m1-finance-20261125T071740Z/last.pt"
+}

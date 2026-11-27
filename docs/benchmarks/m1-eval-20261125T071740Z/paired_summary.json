@@ -1,0 +1,25 @@
+{
+  "finben_bigdata": {
+    "wrong_to_wrong": 546,
+    "wrong_to_correct": 129,
+    "correct_to_correct": 695,
+    "correct_to_wrong": 102
+  },
+  "finben_acl": {
+    "correct_to_correct": 1493,
+    "wrong_to_wrong": 1575,
+    "correct_to_wrong": 325,
+    "wrong_to_correct": 327
+  },
+  "alphafin_test": {
+    "correct_to_correct": 455,
+    "wrong_to_wrong": 495,
+    "correct_to_wrong": 28,
+    "wrong_to_correct": 22
+  },
+  "pi_round2_full": {
+    "scenarios": 90,
+    "equity_marks": 91,
+    "different_target_positions": 11
+  }
+}

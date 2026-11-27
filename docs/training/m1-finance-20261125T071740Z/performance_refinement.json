@@ -1,0 +1,334 @@
+{
+  "identity": {
+    "base_revision": "b8e6fd7463cea8662c556d6257955d7ef9c10d19",
+    "repo_id": "MachinePulseAI/karpo-decision-31B",
+    "directory": "/home/shijunyu/kurumi-research/models/karpo-decision-31B",
+    "manifest_sha256": "a5fd5df3146f085b516fe9088e2231a00e1c19434e4148d459360399f4a0aed7",
+    "original_readout_sha256": "ccb630d849aed395b9a61cf72cd375cf6f91ccd133998df691cc7185aa82b90a",
+    "native_revision": "6600011eb5cf46232d056ec0717dc726146d29de",
+    "config_sha256": "72cafa67b2e2539d6fd2518d7abcefb5b289e0f6cf38f7459490b4b9f0409ab4",
+    "data_sha256": "76f16a35e6b7e208dde14b97744ae14fe1267c50d9e95e41ce823df4454f8e3a",
+    "pack_plan_sha256": "8b69110d4d6cb5647d6760f2934dfffb4213ffc19321f9c62f9730ef7a8f0fe4"
+  },
+  "profile_sha256": "0449194a0d69ae4733829d5f9accdc7ced9c2e3f637b98c35bffe4003b1f4107",
+  "checkpoint_sha256": "e2e8fbf2fbd60a73a9511499f81732999cc8d9840fb49c814e86581126500241",
+  "job_id": "4305",
+  "resume_updates": 141,
+  "resume_epoch": 1,
+  "resume_cursor": 2256,
+  "probe_packs": [
+    [
+      "convfinqa:10399",
+      "cflue:14517",
+      "cflue:22585",
+      "cflue:4904",
+      "cflue:26804",
+      "cflue:27761",
+      "finqa:finqa6034"
+    ],
+    [
+      "cflue:27768",
+      "cflue:16894",
+      "convfinqa:6160",
+      "cflue:2822",
+      "finqa:finqa348"
+    ],
+    [
+      "convfinqa:385",
+      "cflue:7860",
+      "finqa:finqa4801",
+      "cflue:11012",
+      "cflue:6547",
+      "cflue:5978"
+    ],
+    [
+      "cflue:24920",
+      "cflue:29196",
+      "cflue:27757",
+      "cflue:18294",
+      "convfinqa:8745",
+      "cflue:64",
+      "finqa:finqa2095"
+    ],
+    [
+      "cflue:14981",
+      "cflue:28082",
+      "cflue:4174",
+      "convfinqa:9541",
+      "cflue:1574",
+      "cflue:20757",
+      "cflue:12860",
+      "cflue:5840",
+      "cflue:4700",
+      "cflue:25055"
+    ],
+    [
+      "finqa:finqa2800",
+      "fineval:financial_engineering:val:2",
+      "cflue:1192",
+      "convfinqa:4423",
+      "cflue:30686",
+      "cflue:4674"
+    ],
+    [
+      "cflue:19206",
+      "convfinqa:2051",
+      "cflue:30551",
+      "convfinqa:10759",
+      "convfinqa:1922"
+    ],
+    [
+      "convfinqa:5359",
+      "cflue:16725",
+      "cflue:19001",
+      "finqa:finqa1234",
+      "cflue:18168",
+      "cflue:22835"
+    ],
+    [
+      "finqa:finqa5562",
+      "cflue:861",
+      "finqa:finqa3992",
+      "cflue:4888"
+    ],
+    [
+      "convfinqa:4527",
+      "cflue:21425",
+      "cflue:29879",
+      "cfa:2145",
+      "convfinqa:2718",
+      "finqa:finqa2791",
+      "cflue:4330"
+    ],
+    [
+      "cflue:815",
+      "cflue:14173",
+      "convfinqa:9336",
+      "cflue:27186",
+      "cflue:22361",
+      "cflue:23184"
+    ],
+    [
+      "convfinqa:5031",
+      "fpb:553",
+      "cflue:30871",
+      "cflue:26096",
+      "cflue:22368",
+      "cflue:30663",
+      "finqa:finqa4176"
+    ],
+    [
+      "finqa:finqa81",
+      "convfinqa:10465"
+    ],
+    [
+      "convfinqa:10359",
+      "cflue:28196",
+      "cflue:14849",
+      "cflue:24733",
+      "cflue:22881",
+      "cflue:30076",
+      "cflue:7006",
+      "cflue:2784"
+    ],
+    [
+      "finqa:finqa2501",
+      "cflue:1153",
+      "cflue:30673",
+      "cflue:2290",
+      "cflue:19108",
+      "cflue:24049",
+      "cflue:4258",
+      "cflue:2475",
+      "fpb:565"
+    ],
+    [
+      "convfinqa:9003",
+      "cflue:228",
+      "cflue:30222",
+      "cflue:29214",
+      "cflue:18894",
+      "fpb:1079",
+      "finqa:finqa2858"
+    ]
+  ],
+  "trials": [
+    {
+      "recipe": {
+        "recompute": "layer",
+        "checkpoint_every": 0,
+        "keep_every": 1,
+        "long_tokens": 2112,
+        "pack_limit": null,
+        "fused_lora_add": true
+      },
+      "seconds": 188.3148719719611,
+      "usable_tokens_per_second": 324.10079650579814,
+      "tokens": 61033,
+      "originals": 102,
+      "physical_packs": 16,
+      "fast_packs": 14,
+      "min_pack_tokens": 3065,
+      "max_pack_tokens": 4080,
+      "data_seconds": 0.057714701164513826,
+      "forward_gpu_seconds": 59.91488037109376,
+      "backward_gpu_seconds": 128.2615751953125,
+      "new_compiled_graphs": 0,
+      "peak_allocated_bytes": 102751276032,
+      "peak_reserved_bytes": 108036882432,
+      "min_available_bytes": 11095588864,
+      "process_swap_bytes": 0,
+      "mean_ce": 0.39179547905824424,
+      "grad_norm": 430.751708984375,
+      "max_item_ce_delta": 0.0,
+      "avg_abs_item_ce_delta": 0.0,
+      "throughput_ratio": 1.0587124354202604,
+      "gradient_sample_cosine": 0.9999361038208008,
+      "relative_grad_norm_delta": 0.011151842356768471,
+      "eligible": false
+    },
+    {
+      "recipe": {
+        "recompute": "layer",
+        "checkpoint_every": 0,
+        "keep_every": 1,
+        "long_tokens": 2112,
+        "pack_limit": null,
+        "fused_lora_add": true,
+        "inplace_lora_add": true
+      },
+      "seconds": 189.03183013480157,
+      "usable_tokens_per_second": 322.8715500266617,
+      "tokens": 61033,
+      "originals": 102,
+      "physical_packs": 16,
+      "fast_packs": 14,
+      "min_pack_tokens": 3065,
+      "max_pack_tokens": 4080,
+      "data_seconds": 0.05332212336361408,
+      "forward_gpu_seconds": 59.88702612304687,
+      "backward_gpu_seconds": 128.5316396484375,
+      "new_compiled_graphs": 0,
+      "peak_allocated_bytes": 102752960512,
+      "peak_reserved_bytes": 108749914112,
+      "min_available_bytes": 10442354688,
+      "process_swap_bytes": 0,
+      "mean_ce": 0.39179547905824424,
+      "grad_norm": 426.262939453125,
+      "max_item_ce_delta": 0.0,
+      "avg_abs_item_ce_delta": 0.0,
+      "throughput_ratio": 1.0546969607664205,
+      "gradient_sample_cosine": 0.9999076128005981,
+      "relative_grad_norm_delta": 0.021456413153544185,
+      "eligible": false
+    }
+  ],
+  "baseline": {
+    "recipe": {
+      "recompute": "selective",
+      "checkpoint_every": 2,
+      "keep_every": 0,
+      "long_tokens": 0,
+      "pack_limit": null,
+      "fused_lora_add": true
+    },
+    "seconds": 199.37129673128948,
+    "usable_tokens_per_second": 306.12731622175096,
+    "tokens": 61033,
+    "originals": 102,
+    "physical_packs": 16,
+    "fast_packs": 14,
+    "min_pack_tokens": 3065,
+    "max_pack_tokens": 4080,
+    "data_seconds": 1.0416201399639249,
+    "forward_gpu_seconds": 61.82868408203124,
+    "backward_gpu_seconds": 136.43387060546877,
+    "new_compiled_graphs": 15,
+    "peak_allocated_bytes": 104939703296,
+    "peak_reserved_bytes": 106998792192,
+    "min_available_bytes": 12410437632,
+    "process_swap_bytes": 0,
+    "mean_ce": 0.39179547905824424,
+    "grad_norm": 435.60955810546875
+  },
+  "operator_sample": {
+    "status": "measured",
+    "cuda_operator_self_ms": {
+      "aten::mm": 7792.493246999968,
+      "nvjet_sm121_tst_mma_128x208x64_2_32x104x64_tmaAB_bz_TNNN": 3784.3796049999974,
+      "nvjet_sm121_tst_mma_128x208x64_2_32x104x64_tmaAB_bz_NNNN": 2179.3198590000056,
+      "void at::native::vectorized_elementwise_kernel<4, at::native::CUDAFunctor_add<c10::BFloat16>, std::array<char*, 3ul>, false>(int, at::native::CUDAFunctor_add<c10::BFloat16>, std::array<char*, 3ul>)": 1432.5672549999813,
+      "aten::add": 1085.950293000013,
+      "aten::_efficient_attention_backward": 813.6578150000041,
+      "fmha_cutlassB_bf16_aligned_128x64_k65536_sm80(PyTorchMemEffAttention::AttentionBackwardKernel<cutlass::arch::Sm80, cutlass::bfloat16_t, true, false, false, 128, 64, 65536, false>::Params)": 813.6578150000041,
+      "void cutlass::Kernel2<cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_128x256_32x3_nn_align8>(cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_128x256_32x3_nn_align8::Params)": 643.1278080000109,
+      "aten::_flash_attention_backward": 358.736267000014,
+      "aten::add_": 346.6196819999679,
+      "nvjet_sm121_tst_mma_192x144x64_2_48x72x64_tmaAB_bz_TNNN": 339.5819839999937,
+      "aten::mul": 274.8918889999979,
+      "void at::native::vectorized_elementwise_kernel<4, at::native::AUnaryFunctor<c10::BFloat16, c10::BFloat16, c10::BFloat16, at::native::binary_internal::MulFunctor<float> >, std::array<char*, 2ul>, false>(int, at::native::AUnaryFunctor<c10::BFloat16, c10::BFloat16, c10::BFloat16, at::native::binary_internal::MulFunctor<float> >, std::array<char*, 2ul>)": 274.35160399999796,
+      "triton_poi_fused_gelu_mul_0": 257.37473299999743,
+      "void pytorch_flash::flash_bwd_dq_dk_dv_loop_seqk_parallel_kernel<Flash_bwd_kernel_traits<256, 64, 32, 8, 4, 1, 2, true, true, cutlass::bfloat16_t, Flash_kernel_traits<256, 64, 32, 8, cutlass::bfloat16_t> >, false, false, true, false, false, true, false>(pytorch_flash::Flash_bwd_params)": 248.51947599999792
+    },
+    "selected_operator_self_ms": {
+      "aten::_to_copy": {
+        "cuda": 0.0,
+        "cpu": 41.88697299997828,
+        "calls": 3267
+      },
+      "aten::copy_": {
+        "cuda": 88.85573300002545,
+        "cpu": 40.959913999988245,
+        "calls": 2903
+      },
+      "aten::add": {
+        "cuda": 1085.950293000013,
+        "cpu": 38.16654499999711,
+        "calls": 1457
+      },
+      "aten::mul": {
+        "cuda": 274.8918889999979,
+        "cpu": 14.346147999987652,
+        "calls": 428
+      },
+      "aten::mm": {
+        "cuda": 7792.493246999968,
+        "cpu": 272.0827810000379,
+        "calls": 5071
+      },
+      "aten::add_": {
+        "cuda": 346.6196819999679,
+        "cpu": 10.02252800000878,
+        "calls": 645
+      }
+    }
+  },
+  "selected": {
+    "recipe": {
+      "recompute": "selective",
+      "checkpoint_every": 2,
+      "keep_every": 0,
+      "long_tokens": 0,
+      "pack_limit": null,
+      "fused_lora_add": true
+    },
+    "seconds": 199.37129673128948,
+    "usable_tokens_per_second": 306.12731622175096,
+    "tokens": 61033,
+    "originals": 102,
+    "physical_packs": 16,
+    "fast_packs": 14,
+    "min_pack_tokens": 3065,
+    "max_pack_tokens": 4080,
+    "data_seconds": 1.0416201399639249,
+    "forward_gpu_seconds": 61.82868408203124,
+    "backward_gpu_seconds": 136.43387060546877,
+    "new_compiled_graphs": 15,
+    "peak_allocated_bytes": 104939703296,
+    "peak_reserved_bytes": 106998792192,
+    "min_available_bytes": 12410437632,
+    "process_swap_bytes": 0,
+    "mean_ce": 0.39179547905824424,
+    "grad_norm": 435.60955810546875
+  }
+}

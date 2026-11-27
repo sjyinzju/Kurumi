@@ -1,0 +1,153 @@
+{
+  "state": "FROZEN",
+  "history": [
+    {
+      "epoch": 1,
+      "train_originals": 49120,
+      "train_mean_ce": 0.2854231479985081,
+      "dev": {
+        "all": {
+          "items": 2592,
+          "mean_ce": 0.2806891562820271,
+          "item_mean_accuracy": 0.885738168724279,
+          "exact_match": 0.8310185185185185
+        },
+        "cflue": {
+          "items": 1542,
+          "mean_ce": 0.39575357411676054,
+          "item_mean_accuracy": 0.8358192823173356,
+          "exact_match": 0.7438391699092088
+        },
+        "finqa": {
+          "items": 311,
+          "mean_ce": 0.1351121812784294,
+          "item_mean_accuracy": 0.9517684887459807,
+          "exact_match": 0.9517684887459807
+        },
+        "fpb": {
+          "items": 113,
+          "mean_ce": 0.04045658556237586,
+          "item_mean_accuracy": 0.9823008849557522,
+          "exact_match": 0.9823008849557522
+        },
+        "convfinqa": {
+          "items": 558,
+          "mean_ce": 0.045606637580136423,
+          "item_mean_accuracy": 0.9802867383512545,
+          "exact_match": 0.9802867383512545
+        },
+        "cfa": {
+          "items": 6,
+          "mean_ce": 0.12550764326442732,
+          "item_mean_accuracy": 1.0,
+          "exact_match": 1.0
+        },
+        "fineval": {
+          "items": 62,
+          "mean_ce": 0.7177620906375288,
+          "item_mean_accuracy": 0.7580645161290323,
+          "exact_match": 0.7580645161290323
+        }
+      },
+      "optimizer_updates_cumulative": 515,
+      "weights": {
+        "lora": {
+          "path": "/home/shijunyu/kurumi-research/models/kurumi-m1/m1-finance-20261125T071740Z/epoch-1/lora.safetensors",
+          "sha256": "a182cc9b865e7f8fb99eceb8bb829c786c2b35ad7448e84ecc31dba1d83e7f8e",
+          "bytes": 489812080
+        },
+        "readout": {
+          "path": "/home/shijunyu/kurumi-research/models/kurumi-m1/m1-finance-20261125T071740Z/epoch-1/readout.safetensors",
+          "sha256": "dcc862d86220cb3044a8e20a829575974fd259da700fb5ce9f8ad0922b0eb8cf",
+          "bytes": 5483600
+        }
+      }
+    },
+    {
+      "epoch": 2,
+      "train_originals": 49120,
+      "train_mean_ce": 0.18761322883388684,
+      "dev": {
+        "all": {
+          "items": 2592,
+          "mean_ce": 0.2851158373211982,
+          "item_mean_accuracy": 0.8961741255144026,
+          "exact_match": 0.8414351851851852
+        },
+        "cflue": {
+          "items": 1542,
+          "mean_ce": 0.40775129898532425,
+          "item_mean_accuracy": 0.8507674016428867,
+          "exact_match": 0.7587548638132295
+        },
+        "finqa": {
+          "items": 311,
+          "mean_ce": 0.1172640238451241,
+          "item_mean_accuracy": 0.9581993569131833,
+          "exact_match": 0.9581993569131833
+        },
+        "fpb": {
+          "items": 113,
+          "mean_ce": 0.01030316520990331,
+          "item_mean_accuracy": 0.9911504424778761,
+          "exact_match": 0.9911504424778761
+        },
+        "convfinqa": {
+          "items": 558,
+          "mean_ce": 0.038880686952404916,
+          "item_mean_accuracy": 0.9838709677419355,
+          "exact_match": 0.9838709677419355
+        },
+        "cfa": {
+          "items": 6,
+          "mean_ce": 0.24598842334671644,
+          "item_mean_accuracy": 0.8333333333333334,
+          "exact_match": 0.8333333333333334
+        },
+        "fineval": {
+          "items": 62,
+          "mean_ce": 0.7977907154371121,
+          "item_mean_accuracy": 0.7580645161290323,
+          "exact_match": 0.7580645161290323
+        }
+      },
+      "optimizer_updates_cumulative": 1030,
+      "weights": {
+        "lora": {
+          "path": "/home/shijunyu/kurumi-research/models/kurumi-m1/m1-finance-20261125T071740Z/epoch-2/lora.safetensors",
+          "sha256": "89ed17e322f9002d9feb1dbbd8a75dd6cefee65712e126c8968b19a03afea3dd",
+          "bytes": 489812080
+        },
+        "readout": {
+          "path": "/home/shijunyu/kurumi-research/models/kurumi-m1/m1-finance-20261125T071740Z/epoch-2/readout.safetensors",
+          "sha256": "381aed025de9fa535ff988905f13e2b2496c37ffef54b8d1d6d88bccb07486cd",
+          "bytes": 5483600
+        }
+      }
+    }
+  ],
+  "selected_epoch": 1,
+  "compute_s": 193688.869127044,
+  "updates": 1030,
+  "tokens": 59243168,
+  "microsteps": 16459,
+  "physical_packs": 16459,
+  "performance": {
+    "recipe": {
+      "recompute": "selective",
+      "checkpoint_every": 2,
+      "keep_every": 0,
+      "long_tokens": 0,
+      "pack_limit": null,
+      "fused_lora_add": true
+    },
+    "tokens": 54991422,
+    "seconds": 178536.02856762102,
+    "windows": 956,
+    "fast_packs": 14240,
+    "total_packs": 15275,
+    "retry_windows": 7
+  },
+  "performance_history": [],
+  "frozen_manifest": "/home/shijunyu/kurumi-research/models/kurumi-m1/m1-finance-20261125T071740Z/frozen/manifest.json"
+}

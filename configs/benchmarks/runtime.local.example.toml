@@ -1,0 +1,24 @@
+# Codex discovers existing GB10 paths and writes runtime.local.toml.
+# Empty paths are intentionally unresolved; never execute against empty paths.
+# All five values must become actual absolute GB10 paths. Do not commit the local file.
+[paths]
+repository_root = ""
+python_executable = ""
+model_dir = ""
+data_root = ""
+run_root = ""
+
+[model]
+# Per-run identity, separated from the frozen scientific protocol.
+key = "karpo-m0"
+repo_id = "MachinePulseAI/karpo-decision-31B"
+checkpoint_role = "original_unmodified"
+# Use the verified revision and absolute path to the existing official-file verification manifest.
+revision = ""
+provenance_manifest = ""
+
+[runtime]
+device = "cuda:0"
+# Existing local checkpoint and environment are reused; no fresh model download.
+# All other scientific settings come from v1.toml and the checkpoint itself.
+

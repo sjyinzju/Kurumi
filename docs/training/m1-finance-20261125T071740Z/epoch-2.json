@@ -1,0 +1,62 @@
+{
+  "epoch": 2,
+  "train_originals": 49120,
+  "train_mean_ce": 0.18761322883388684,
+  "dev": {
+    "all": {
+      "items": 2592,
+      "mean_ce": 0.2851158373211982,
+      "item_mean_accuracy": 0.8961741255144026,
+      "exact_match": 0.8414351851851852
+    },
+    "cflue": {
+      "items": 1542,
+      "mean_ce": 0.40775129898532425,
+      "item_mean_accuracy": 0.8507674016428867,
+      "exact_match": 0.7587548638132295
+    },
+    "finqa": {
+      "items": 311,
+      "mean_ce": 0.1172640238451241,
+      "item_mean_accuracy": 0.9581993569131833,
+      "exact_match": 0.9581993569131833
+    },
+    "fpb": {
+      "items": 113,
+      "mean_ce": 0.01030316520990331,
+      "item_mean_accuracy": 0.9911504424778761,
+      "exact_match": 0.9911504424778761
+    },
+    "convfinqa": {
+      "items": 558,
+      "mean_ce": 0.038880686952404916,
+      "item_mean_accuracy": 0.9838709677419355,
+      "exact_match": 0.9838709677419355
+    },
+    "cfa": {
+      "items": 6,
+      "mean_ce": 0.24598842334671644,
+      "item_mean_accuracy": 0.8333333333333334,
+      "exact_match": 0.8333333333333334
+    },
+    "fineval": {
+      "items": 62,
+      "mean_ce": 0.7977907154371121,
+      "item_mean_accuracy": 0.7580645161290323,
+      "exact_match": 0.7580645161290323
+    }
+  },
+  "optimizer_updates_cumulative": 1030,
+  "weights": {
+    "lora": {
+      "path": "/home/shijunyu/kurumi-research/models/kurumi-m1/m1-finance-20261125T071740Z/epoch-2/lora.safetensors",
+      "sha256": "89ed17e322f9002d9feb1dbbd8a75dd6cefee65712e126c8968b19a03afea3dd",
+      "bytes": 489812080
+    },
+    "readout": {
+      "path": "/home/shijunyu/kurumi-research/models/kurumi-m1/m1-finance-20261125T071740Z/epoch-2/readout.safetensors",
+      "sha256": "381aed025de9fa535ff988905f13e2b2496c37ffef54b8d1d6d88bccb07486cd",
+      "bytes": 5483600
+    }
+  }
+}

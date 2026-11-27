@@ -1,0 +1,75 @@
+{
+  "sources": {
+    "cflue": {
+      "path": "/home/shijunyu/kurumi-research/data/financial_m1/v1/raw/cflue/train.json",
+      "sha256": "d7fe97ef489ea6834189911d7d926a2a1c71bd226d75870263fd950815476f3d",
+      "size_bytes": 26287557,
+      "revision": "adcf2643b83dfaed79d43ed916716ac57e88544a",
+      "verified": true,
+      "transport": "authorized local browser download + SFTP"
+    },
+    "finqa": {
+      "path": "/home/shijunyu/kurumi-research/data/financial_m1/v1/raw/finqa/train-00000-of-00001.parquet",
+      "sha256": "2bc6646fb773687755c94ef41078d7d89adc85d7c900f0668f1fefb9c0b6a394",
+      "size_bytes": 12326410,
+      "revision": "8c458402abbbaba013a344e8365ded7699b3f0bf",
+      "verified": true,
+      "transport": "authorized local browser download + SFTP"
+    },
+    "fpb": {
+      "path": "/home/shijunyu/kurumi-research/data/financial_m1/v1/raw/fpb/FinancialPhraseBank-v1.0.zip",
+      "sha256": "0e1a06c4900fdae46091d031068601e3773ba067c7cecb5b0da1dcba5ce989a6",
+      "size_bytes": 681890,
+      "revision": "8d3fe0c36d5feec6b3cc5e455b0fcb4820fb9964",
+      "verified": true,
+      "transport": "GB10 download from official HF signed storage redirect"
+    },
+    "convfinqa": {
+      "path": "/home/shijunyu/kurumi-research/data/financial_m1/v1/raw/convfinqa/train-00000-of-00001-7acaa8cc8803a6e9.parquet",
+      "sha256": "ee5e2202dce4675330981f49e077b8d1839adf3d1d1e09baa9dc867ec07b9f66",
+      "size_bytes": 9731637,
+      "revision": "130ed6276b6ba5cc188eb4eafa558f3312f5bc4d",
+      "verified": true,
+      "transport": "GB10 download from official HF signed storage redirect"
+    },
+    "cfa": {
+      "path": "/home/shijunyu/kurumi-research/data/financial_m1/v1/raw/cfa/train-00000-of-00001.parquet",
+      "sha256": "b6c8d2536a74d71b67a4f2792a5ebb200c7a6bb222c1b4c224c41fab5676dd61",
+      "size_bytes": 15101832,
+      "revision": "8c458402abbbaba013a344e8365ded7699b3f0bf",
+      "verified": true,
+      "transport": "GB10 download from official HF signed storage redirect"
+    },
+    "fineval": {
+      "path": "/home/shijunyu/kurumi-research/data/financial_m1/v1/raw/fineval/FinEval.zip",
+      "sha256": "44467786cfceab0783959ffb674598669207d28122ed6104f837f26a4f926764",
+      "size_bytes": 507039,
+      "revision": "ab300028f8836f14c28e80d4e96984bca9902a85",
+      "verified": true,
+      "transport": "GB10 download from official HF signed storage redirect"
+    }
+  },
+  "supervision_only": {
+    "finqa": {
+      "url": "https://raw.githubusercontent.com/czyssrs/FinQA/0f16e2867befa6840783e58be38c9efb9229d742/dataset/train.json",
+      "revision": "0f16e2867befa6840783e58be38c9efb9229d742",
+      "path": "/home/shijunyu/kurumi-research/data/financial_m1/v1/raw/supervision/finqa/train.json",
+      "sha256": "49f237eb9779b569473b26b08048867d04635a7cc39ad6a7a5664c55bb428db6",
+      "git_blob_sha1": "a6c2c5a60f9abe3fba5a793cc4d9e1dee2e09209",
+      "size_bytes": 78216616,
+      "license": "MIT",
+      "train_records": 6251
+    },
+    "convfinqa": {
+      "url": "https://raw.githubusercontent.com/czyssrs/ConvFinQA/bd38f287c9cfbd79b4acebd7e2d1d527c64a7952/data.zip",
+      "revision": "bd38f287c9cfbd79b4acebd7e2d1d527c64a7952",
+      "path": "/home/shijunyu/kurumi-research/data/financial_m1/v1/raw/supervision/convfinqa/data.zip",
+      "sha256": "d764271fae60d81b62e6d58dfc481807ebc8cfbcd633811241723c4a2101072a",
+      "git_blob_sha1": "bde03381e2d9ef0043796f2722f7a87633887358",
+      "size_bytes": 17512756,
+      "license": "MIT",
+      "member": "data/train_turn.json",
+      "train_records": 11104
+    }
+  }
+}

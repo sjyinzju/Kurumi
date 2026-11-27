@@ -1,0 +1,30 @@
+{
+  "recorded_utc": "2026-11-25T10:10:38.342102+00:00",
+  "train_run_id": "m1-finance-20261125T071740Z",
+  "previous_job": {
+    "job_id": "4264",
+    "state": "FAILED",
+    "exit_code": "75:0",
+    "elapsed_s": "3031",
+    "nodes": "pgx04",
+    "start": "2026-11-25T09:02:24",
+    "end": "2026-11-25T09:52:55",
+    "submit": "2026-11-25T08:56:47"
+  },
+  "verified_restorable_boundary": {
+    "epoch": 1,
+    "pack_cursor": 176,
+    "optimizer_updates": 11,
+    "originals": 1072
+  },
+  "recovery_file": {
+    "path": "/home/shijunyu/kurumi-research/models/kurumi-m1/m1-finance-20261125T071740Z/last.pt",
+    "sha256_at_takeover": "00da4853a3a1e448a60b6c2ae5d0d7e011b2982e8f6a23012c2a2f362a57a192"
+  },
+  "resumed_job": "4266",
+  "coordinator": {
+    "host": "pgx01",
+    "pid": 1016519
+  },
+  "remaining_pure_training_hours_at_takeover": 68.14
+}

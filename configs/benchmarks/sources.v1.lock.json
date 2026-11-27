@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "protocol_id": "kurumi-external-bench-v1",
+  "reviewed_date": "2026-11-25",
+  "benchmarks": {
+    "finben_bigdata": {
+      "provider": "huggingface",
+      "repo_id": "TheFinAI/en-sm-bigdata",
+      "repo_type": "dataset",
+      "revision": "6ee4d4b0e8b5a4e1ccaca54259559a6f0025dd00",
+      "split": "test",
+      "file": "test-00000-of-00001-bcbe082671cc1fdb.parquet",
+      "size_bytes": 792406,
+      "sha256": "4496a9811c78577c642e7360e73983f915aea7ed7bba065f22d03ea591578a1c",
+      "sha256_status": "verified_download",
+      "expected_rows": 1472,
+      "adapter": "prepare_finben",
+      "access": "huggingface_gated_auto_approval",
+      "verification": "exact_path_size_sha256_all_rows_fields_and_gold_verified",
+      "expected_labels": {
+        "up": 813,
+        "down": 659
+      }
+    },
+    "finben_acl": {
+      "provider": "huggingface",
+      "repo_id": "TheFinAI/en-sm-acl",
+      "repo_type": "dataset",
+      "revision": "54e780dd92ada10e02b5af35486b1a7636a2f065",
+      "split": "test",
+      "file": "data/test-00000-of-00001-9e63b9de85b2453a.parquet",
+      "size_bytes": 6917013,
+      "sha256": "7179bacf4cf4c330a6dd1254fd32cf8cc16924b99200a458a0d1029066bd843f",
+      "sha256_status": "verified_download",
+      "expected_rows": 3720,
+      "adapter": "prepare_finben",
+      "access": "huggingface_gated_auto_approval",
+      "verification": "exact_path_size_sha256_all_rows_fields_and_gold_verified",
+      "expected_labels": {
+        "down": 1812,
+        "up": 1908
+      }
+    },
+    "alphafin_test": {
+      "provider": "huggingface",
+      "repo_id": "AlphaFin/AlphaFin-dataset-v1",
+      "repo_type": "dataset",
+      "revision": "09fd46494e00cfcf2d089fc4dbeb3589b969d9e0",
+      "split": "test",
+      "file": "test/1000_report_marketdata.json",
+      "size_bytes": 5048297,
+      "sha256": "f5f084f3760cf05adb7aed745f3cd7fea0944618f8e31a1e20cd5db4a403ef72",
+      "expected_rows": 1000,
+      "expected_labels": {
+        "up": 484,
+        "down": 516
+      },
+      "adapter": "prepare_alphafin",
+      "target": "next_calendar_month_direction",
+      "verification": "complete_file_and_labels_checked"
+    },
+    "pi_round2_full": {
+      "provider": "official_archive",
+      "url": "https://pilabs.space/trading-arena/pi-trading-arena-round2.zip",
+      "reference_archive_sha256": "1254a8ef2389b7d7946ca8996a2adf1fbdd5da853680d82a718b467bc6ea1b46",
+      "archive_policy": "record_actual_archive_sha256; require_all_core_file_hashes",
+      "round": "round2",
+      "track": "full",
+      "policy": "pick>=0.5",
+      "expected_rows": 90,
+      "expected_questions": 2070,
+      "expected_question_types": {
+        "choice": 90,
+        "noul": 1260,
+        "score": 720
+      },
+      "core_files": [
+        {
+          "path": "rounds/round2/full/decision_points.jsonl",
+          "size_bytes": 2912178,
+          "sha256": "5f301c1431bf5ca209576c4c5e1234392bb7f25f0b7d7fe3b36a662898248e09"
+        },
+        {
+          "path": "data/bars_15m.csv",
+          "size_bytes": 2702941,
+          "sha256": "757c9f0e90fee45302b4ba68191af430341544d69d5ae4dbed9c6bfe190ae736"
+        },
+        {
+          "path": "arena/simulate.py",
+          "size_bytes": 10025,
+          "sha256": "190184a5543da97b52121c9901f5af81df04d8fd2b5d46b129b2f744936e8253"
+        }
+      ],
+      "adapter": "prepare_pi",
+      "verification": "complete_tasks_and_source_files_checked; no_model_inference_performed"
+    }
+  }
+}

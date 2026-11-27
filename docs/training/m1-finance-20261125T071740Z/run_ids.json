@@ -1,0 +1,10 @@
+{
+  "train_run_id": "m1-finance-20261125T071740Z",
+  "benchmark_run_id": "m1-eval-20261125T071740Z",
+  "m0_run_id": "m0-20261125T034500Z",
+  "model_path": "/home/shijunyu/kurumi-research/models/karpo-decision-31B",
+  "source_manifest": "/home/shijunyu/kurumi-research/runs/setup/model-manifest.json",
+  "manifest_sha256": "a5fd5df3146f085b516fe9088e2231a00e1c19434e4148d459360399f4a0aed7",
+  "qos": "student",
+  "qos_walltime": "04:00:00"
+}

@@ -1,0 +1,85 @@
+{
+  "version": "m1-finance-v1",
+  "sources": {
+    "cflue": {
+      "repo_id": "DianJin/CFLUE",
+      "revision": "adcf2643b83dfaed79d43ed916716ac57e88544a",
+      "file": "train.json",
+      "url": "https://huggingface.co/datasets/DianJin/CFLUE/resolve/adcf2643b83dfaed79d43ed916716ac57e88544a/train.json",
+      "size_bytes": 26287557,
+      "sha256": "d7fe97ef489ea6834189911d7d926a2a1c71bd226d75870263fd950815476f3d",
+      "license_at_revision": "not declared in HF metadata",
+      "split": "train"
+    },
+    "finqa": {
+      "repo_id": "Salesforce/FinTrain",
+      "revision": "8c458402abbbaba013a344e8365ded7699b3f0bf",
+      "file": "flare_finqa_sup/train-00000-of-00001.parquet",
+      "url": "https://huggingface.co/datasets/Salesforce/FinTrain/resolve/8c458402abbbaba013a344e8365ded7699b3f0bf/flare_finqa_sup/train-00000-of-00001.parquet",
+      "size_bytes": 12326410,
+      "sha256": "2bc6646fb773687755c94ef41078d7d89adc85d7c900f0668f1fefb9c0b6a394",
+      "license_at_revision": "not declared in HF metadata",
+      "split": "train"
+    },
+    "fpb": {
+      "repo_id": "takala/financial_phrasebank",
+      "revision": "8d3fe0c36d5feec6b3cc5e455b0fcb4820fb9964",
+      "file": "data/FinancialPhraseBank-v1.0.zip",
+      "url": "https://huggingface.co/datasets/takala/financial_phrasebank/resolve/8d3fe0c36d5feec6b3cc5e455b0fcb4820fb9964/data/FinancialPhraseBank-v1.0.zip",
+      "size_bytes": 681890,
+      "sha256": "0e1a06c4900fdae46091d031068601e3773ba067c7cecb5b0da1dcba5ce989a6",
+      "license_at_revision": "CC-BY-NC-SA-3.0",
+      "member": "FinancialPhraseBank-v1.0/Sentences_AllAgree.txt"
+    },
+    "convfinqa": {
+      "repo_id": "FinGPT/fingpt-convfinqa",
+      "revision": "130ed6276b6ba5cc188eb4eafa558f3312f5bc4d",
+      "file": "data/train-00000-of-00001-7acaa8cc8803a6e9.parquet",
+      "url": "https://huggingface.co/datasets/FinGPT/fingpt-convfinqa/resolve/130ed6276b6ba5cc188eb4eafa558f3312f5bc4d/data/train-00000-of-00001-7acaa8cc8803a6e9.parquet",
+      "size_bytes": 9731637,
+      "sha256": "ee5e2202dce4675330981f49e077b8d1839adf3d1d1e09baa9dc867ec07b9f66",
+      "license_at_revision": "not declared in HF metadata",
+      "split": "train"
+    },
+    "cfa": {
+      "repo_id": "Salesforce/FinTrain",
+      "revision": "8c458402abbbaba013a344e8365ded7699b3f0bf",
+      "file": "cfa_exercise_sup/train-00000-of-00001.parquet",
+      "url": "https://huggingface.co/datasets/Salesforce/FinTrain/resolve/8c458402abbbaba013a344e8365ded7699b3f0bf/cfa_exercise_sup/train-00000-of-00001.parquet",
+      "size_bytes": 15101832,
+      "sha256": "b6c8d2536a74d71b67a4f2792a5ebb200c7a6bb222c1b4c224c41fab5676dd61",
+      "license_at_revision": "not declared in HF metadata",
+      "split": "train"
+    },
+    "fineval": {
+      "repo_id": "SUFE-AIFLM-Lab/FinEval",
+      "revision": "ab300028f8836f14c28e80d4e96984bca9902a85",
+      "file": "FinEval.zip",
+      "url": "https://huggingface.co/datasets/SUFE-AIFLM-Lab/FinEval/resolve/ab300028f8836f14c28e80d4e96984bca9902a85/FinEval.zip",
+      "size_bytes": 507039,
+      "sha256": "44467786cfceab0783959ffb674598669207d28122ed6104f837f26a4f926764",
+      "license_at_revision": "CC-BY-NC-SA-4.0",
+      "splits": [
+        "dev",
+        "val"
+      ]
+    }
+  },
+  "supervision_only": {
+    "finqa": {
+      "repo": "czyssrs/FinQA",
+      "revision": "0f16e2867befa6840783e58be38c9efb9229d742",
+      "file": "dataset/train.json",
+      "sha256": "49f237eb9779b569473b26b08048867d04635a7cc39ad6a7a5664c55bb428db6",
+      "license": "MIT"
+    },
+    "convfinqa": {
+      "repo": "czyssrs/ConvFinQA",
+      "revision": "bd38f287c9cfbd79b4acebd7e2d1d527c64a7952",
+      "file": "data.zip",
+      "sha256": "d764271fae60d81b62e6d58dfc481807ebc8cfbcd633811241723c4a2101072a",
+      "member_basename": "train_turn.json",
+      "license": "MIT"
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "epoch": 1,
+  "cursor": 96,
+  "updates": 6,
+  "microsteps": 100,
+  "tokens": 362739,
+  "compute_s": 1534.5315679083578,
+  "items_epoch": 592,
+  "ce_sum_epoch": 211.90802250010893,
+  "history": [],
+  "utc": "2026-11-25T09:33:44.732040+00:00",
+  "job": "4264",
+  "pack_total": 16459,
+  "tokens_total": 59243168,
+  "effective_tokens_per_second": 236.3841888860137,
+  "remaining_compute_seconds": 249087.8483771713
+}

@@ -1,0 +1,589 @@
+[
+  {
+    "job_id": "4260",
+    "stage": "prepare",
+    "accounting": {
+      "job_id": "4260",
+      "state": "FAILED",
+      "exit_code": "127:0",
+      "elapsed_s": "1",
+      "nodes": "pgx02",
+      "start": "2026-11-25T08:00:41",
+      "end": "2026-11-25T08:00:42",
+      "submit": "2026-11-25T08:00:41"
+    }
+  },
+  {
+    "job_id": "4261",
+    "stage": "prepare",
+    "accounting": {
+      "job_id": "4261",
+      "state": "COMPLETED",
+      "exit_code": "0:0",
+      "elapsed_s": "288",
+      "nodes": "pgx02",
+      "start": "2026-11-25T08:01:51",
+      "end": "2026-11-25T08:06:39",
+      "submit": "2026-11-25T08:01:50"
+    }
+  },
+  {
+    "job_id": "4262",
+    "stage": "diagnostic",
+    "dependency": "afterok:4261",
+    "accounting": {
+      "job_id": "4262",
+      "state": "COMPLETED",
+      "exit_code": "0:0",
+      "elapsed_s": "1770",
+      "nodes": "pgx04",
+      "start": "2026-11-25T08:26:52",
+      "end": "2026-11-25T08:56:22",
+      "submit": "2026-11-25T08:06:12"
+    }
+  },
+  {
+    "stage": "train",
+    "job_id": "4264",
+    "submitted_utc": "2026-11-25T08:56:47.644931+00:00",
+    "command": [
+      "sbatch",
+      "--parsable",
+      "--job-name=kurumi-m1-train",
+      "--comment=m1-finance-20261125T071740Z:train",
+      "--output=/home/shijunyu/kurumi-research/runs/training/m1/m1-finance-20261125T071740Z/train-%j.log",
+      "/home/shijunyu/kurumi-research/Kurumi/scripts/m1_gpu.slurm",
+      "/home/shijunyu/kurumi-research",
+      "m1-finance-20261125T071740Z",
+      "train"
+    ],
+    "log": "/home/shijunyu/kurumi-research/runs/training/m1/m1-finance-20261125T071740Z/train-4264.log",
+    "accounting": {
+      "job_id": "4264",
+      "state": "FAILED",
+      "exit_code": "75:0",
+      "elapsed_s": "3031",
+      "nodes": "pgx04",
+      "start": "2026-11-25T09:02:24",
+      "end": "2026-11-25T09:52:55",
+      "submit": "2026-11-25T08:56:47"
+    }
+  },
+  {
+    "stage": "train",
+    "job_id": "4266",
+    "submitted_utc": "2026-11-25T10:07:41.785032+00:00",
+    "command": [
+      "sbatch",
+      "--parsable",
+      "--job-name=kurumi-m1-train",
+      "--comment=m1-finance-20261125T071740Z:train",
+      "--output=/home/shijunyu/kurumi-research/runs/training/m1/m1-finance-20261125T071740Z/train-%j.log",
+      "/home/shijunyu/kurumi-research/Kurumi/scripts/m1_gpu.slurm",
+      "/home/shijunyu/kurumi-research",
+      "m1-finance-20261125T071740Z",
+      "train"
+    ],
+    "log": "/home/shijunyu/kurumi-research/runs/training/m1/m1-finance-20261125T071740Z/train-4266.log",
+    "accounting": {
+      "job_id": "4266",
+      "state": "FAILED",
+      "exit_code": "75:0",
+      "elapsed_s": "13706",
+      "nodes": "pgx04",
+      "start": "2026-11-25T10:19:02",
+      "end": "2026-11-25T14:07:28",
+      "submit": "2026-11-25T10:07:41"
+    }
+  },
+  {
+    "stage": "train",
+    "job_id": "4278",
+    "submitted_utc": "2026-11-25T14:07:46.328908+00:00",
+    "command": [
+      "sbatch",
+      "--parsable",
+      "--job-name=kurumi-m1-train",
+      "--comment=m1-finance-20261125T071740Z:train",
+      "--output=/home/shijunyu/kurumi-research/runs/training/m1/m1-finance-20261125T071740Z/train-%j.log",
+      "/home/shijunyu/kurumi-research/Kurumi/scripts/m1_gpu.slurm",
+      "/home/shijunyu/kurumi-research",
+      "m1-finance-20261125T071740Z",
+      "train"
+    ],
+    "log": "/home/shijunyu/kurumi-research/runs/training/m1/m1-finance-20261125T071740Z/train-4278.log",
+    "accounting": {
+      "job_id": "4278",
+      "state": "CANCELLED by 1013",
+      "exit_code": "0:0",
+      "elapsed_s": "2351",
+      "nodes": "pgx02",
+      "start": "2026-11-25T14:07:46",
+      "end": "2026-11-25T14:46:57",
+      "submit": "2026-11-25T14:07:46"
+    },
+    "acknowledged_for_retry": true
+  },
+  {
+    "stage": "train",
+    "job_id": "4288",
+    "submitted_utc": "2026-11-25T14:50:42.695934+00:00",
+    "command": [
+      "sbatch",
+      "--parsable",
+      "--job-name=kurumi-m1-train",
+      "--comment=m1-finance-20261125T071740Z:train",
+      "--output=/home/shijunyu/kurumi-research/runs/training/m1/m1-finance-20261125T071740Z/train-%j.log",
+      "/home/shijunyu/kurumi-research/Kurumi/scripts/m1_gpu.slurm",
+      "/home/shijunyu/kurumi-research",
+      "m1-finance-20261125T071740Z",
+      "train"
+    ],
+    "log": "/home/shijunyu/kurumi-research/runs/training/m1/m1-finance-20261125T071740Z/train-4288.log",
+    "accounting": {
+      "job_id": "4288",
+      "state": "FAILED",
+      "exit_code": "75:0",
+      "elapsed_s": "13305",
+      "nodes": "pgx02",
+      "start": "2026-11-25T14:50:42",
+      "end": "2026-11-25T18:32:27",
+      "submit": "2026-11-25T14:50:42"
+    }
+  },
+  {
+    "stage": "train",
+    "job_id": "4305",
+    "submitted_utc": "2026-11-25T18:33:02.292335+00:00",
+    "command": [
+      "sbatch",
+      "--parsable",
+      "--job-name=kurumi-m1-train",
+      "--comment=m1-finance-20261125T071740Z:train",
+      "--output=/home/shijunyu/kurumi-research/runs/training/m1/m1-finance-20261125T071740Z/train-%j.log",
+      "/home/shijunyu/kurumi-research/Kurumi/scripts/m1_gpu.slurm",
+      "/home/shijunyu/kurumi-research",
+      "m1-finance-20261125T071740Z",
+      "train"
+    ],
+    "log": "/home/shijunyu/kurumi-research/runs/training/m1/m1-finance-20261125T071740Z/train-4305.log",
+    "accounting": {
+      "job_id": "4305",
+      "state": "FAILED",
+      "exit_code": "75:0",
+      "elapsed_s": "13352",
+      "nodes": "pgx02",
+      "start": "2026-11-25T18:33:02",
+      "end": "2026-11-25T22:15:34",
+      "submit": "2026-11-25T18:33:02"
+    }
+  },
+  {
+    "stage": "train",
+    "job_id": "4311",
+    "submitted_utc": "2026-11-25T22:16:11.815813+00:00",
+    "command": [
+      "sbatch",
+      "--parsable",
+      "--job-name=kurumi-m1-train",
+      "--comment=m1-finance-20261125T071740Z:train",
+      "--output=/home/shijunyu/kurumi-research/runs/training/m1/m1-finance-20261125T071740Z/train-%j.log",
+      "/home/shijunyu/kurumi-research/Kurumi/scripts/m1_gpu.slurm",
+      "/home/shijunyu/kurumi-research",
+      "m1-finance-20261125T071740Z",
+      "train"
+    ],
+    "log": "/home/shijunyu/kurumi-research/runs/training/m1/m1-finance-20261125T071740Z/train-4311.log",
+    "accounting": {
+      "job_id": "4311",
+      "state": "FAILED",
+      "exit_code": "75:0",
+      "elapsed_s": "13295",
+      "nodes": "pgx02",
+      "start": "2026-11-25T22:16:11",
+      "end": "2026-11-26T01:57:46",
+      "submit": "2026-11-25T22:16:11"
+    }
+  },
+  {
+    "stage": "train",
+    "job_id": "4313",
+    "submitted_utc": "2026-11-26T01:57:50.891487+00:00",
+    "command": [
+      "sbatch",
+      "--parsable",
+      "--job-name=kurumi-m1-train",
+      "--comment=m1-finance-20261125T071740Z:train",
+      "--output=/home/shijunyu/kurumi-research/runs/training/m1/m1-finance-20261125T071740Z/train-%j.log",
+      "/home/shijunyu/kurumi-research/Kurumi/scripts/m1_gpu.slurm",
+      "/home/shijunyu/kurumi-research",
+      "m1-finance-20261125T071740Z",
+      "train"
+    ],
+    "log": "/home/shijunyu/kurumi-research/runs/training/m1/m1-finance-20261125T071740Z/train-4313.log",
+    "accounting": {
+      "job_id": "4313",
+      "state": "FAILED",
+      "exit_code": "75:0",
+      "elapsed_s": "13241",
+      "nodes": "pgx02",
+      "start": "2026-11-26T01:57:50",
+      "end": "2026-11-26T05:38:31",
+      "submit": "2026-11-26T01:57:50"
+    }
+  },
+  {
+    "stage": "train",
+    "job_id": "4320",
+    "submitted_utc": "2026-11-26T05:38:45.351912+00:00",
+    "command": [
+      "sbatch",
+      "--parsable",
+      "--job-name=kurumi-m1-train",
+      "--comment=m1-finance-20261125T071740Z:train",
+      "--output=/home/shijunyu/kurumi-research/runs/training/m1/m1-finance-20261125T071740Z/train-%j.log",
+      "/home/shijunyu/kurumi-research/Kurumi/scripts/m1_gpu.slurm",
+      "/home/shijunyu/kurumi-research",
+      "m1-finance-20261125T071740Z",
+      "train"
+    ],
+    "log": "/home/shijunyu/kurumi-research/runs/training/m1/m1-finance-20261125T071740Z/train-4320.log",
+    "accounting": {
+      "job_id": "4320",
+      "state": "FAILED",
+      "exit_code": "75:0",
+      "elapsed_s": "13223",
+      "nodes": "pgx02",
+      "start": "2026-11-26T05:38:45",
+      "end": "2026-11-26T09:19:08",
+      "submit": "2026-11-26T05:38:45"
+    }
+  },
+  {
+    "stage": "train",
+    "job_id": "4328",
+    "submitted_utc": "2026-11-26T09:19:38.103935+00:00",
+    "command": [
+      "sbatch",
+      "--parsable",
+      "--job-name=kurumi-m1-train",
+      "--comment=m1-finance-20261125T071740Z:train",
+      "--output=/home/shijunyu/kurumi-research/runs/training/m1/m1-finance-20261125T071740Z/train-%j.log",
+      "/home/shijunyu/kurumi-research/Kurumi/scripts/m1_gpu.slurm",
+      "/home/shijunyu/kurumi-research",
+      "m1-finance-20261125T071740Z",
+      "train"
+    ],
+    "log": "/home/shijunyu/kurumi-research/runs/training/m1/m1-finance-20261125T071740Z/train-4328.log",
+    "accounting": {
+      "job_id": "4328",
+      "state": "FAILED",
+      "exit_code": "75:0",
+      "elapsed_s": "13315",
+      "nodes": "pgx02",
+      "start": "2026-11-26T09:19:38",
+      "end": "2026-11-26T13:01:33",
+      "submit": "2026-11-26T09:19:38"
+    }
+  },
+  {
+    "stage": "train",
+    "job_id": "4351",
+    "submitted_utc": "2026-11-26T13:02:00.098589+00:00",
+    "command": [
+      "sbatch",
+      "--parsable",
+      "--job-name=kurumi-m1-train",
+      "--comment=m1-finance-20261125T071740Z:train",
+      "--output=/home/shijunyu/kurumi-research/runs/training/m1/m1-finance-20261125T071740Z/train-%j.log",
+      "/home/shijunyu/kurumi-research/Kurumi/scripts/m1_gpu.slurm",
+      "/home/shijunyu/kurumi-research",
+      "m1-finance-20261125T071740Z",
+      "train"
+    ],
+    "log": "/home/shijunyu/kurumi-research/runs/training/m1/m1-finance-20261125T071740Z/train-4351.log",
+    "accounting": {
+      "job_id": "4351",
+      "state": "FAILED",
+      "exit_code": "75:0",
+      "elapsed_s": "13272",
+      "nodes": "pgx02",
+      "start": "2026-11-26T13:02:00",
+      "end": "2026-11-26T16:43:12",
+      "submit": "2026-11-26T13:02:00"
+    }
+  },
+  {
+    "stage": "train",
+    "job_id": "4362",
+    "submitted_utc": "2026-11-26T16:43:36.400883+00:00",
+    "command": [
+      "sbatch",
+      "--parsable",
+      "--job-name=kurumi-m1-train",
+      "--comment=m1-finance-20261125T071740Z:train",
+      "--output=/home/shijunyu/kurumi-research/runs/training/m1/m1-finance-20261125T071740Z/train-%j.log",
+      "/home/shijunyu/kurumi-research/Kurumi/scripts/m1_gpu.slurm",
+      "/home/shijunyu/kurumi-research",
+      "m1-finance-20261125T071740Z",
+      "train"
+    ],
+    "log": "/home/shijunyu/kurumi-research/runs/training/m1/m1-finance-20261125T071740Z/train-4362.log",
+    "accounting": {
+      "job_id": "4362",
+      "state": "FAILED",
+      "exit_code": "75:0",
+      "elapsed_s": "13301",
+      "nodes": "pgx02",
+      "start": "2026-11-26T16:43:36",
+      "end": "2026-11-26T20:25:17",
+      "submit": "2026-11-26T16:43:36"
+    }
+  },
+  {
+    "stage": "train",
+    "job_id": "4367",
+    "submitted_utc": "2026-11-26T20:25:57.741680+00:00",
+    "command": [
+      "sbatch",
+      "--parsable",
+      "--job-name=kurumi-m1-train",
+      "--comment=m1-finance-20261125T071740Z:train",
+      "--output=/home/shijunyu/kurumi-research/runs/training/m1/m1-finance-20261125T071740Z/train-%j.log",
+      "/home/shijunyu/kurumi-research/Kurumi/scripts/m1_gpu.slurm",
+      "/home/shijunyu/kurumi-research",
+      "m1-finance-20261125T071740Z",
+      "train"
+    ],
+    "log": "/home/shijunyu/kurumi-research/runs/training/m1/m1-finance-20261125T071740Z/train-4367.log",
+    "accounting": {
+      "job_id": "4367",
+      "state": "FAILED",
+      "exit_code": "75:0",
+      "elapsed_s": "13386",
+      "nodes": "pgx02",
+      "start": "2026-11-26T20:25:57",
+      "end": "2026-11-27T00:09:03",
+      "submit": "2026-11-26T20:25:57"
+    }
+  },
+  {
+    "stage": "train",
+    "job_id": "4368",
+    "submitted_utc": "2026-11-27T00:09:48.242565+00:00",
+    "command": [
+      "sbatch",
+      "--parsable",
+      "--job-name=kurumi-m1-train",
+      "--comment=m1-finance-20261125T071740Z:train",
+      "--output=/home/shijunyu/kurumi-research/runs/training/m1/m1-finance-20261125T071740Z/train-%j.log",
+      "/home/shijunyu/kurumi-research/Kurumi/scripts/m1_gpu.slurm",
+      "/home/shijunyu/kurumi-research",
+      "m1-finance-20261125T071740Z",
+      "train"
+    ],
+    "log": "/home/shijunyu/kurumi-research/runs/training/m1/m1-finance-20261125T071740Z/train-4368.log",
+    "accounting": {
+      "job_id": "4368",
+      "state": "FAILED",
+      "exit_code": "75:0",
+      "elapsed_s": "13301",
+      "nodes": "pgx02",
+      "start": "2026-11-27T00:09:48",
+      "end": "2026-11-27T03:51:29",
+      "submit": "2026-11-27T00:09:48"
+    }
+  },
+  {
+    "stage": "train",
+    "job_id": "4373",
+    "submitted_utc": "2026-11-27T03:52:11.635402+00:00",
+    "command": [
+      "sbatch",
+      "--parsable",
+      "--job-name=kurumi-m1-train",
+      "--comment=m1-finance-20261125T071740Z:train",
+      "--output=/home/shijunyu/kurumi-research/runs/training/m1/m1-finance-20261125T071740Z/train-%j.log",
+      "/home/shijunyu/kurumi-research/Kurumi/scripts/m1_gpu.slurm",
+      "/home/shijunyu/kurumi-research",
+      "m1-finance-20261125T071740Z",
+      "train"
+    ],
+    "log": "/home/shijunyu/kurumi-research/runs/training/m1/m1-finance-20261125T071740Z/train-4373.log",
+    "accounting": {
+      "job_id": "4373",
+      "state": "FAILED",
+      "exit_code": "75:0",
+      "elapsed_s": "13377",
+      "nodes": "pgx03",
+      "start": "2026-11-27T04:13:34",
+      "end": "2026-11-27T07:56:31",
+      "submit": "2026-11-27T03:52:11"
+    }
+  },
+  {
+    "stage": "train",
+    "job_id": "4379",
+    "submitted_utc": "2026-11-27T07:57:11.626496+00:00",
+    "command": [
+      "sbatch",
+      "--parsable",
+      "--job-name=kurumi-m1-train",
+      "--comment=m1-finance-20261125T071740Z:train",
+      "--output=/home/shijunyu/kurumi-research/runs/training/m1/m1-finance-20261125T071740Z/train-%j.log",
+      "/home/shijunyu/kurumi-research/Kurumi/scripts/m1_gpu.slurm",
+      "/home/shijunyu/kurumi-research",
+      "m1-finance-20261125T071740Z",
+      "train"
+    ],
+    "log": "/home/shijunyu/kurumi-research/runs/training/m1/m1-finance-20261125T071740Z/train-4379.log",
+    "accounting": {
+      "job_id": "4379",
+      "state": "FAILED",
+      "exit_code": "75:0",
+      "elapsed_s": "13248",
+      "nodes": "pgx02",
+      "start": "2026-11-27T07:57:11",
+      "end": "2026-11-27T11:37:59",
+      "submit": "2026-11-27T07:57:11"
+    }
+  },
+  {
+    "stage": "train",
+    "job_id": "4392",
+    "submitted_utc": "2026-11-27T11:38:02.519043+00:00",
+    "command": [
+      "sbatch",
+      "--parsable",
+      "--job-name=kurumi-m1-train",
+      "--comment=m1-finance-20261125T071740Z:train",
+      "--output=/home/shijunyu/kurumi-research/runs/training/m1/m1-finance-20261125T071740Z/train-%j.log",
+      "/home/shijunyu/kurumi-research/Kurumi/scripts/m1_gpu.slurm",
+      "/home/shijunyu/kurumi-research",
+      "m1-finance-20261125T071740Z",
+      "train"
+    ],
+    "log": "/home/shijunyu/kurumi-research/runs/training/m1/m1-finance-20261125T071740Z/train-4392.log",
+    "accounting": {
+      "job_id": "4392",
+      "state": "FAILED",
+      "exit_code": "75:0",
+      "elapsed_s": "13346",
+      "nodes": "pgx02",
+      "start": "2026-11-27T11:38:02",
+      "end": "2026-11-27T15:20:28",
+      "submit": "2026-11-27T11:38:02"
+    }
+  },
+  {
+    "stage": "train",
+    "job_id": "4403",
+    "submitted_utc": "2026-11-27T15:21:11.992396+00:00",
+    "command": [
+      "sbatch",
+      "--parsable",
+      "--job-name=kurumi-m1-train",
+      "--comment=m1-finance-20261125T071740Z:train",
+      "--output=/home/shijunyu/kurumi-research/runs/training/m1/m1-finance-20261125T071740Z/train-%j.log",
+      "/home/shijunyu/kurumi-research/Kurumi/scripts/m1_gpu.slurm",
+      "/home/shijunyu/kurumi-research",
+      "m1-finance-20261125T071740Z",
+      "train"
+    ],
+    "log": "/home/shijunyu/kurumi-research/runs/training/m1/m1-finance-20261125T071740Z/train-4403.log",
+    "accounting": {
+      "job_id": "4403",
+      "state": "FAILED",
+      "exit_code": "75:0",
+      "elapsed_s": "13311",
+      "nodes": "pgx02",
+      "start": "2026-11-27T15:21:11",
+      "end": "2026-11-27T19:03:02",
+      "submit": "2026-11-27T15:21:11"
+    }
+  },
+  {
+    "stage": "train",
+    "job_id": "4413",
+    "submitted_utc": "2026-11-27T19:03:37.957469+00:00",
+    "command": [
+      "sbatch",
+      "--parsable",
+      "--job-name=kurumi-m1-train",
+      "--comment=m1-finance-20261125T071740Z:train",
+      "--output=/home/shijunyu/kurumi-research/runs/training/m1/m1-finance-20261125T071740Z/train-%j.log",
+      "/home/shijunyu/kurumi-research/Kurumi/scripts/m1_gpu.slurm",
+      "/home/shijunyu/kurumi-research",
+      "m1-finance-20261125T071740Z",
+      "train"
+    ],
+    "log": "/home/shijunyu/kurumi-research/runs/training/m1/m1-finance-20261125T071740Z/train-4413.log",
+    "accounting": {
+      "job_id": "4413",
+      "state": "COMPLETED",
+      "exit_code": "0:0",
+      "elapsed_s": "5495",
+      "nodes": "pgx02",
+      "start": "2026-11-27T19:03:37",
+      "end": "2026-11-27T20:35:12",
+      "submit": "2026-11-27T19:03:37"
+    }
+  },
+  {
+    "stage": "benchmark",
+    "job_id": "4414",
+    "submitted_utc": "2026-11-27T20:35:46.625402+00:00",
+    "command": [
+      "sbatch",
+      "--parsable",
+      "--job-name=kurumi-m1-benchmark",
+      "--comment=m1-finance-20261125T071740Z:benchmark",
+      "--output=/home/shijunyu/kurumi-research/runs/training/m1/m1-finance-20261125T071740Z/benchmark-%j.log",
+      "/home/shijunyu/kurumi-research/Kurumi/scripts/m1_gpu.slurm",
+      "/home/shijunyu/kurumi-research",
+      "m1-finance-20261125T071740Z",
+      "benchmark",
+      "m1-eval-20261125T071740Z"
+    ],
+    "log": "/home/shijunyu/kurumi-research/runs/training/m1/m1-finance-20261125T071740Z/benchmark-4414.log",
+    "accounting": {
+      "job_id": "4414",
+      "state": "FAILED",
+      "exit_code": "1:0",
+      "elapsed_s": "686",
+      "nodes": "pgx02",
+      "start": "2026-11-27T20:35:46",
+      "end": "2026-11-27T20:47:12",
+      "submit": "2026-11-27T20:35:46"
+    },
+    "acknowledged_for_retry": true
+  },
+  {
+    "stage": "benchmark",
+    "job_id": "4415",
+    "submitted_utc": "2026-11-27T20:51:25.830085+00:00",
+    "command": [
+      "sbatch",
+      "--parsable",
+      "--job-name=kurumi-m1-benchmark",
+      "--comment=m1-finance-20261125T071740Z:benchmark",
+      "--output=/home/shijunyu/kurumi-research/runs/training/m1/m1-finance-20261125T071740Z/benchmark-%j.log",
+      "/home/shijunyu/kurumi-research/Kurumi/scripts/m1_gpu.slurm",
+      "/home/shijunyu/kurumi-research",
+      "m1-finance-20261125T071740Z",
+      "benchmark",
+      "m1-eval-20261125T071740Z"
+    ],
+    "log": "/home/shijunyu/kurumi-research/runs/training/m1/m1-finance-20261125T071740Z/benchmark-4415.log",
+    "accounting": {
+      "job_id": "4415",
+      "state": "COMPLETED",
+      "exit_code": "0:0",
+      "elapsed_s": "10539",
+      "nodes": "pgx02",
+      "start": "2026-11-27T20:51:25",
+      "end": "2026-11-27T23:47:04",
+      "submit": "2026-11-27T20:51:25"
+    }
+  }
+]

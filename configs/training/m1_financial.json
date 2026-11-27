@@ -1,0 +1,55 @@
+{
+  "version": "m1-finance-v1",
+  "base_repo": "MachinePulseAI/karpo-decision-31B",
+  "base_revision": "b8e6fd7463cea8662c556d6257955d7ef9c10d19",
+  "native_revision": "6600011eb5cf46232d056ec0717dc726146d29de",
+  "seed": 17,
+  "dev_fraction": 0.05,
+  "max_length": 4096,
+  "epochs": 2,
+  "microbatch_packs": 1,
+  "accumulate_packs": 16,
+  "checkpoint_every": 1,
+  "recompute": "layer",
+  "save_minutes": 60,
+  "lora": {
+    "targets": [
+      "q_proj",
+      "k_proj",
+      "v_proj",
+      "o_proj",
+      "gate_proj",
+      "up_proj",
+      "down_proj"
+    ],
+    "rank": 16,
+    "alpha": 32,
+    "dropout": 0,
+    "bias": "none",
+    "lr": 0.00005,
+    "weight_decay": 0.01
+  },
+  "readout": {
+    "rows": 255,
+    "dtype": "float32",
+    "lr": 0.000005,
+    "weight_decay": 0
+  },
+  "backbone_dtype": "bfloat16",
+  "optimizer": {
+    "type": "AdamW",
+    "betas": [
+      0.9,
+      0.999
+    ],
+    "eps": 1e-8,
+    "gradient_clip": 1
+  },
+  "schedule": {
+    "type": "cosine",
+    "warmup_fraction": 0.03
+  },
+  "objective": "mean_within_question_group_then_mean_over_original_items",
+  "selection": "minimum_full_dev_original_item_mean_ce_then_earliest_epoch",
+  "m0_run_id": "m0-20261125T034500Z"
+}
