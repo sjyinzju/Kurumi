@@ -71,3 +71,5 @@ python -u scripts/m2_handoff.py watch --config $HandoffConfig --state $HandoffSt
 协调器从发布回执获取固定 commit，从 GB10 获取 SHA256 校验回执，再提交正式测评。HF 持久保存全部恢复点。GB10 接收模型、全部验证、日志、来源记录、原始归档及最终恢复点。测评的首条有效预测回执绑定训练 ID、HF commit、模型摘要、测评 ID 与 Slurm job ID。只有该作业仍为 `RUNNING` 且有效预测文件存在时，协调器才在身份匹配的 A100 目标内调用矩池云释放命令。Slurm 超时、抢占或节点故障后的续跑复用同一测评 ID 和逐样本落盘。完成后的四项结果上传到训练目录下独立的 `benchmark/` 路径。
 
 释放请求与计费终态分别记录。若已接入矩池云的鉴权状态查询，可将其命令参数数组写入 `a100.platform_status_command`。协调器在数组末尾添加实例 ID，读取该命令输出的 JSON。使用官方控制台观察终态时，将实际页面证据写成 `--release-confirmation` 指定的 JSON，包含 `provider`（`matpool`）、`instance_id`、`state`（`RELEASED` 或 `STOPPED`）、`billing_active`（`false`）、`checked_at` 与 `source`。SSH 断开后继续查平台状态。
+
+GB10 交接验收单独持久化。要发起释放，协调器会再次确认回执记录的首条正式预测文件仍存在且非空，同一次测评的最新 Slurm 作业仍为 `RUNNING`。明确未发出的释放请求可在下一次验收通过后重试。结果不明时，只有官方状态查询确认同一实例仍为 `RUNNING` 且 `billing_active` 为 `true`，并且观测时间晚于上次尝试、距当前不超过两分钟，才允许重试。

@@ -9,13 +9,16 @@ import subprocess
 import sys
 import time
 from contextlib import contextmanager
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path, PurePosixPath
 
 from m2_hf_artifacts import COMMIT, SHA256, atomic_json, json_bytes, now, read_json, run_prefix
 
 RETRYABLE_JOBS = {"PREEMPTED", "TIMEOUT", "NODE_FAIL", "BOOT_FAIL"}
 BILLING_TERMINAL = {"RELEASED", "STOPPED"}
+UNCERTAIN_RELEASE = {"ATTEMPTING", "PLATFORM_VERIFICATION_PENDING"}
+MATPOOL_GUARD_EXIT = 20
+MATPOOL_UNCONFIRMED_EXIT = 12
 IDENTITY = ("run_id", "hf_complete_commit", "model_manifest_sha256")
 TOKEN_LAUNCHER = """
 import fcntl, os, re, subprocess, sys
@@ -39,6 +42,10 @@ with open(lock, 'ab') as guard:
         subprocess.Popen(command, stdin=subprocess.DEVNULL, stdout=stream, stderr=stream,
                          env=env, start_new_session=True, pass_fds=(guard.fileno(),))
 """
+
+
+class SSHNotDispatched(RuntimeError):
+    """The SSH connector failed before any requested command was dispatched."""
 
 
 @contextmanager
@@ -72,7 +79,11 @@ def ssh(host, command, *, check=True, stdin=None):
         helper = ssh_helper(Path(host["ssh_helper"]).resolve())
         connector = getattr(helper, host["ssh_connector"])
         try:
-            with connector() as connection:
+            connection = connector()
+        except (OSError, EOFError, RuntimeError, helper.paramiko.SSHException) as error:
+            raise SSHNotDispatched(f"SSH connection failed before dispatch: {type(error).__name__}") from error
+        try:
+            with connection:
                 user_input, out, err = connection.exec_command(command, timeout=45)
                 if stdin is not None:
                     user_input.write(stdin)
@@ -193,55 +204,87 @@ def verify_matpool_host(config, *, release=False):
     if not re.fullmatch(r"[a-f0-9-]{36}", fingerprint["boot_id"]):
         raise ValueError("invalid expected rental boot ID")
     # Check identity and token presence in the same SSH call as any release.
-    script = """
+    script = f"""
 import os, socket, subprocess, sys
 from pathlib import Path
+def reject(message):
+    print(message, file=sys.stderr)
+    sys.exit({MATPOOL_GUARD_EXIT})
 hostname, boot_id, release = sys.argv[1:]
 if socket.gethostname() != hostname or Path('/proc/sys/kernel/random/boot_id').read_text().strip() != boot_id:
-    sys.exit('A100 rental fingerprint mismatch')
+    reject('A100 rental fingerprint mismatch')
 cli = '/public/script/matncli'
 if not os.access(cli, os.X_OK):
-    sys.exit('MatPool release CLI unavailable')
+    reject('MatPool release CLI unavailable')
 entry = b'MATCLOUD_CANCELTOKEN='
 tokens = [item[len(entry):] for item in Path('/proc/1/environ').read_bytes().split(b'\\0') if item.startswith(entry)]
 if len(tokens) != 1 or not tokens[0]:
-    sys.exit('MatPool release token unavailable')
+    reject('MatPool release token unavailable')
 if release == 'yes':
     env = os.environb.copy()
     env[b'MATCLOUD_CANCELTOKEN'] = tokens[0]
     status = subprocess.run([cli, 'node', 'cancel', '-url', 'https://matpool.com/api/public/node'],
                             env=env, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
                             stderr=subprocess.DEVNULL, check=False).returncode
-    sys.exit(0 if status == 0 else 12)
+    sys.exit(0 if status == 0 else {MATPOOL_UNCONFIRMED_EXIT})
 """
     return ssh(host, shlex.join([host["python"], "-c", script, fingerprint["hostname"],
                                fingerprint["boot_id"], "yes" if release else "no"]), check=not release)
 
 
-def release_confirmation(config, confirmation_file, requested_at):
+def platform_status(config, confirmation_file, requested_at):
     import json
 
-    if config["a100"].get("platform_status_command"):
-        # This command must use the authenticated rental status source, independently of SSH.
-        command = config["a100"]["platform_status_command"]
-        result = execute([*command, config["a100"]["instance_id"]], check=False)
-        if result.returncode == 0:
-            status = json.loads(result.stdout)
+    try:
+        if config["a100"].get("platform_status_command"):
+            # This command must use the authenticated rental status source, independently of SSH.
+            command = config["a100"]["platform_status_command"]
+            result = execute([*command, config["a100"]["instance_id"]], check=False)
+            status = json.loads(result.stdout) if result.returncode == 0 else None
+        elif confirmation_file.is_file():
+            status = read_json(confirmation_file)
         else:
-            status = None
-    elif confirmation_file.is_file():
-        status = read_json(confirmation_file)
+            return None
+        if (not isinstance(status, dict) or status.get("instance_id") != config["a100"]["instance_id"]
+                or status.get("provider") != "matpool" or not status.get("source")):
+            return None
+        observed = datetime.fromisoformat(status["checked_at"])
+        if not datetime.fromisoformat(requested_at) < observed <= datetime.now(UTC):
+            return None
+    except (KeyError, TypeError, ValueError, OSError, subprocess.TimeoutExpired):
+        return None
+    return status
+
+
+def can_submit_release(config, request, status):
+    if not request or request["status"] == "NOT_SUBMITTED":
+        return True
+    return (request["status"] in UNCERTAIN_RELEASE and bool(config["a100"].get("platform_status_command"))
+            and status is not None and status.get("state") == "RUNNING" and status.get("billing_active") is True
+            and (datetime.now(UTC) - datetime.fromisoformat(status["checked_at"])).total_seconds() <= 120)
+
+
+def running_with_prediction(gb, prediction, job):
+    running = shlex.join(["squeue", "-h", "-j", job, "-t", "RUNNING", "-o", "%i"])
+    result = ssh(gb, f"test -s {shlex.quote(str(prediction))} && {running}", check=False)
+    return result.returncode == 0 and result.stdout.strip() == job
+
+
+def submit_release(config, args, state, handoff):
+    request = {"requested_at": now(), "instance_id": config["a100"]["instance_id"], "status": "ATTEMPTING"}
+    save(args.state, state, handoff=handoff, release_request=request)
+    try:
+        result = verify_matpool_host(config, release=True)
+    except SSHNotDispatched:
+        outcome = {"status": "NOT_SUBMITTED"}
+    except (OSError, EOFError, RuntimeError, subprocess.TimeoutExpired):
+        outcome = {"status": "PLATFORM_VERIFICATION_PENDING"}
     else:
-        status = None
-    if status and (status.get("instance_id") == config["a100"]["instance_id"]
-                   and status.get("provider") == "matpool"
-                   and status.get("state") in BILLING_TERMINAL
-                   and status.get("billing_active") is False
-                   and status.get("checked_at")
-                   and status.get("source")
-                   and datetime.fromisoformat(status["checked_at"]) >= datetime.fromisoformat(requested_at)):
-        return status
-    return None
+        status = {0: "SUBMITTED", MATPOOL_GUARD_EXIT: "NOT_SUBMITTED"}.get(
+            result.returncode, "PLATFORM_VERIFICATION_PENDING",
+        )
+        outcome = {"status": status, "command_exit": result.returncode}
+    save(args.state, state, release_request=request | outcome)
 
 
 def job_state(job):
@@ -340,14 +383,22 @@ def tick(config, args, state):
     if state.get("slurm") != slurm:
         save(args.state, state, slurm=slurm)
 
-    handoff = remote_json(gb, handoff_path)
-    if handoff and not state.get("release_request"):
+    request = state.get("release_request")
+    platform = None
+    if request and "release_confirmation" not in state:
+        platform = platform_status(config, args.release_confirmation, request["requested_at"])
+        if platform and platform.get("state") in BILLING_TERMINAL and platform.get("billing_active") is False:
+            save(args.state, state, release_confirmation=platform)
+
+    eligible = "release_confirmation" not in state and can_submit_release(config, request, platform)
+    handoff = remote_json(gb, handoff_path) if "handoff" not in state or eligible else None
+    if handoff:
         validate_artifact_identity(publication, handoff)
         job = str(handoff["slurm_job_id"])
         probe = handoff.get("probe", {})
         probabilities = probe.get("probabilities", [])
         fixed_probe = probe.get("sample_id") and len(probabilities) == 3 and all(len(row) == 7 for row in probabilities)
-        if (job == slurm["jobs"][-1] and job.isdecimal() and handoff.get("eval_run_id") == config["eval_run_id"]
+        if (job in slurm["jobs"] and job.isdecimal() and handoff.get("eval_run_id") == config["eval_run_id"]
                 and all(handoff.get(key) is True for key in ("gb10_received_verified", "model_loaded",
                                                             "first_valid_prediction_written"))
                 and handoff.get("prediction_written_at") and fixed_probe):
@@ -355,22 +406,15 @@ def tick(config, args, state):
             prediction = PurePosixPath(handoff["prediction_path"])
             if not prediction.is_absolute() or expected_output not in prediction.parents or ".." in prediction.parts:
                 raise ValueError("the handoff prediction is outside the GB10 M2 benchmark run")
-            ready = ssh(gb, f"test -s {shlex.quote(str(prediction))} && "
-                        + shlex.join(["squeue", "-h", "-j", job, "-t", "RUNNING", "-o", "%i"]), check=False)
-            if ready.returncode == 0 and ready.stdout.strip() == job:
-                verify_matpool_host(config)
-                save(args.state, state, handoff=handoff, release_request={"requested_at": now(),
-                     "instance_id": aid["instance_id"], "status": "ATTEMPTING"})
-                result = verify_matpool_host(config, release=True)
-                status = "SUBMITTED" if result.returncode == 0 else "PLATFORM_VERIFICATION_PENDING"
-                save(args.state, state, release_request=state["release_request"] | {
-                    "status": status, "command_exit": result.returncode,
-                })
-
-    if state.get("release_request") and "release_confirmation" not in state:
-        confirmation = release_confirmation(config, args.release_confirmation, state["release_request"]["requested_at"])
-        if confirmation:
-            save(args.state, state, release_confirmation=confirmation)
+            present = ssh(gb, f"test -s {shlex.quote(str(prediction))}", check=False)
+            if present.returncode == 0:
+                if "handoff" not in state:
+                    save(args.state, state, handoff=handoff)
+                if eligible and job == slurm["jobs"][-1] and slurm["job_state"] != "COMPLETED":
+                    verify_matpool_host(config)
+                    if (running_with_prediction(gb, prediction, job)
+                            and can_submit_release(config, request, platform)):
+                        submit_release(config, args, state, handoff)
 
     if slurm["job_state"] == "COMPLETED" and "benchmark_publication" not in state:
         receipt_path = control / "benchmark-published.json"
