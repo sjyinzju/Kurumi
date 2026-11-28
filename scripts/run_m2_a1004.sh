@@ -13,7 +13,7 @@ run=$3
 code=$(cd -- "$(dirname -- "$0")/.." && pwd)
 bundle="$root/data/m2-v3-60k-ready"
 base="$root/assets/karpo-decision-31B"
-m1="$root/assets/m1"
+m1="$root/assets/m1-epoch1"
 python="$root/env/train/bin/python"
 execution="$code/configs/training/m2_a1004_execution.json"
 controls="$root/control/$run"
@@ -36,7 +36,7 @@ common=(
     --model "$base"
     --provenance "$m1/base-model-manifest.json"
     --m1-frozen "$m1/manifest.json"
-    --environment "$root/env/environment.txt"
+    --environment "$root/ops/m2-environment.txt"
     --code-commit "$commit"
 )
 torchrun=("$python" -u -m torch.distributed.run --standalone --nnodes=1 --nproc_per_node=4)
