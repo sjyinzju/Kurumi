@@ -4,7 +4,16 @@
     "backend": "nccl",
     "strategy": "fsdp2",
     "world_size": 4,
-    "decoder_reshard_after_forward": true
+    "decoder_reshard_after_forward": true,
+    "layer_reshard": {
+      "value": false,
+      "layers": [
+        57,
+        58,
+        59
+      ],
+      "max_extra_bytes": 3221225472
+    }
   },
   "optimization": {
     "epochs": 1,
