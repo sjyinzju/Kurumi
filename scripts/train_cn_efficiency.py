@@ -319,6 +319,7 @@ def execute(view, ckpt, packed, adapters, cfg, identity, fmt, optimized, out, ma
     save_every = cfg.get("save_every_updates", 0)
     save_seconds = cfg.get("save_every_seconds", 0)
     log_every = cfg.get("log_every_updates", 1)
+    recovery_after = cfg.get("recovery_check_after")
     operator_sample = None
     for rows in view.rows("fit", cfg["originals_per_update"], start=cursor):
         if STOP or (max_updates is not None and count >= max_updates):
@@ -329,7 +330,8 @@ def execute(view, ckpt, packed, adapters, cfg, identity, fmt, optimized, out, ma
                                                            torch.profiler.ProfilerActivity.CUDA])
         with profiler if profiler is not None else nullcontext():
             stats, scores, detail = update(
-                view, ckpt, packed, opt, sched, params, cfg, rows, fmt, optimized, details=count == 0
+                view, ckpt, packed, opt, sched, params, cfg, rows, fmt, optimized,
+                details=count == 0 or count == recovery_after,
             )
         if profiler is not None:
             operator_sample = [
@@ -349,6 +351,11 @@ def execute(view, ckpt, packed, adapters, cfg, identity, fmt, optimized, out, ma
         if count == 1 or log_every and count % log_every == 0:
             print(json.dumps({"phase": out.name, "update": count, **stats}), flush=True)
         now = time.monotonic()
+        if not resume and count == recovery_after:
+            checkpoint(out / "recovery.pt", identity, params, ckpt.readout, opt, sched, cursor, count)
+            save_time += time.monotonic() - now
+        if recovery_after is not None and count == recovery_after + 1 and detail is not None:
+            atomic_save(out / "recovery-next.pt", dict(detail, original_scores=scores))
         if (save_every and count % save_every == 0) or (save_seconds and now - last_save_time >= save_seconds):
             checkpoint(last, identity, params, ckpt.readout, opt, sched, cursor, count)
             last_save_time = time.monotonic()
@@ -435,6 +442,8 @@ def load_training(args, view, cfg):
         raise ValueError("Prepared view tokenizer differs from the native checkpoint")
     del encoder
     device = torch.device(args.device)
+    if cfg.get("deterministic_algorithms", False):
+        torch.use_deterministic_algorithms(True)
     if device.type != "cuda" or not torch.cuda.is_available():
         raise RuntimeError("Native training requires an allocated CUDA device with BF16 support")
     if device.index is None or device.index >= torch.cuda.device_count():
@@ -485,6 +494,7 @@ def load_training(args, view, cfg):
         "gpu": gpu.name, "node": socket.gethostname(), "slurm_job": os.environ.get("SLURM_JOB_ID"),
         "capability": torch.cuda.get_device_capability(device), "device": str(device),
         "cuda_visible_devices": os.environ.get("CUDA_VISIBLE_DEVICES"),
+        "deterministic_algorithms": torch.are_deterministic_algorithms_enabled(),
         "attention": {"global": "cudnn_frost" if supports(global_attention) else "native_efficient_sdpa",
                       "sliding": "fa4" if supports(sliding_attention) else "native_varlen"},
         "torch": str(torch.__version__), "cuda": torch.version.cuda, "allocator_cap_bytes": cap,

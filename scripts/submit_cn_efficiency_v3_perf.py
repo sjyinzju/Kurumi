@@ -21,7 +21,10 @@ TERMINAL = {"COMPLETED", "FAILED", "CANCELLED", "TIMEOUT", "OUT_OF_MEMORY", "NOD
 
 def remote(args, script):
     result = subprocess.run((sys.executable, "-B", str(args.transport), "run"), input=script, encoding="utf-8",
-                            capture_output=True, timeout=90, check=True)
+                            capture_output=True, timeout=90)
+    if result.returncode:
+        raise subprocess.CalledProcessError(result.returncode, "Xlab command", output=result.stdout[-1600:],
+                                            stderr=result.stderr[-1600:])
     return result.stdout.strip()
 
 
@@ -56,7 +59,8 @@ def submit(args, exp):
     archive = exp / "bundle.tar.gz"
     digest = file_sha(args.bundle)
     transfer(args, "put", args.bundle, archive)
-    script = f"""+set -euo pipefail
+    script = f"""
+set -euo pipefail
 cd {exp_text}
 test "$(pwd -P)" = {exp_text}
 exec 9>.submit.lock
@@ -182,7 +186,12 @@ def run(args):
             record(args, status="BLOCKED_M1", reason=gate["reason"])
             return
         exp = PurePosixPath(args.root) / "runs" / "perf-experiments" / args.experiment_name
-        job = submit(args, exp)
+        try:
+            job = submit(args, exp)
+        except subprocess.CalledProcessError as error:
+            record(args, status="SUBMIT_FAILED", path=str(exp), exit_code=error.returncode,
+                   detail=(error.stderr or error.stdout).strip())
+            raise
         record(args, status="SUBMITTED", job=job, path=str(exp))
         status = wait_for_job(args, exp, job)
         collect(args, exp, job, status)

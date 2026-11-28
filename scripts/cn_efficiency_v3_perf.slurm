@@ -27,6 +27,7 @@ grep -q 'gres/gpu=1' allocation.txt
 
 mkdir -p cache/{cuda,cudnn,flash,extensions,inductor,triton,hf,tmp}
 export CUDA_CACHE_PATH="$experiment/cache/cuda"
+export CUBLAS_WORKSPACE_CONFIG=:4096:8
 export CUDNN_FRONTEND_COMPILED_CACHE="$experiment/cache/cudnn"
 export FLASH_ATTENTION_CUTE_DSL_CACHE_DIR="$experiment/cache/flash"
 export TORCH_EXTENSIONS_DIR="$experiment/cache/extensions"

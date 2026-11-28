@@ -61,8 +61,8 @@ def same_view(inputs):
             view.db.close()
 
 
-def parity(reference, candidate):
-    left, right = (torch.load(x / "first_update.pt", map_location="cpu", weights_only=True)
+def parity(reference, candidate, *, detail="first_update.pt", reference_update=0):
+    left, right = (torch.load(x / detail, map_location="cpu", weights_only=True)
                    for x in (reference, candidate))
     if left["draw_order"] != right["draw_order"]:
         raise ValueError("First optimizer update changed its original draw order")
@@ -75,8 +75,8 @@ def parity(reference, candidate):
         scores.append(abs(left["original_scores"][sid] - right["original_scores"][sid]))
     gradient_a, gradient_b = left["gradient"], right["gradient"]
     update_a, update_b = left["parameter_delta"], right["parameter_delta"]
-    norm_a, norm_b = (read(path / "metrics.json")["records"][0]["grad_norm"]
-                     for path in (reference, candidate))
+    norm_a = read(reference / "metrics.json")["records"][reference_update]["grad_norm"]
+    norm_b = read(candidate / "metrics.json")["records"][0]["grad_norm"]
     result = {
         "probability_max_abs": float(max(probabilities)),
         "original_loss_max_abs": max(scores),
@@ -105,14 +105,15 @@ def run(exp, gate):
                "stable_updates": STABLE_UPDATES, "trials": {}}
     report = results / "summary.json"
 
-    def trial(name, arm, profile, updates, *, resume=False, confirmation=False, retain=False, profile_update=None):
+    def trial(name, arm, profile, updates, *, resume_from=None, confirmation=False,
+              recovery_after=None, profile_update=None):
         dest = results / name
         optimized, policy = profile
         config = dict(read(inputs / f"{arm}.json"), execution=policy, evaluate_confirmation=confirmation,
-                      profile_update=profile_update)
+                      profile_update=profile_update, deterministic_algorithms=True,
+                      recovery_check_after=recovery_after)
         config_path = results / f"{name}.json"
-        if not resume:
-            write(config_path, config)
+        write(config_path, config)
         log = results / f"{name}.log"
         command = [sys.executable, "-B", "-u", str(Path(__file__).with_name("train_cn_efficiency.py")),
                    "--config", str(config_path), "train", "--view", str(inputs / f"{arm}.sqlite"),
@@ -121,7 +122,9 @@ def run(exp, gate):
                    "--output", str(dest), "--max-updates", str(updates)]
         if not optimized:
             command.append("--baseline-execution")
-        if resume:
+        if resume_from is not None:
+            dest.mkdir()
+            resume_from.replace(dest / "last.pt")
             command.append("--resume")
         started = time.monotonic()
         with log.open("ab") as stream:
@@ -136,9 +139,9 @@ def run(exp, gate):
         elif "out of memory" in log.read_bytes()[-8000:].decode(errors="replace").lower():
             record["status"] = "OOM"
         checkpoint = dest / "last.pt"
-        if not retain and checkpoint.is_file() and checkpoint.resolve().parent == dest.resolve():
+        if checkpoint.is_file() and checkpoint.resolve().parent == dest.resolve():
             checkpoint.unlink()
-        summary["trials"][f"{name}-resumed" if resume else name] = record
+        summary["trials"][name] = record
         write(report, summary)
         print(name, record["status"], flush=True)
         return record.get("metrics")
@@ -150,26 +153,38 @@ def run(exp, gate):
             raise ValueError("Trials changed the original optimizer update groups")
 
     write(report, summary)
-    smoke = trial("smoke", "repair", BASELINE, 1, retain=True)
+    smoke = trial("recovery-control", "repair", BASELINE, 2, recovery_after=1)
     if smoke is None:
-        raise RuntimeError("Baseline could not complete native forward, backward and save")
-    resumed = trial("smoke", "repair", BASELINE, 2, resume=True)
-    if resumed is None or resumed["cursor"] == smoke["cursor"]:
-        raise RuntimeError("Baseline failed independent optimizer recovery")
+        raise RuntimeError("Deterministic native update or checkpoint failed")
+    resumed = trial("recovery-resume", "repair", BASELINE, 2, recovery_after=1,
+                    resume_from=results / "recovery-control" / "recovery.pt")
+    if (resumed is None or resumed["cursor"] != smoke["cursor"]
+            or resumed["records"][0]["draw_sha256"] != smoke["records"][1]["draw_sha256"]):
+        raise RuntimeError("Baseline failed to recover the saved optimizer boundary and original draw")
+    summary["recovery_parity"] = parity(results / "recovery-control", results / "recovery-resume",
+                                        detail="recovery-next.pt", reference_update=1)
+    write(report, summary)
+    if not summary["recovery_parity"]["passes"]:
+        raise RuntimeError("Independent recovery exceeded the fixed numerical tolerance on a shared trajectory")
     base_count = WARMUP + STABLE_UPDATES
     baseline = trial("baseline-a", "repair", BASELINE, base_count)
     repeated = trial("baseline-b", "repair", BASELINE, base_count)
     if baseline is None or repeated is None:
         raise RuntimeError("Baseline could not repeat its measured reference path")
     compare_sequence(baseline, repeated)
-    if (resumed["records"][0]["draw_sha256"] != baseline["records"][1]["draw_sha256"]
-            or abs(resumed["records"][0]["loss"] - baseline["records"][1]["loss"]) > TOLERANCE["original_loss_max_abs"]):
-        raise RuntimeError("Independent recovery did not reproduce the next optimizer update")
     summary["baseline_repeat_parity"] = parity(results / "baseline-a", results / "baseline-b")
     summary["baseline_repeat_seconds_per_update"] = [stable_seconds(baseline), stable_seconds(repeated)]
     if not summary["baseline_repeat_parity"]["passes"]:
         write(report, summary)
         raise RuntimeError("Repeated reference exceeded the predeclared numeric tolerance")
+    write(report, summary)
+
+    # Format comparison keeps the compute policy fixed and runs the same short confirmed draw.
+    for arm in ("v2", "prior-v3", "repair"):
+        current = trial(f"format-{arm}", arm, BASELINE, WARMUP + 1, confirmation=True)
+        if current is None:
+            raise RuntimeError(f"Format comparison did not complete for {arm}")
+        compare_sequence(baseline, current)
     write(report, summary)
 
     trial("operators", "repair-wide", BASELINE, 2, profile_update=2)
@@ -213,12 +228,6 @@ def run(exp, gate):
             break
     write(report, summary)
 
-    # Format comparison keeps the compute policy fixed and runs the same short confirmed draw.
-    for arm in ("v2", "prior-v3", "repair"):
-        current = trial(f"format-{arm}", arm, BASELINE, WARMUP + 1, confirmation=True)
-        if current is None:
-            raise RuntimeError(f"Format comparison did not complete for {arm}")
-        compare_sequence(baseline, current)
     summary["status"] = "MEASURED"
     write(report, summary)
 

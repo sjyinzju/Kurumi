@@ -1,0 +1,168 @@
+{
+  "version": "cn-efficiency-v3",
+  "base_repo": "MachinePulseAI/karpo-decision-31B",
+  "base_revision": "b8e6fd7463cea8662c556d6257955d7ef9c10d19",
+  "native_revision": "6600011eb5cf46232d056ec0717dc726146d29de",
+  "repair_revision": "r1",
+  "input_recipe": "v3_repair_full60",
+  "sampling_order": "security_first",
+  "expected_input_tokens_per_original": 6066.4935,
+  "seed": 17,
+  "max_length": 8192,
+  "pack_tokens": 6200,
+  "originals_per_update": 2,
+  "memory_limit_gib": null,
+  "save_every_updates": 0,
+  "save_every_seconds": 0,
+  "log_every_updates": 1,
+  "measure_warmup_updates": 2,
+  "lora": {
+    "targets": [
+      "q_proj",
+      "k_proj",
+      "v_proj",
+      "o_proj",
+      "gate_proj",
+      "up_proj",
+      "down_proj"
+    ],
+    "rank": 16,
+    "alpha": 32,
+    "lr": 5e-05,
+    "weight_decay": 0.01
+  },
+  "readout": {
+    "rows": 255,
+    "lr": 5e-06,
+    "weight_decay": 0
+  },
+  "optimizer": {
+    "betas": [
+      0.9,
+      0.999
+    ],
+    "eps": 1e-08,
+    "gradient_clip": 1
+  },
+  "schedule": {
+    "warmup_fraction": 0.03
+  },
+  "objective": "inverse inclusion weighted fit originals, each averaged over valid equal-weight horizons; CE + 0.5 Brier + 0.5 normalized RPS",
+  "initialization": "frozen_m1",
+  "validation_status": "KARPO_VALIDATION_PENDING",
+  "display": {
+    "history": {
+      "sessions": 60,
+      "channels": [
+        "open_relative",
+        "high_relative",
+        "low_relative",
+        "close_relative",
+        "log_return_1d",
+        "volume_relative"
+      ],
+      "precision": "8 significant decimal digits; 17 digits for OHLC values that would otherwise become equal",
+      "price_unit": "ratio to current adjusted close",
+      "return_unit": "decimal log return",
+      "volume_unit": "ratio to the 60-session median in current share units"
+    },
+    "scalar": {
+      "precision": "8 significant decimal digits",
+      "amounts": "million quote/reporting currency or million shares",
+      "returns_vol_drawdown_gap_dispersion_turnover": "decimal",
+      "count_coverage": "decimal from the PIT source",
+      "omitted_fields": "missing; daily sigma shown in the decision table"
+    },
+    "choice_bounds": "native seven ordered intervals, 12 significant digits in percent, exact zero bin"
+  },
+  "cpu_development": {
+    "fit_start": "2015-01-01",
+    "research_cutoff": "2023-12-31",
+    "windows": [
+      [
+        "2020",
+        "2019-12-31",
+        "2020-01-01",
+        "2020-12-31"
+      ],
+      [
+        "2021",
+        "2020-12-31",
+        "2021-01-01",
+        "2021-12-31"
+      ],
+      [
+        "2022_2023",
+        "2021-12-31",
+        "2022-01-01",
+        "2023-12-31"
+      ]
+    ],
+    "train_seeds": [
+      17,
+      29,
+      43
+    ],
+    "audit_seed": 43,
+    "screen_eval_seed": 1459,
+    "confirm_eval_seed": 6163,
+    "audit_budget": 6000,
+    "screen_train": 24000,
+    "screen_eval": 5000,
+    "confirm_train": 48000,
+    "confirm_eval": 7000,
+    "capacity": {
+      "fit": 16000,
+      "eval": 3000,
+      "window": "2020",
+      "seed": 17,
+      "max_iter": [
+        18,
+        64,
+        128
+      ],
+      "min_gain_vs_prior_for_signal": 0.005,
+      "gain_to_prefer_more_iterations": 0.002
+    },
+    "thresholds": {
+      "window_upper": 0.01,
+      "horizon_point": 0.02,
+      "bootstrap_blocks": "month",
+      "bootstrap_draws": 2000,
+      "bootstrap_seed": 17,
+      "subgroup_minimum_rows": 200,
+      "subgroup_minimum_months": 6,
+      "subgroup_repeat_windows": 2
+    },
+    "groups": [
+      "exchange",
+      "sector",
+      "market_state",
+      "low_liquidity",
+      "low_volatility",
+      "missing_fundamentals",
+      "missing_volume",
+      "tail_label",
+      "zero_label"
+    ],
+    "sampling_benchmark": [
+      "security_first",
+      "pit_coverage"
+    ],
+    "stopping": {
+      "meaningful_token_reduction": 0.01,
+      "meaningful_cpu_reduction": 0.05,
+      "meaningful_loss_reduction": 0.005,
+      "consecutive_rounds": 2
+    },
+    "confirm_train_effective": 32000,
+    "budget_max_candidate_rows": 16000,
+    "confirm_train_deviation": "Limit confirm fit to 32k and the shared-budget arm to 16k to bound memory and wall time on the measured local host. Fixed before constructing any confirmation view."
+  },
+  "evaluate_confirmation": false,
+  "record_update_identity": true,
+  "execution": {},
+  "profile_update": null,
+  "deterministic_algorithms": true,
+  "recovery_check_after": null
+}
