@@ -1,0 +1,80 @@
+{
+  "format": "kurumi-m2-v3-60k",
+  "v3_final_commit": "b5ceff6191d488557f4f804a1f4f194d1efbc4c1",
+  "v3_package_manifest_sha256": "0540ef90859b474aa19041ae59cd75df93ef8bd3a0a033b728b0dabc14aee36f",
+  "v3_pool_manifest_sha256": "d439dba01790f375d04835aacba77d801b437b6f6eb39b0aa81ebfb6f62ec9d8",
+  "local_code_commit_at_seal": "426079fe2fcc809970005c1d850661f4f0e32bb2",
+  "github_code_commit": "9a9bcdf1ca741732b8bebcaf3af33f9b66463418",
+  "shared_code_tree": "094993dcef08e7cf7ee84255e27bb58626418c6f",
+  "receipt": {
+    "files_verified": 93,
+    "payload_bytes": 616335056,
+    "archive_members_verified": 95,
+    "package": "E:\\Kurumi\\artifacts\\m2\\m2-v3-60k-ready",
+    "package_bytes": 616366904,
+    "manifest_identity": {
+      "bytes": 21837,
+      "sha256": "6d055fe3c8d47ff172de8ded5078e5d6dc22a4a9ca75e19bbd393a9e38ff8ad2"
+    },
+    "archive": "E:\\Kurumi\\artifacts\\m2\\m2-v3-60k-ready.tar.gz",
+    "archive_identity": {
+      "bytes": 524756579,
+      "sha256": "35ca1851d9483b3733ffa5393019ffa0354473c6d3430a49caba63611de26570"
+    }
+  },
+  "input_identities": {
+    "selection.json": {
+      "bytes": 155715,
+      "sha256": "06a1c1ed8acb8b99ef11406ef47874a5f799f1192f5a82519fdf5dbc661c683e"
+    },
+    "train.parquet": {
+      "bytes": 3113472,
+      "sha256": "7dffb6cae7e34937cca651278a4a2b12c573d09431deed12ff411b795d4bb617"
+    },
+    "validation.parquet": {
+      "bytes": 183046,
+      "sha256": "ca6520e5b4d3f599001e227390a5acfd759f4a189f0993bd16f8a257b503da5e"
+    },
+    "native.sqlite": {
+      "bytes": 579895296,
+      "sha256": "ea45f0f4663b89fe68b24ec2b2ba140d803a2bdf3b909670c2b8f00b1f624ecf"
+    },
+    "training.json": {
+      "bytes": 2680,
+      "sha256": "add9bd2b61db4ef6148aa761bf53b8b581c95e4740b1b49d7fd16fcde374033b"
+    },
+    "coverage_report.json": {
+      "bytes": 55558,
+      "sha256": "ca7f52a849c59972043508b94fa2de6f71916bc549a188afd9d99dfaa7a5dcff"
+    },
+    "report.md": {
+      "bytes": 5921,
+      "sha256": "83e5e82c427394d35d5292508853cd7965126fd90b40e9bab787c73987090ce7"
+    },
+    "native_audit.json": {
+      "bytes": 8314,
+      "sha256": "c85790a5dd086f5b8bd66d226e0251ff3ef77a90e8794e45d3a86a53aa039173"
+    },
+    "cpu_relocated_readback.json": {
+      "bytes": 644,
+      "sha256": "37572c2f3a5f570f5628492b1aefa89d619e899f3e00b96d233acc4c3353df97"
+    }
+  },
+  "cache_counts": {
+    "distinct_plans": 63000,
+    "fit": 60000,
+    "confirm": 3000
+  },
+  "cache_supervision_1_5_20": {
+    "fit": [
+      59955,
+      59567,
+      58593
+    ],
+    "confirm": [
+      2998,
+      2898,
+      2515
+    ]
+  }
+}
