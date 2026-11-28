@@ -63,7 +63,11 @@ def main():
             raise ValueError("The full recomputation acceptance result is missing")
         if record and (record["keep_every"] != keep or record["effective_tokens_per_second"] <= 0):
             raise ValueError(f"Invalid throughput measurement for keep_every={keep}")
-        profiles.append({"keep_every": keep, "measurement": record})
+        rejection = path.with_name("rejection.json")
+        profiles.append({
+            "keep_every": keep, "measurement": record,
+            "rejection": read(rejection) if rejection.is_file() else None,
+        })
     minimum = execution["performance"]["minimum_free_vram_gib"] * 2 ** 30
     eligible = [
         row["measurement"] for row in profiles if row["measurement"] is not None
