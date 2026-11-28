@@ -61,5 +61,6 @@ else
     output="$root/runs/m2/$run"
     args=()
     [[ ! -d "$output" ]] || args+=(--resume)
-    "${torchrun[@]}" "$trainer" "${common[@]}" --output "$output" "${args[@]}"
+    "${torchrun[@]}" "$trainer" "${common[@]}" --output "$output" \
+        --profile-evidence "$controls/profile-evidence.json" "${args[@]}"
 fi

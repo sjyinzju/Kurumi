@@ -19,10 +19,6 @@ import numpy as np
 import torch
 import torch.distributed as dist
 import torch.distributed.checkpoint as dcp
-from kurumi.cn_efficiency_init import validate_frozen_m1, validate_output_path, verify_original_model
-from kurumi.cn_efficiency_m2 import record_validation, validate_m2_initializer, validation_progress
-from kurumi.cn_m2_fsdp2 import build_sharded_model, gather_export_state, verify_first_gradients
-from kurumi.m2_selection import STATE_FIELDS
 from torch.distributed.checkpoint.state_dict import (
     StateDictOptions,
     get_state_dict,
@@ -32,10 +28,14 @@ from torch.distributed.checkpoint.state_dict import (
 from torch.distributed.elastic.multiprocessing.errors import record
 from train_cn_efficiency import batches, native_identity
 
+from kurumi.cn_efficiency_init import validate_frozen_m1, validate_output_path, verify_original_model
+from kurumi.cn_efficiency_m2 import record_validation, validate_m2_initializer, validation_progress
 from kurumi.cn_efficiency_train import View, cpu_pack, losses, serialize, validate_prepared_recipe
+from kurumi.cn_m2_fsdp2 import build_sharded_model, gather_export_state, verify_first_gradients
 from kurumi.karpo_numeric import KarpoNumericEncoder
 from kurumi.m1_model import adapter_parameters, frozen_identity, sha256, write_json
 from kurumi.m1_optimize import optimizer_and_schedule
+from kurumi.m2_selection import STATE_FIELDS
 from kurumi.numeric_loader import HORIZONS
 
 DATA_ARCHIVE_SHA = "35ca1851d9483b3733ffa5393019ffa0354473c6d3430a49caba63611de26570"
@@ -346,6 +346,8 @@ def prepare_output(args, identity, rank):
                 shutil.copyfile(source, out / "provenance" / name)
             if args.environment is not None:
                 shutil.copyfile(args.environment, out / "provenance" / "environment.txt")
+            if args.profile_evidence is not None:
+                shutil.copyfile(args.profile_evidence, out / "provenance" / "profile-evidence.json")
     dist.barrier()
 
 
@@ -561,6 +563,7 @@ def parse_args():
     for name in ("data-config", "execution-config", "view", "model", "provenance", "m1-frozen", "output"):
         parser.add_argument(f"--{name}", type=Path, required=True)
     parser.add_argument("--environment", type=Path)
+    parser.add_argument("--profile-evidence", type=Path)
     parser.add_argument("--code-commit", required=True)
     parser.add_argument("--resume", action="store_true")
     parser.add_argument("--profile-keep", type=int, choices=(0, 4, 2))
@@ -591,6 +594,17 @@ def main():
         cfg = json.loads(args.data_config.read_bytes())
         execution = json.loads(args.execution_config.read_bytes())
         width, accumulation, total, boundaries, keep = option_contract(execution, cfg, args.profile_keep)
+        profile_digest = None
+        if args.profile_keep is None:
+            profile = json.loads(args.profile_evidence.read_bytes())
+            if (
+                profile["selected_keep_every"] != keep or profile["run_id"] != args.output.name
+                or not profile["m1_probe"]["passed"] or not profile["distributed_gradient_check"]
+                or profile["selected"]["minimum_headroom_bytes"]
+                < execution["performance"]["minimum_free_vram_gib"] * 2 ** 30
+            ):
+                raise ValueError("Formal execution requires matching acceptance and measured profile evidence")
+            profile_digest = sha256(args.profile_evidence)
         view = View(args.view)
         validate_prepared_recipe(view.manifest, cfg)
         checked_native = native_identity()
@@ -612,6 +626,7 @@ def main():
         initializer = validate_frozen_m1(frozen, cfg, base, cfg["native_revision"])
         validate_m2_initializer(initializer, cfg["m2"])
         identity = {
+            "profile_evidence_sha256": profile_digest,
             "train_run_id": args.output.name, "code_commit": args.code_commit,
             "base_revision": base["revision"], "base_provenance": base["provenance_sha256"],
             "original_readout": base["readout_sha256"], "native_revision": checked_native["revision"],
