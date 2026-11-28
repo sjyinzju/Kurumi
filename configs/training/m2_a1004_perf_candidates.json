@@ -1,0 +1,46 @@
+{
+  "s0": {"profile_keep": 0},
+  "keep16": {"profile_keep": 16},
+  "keep12": {"profile_keep": 12},
+  "keep8": {"profile_keep": 8},
+  "prefetch1": {
+    "profile_keep": 0,
+    "distributed": {"prefetch_depth": 1}
+  },
+  "prefetch2": {
+    "profile_keep": 0,
+    "distributed": {"prefetch_depth": 2}
+  },
+  "reshard2-last8": {
+    "profile_keep": 0,
+    "distributed": {
+      "layer_reshard": {
+        "value": 2,
+        "layers": [52, 53, 54, 55, 56, 57, 58, 59],
+        "max_extra_bytes": 4294967296
+      }
+    }
+  },
+  "retain-last3": {
+    "profile_keep": 0,
+    "distributed": {
+      "layer_reshard": {
+        "value": false,
+        "layers": [57, 58, 59],
+        "max_extra_bytes": 3221225472
+      }
+    }
+  },
+  "selective-keep8": {
+    "profile_keep": 8,
+    "performance": {"recompute_mode": "selective"}
+  },
+  "fused-lora-add": {
+    "profile_keep": 0,
+    "performance": {"fused_lora_add": true}
+  },
+  "hsdp2x2": {
+    "profile_keep": 0,
+    "distributed": {"mesh_shape": [2, 2]}
+  }
+}

@@ -53,15 +53,18 @@ def stop_requested(*_):
 def option_contract(execution, cfg, profile_keep):
     optimization = execution["optimization"]
     performance = execution["performance"]
+    distributed = execution["distributed"]
     width = optimization["originals_per_rank_per_microstep"]
     accumulation = optimization["gradient_accumulation_steps"]
     total = optimization["total_updates"]
     boundaries = optimization["validation_updates"]
     keep = performance["selected_keep_every"] if profile_keep is None else profile_keep
     if (
-        execution["stage"] != "m2" or execution["distributed"] != {
+        execution["stage"] != "m2" or {key: value for key, value in distributed.items()
+                                      if key not in ("layer_reshard", "prefetch_depth", "mesh_shape")} != {
             "backend": "nccl", "strategy": "fsdp2", "world_size": 4, "decoder_reshard_after_forward": True,
         }
+        or (profile_keep is None and distributed.get("mesh_shape") is not None)
         or execution["precision"] != {
             "base": "bfloat16", "lora_master": "float32", "readout": "float32",
             "reduce": "float32", "loss": "float32",
@@ -72,7 +75,7 @@ def option_contract(execution, cfg, profile_keep):
         or optimization["lora_lr"] != cfg["lora"]["lr"]
         or optimization["readout_lr"] != cfg["readout"]["lr"]
         or optimization["warmup_fraction"] != cfg["schedule"]["warmup_fraction"]
-        or keep not in (0, 4, 2) or performance["pack_tokens"] != 8192
+        or keep not in (0, 4, 2, 8, 12, 16) or performance["pack_tokens"] != 8192
         or performance["original_max_tokens"] != 3199
         or any(performance[key] for key in ("cpu_parameter_offload", "optimizer_offload", "full_model_compile"))
     ):
@@ -404,7 +407,7 @@ def train(args, view, native, model, adapters, trainables, cfg, identity,
     model.train()
     model.packed.train()
     if args.profile_keep is not None:
-        if args.profile_keep == 0:
+        if args.profile_keep == 0 and not args.profile_timing_only:
             probe_dir = out / "initial-m1"
             if rank == 0:
                 probe_dir.mkdir()
@@ -515,9 +518,12 @@ def train(args, view, native, model, adapters, trainables, cfg, identity,
     if step != stop_at:
         raise ValueError(f"Expected {stop_at} optimizer updates, completed {step}")
     if args.profile_keep is not None:
-        before = model_probe(view, native, model, None)
+        probe_path = out / "final-probe"
+        if rank == 0:
+            probe_path.mkdir(exist_ok=True)
+        before = model_probe(view, native, model, probe_path)
         evaluate(view, native, model, rank, width, accumulation, metadata, max_global_batches=2)
-        if args.profile_keep == 0:
+        if args.profile_checkpoint or (args.profile_keep == 0 and not args.profile_timing_only):
             saved = snapshot(out, model, optimizer, scheduler, identity, rank, device, step, cursor, totals)
             with torch.no_grad():
                 trainables["readout.weight"].zero_()
@@ -552,10 +558,26 @@ def train(args, view, native, model, adapters, trainables, cfg, identity,
             if rank == 0:
                 print("Portable adapter and Readout reloaded with the same fixed probabilities", flush=True)
         peaks = peak_memory(device)
+        local_peak = torch.tensor([torch.cuda.max_memory_allocated(device), torch.cuda.max_memory_reserved(device)],
+                                  device=device, dtype=torch.int64)
+        rank_peaks = [torch.empty_like(local_peak) for _ in range(dist.get_world_size())]
+        dist.all_gather(rank_peaks, local_peak)
+        selected = {}
+        # Sample projections across the stack, using full tensors only at this diagnostic boundary.
+        lora_names = sorted(name for name in trainables if name.endswith(".B"))
+        sample_names = [lora_names[0], lora_names[len(lora_names) // 2], lora_names[-1], "readout.weight"]
+        for name in sample_names:
+            full = trainables[name].detach().full_tensor().flatten()
+            if rank == 0:
+                stride = max(1, full.numel() // 256)
+                selected[name] = full[::stride][:256].cpu().tolist()
         if rank == 0:
             write_json(out / "profile.json", {
                 **totals, **peaks, "keep_every": args.profile_keep, "first_gradient_norms": first_norms,
                 "effective_tokens_per_second": totals["effective_tokens"] / totals["training_seconds"],
+                "window_updates": args.profile_updates, "samples": selected,
+                "per_rank_allocator_peaks_bytes": [item.cpu().tolist() for item in rank_peaks],
+                "execution": identity["execution"],
             })
         return
     if totals["effective_tokens"] != 171_897_552:
@@ -572,9 +594,12 @@ def parse_args():
     parser.add_argument("--profile-evidence", type=Path)
     parser.add_argument("--code-commit", required=True)
     parser.add_argument("--resume", action="store_true")
-    parser.add_argument("--profile-keep", type=int, choices=(0, 4, 2))
+    parser.add_argument("--profile-keep", type=int, choices=(0, 4, 2, 8, 12, 16))
     parser.add_argument("--profile-updates", type=int, default=30)
     parser.add_argument("--warmup-updates", type=int, default=3)
+    parser.add_argument("--profile-timing-only", action="store_true")
+    parser.add_argument("--profile-checkpoint", action="store_true")
+    parser.add_argument("--profile-enforce-headroom", action="store_true")
     return parser.parse_args()
 
 
@@ -600,16 +625,27 @@ def main():
         cfg = json.loads(args.data_config.read_bytes())
         execution = json.loads(args.execution_config.read_bytes())
         width, accumulation, total, boundaries, keep = option_contract(execution, cfg, args.profile_keep)
+        if args.profile_enforce_headroom:
+            if args.profile_keep is None:
+                raise ValueError("The trial memory guard is only for isolated performance profiles")
+            free, total_memory = torch.cuda.mem_get_info(device)
+            room = free - execution["performance"]["minimum_free_vram_gib"] * (2 ** 30)
+            torch.cuda.memory.set_per_process_memory_fraction(room / total_memory, device)
         profile_digest = None
         if args.profile_keep is None:
             if args.profile_evidence is None:
                 raise ValueError("Supply --profile-evidence for a formal run")
             profile = json.loads(args.profile_evidence.read_bytes())
+            distributed, performance = execution["distributed"], execution["performance"]
+            tuned = (distributed.get("layer_reshard") is not None or distributed.get("prefetch_depth", 0)
+                     or performance.get("recompute_mode", "layer") != "layer"
+                     or performance.get("fused_lora_add", False) or keep in (8, 12, 16))
             if (
                 profile["selected_keep_every"] != keep or profile["run_id"] != args.output.name
                 or not profile["m1_probe"]["passed"] or not profile["distributed_gradient_check"]
                 or profile["selected"]["minimum_headroom_bytes"]
                 < execution["performance"]["minimum_free_vram_gib"] * 2 ** 30
+                or (tuned and profile.get("accepted_execution") != execution)
             ):
                 raise ValueError("Formal execution requires matching acceptance and measured profile evidence")
             profile_digest = sha256(args.profile_evidence)
@@ -651,7 +687,9 @@ def main():
         random.seed(cfg["seed"] + rank)
         np.random.seed(cfg["seed"] + rank)
         torch.manual_seed(cfg["seed"] + rank)
-        native, model, adapters, trainables = build_sharded_model(args.model, cfg, frozen, device, keep)
+        native, model, adapters, trainables = build_sharded_model(
+            args.model, cfg, frozen, device, keep, execution=execution,
+        )
         metadata = validation_metadata(args, view)
         train(args, view, native, model, adapters, trainables, cfg, identity,
               metadata, rank, device, width, accumulation, total, boundaries)
