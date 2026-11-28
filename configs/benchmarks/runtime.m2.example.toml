@@ -1,0 +1,21 @@
+# Fill all paths with verified absolute GB10 paths before use.
+[paths]
+repository_root = ""
+python_executable = ""
+model_dir = ""
+data_root = ""
+run_root = ""
+
+[model]
+key = "karpo-m2"
+repo_id = "MachinePulseAI/karpo-decision-31B"
+revision = "b8e6fd7463cea8662c556d6257955d7ef9c10d19"
+checkpoint_role = "original_unmodified"
+provenance_manifest = ""
+
+[runtime]
+device = "cuda:0"
+
+[m2]
+frozen_manifest = ""
+m0_run = ""

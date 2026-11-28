@@ -1,0 +1,46 @@
+# Shared protocol. Machine paths belong in runtime.local.toml.
+protocol_id = "kurumi-external-bench-v1"
+adapter_module = "kurumi.benchmark_adapters"
+adapter_version = "1.0.0"
+sources_lock = "configs/benchmarks/sources.v1.lock.json"
+benchmark_order = ["finben_bigdata", "finben_acl", "alphafin_test", "pi_round2_full"]
+
+[inference]
+interface = "karpo_native_python"
+batch_size = 1
+seed = 17
+max_length = 32768
+token_budget = 32768
+temperature_policy = "checkpoint_native"
+additional_calibration = false
+update_weights = false
+
+[direction_metrics]
+names = ["accuracy", "mcc", "brier", "nll"]
+positive_class = "up"
+tie_break = "first_option_in_original_order"
+brier_definition = "mean((p_up-y_true)^2)"
+nll_definition = "mean(-ln(max(p_gold,nll_floor)))"
+nll_floor = 1e-12
+mcc_zero_denominator = 0.0
+probability_atol = 1e-5
+
+[pi]
+round = "round2"
+track = "full"
+policy = "pick>=0.5"
+# These identify the frozen scorer policy; do not rewrite its implementation.
+initial_equity_usd = 1000.0
+choice_probability_threshold = 0.5
+regime_score_threshold = 0.5
+score_scale = [0.0, 2.0]
+
+[execution]
+resume = true
+flush_responses_each_sample = true
+smoke_samples_per_benchmark = 1
+require_full_coverage = true
+preserve_source_order = true
+allow_input_truncation = false
+allow_external_retrieval = false
+allow_skip_benchmark = false

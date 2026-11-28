@@ -1,0 +1,59 @@
+{
+  "stage": "m2",
+  "distributed": {
+    "backend": "nccl",
+    "strategy": "fsdp2",
+    "world_size": 4,
+    "decoder_reshard_after_forward": true
+  },
+  "optimization": {
+    "epochs": 1,
+    "global_originals_per_update": 8,
+    "originals_per_rank_per_microstep": 2,
+    "gradient_accumulation_steps": 1,
+    "lora_lr": 0.00005,
+    "readout_lr": 0.000005,
+    "warmup_fraction": 0.03,
+    "total_updates": 7500,
+    "validation_updates": [
+      0,
+      2500,
+      5000,
+      7500
+    ]
+  },
+  "precision": {
+    "base": "bfloat16",
+    "lora_master": "float32",
+    "readout": "float32",
+    "reduce": "float32",
+    "loss": "float32"
+  },
+  "performance": {
+    "pack_tokens": 8192,
+    "original_max_tokens": 3199,
+    "recompute_candidates_keep_every": [
+      0,
+      4,
+      2
+    ],
+    "selected_keep_every": null,
+    "minimum_free_vram_gib": 3,
+    "cpu_parameter_offload": false,
+    "optimizer_offload": false,
+    "full_model_compile": false
+  },
+  "persistence": {
+    "checkpoint_seconds": 3600,
+    "hf_repo_id": "sjyinzju/Kurumi-Research",
+    "hf_repo_type": "model",
+    "upload_closed_snapshots": true,
+    "require_complete_commit": true,
+    "require_gb10_hash_verification": true
+  },
+  "handoff": {
+    "benchmark_protocol": "kurumi-external-bench-v1",
+    "release_only_after_first_valid_benchmark_prediction": true,
+    "provider": "matpool"
+  }
+}
