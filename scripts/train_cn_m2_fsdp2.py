@@ -35,6 +35,7 @@ from kurumi.cn_m2_fsdp2 import build_sharded_model, gather_export_state, verify_
 from kurumi.karpo_numeric import KarpoNumericEncoder
 from kurumi.m1_model import adapter_parameters, frozen_identity, sha256, write_json
 from kurumi.m1_optimize import optimizer_and_schedule
+from kurumi.m2_resume import reconcile_execution, record_verified_restore
 from kurumi.m2_selection import STATE_FIELDS
 from kurumi.numeric_loader import HORIZONS
 
@@ -267,12 +268,20 @@ def snapshot(out, model, opt, schedule, identity, rank, device, count, cursor, t
     return folder
 
 
-def restore(folder, model, opt, schedule, identity, device):
+def restore(folder, model, opt, schedule, identity, device, *, verify_layout=False):
     data = json.loads((folder / "meta.json").read_bytes())
     if data["identity"] != identity or not (folder / "READY.json").is_file():
         raise ValueError("Resume snapshot identity differs from the current run")
     model_state, optim_state = get_state_dict(model, opt, options=CHECKPOINT_OPTIONS)
     model_state = {name: model_state[name] for name, p in model.named_parameters() if p.requires_grad}
+    if verify_layout:
+        metadata = dcp.FileSystemReader(folder / "dcp").read_metadata().state_dict_metadata
+        stored = {key.removeprefix("model."): value for key, value in metadata.items() if key.startswith("model.")}
+        if stored.keys() != model_state.keys() or any(
+            tuple(stored[name].size) != tuple(tensor.shape) or stored[name].properties.dtype != tensor.dtype
+            for name, tensor in model_state.items()
+        ):
+            raise ValueError("Continuation changed the sharded trainable parameter layout")
     state = {"model": model_state, "optimizer": optim_state}
     dcp.load(state, checkpoint_id=folder / "dcp")
     set_state_dict(
@@ -298,7 +307,7 @@ def append_log(out, record):
 
 
 def record_boundary(args, view, native, model, adapters, identity, rank, width, accumulation,
-                    metadata, step):
+                    metadata, step, *, baseline_identity=None):
     started = time.monotonic()
     rows, metrics = evaluate(view, native, model, rank, width, accumulation, metadata)
     portable, readout = gather_export_state(model, adapters) if step else (None, None)
@@ -312,7 +321,8 @@ def record_boundary(args, view, native, model, adapters, identity, rank, width, 
                 write({key: value for key, value in row.items() if not key.startswith("_")})
             return metrics
         record_validation(args.output, identity, step, portable, readout, write_predictions)
-        progress = validation_progress(args.output, identity, (2500, 5000, 7500), step)
+        progress = validation_progress(args.output, identity, (2500, 5000, 7500), step,
+                                       baseline_identity=baseline_identity)
         append_log(args.output, {
             "kind": "validation", "step": step, "seconds": time.monotonic() - started,
             "metrics": metrics, "best": None if progress["best"] is None else progress["best"]["checkpoint"],
@@ -332,16 +342,22 @@ def checkpoint_folder(out):
     return max(dirs, default=None)
 
 
-def prepare_output(args, identity, rank):
+def prepare_output(args, identity, rank, view, device):
+    plan = [None]
     if rank == 0:
         out = args.output
         out.mkdir(parents=True, exist_ok=args.resume)
         for name in ("provenance", "logs", "checkpoints"):
             (out / name).mkdir(exist_ok=True)
         path = out / "provenance" / "identity.json"
-        if path.is_file() and json.loads(path.read_bytes()) != identity:
-            raise ValueError("The output directory belongs to a different run")
-        if not path.exists():
+        previous = checkpoint_folder(out) if args.resume else None
+        if path.is_file():
+            restore_identity, baseline_identity = reconcile_execution(
+                out, previous, identity, args.adopt_execution, args.profile_evidence, view.db,
+            )
+        else:
+            if args.adopt_execution is not None:
+                raise ValueError("No original formal run was found for performance continuation")
             write_json(path, identity)
             for source, name in ((args.data_config, "data-config.json"),
                                  (args.execution_config, "execution.json"),
@@ -351,12 +367,16 @@ def prepare_output(args, identity, rank):
                 shutil.copyfile(args.environment, out / "provenance" / "environment.txt")
             if args.profile_evidence is not None:
                 shutil.copyfile(args.profile_evidence, out / "provenance" / "profile-evidence.json")
-    dist.barrier()
+            restore_identity, baseline_identity = identity, None
+        plan[0] = (previous, restore_identity, baseline_identity)
+    dist.broadcast_object_list(plan, src=0, device=device)
+    return plan[0]
 
 
-def finalize(args, identity, totals):
+def finalize(args, identity, totals, *, baseline_identity=None):
     out = args.output
-    progress = validation_progress(out, identity, (2500, 5000, 7500), 7500)
+    progress = validation_progress(out, identity, (2500, 5000, 7500), 7500,
+                                   baseline_identity=baseline_identity)
     best = progress["best"]
     model = out / "model"
     if not model.is_dir():
@@ -388,19 +408,25 @@ def finalize(args, identity, totals):
 
 
 def train(args, view, native, model, adapters, trainables, cfg, identity,
-          metadata, rank, device, width, accumulation, total, boundaries):
+          metadata, rank, device, width, accumulation, total, boundaries, resume_plan):
     out = args.output
     optimizer, scheduler, warmup = optimizer_and_schedule(adapter_parameters(adapters), native.readout, cfg, total)
     if warmup != 225:
         raise ValueError(f"Unexpected warmup steps: {warmup}")
     step, cursor = 0, -1
     totals = {"effective_tokens": 0, "training_seconds": 0.0}
-    previous = checkpoint_folder(out) if args.resume else None
+    previous, restore_identity, baseline_identity = resume_plan
     if previous is not None:
-        step, cursor, totals = restore(previous, model, optimizer, scheduler, identity, device)
+        step, cursor, totals = restore(previous, model, optimizer, scheduler, restore_identity, device,
+                                       verify_layout=restore_identity != identity)
+        if baseline_identity is not None:
+            dist.barrier()
+            if rank == 0:
+                record_verified_restore(out, baseline_identity, identity, step, cursor)
+            dist.barrier()
     if step == total:
         if rank == 0:
-            finalize(args, identity, totals)
+            finalize(args, identity, totals, baseline_identity=baseline_identity)
         return
     if step == 0 and args.profile_keep is None:
         record_boundary(args, view, native, model, adapters, identity, rank, width, accumulation, metadata, 0)
@@ -463,7 +489,7 @@ def train(args, view, native, model, adapters, trainables, cfg, identity,
             window[5] += work["effective_tokens"]
         if not final_micro:
             continue
-        if step == 0:
+        if step == 0 or (index + 1 == accumulation and baseline_identity is not None):
             first_norms = verify_first_gradients(trainables, model)
         torch.nn.utils.clip_grad_norm_(list(trainables.values()), cfg["optimizer"]["gradient_clip"],
                                       error_if_nonfinite=True)
@@ -502,7 +528,8 @@ def train(args, view, native, model, adapters, trainables, cfg, identity,
             window.zero_()
             start_step = step
         if boundary:
-            record_boundary(args, view, native, model, adapters, identity, rank, width, accumulation, metadata, step)
+            record_boundary(args, view, native, model, adapters, identity, rank, width, accumulation,
+                            metadata, step, baseline_identity=baseline_identity)
         if save:
             for key, value in peak_memory(device).items():
                 existing = totals.get(key, value)
@@ -583,7 +610,7 @@ def train(args, view, native, model, adapters, trainables, cfg, identity,
     if totals["effective_tokens"] != 171_897_552:
         raise ValueError(f"Sealed effective token total differs: {totals['effective_tokens']}")
     if rank == 0:
-        finalize(args, identity, totals)
+        finalize(args, identity, totals, baseline_identity=baseline_identity)
 
 
 def parse_args():
@@ -594,13 +621,17 @@ def parse_args():
     parser.add_argument("--profile-evidence", type=Path)
     parser.add_argument("--code-commit", required=True)
     parser.add_argument("--resume", action="store_true")
+    parser.add_argument("--adopt-execution", type=int, metavar="SOURCE_STEP")
     parser.add_argument("--profile-keep", type=int, choices=(0, 4, 2, 8, 12, 16))
     parser.add_argument("--profile-updates", type=int, default=30)
     parser.add_argument("--warmup-updates", type=int, default=3)
     parser.add_argument("--profile-timing-only", action="store_true")
     parser.add_argument("--profile-checkpoint", action="store_true")
     parser.add_argument("--profile-enforce-headroom", action="store_true")
-    return parser.parse_args()
+    args = parser.parse_args()
+    if args.adopt_execution is not None and (not args.resume or args.profile_keep is not None):
+        parser.error("--adopt-execution requires --resume in a formal run")
+    return args
 
 
 @record
@@ -683,7 +714,7 @@ def main():
         }
         if args.resume and (args.output / "TRAINING_COMPLETE.json").is_file():
             return
-        prepare_output(args, identity, rank)
+        resume_plan = prepare_output(args, identity, rank, view, device)
         random.seed(cfg["seed"] + rank)
         np.random.seed(cfg["seed"] + rank)
         torch.manual_seed(cfg["seed"] + rank)
@@ -692,7 +723,7 @@ def main():
         )
         metadata = validation_metadata(args, view)
         train(args, view, native, model, adapters, trainables, cfg, identity,
-              metadata, rank, device, width, accumulation, total, boundaries)
+              metadata, rank, device, width, accumulation, total, boundaries, resume_plan)
     finally:
         dist.destroy_process_group()
 

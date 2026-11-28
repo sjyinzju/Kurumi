@@ -106,17 +106,19 @@ def record_validation(out, identity, update, adapters, readout, evaluate):
         folder.rename(destination)
 
 
-def validation_progress(out, identity, boundaries, count):
+def validation_progress(out, identity, boundaries, count, *, baseline_identity=None):
     """Reconcile the best pointer on either side of an interrupted publication."""
     from .m1_model import write_json
 
     results = []
     run_hash = _run_hash(identity)
+    baseline_hash = run_hash if baseline_identity is None else _run_hash(baseline_identity)
     for update in (0, *(update for update in boundaries if update <= count)):
         checkpoint = _checkpoint_id(update)
         folder = Path("validation") / checkpoint
         result = json.loads((out / folder / "validation.json").read_bytes())
-        if result["identity_sha256"] != run_hash or (result["checkpoint"], result["update"]) != (checkpoint, update):
+        expected_hash = run_hash if update else baseline_hash
+        if result["identity_sha256"] != expected_hash or (result["checkpoint"], result["update"]) != (checkpoint, update):
             raise ValueError(f"Validation snapshot differs from the current run: {checkpoint}")
         results.append({**result, "predictions": (folder / "predictions.jsonl").as_posix()})
     best = None

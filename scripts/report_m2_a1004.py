@@ -8,7 +8,7 @@ import json
 import math
 import re
 from datetime import datetime, timedelta, timezone
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 BENCHMARKS = {
     "finben_bigdata": ("FinBen BigData", 1472),
@@ -26,6 +26,12 @@ REPO = "sjyinzju/Kurumi-Research"
 PROTOCOL = "kurumi-external-bench-v1"
 BASELINE_IDS = {"M0": "m0-20261125T034500Z", "M1": "m1-eval-20261125T071740Z"}
 CN_TIME = timezone(timedelta(hours=8))
+TRANSITION = "provenance/execution-transition"
+TRANSITION_FILES = tuple(f"{TRANSITION}/{name}.json" for name in ("record", "profile-evidence", "restore-verified"))
+BASELINE_FILES = (
+    "validation/m1-baseline/validation.json", "validation/m1-baseline/predictions.jsonl",
+    "provenance/probe-00000000/probe.json", "provenance/probe-00000000/probe.plan.zlib",
+)
 
 
 def read(path):
@@ -87,6 +93,64 @@ def training_windows(path):
     return windows
 
 
+def identity_hash(identity):
+    return hashlib.sha256(json.dumps(identity, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+
+
+def verified_transition(root, original, manifest, validation, hashes):
+    if not any(name in hashes or (root / name).is_file() for name in TRANSITION_FILES):
+        return {}
+    for name in TRANSITION_FILES:
+        require((root / name).is_file(), f"Execution transition input missing: {name}")
+        if hashes:
+            require(sha256(root / name) == hashes.get(name), f"Execution transition HF checksum changed: {name}")
+    record, evidence, restored = (read(root / name) for name in TRANSITION_FILES)
+    active, source = record["active_identity"], record["source"]
+    original_hash, active_hash = identity_hash(original), identity_hash(active)
+    step, cursor = source["step"], source["cursor"]
+    require(original and original_hash == record["original_identity_sha256"] and original_hash != active_hash,
+            "Transition does not preserve the original run identity")
+    require(active["artifact_role"] == original["artifact_role"] == "FORMAL"
+            and active["train_run_id"] == original["train_run_id"], "Transition is for a different training run")
+    require(0 < step < original["execution"]["optimization"]["validation_updates"][1]
+            and source["checkpoint"] == f"checkpoints/step-{step:08d}", "Invalid execution transition source")
+    require(restored == {"step": step, "cursor": cursor, "original_identity_sha256": original_hash,
+                         "active_identity_sha256": active_hash}, "Restore attestation does not match the transition")
+    require(sha256(root / TRANSITION_FILES[1]) == active["profile_evidence_sha256"]
+            and evidence["accepted_execution"] == active["execution"]
+            and evidence["execution_transition"] == {"source_step": step, "source_code_commit": original["code_commit"],
+                                                     "target_code_commit": active["code_commit"]},
+            "Active execution differs from its accepted profiling evidence")
+    original_profile = root / "provenance/profile-evidence.json"
+    require(original_profile.is_file() and sha256(original_profile) == original["profile_evidence_sha256"],
+            "Original execution profile changed or is missing")
+    baseline = source["baseline_files_sha256"]
+    require(baseline.keys() == set(BASELINE_FILES), "Transition has incomplete M1 baseline inventory")
+    for name, digest in baseline.items():
+        require((root / name).is_file() and sha256(root / name) == digest
+                and (not hashes or hashes.get(name) == digest), f"Frozen M1 baseline input changed or is missing: {name}")
+    expected = read(root / BASELINE_FILES[0])
+    require((expected["checkpoint"], expected["update"], expected["identity_sha256"]) == ("m1-baseline", 0, original_hash),
+            "Frozen M1 baseline is not tied to the original run identity")
+    source_hashes = source["checkpoint_files_sha256"]
+    require({"READY.json", "meta.json", "dcp/.metadata", *(f"rank-{i}.pt" for i in range(4))} <= source_hashes.keys()
+            and any(name.endswith(".distcp") for name in source_hashes), "Transition source checkpoint inventory is incomplete")
+    for name, digest in source_hashes.items():
+        entry = PurePosixPath(name)
+        require(not entry.is_absolute() and ".." not in entry.parts and re.fullmatch(r"[0-9a-f]{64}", digest)
+                and (not hashes or hashes.get(f"{source['checkpoint']}/{name}") == digest),
+                f"Transition source checkpoint checksum changed: {name}")
+    if validation:
+        require(validation[0]["identity_sha256"] == original_hash
+                and all(validation[0].get(key) == value for key, value in expected.items())
+                and all(item["identity_sha256"] == active_hash for item in validation[1:]),
+                "Validation candidates do not match the recorded execution transition")
+    if manifest:
+        require(manifest["identity"] == active, "Frozen M2 is not tied to the active optimized execution")
+    return {"active": active, "original_hash": original_hash, "active_hash": active_hash, "source": source,
+            "evidence": evidence}
+
+
 def verified_training(root, run_id, publication):
     if root is None:
         return {}, [], []
@@ -96,6 +160,7 @@ def verified_training(root, run_id, publication):
     complete = optional(root / "COMPLETE.json")
     summary = optional(root / "provenance/summary.json")
     profile = optional(root / "provenance/profile-evidence.json")
+    hashes = {}
     for source, key in ((identity, "train_run_id"), (manifest, "train_run_id"), (complete, "run_id"),
                         (profile, "run_id")):
         if source:
@@ -106,7 +171,6 @@ def verified_training(root, run_id, publication):
         sums = root / "SHA256SUMS"
         require(complete["repo_id"] == REPO and sha256(sums) == complete["sha256sums_sha256"],
                 "HF training checksum list does not match COMPLETE")
-        hashes = {}
         for line in sums.read_text(encoding="ascii").splitlines():
             digest, path = line.split("  ", 1)
             require(path not in hashes and re.fullmatch(r"[0-9a-f]{64}", digest), "Invalid HF checksum record")
@@ -135,6 +199,7 @@ def verified_training(root, run_id, publication):
                 and summary["best_originals"] == best["update"] * 8, "Frozen candidate selection differs")
         if complete:
             require(complete["best_checkpoint"] == best["checkpoint"], "Selected M2 differs from HF COMPLETE")
+    transition = verified_transition(root, identity, manifest, validation, hashes)
     system = root / "provenance/environment.txt"
     gpu = []
     topology = []
@@ -143,7 +208,7 @@ def verified_training(root, run_id, publication):
         gpu = [line.strip() for line in content.splitlines() if "A100-PCIE" in line and "UUID" not in line]
         topo = content.partition("GPU topology\n")[2].partition("\nDisk and architecture")[0]
         topology = [line for line in topo.splitlines() if re.match(r"\s*GPU\d+\s", line)]
-    return {"summary": summary, "identity": identity, "best": best, "profile": profile,
+    return {"summary": summary, "identity": identity, "best": best, "profile": profile, "transition": transition,
             "gpu": gpu, "topology": topology}, windows, validation
 
 
@@ -270,6 +335,107 @@ def draw(out, windows, validation, benchmarks):
     return figures
 
 
+def wall_time_report(lines, operations):
+    def stamp(key):
+        if val := operations.get(key):
+            result = datetime.fromisoformat(val)
+            require(result.utcoffset() is not None, f"Wall-time stamp needs a UTC offset: {key}")
+            return result
+        return None
+
+    start, stop = (stamp(key) for key in ("training_started_at", "training_completed_at"))
+    pause, resumed = (stamp(key) for key in ("optimization_pause_started_at", "optimization_pause_ended_at"))
+    if start and stop:
+        require(stop >= start, "Training timeline dates are reversed")
+        elapsed = (stop - start).total_seconds()
+        lines.append(f"- 从正式启动到训练封存的墙钟为 {elapsed / 3600:.2f} 小时，"
+                     f"{show_time(start.isoformat())} 至 {show_time(stop.isoformat())}，包含期间的暂停。")
+    else:
+        lines.append("- 正式训练总墙钟尚无起止回执可核验。")
+    if pause and resumed:
+        require(pause <= resumed and (start is None or start <= pause) and (stop is None or resumed <= stop),
+                "Recorded optimization pause is outside the formal timeline")
+        paused = (resumed - pause).total_seconds()
+        lines.append(f"- 优化暂停 {paused / 60:.2f} 分钟，{show_time(pause.isoformat())} 至 {show_time(resumed.isoformat())}。")
+        if start and stop:
+            lines.append(f"- 扣除上述暂停的墙钟为 {(elapsed - paused) / 3600:.2f} 小时，仍包含正式验证、保存与启动开销。")
+    elif pause or resumed:
+        lines.append("- 优化暂停缺一端的时间回执，墙钟未扣减该区间。")
+
+
+def trace_report(lines, trace):
+    metrics = ("cuda_compute_union_ms", "cuda_nccl_without_any_compute_ms", "cuda_recompute_attributed_compute_union_ms",
+               "cuda_attention_kernel_union_ms", "cpu_input_wait_ms")
+    samples = [(title, trace[key]) for key, title in (("before", "S0"), ("after", "优化配置")) if trace.get(key)]
+    if not samples:
+        return
+    lines += ["", "| 单步 trace | 四卡同步墙钟范围 (s) | 计算 (ms) | 未与计算重叠的 NCCL (ms) | 重算 (ms) | Attention (ms) | CPU 输入等待 (ms) |",
+              "| --- | ---: | ---: | ---: | ---: | ---: | ---: |"]
+    for label, ranks in samples:
+        require(len(ranks) == 4 and {row["rank"] for row in ranks} == set(range(4)),
+                f"Trace evidence lacks four ranks: {label}")
+        wall = [row["traced_cuda_synchronized_wall_seconds"] for row in ranks]
+        mean_ms = [sum(row[key] for row in ranks) / 4 for key in metrics]
+        require(all(math.isfinite(v) and v >= 0 for v in [*wall, *mean_ms]), f"Invalid trace duration: {label}")
+        times = " | ".join(fmt(value, 2) for value in mean_ms)
+        lines.append(f"| {label} | {min(wall):.3f}–{max(wall):.3f} | {times} |")
+    lines += ["", "事件时长为四卡平均，CUDA 类别存在重叠，trace 单步仅用于定位开销。"]
+
+
+def bandwidth_report(lines, bandwidth):
+    sets = bandwidth.get("sets", {})
+    samples = [(kind, row) for kind, value in sets.items() for row in value["measurements"]
+               if row["operation"] == "all_gather" and row["bytes_per_rank_input"] == 240 * 2**20]
+    if samples:
+        lines += ["", "| NCCL all-gather 240 MiB/卡 | GPU | 拓扑 | 最慢卡中位耗时 (ms) | 总线带宽 (GB/s) |",
+                  "| --- | --- | --- | ---: | ---: |"]
+        for label, row in samples:
+            ranks = "/".join(map(str, row["ranks"]))
+            lines.append(f"| `{label}` | {ranks} | {row['topology']} | {fmt(row['median_slowest_rank_ms'], 2)} | "
+                         f"{fmt(row['effective_bus_GBps'], 2)} |")
+
+
+def transition_report(lines, transition, windows):
+    source, active, evidence = (transition[key] for key in ("source", "active", "evidence"))
+    execution = active["execution"]
+    dist, perf = execution["distributed"], execution["performance"]
+    step = source["step"]
+    lines += ["", "## 正式训练中的性能切换", "",
+              f"- 四卡从已保存的第 {step:,} 次更新接续，恢复游标 `{source['cursor']}`，原始身份 `{transition['original_hash']}`，"
+              f"接续身份 `{transition['active_hash']}`。继续使用原始 M1 基线。",
+              f"- 生效源码 `{active['code_commit']}`，通过的 profile SHA256 `{active['profile_evidence_sha256']}`。 "
+              f"[GitHub 固定优化源码](https://github.com/sjyinzju/Kurumi/tree/{active['code_commit']})",
+              f"- 生效 `keep_every={active['actual_keep_every']}`，重算模式 `{perf.get('recompute_mode', 'layer')}`，"
+              f"显式预取深度 {dist.get('prefetch_depth', 0)}，LoRA 融合加法{'启用' if perf.get('fused_lora_add') else '关闭'}。"]
+    if reshard := dist.get("layer_reshard"):
+        layers = ", ".join(map(str, reshard["layers"]))
+        value = json.dumps(reshard["value"])
+        lines.append(f"- Decoder 层 {layers} 使用 `reshard_after_forward={value}`，"
+                     f"额外参数上限 {reshard['max_extra_bytes'] / 2 ** 30:.2f} GiB/卡。")
+    for label, subset in ("切换前", [row for row in windows if row["step"] <= step]), (
+        "切换后", [row for row in windows if row["step"] - row["window_updates"] >= step],
+    ):
+        if subset:
+            tokens = sum(row["effective_tokens"] for row in subset)
+            seconds = sum(row["seconds"] for row in subset)
+            count = sum(row["window_updates"] for row in subset)
+            lines.append(f"- {label}正式计时窗口共 {count:,} 次更新、{tokens:,} 个有效 token，"
+                         f"窗口加权平均 {tokens / seconds:,.2f} effective tokens/s。")
+    comparison = evidence.get("performance_comparison", {})
+    if candidates := comparison.get("all"):
+        lines += ["", "| 隔离短测 | 有效 token/s | 最小显存余量 (GiB) | 验收 |",
+                  "| --- | ---: | ---: | --- |"]
+        for row in candidates:
+            lines.append(f"| `{row['case']}` | {fmt(row['effective_tokens_per_second'], 2)} | "
+                         f"{fmt(row['min_headroom_gib'], 2)} | {'通过' if row['eligible'] else '未通过'} |")
+    if steady := comparison.get("steady"):
+        speed = steady.get("effective_tokens_per_second")
+        lines += ["", f"稳态验收 `{steady.get('case', '获选配置')}` 的有效吞吐为 {fmt(speed, 2)} token/s，"
+                  f"最小余量 {fmt(steady.get('min_headroom_gib'), 2)} GiB。"]
+    trace_report(lines, evidence.get("trace", {}))
+    bandwidth_report(lines, evidence.get("bandwidth", {}))
+
+
 def training_report(lines, data, windows, validation, operations):
     lines += ["## 四卡训练", ""]
     identity = data.get("identity", {})
@@ -278,7 +444,7 @@ def training_report(lines, data, windows, validation, operations):
         choices = execution["optimization"]
         initial = identity["initialization"]
         lines += [
-            f"- 训练源码 `{identity['code_commit']}`。 "
+            f"- 正式启动源码 `{identity['code_commit']}`。 "
             f"[GitHub 固定源码](https://github.com/sjyinzju/Kurumi/tree/{identity['code_commit']})",
             f"- 基座 `{cfg['base_repo']}@{identity['base_revision']}`，provenance SHA256 `{identity['base_provenance']}`，"
             f"native `{identity['native_revision']}`，tokenizer `{identity['tokenizer_revision']}`。",
@@ -312,13 +478,7 @@ def training_report(lines, data, windows, validation, operations):
             lines.append("- 训练日志与最终累计 token 存在缺口，曲线只绘制可恢复的窗口。")
     else:
         lines.append("- 正式训练总量、吞吐与模型选择尚无完整训练摘要可核验。")
-    if operations.get("training_started_at") and operations.get("training_completed_at"):
-        start, stop = (datetime.fromisoformat(operations[key]) for key in ("training_started_at", "training_completed_at"))
-        require(stop >= start, "Training timeline dates are reversed")
-        lines.append(f"- 正式训练墙钟 {(stop - start).total_seconds() / 3600:.2f} 小时，"
-                     f"{show_time(start.isoformat())} 至 {show_time(stop.isoformat())}。")
-    else:
-        lines.append("- 正式训练总墙钟尚无起止回执可核验。")
+    wall_time_report(lines, operations)
     profile = data.get("profile", {})
     if profile:
         lines += ["", "| `keep_every` | 有效 token/s | 最小显存余量 (GiB) |", "| ---: | ---: | ---: |"]
@@ -342,6 +502,8 @@ def training_report(lines, data, windows, validation, operations):
         lines += ["", *[f"- `{line}`" for line in data["gpu"]]]
     if data.get("topology"):
         lines += ["", "```text", *data["topology"], "```"]
+    if data.get("transition"):
+        transition_report(lines, data["transition"], windows)
     if validation:
         validation_report(lines, validation, data["best"])
 
