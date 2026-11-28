@@ -41,6 +41,22 @@ def _sql_path(path: Path) -> str:
     return "'" + path.resolve().as_posix().replace("'", "''") + "'"
 
 
+def _cutoff_mask(pool_mask, cutoff):
+    if cutoff is None:
+        return pool_mask
+    return " + ".join(
+        f"CASE WHEN target_end_{horizon} <= DATE '{cutoff.isoformat()}' "
+        f"THEN {pool_mask} & {1 << i} ELSE 0 END"
+        for i, horizon in enumerate(HORIZONS)
+    )
+
+
+def _systematic_rank(index, population, offset, size):
+    # Each of the population possible offsets yields size draws, with equal marginal
+    # inclusion probability size/population and no repeated row within a draw.
+    return f"(({index} * {population} + {offset}) // {size})"
+
+
 def build_view(
     pool: Path, output: Path, *, start: date | None = None, end: date | None = None,
     label_end: date | None = None, split: str | None = None, budget: int | None = None,
@@ -91,13 +107,7 @@ def build_view(
         if split:
             conditions.append(f"split = '{split}'")
         pool_mask = "legacy_horizon_mask" if split else "horizon_mask"
-        mask = pool_mask
-        if cutoff:
-            mask = " + ".join(
-                f"CASE WHEN target_end_{horizon} <= DATE '{cutoff.isoformat()}' "
-                f"THEN {pool_mask} & {1 << i} ELSE 0 END"
-                for i, horizon in enumerate(HORIZONS)
-            )
+        mask = _cutoff_mask(pool_mask, cutoff)
         split_metadata = "NULL" if split is None else f"'{split}'"
         cutoff_metadata = "NULL::DATE" if cutoff is None else f"DATE '{cutoff.isoformat()}'"
         db.execute(f"""
@@ -124,8 +134,6 @@ def build_view(
             """
         else:
             offset = random.Random(seed).randrange(population)
-            # Uniform offset modulo population yields exactly size/population inclusion probability
-            # for each row. Ordering spreads exposure across clocks, industries and neighboring windows.
             selected = f"""
                 WITH ordered AS (
                     SELECT *, row_number() OVER (
@@ -133,7 +141,7 @@ def build_view(
                     ) - 1 AS sample_rank
                     FROM eligible
                 ), draws AS (
-                    SELECT ((i * {population} + {offset}) // {size}) AS sample_rank
+                    SELECT {_systematic_rank('i', population, offset, size)} AS sample_rank
                     FROM range({size}) AS t(i)
                 )
                 SELECT ordered.* EXCLUDE (sample_rank),

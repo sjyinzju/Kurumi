@@ -146,15 +146,15 @@ def load_weights(files, adapters, readout, verify=True):
 
 def frozen_identity(manifest_file):
     manifest_file = Path(manifest_file).resolve()
-    f = json.loads(manifest_file.read_text())
+    f = json.loads(manifest_file.read_text(encoding="utf-8"))
     if f["state"] != "FROZEN":
-        raise ValueError("The M1 checkpoint is not frozen")
+        raise ValueError("The checkpoint is not frozen")
     for x in f["weights"].values():
         path = (manifest_file.parent / x["path"]).resolve()
         if path.parent != manifest_file.parent or path.stat().st_mode & 0o222 or sha256(path) != x["sha256"]:
-            raise ValueError(f"Unsealed or changed frozen M1 weight: {path}")
+            raise ValueError(f"Unsealed or changed frozen weight: {path}")
         x["path"] = str(path)
-    return {"manifest": str(manifest_file), "manifest_sha256": sha256(manifest_file), **f}
+    return {**f, "manifest": str(manifest_file), "manifest_sha256": sha256(manifest_file)}
 
 
 def load_frozen(base_dir, frozen, device):
@@ -163,7 +163,7 @@ def load_frozen(base_dir, frozen, device):
     ckpt = checkpoint.load(base_dir, device, dtype=torch.bfloat16)
     adapters = attach(ckpt, frozen["config"])
     if sorted(adapters) != frozen["mounted_modules"] or ckpt.readout.cap != frozen["readout_soft_cap"]:
-        raise ValueError("Frozen M1 architecture differs from training")
+        raise ValueError("Frozen architecture differs from training")
     load_weights(frozen["weights"], adapters, ckpt.readout, verify=True)
     ckpt.backbone.eval().requires_grad_(False)
     ckpt.readout.eval().requires_grad_(False)

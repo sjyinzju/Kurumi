@@ -1,0 +1,80 @@
+{
+  "version": "cn-efficiency-v3",
+  "base_repo": "MachinePulseAI/karpo-decision-31B",
+  "base_revision": "b8e6fd7463cea8662c556d6257955d7ef9c10d19",
+  "native_revision": "6600011eb5cf46232d056ec0717dc726146d29de",
+  "repair_revision": "final",
+  "input_recipe": "v3_final_full60",
+  "sampling_order": "security_first",
+  "seed": 17,
+  "max_length": 8192,
+  "pack_tokens": 8192,
+  "originals_per_update": 4,
+  "memory_limit_gib": null,
+  "save_every_updates": 0,
+  "save_every_seconds": 3600,
+  "log_every_updates": 20,
+  "measure_warmup_updates": 1,
+  "lora": {
+    "targets": [
+      "q_proj",
+      "k_proj",
+      "v_proj",
+      "o_proj",
+      "gate_proj",
+      "up_proj",
+      "down_proj"
+    ],
+    "rank": 16,
+    "alpha": 32,
+    "lr": 5e-05,
+    "weight_decay": 0.01
+  },
+  "readout": {
+    "rows": 255,
+    "lr": 5e-06,
+    "weight_decay": 0
+  },
+  "optimizer": {
+    "betas": [
+      0.9,
+      0.999
+    ],
+    "eps": 1e-08,
+    "gradient_clip": 1
+  },
+  "schedule": {
+    "warmup_fraction": 0.03
+  },
+  "objective": "inverse inclusion weighted fit originals, each averaged over valid equal-weight horizons; CE + 0.5 Brier + 0.5 normalized RPS",
+  "initialization": "frozen_m1",
+  "display": {
+    "history": {
+      "sessions": 60,
+      "layout": "Ascending daily log return, open/close, high above max(open,close), low below min(open,close), and median-relative volume",
+      "returns_and_intraday_bp": 1,
+      "anchor_interval_sessions": 12,
+      "anchor_log_close_bp": 1,
+      "share_rebased_volume_ticks_per_unit_ratio": 100,
+      "near_zero": "Signed quarter unit preserves nonzero direction. Literal zero is exact."
+    },
+    "scalar": {
+      "returns_vol_drawdown_gap_dispersion_turnover": "1 basis point, with signed quarter basis point near zero",
+      "amounts": "million quote/reporting currency or million shares, 3 significant digits",
+      "multiples_ratios_and_ranks": "decimal, 3 significant digits",
+      "quote_prices_counts_and_ages": "source quote units or integer counts, up to 8 significant digits",
+      "coverage": "all distinct coverage groups and status; count share inferred only when exact",
+      "omitted_fields": "missing; stock 60-day daily volatility is the decision sigma"
+    },
+    "choice_bounds": "native ordered 1/5/20-session seven-bin interval, 12 significant digits in percent, exact zero bin"
+  },
+  "original_max_tokens": 3199,
+  "m2": {
+    "m1_manifest_sha256": [
+      "95f4d8ee0d00e76b5fda201c3ce6339eaa813d8ce86ccda4d91c43da76d355ed",
+      "316ca27fda50826d21955b659334e4a96b0bf6c2ec9713d4512defe60edb907a"
+    ],
+    "m1_selected_epoch": 1,
+    "m1_train_run_id": "m1-finance-20261125T071740Z"
+  }
+}

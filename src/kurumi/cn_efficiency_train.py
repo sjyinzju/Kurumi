@@ -211,6 +211,11 @@ def native_source_hashes():
             for p in sorted(code.rglob("*.py"))}
 
 
+def configuration_sha256(cfg):
+    payload = json.dumps(cfg, sort_keys=True, separators=(",", ":"), allow_nan=False)
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+
 def validate_prepared_recipe(manifest, cfg):
     from .cn_efficiency_data_v2 import PORTABLE_VERSION
 
@@ -234,11 +239,13 @@ def validate_prepared_recipe(manifest, cfg):
             or not 0 < manifest.get("max_original_tokens", 0) <= cfg["original_max_tokens"]
         ):
             raise ValueError("Rebuild the V3 cache with full-original length validation")
+        if cfg.get("m2") and provenance.get("configuration_sha256") != configuration_sha256(cfg):
+            raise ValueError("The formal native cache is bound to a different training configuration")
 
 
 def prepare_parquet(pool, date_view, confirmation_view, destination, tokenizer, formats, max_length,
                     native_revision, seed=17, *, recipe="compact", batch_size=4096, token_cache=True,
-                    pack_tokens=None):
+                    pack_tokens=None, configuration=None):
     """Prepare from frozen dated views, with no corpus or unmasked label path in between."""
     import pyarrow.parquet as pq
 
@@ -296,6 +303,9 @@ def prepare_parquet(pool, date_view, confirmation_view, destination, tokenizer, 
                               configured_max_length=max_length)
         if original_limit is not None:
             provenance["original_max_tokens"] = original_limit
+        if configuration is not None:
+            provenance["configuration_sha256"] = configuration_sha256(configuration)
+            provenance["native_choice_keys"] = [str(i) for i in range(1, 8)]
 
         def records():
             for path, segment in views:
@@ -347,6 +357,7 @@ def prepare_records(records, destination, tokenizer, formats, max_length, native
     supervision = {name: [0, 0, 0] for name in ("fit", "confirm")}
     counts = Counter()
     original_limit = (provenance or {}).get("original_max_tokens")
+    choice_keys = (provenance or {}).get("native_choice_keys")
     max_original_tokens = 0
     temp.touch(exist_ok=False)
     try:
@@ -379,6 +390,14 @@ def prepare_records(records, destination, tokenizer, formats, max_length, native
                     request = row[name]
                     if not isinstance(request.get("state"), str) or set(request) != {"state", "questions"}:
                         raise ValueError(f"Expected a text-only native request: {row['id']}")
+                    if choice_keys is not None:
+                        from karpo_decision.protocol import options
+
+                        questions = request["questions"]
+                        if tuple(questions) != TASK_IDS or any(
+                            q["type"] != "choice" or options(q)[0] != choice_keys for q in questions.values()
+                        ):
+                            raise ValueError(f"Native option order differs from class indices: {row['id']}")
                     payload = json.dumps(request, ensure_ascii=False, separators=(",", ":"), allow_nan=False)
                     key = hashlib.sha256(payload.encode()).digest()
                     keys[name] = key

@@ -26,6 +26,12 @@ from kurumi.cn_efficiency_init import (
     validate_output_path,
     verify_original_model,
 )
+from kurumi.cn_efficiency_m2 import (
+    record_validation,
+    validate_m2_initializer,
+    validation_progress,
+    validation_updates,
+)
 from kurumi.cn_efficiency_train import (
     CPU,
     FORMATS,
@@ -40,6 +46,7 @@ from kurumi.cn_efficiency_train import (
     staged_forward,
     validate_prepared_recipe,
 )
+from kurumi.numeric_loader import HORIZONS
 
 DEFAULT_CONFIG = Path(__file__).resolve().parents[1] / "configs/training/cn_efficiency_v1.json"
 STOP = []
@@ -158,28 +165,39 @@ def forward(ckpt, packed, prepared, count, horizons, optimized):
 
 
 @torch.inference_mode()
-def evaluate(view, ckpt, packed, fmt, limit, optimized):
+def evaluate(view, ckpt, packed, fmt, limit, optimized, *, predict=None):
     device = ckpt.readout.weight.device
     stream = view.rows("confirm", 8)
-    stratified_sum = torch.zeros(3, 3, device=device)
-    horizon_weight = torch.zeros(3, device=device)
+    stratified_sum = torch.zeros(3, 3, device=device, dtype=torch.float64)
+    horizon_weight = torch.zeros(3, device=device, dtype=torch.float64)
     horizon_count = torch.zeros(3, device=device, dtype=torch.long)
-    score_sum = torch.zeros(2, device=device)
+    score_sum = torch.zeros(2, device=device, dtype=torch.float64)
     packed.eval()
     ckpt.readout.eval()
     for rows in stream:
         groups = view.batches(rows, fmt, limit, optimize=optimized)
-        for group, (target, weight, plans, _, _), _ in batches(view, ckpt, packed, groups, optimized, limit):
-            y, w = target.to(device, non_blocking=True), weight.to(device, non_blocking=True)
-            logits = [forward(ckpt, packed, plan, len(group), take.stop - take.start, optimized)
-                      for take, plan in plans]
-            item_score, terms = losses(logits[0] if len(logits) == 1 else torch.cat(logits, dim=1), y)
+        for group, (target, _, plans, _, _), _ in batches(view, ckpt, packed, groups, optimized, limit):
+            y = target.to(device, non_blocking=True)
+            w = torch.tensor([row[3] for row in group], device=device, dtype=torch.float64)
+            parts = [forward(ckpt, packed, plan, len(group), take.stop - take.start, optimized)
+                     for take, plan in plans]
+            logits = parts[0] if len(parts) == 1 else torch.cat(parts, dim=1)
+            item_score, terms = losses(logits, y)
             mask = y >= 0
             wmask = w[:, None] * mask
             stratified_sum += (terms * wmask[..., None]).sum(0)
             horizon_weight += wmask.sum(0)
             horizon_count += mask.sum(0)
             score_sum += torch.stack(((w * item_score).sum(), w.sum()))
+            if predict is not None:
+                probabilities = logits.float().softmax(-1).cpu().tolist()
+                for (_, sid, targets, weight, *_), original in zip(group, probabilities, strict=True):
+                    for horizon, target_index, probability in zip(HORIZONS, targets, original, strict=True):
+                        predict({
+                            "sample_id": sid, "horizon": horizon, "probabilities": probability,
+                            "target_index": target_index if target_index >= 0 else None,
+                            "mask": target_index >= 0, "weight": weight,
+                        })
     totals = horizon_count.tolist()
     overall = score_sum.cpu().tolist()
     values = (stratified_sum / horizon_weight.clamp_min(1e-15)[:, None]).cpu().tolist()
@@ -326,6 +344,29 @@ def execute(view, ckpt, packed, adapters, cfg, identity, fmt, optimized, out, ma
     log_every = cfg.get("log_every_updates", 1)
     recovery_after = cfg.get("recovery_check_after")
     operator_sample = None
+    formal = cfg.get("m2") is not None
+    validations = validation_updates(total_updates) if formal else ()
+    validation_wall = 0.0
+    validation = None
+
+    def validate_boundary(boundary):
+        nonlocal validation_wall
+        beginning = time.monotonic()
+        record_validation(out, identity, boundary, adapters, ckpt.readout, lambda predict: evaluate(
+            view, ckpt, packed, fmt, cfg["pack_tokens"], optimized, predict=predict,
+        ))
+        packed.train()
+        ckpt.readout.train()
+        validation_wall += time.monotonic() - beginning
+        return validation_progress(out, identity, validations, boundary)
+
+    if formal:
+        if not resume:
+            checkpoint(last, identity, params, ckpt.readout, opt, sched, cursor, count)
+            save_time += time.monotonic() - started
+        validation = validate_boundary(count) if count == 0 or count in validations else (
+            validation_progress(out, identity, validations, count)
+        )
     for rows in view.rows("fit", cfg["originals_per_update"], start=cursor):
         if STOP or (max_updates is not None and count >= max_updates):
             break
@@ -361,18 +402,24 @@ def execute(view, ckpt, packed, adapters, cfg, identity, fmt, optimized, out, ma
             save_time += time.monotonic() - now
         if recovery_after is not None and count == recovery_after + 1 and detail is not None:
             atomic_save(out / "recovery-next.pt", dict(detail, original_scores=scores))
-        if (save_every and count % save_every == 0) or (save_seconds and now - last_save_time >= save_seconds):
+        boundary = count in validations
+        if (boundary or (save_every and count % save_every == 0)
+                or (save_seconds and now - last_save_time >= save_seconds)):
+            now = time.monotonic()
             checkpoint(last, identity, params, ckpt.readout, opt, sched, cursor, count)
             last_save_time = time.monotonic()
             save_time += last_save_time - now
-    if not records:
+        if boundary:
+            validation = validate_boundary(count)
+    if not records and not formal:
         raise RuntimeError("No training update was executed")
     peak_allocated = torch.cuda.max_memory_allocated(device)
     peak_reserved = torch.cuda.max_memory_reserved(device)
     save_start = time.monotonic()
-    checkpoint(last, identity, params, ckpt.readout, opt, sched, cursor, count)
+    if records and count not in validations:
+        checkpoint(last, identity, params, ckpt.readout, opt, sched, cursor, count)
     save_time += time.monotonic() - save_start
-    wall_train = time.monotonic() - started
+    wall_train = time.monotonic() - started - validation_wall
     # Verify reloaded optimizer state into fresh objects, including schedule and draw cursor.
     fresh, fresh_schedule, _ = optimizer_and_schedule(params, ckpt.readout, cfg, total_updates)
     with torch.no_grad():
@@ -391,11 +438,15 @@ def execute(view, ckpt, packed, adapters, cfg, identity, fmt, optimized, out, ma
         "min_host_available_bytes": host_available, "process_swap_bytes": swap_bytes(),
         "checkpoint_save_seconds": save_time, "training_wall_with_checkpoint_seconds": wall_train,
         "operator_sample": operator_sample,
-        "training_end_to_end": throughput(records, wall_train),
-        "throughput_with_first": throughput(records), "throughput_after_first": throughput(steady) if steady else None,
-        "confirmation": (evaluate(view, ckpt, packed, fmt, cfg["pack_tokens"], optimized)
-                         if not STOP and cfg.get("evaluate_confirmation", True) else None),
+        "training_end_to_end": throughput(records, wall_train) if records else None,
+        "throughput_with_first": throughput(records) if records else None,
+        "throughput_after_first": throughput(steady) if steady else None,
     }
+    if formal:
+        report.update(validation=validation, validation_wall_seconds=validation_wall, complete=count == total_updates)
+    else:
+        report["confirmation"] = (evaluate(view, ckpt, packed, fmt, cfg["pack_tokens"], optimized)
+                                  if not STOP and cfg.get("evaluate_confirmation", True) else None)
     write_json(out / "metrics.json", report)
     return report, first_scores, None if first_detail is None else first_detail["gradient"]
 
@@ -459,6 +510,8 @@ def load_training(args, view, cfg):
 
         frozen = frozen_identity(args.m1_frozen)
     initializer = validate_frozen_m1(frozen, cfg, base, native["revision"]) if frozen else None
+    if "m2" in cfg:
+        validate_m2_initializer(initializer, cfg["m2"])
     random.seed(cfg["seed"])
     np.random.seed(cfg["seed"])
     torch.manual_seed(cfg["seed"])
@@ -505,8 +558,8 @@ def training(args, cfg):
     from kurumi.m1_optimize import restore_rng, rng_state
 
     view = View(args.view)
-    if args.stage == "probe" and not view.manifest["counts"].get("confirm"):
-        raise ValueError("Probe needs a separate chronological confirmation block")
+    if (args.stage == "probe" or "m2" in cfg) and not view.manifest["counts"].get("confirm"):
+        raise ValueError("Training or probing requires a separate chronological confirmation block")
     load_start = time.monotonic()
     ckpt, packed, adapters, identity, execution = load_training(args, view, cfg)
     execution["load_seconds"] = time.monotonic() - load_start
@@ -612,7 +665,7 @@ def main():
         command.add_argument("--output", required=True, type=Path)
         command.add_argument("--device", default="cuda:0", help="Visible CUDA ordinal within the allocation")
         command.add_argument("--perf-experiment", action="store_true", help="Mark isolated experimental weights")
-        command.add_argument("--max-updates", type=int, required=stage == "train")
+        command.add_argument("--max-updates", type=int)
         if stage == "probe":
             command.add_argument("--arms", nargs="+", choices=tuple(ARMS), default=list(ARMS))
         else:
@@ -641,7 +694,7 @@ def main():
             result = prepare_parquet(args.pool, args.date_view, args.confirmation_date_view, args.view,
                                      args.tokenizer, formats, cfg["max_length"], cfg["native_revision"],
                                      cfg["seed"], recipe=recipe, batch_size=args.batch_size,
-                                     pack_tokens=cfg["pack_tokens"])
+                                     pack_tokens=cfg["pack_tokens"], configuration=cfg if cfg.get("m2") else None)
         else:
             if cap is not None:
                 parser.error("The length-constrained V3 configuration requires --pool and --date-view")
@@ -658,6 +711,12 @@ def main():
         parser.error(str(error))
     if args.max_updates is not None and args.max_updates <= 0:
         parser.error("--max-updates must be positive")
+    if "m2" in cfg and (args.stage != "train" or args.perf_experiment):
+        parser.error("The fixed M2 schedule requires the formal train entry point")
+    if "m2" in cfg and any(int(os.environ.get(name, 1)) != 1 for name in ("WORLD_SIZE", "SLURM_STEP_NUM_TASKS")):
+        parser.error("This M2 entry point uses one training process and a global batch of 4 originals")
+    if args.stage == "train" and "m2" not in cfg and args.max_updates is None:
+        parser.error("--max-updates is required for this training configuration")
     if args.perf_experiment and (not os.environ.get("SLURM_JOB_ID") or not args.m1_frozen):
         parser.error("Performance experiments require an allocated Slurm job and the sealed M1 initializer")
     for signum in (signal.SIGTERM, getattr(signal, "SIGUSR1", signal.SIGTERM)):
