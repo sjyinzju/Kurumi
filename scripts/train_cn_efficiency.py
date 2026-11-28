@@ -20,7 +20,12 @@ from pathlib import Path
 import numpy as np
 import torch
 
-from kurumi.cn_efficiency_init import initialization_mode, validate_frozen_m1, validate_output_path
+from kurumi.cn_efficiency_init import (
+    initialization_mode,
+    validate_frozen_m1,
+    validate_output_path,
+    verify_original_model,
+)
 from kurumi.cn_efficiency_train import (
     CPU,
     FORMATS,
@@ -28,8 +33,8 @@ from kurumi.cn_efficiency_train import (
     cpu_pack,
     losses,
     native_source_hashes,
-    plan_tokens,
     physical_packs,
+    plan_tokens,
     prepare_parquet,
     prepare_view,
     staged_forward,
@@ -416,11 +421,10 @@ def throughput(records, seconds=None):
 
 def load_training(args, view, cfg):
     from karpo_decision import checkpoint as native_checkpoint
-    from kurumi.m1_model import attach
-    from kurumi.m1_performance import GIB, bound_training_memory
-    from run_benchmarks import original_model
 
     from kurumi.karpo_numeric import KarpoNumericEncoder
+    from kurumi.m1_model import attach
+    from kurumi.m1_performance import GIB, bound_training_memory
 
     mode = initialization_mode(cfg, args.m1_frozen)
     validate_output_path(args.output, args.model, args.m1_frozen)
@@ -429,13 +433,8 @@ def load_training(args, view, cfg):
     validate_prepared_recipe(manifest, cfg)
     if native["revision"] != cfg["native_revision"] or native["revision"] != manifest["native_revision"]:
         raise ValueError("Native source revision differs from the prepared view/configuration")
-    base = original_model({
-        "paths": {"model_dir": str(args.model.resolve())},
-        "model": {
-            "key": "karpo-m0", "revision": cfg["base_revision"], "repo_id": cfg["base_repo"],
-            "checkpoint_role": "original_unmodified", "provenance_manifest": str(args.provenance.resolve()),
-        },
-    })
+    base = verify_original_model(args.model.resolve(), args.provenance.resolve(),
+                                 cfg["base_repo"], cfg["base_revision"])
     # Verify the view's tokenizer input bytes also match the model used for training.
     encoder = KarpoNumericEncoder.from_checkpoint(args.model)
     if encoder.tokenizer_revision != manifest["tokenizer_revision"]:
@@ -577,8 +576,15 @@ def native_identity():
     import karpo_decision
 
     package = Path(karpo_decision.__file__).resolve().parent
-    revision = subprocess.check_output(["git", "-C", str(package), "rev-parse", "HEAD"], text=True).strip()
     files = native_source_hashes()
+    archive_manifest = package.parents[1] / "native-source.json"
+    if archive_manifest.is_file():
+        archive = json.loads(archive_manifest.read_bytes())
+        if files != archive["source_files_sha256"]:
+            raise ValueError("Packaged Karpo native files differ from the source archive manifest")
+        revision = archive["revision"]
+    else:
+        revision = subprocess.check_output(["git", "-C", str(package), "rev-parse", "HEAD"], text=True).strip()
     return {"package": str(package), "revision": revision, "source_files_sha256": files}
 
 
@@ -596,7 +602,7 @@ def main():
     prepare.add_argument("--batch-size", type=int, default=4096)
     prepare.add_argument("--view", required=True, type=Path)
     prepare.add_argument("--tokenizer", required=True, type=Path)
-    prepare.add_argument("--formats", nargs="+", choices=FORMATS, default=FORMATS)
+    prepare.add_argument("--formats", nargs="+", choices=FORMATS)
     for stage in ("probe", "train"):
         command = stages.add_parser(stage)
         command.add_argument("--view", required=True, type=Path)
@@ -617,6 +623,8 @@ def main():
     cfg = json.loads(args.config.read_text(encoding="utf-8"))
     torch.set_num_threads(1)
     if args.stage == "prepare":
+        cap = cfg.get("original_max_tokens")
+        formats = args.formats or (("compact",) if cap is not None else FORMATS)
         native = native_identity()
         if native["revision"] != cfg["native_revision"]:
             raise ValueError("Native source revision differs from the configuration")
@@ -626,14 +634,20 @@ def main():
             recipe = args.recipe or cfg.get("input_recipe", "compact")
             if not args.pool or recipe not in RECIPES or args.batch_size < 1:
                 parser.error("A CN columnar pool, available recipe and positive batch size are required")
+            if cap is not None:
+                release = json.loads((args.pool / "manifest.json").read_bytes())
+                if release.get("original_max_tokens") != cap or release.get("input_recipe") != recipe:
+                    parser.error("Configuration and pool disagree on the published recipe or original length cap")
             result = prepare_parquet(args.pool, args.date_view, args.confirmation_date_view, args.view,
-                                     args.tokenizer, args.formats, cfg["max_length"], cfg["native_revision"],
+                                     args.tokenizer, formats, cfg["max_length"], cfg["native_revision"],
                                      cfg["seed"], recipe=recipe, batch_size=args.batch_size,
                                      pack_tokens=cfg["pack_tokens"])
         else:
+            if cap is not None:
+                parser.error("The length-constrained V3 configuration requires --pool and --date-view")
             if args.pool or args.confirmation_date_view or args.recipe:
                 parser.error("--pool, --confirmation-date-view and --recipe require --date-view")
-            result = prepare_view(args.input, args.view, args.tokenizer, args.formats,
+            result = prepare_view(args.input, args.view, args.tokenizer, formats,
                                   cfg["max_length"], cfg["native_revision"], cfg["seed"])
         print(json.dumps(result, indent=2))
         return

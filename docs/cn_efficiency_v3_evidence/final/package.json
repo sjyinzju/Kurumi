@@ -1,0 +1,60 @@
+{
+  "package": "E:\\Kurumi\\artifacts\\cn-efficiency-v3\\final",
+  "total_bytes": 2986268299,
+  "manifest_sha256": "0540ef90859b474aa19041ae59cd75df93ef8bd3a0a033b728b0dabc14aee36f",
+  "pool_manifest_sha256": "d439dba01790f375d04835aacba77d801b437b6f6eb39b0aa81ebfb6f62ec9d8",
+  "files_verified": 22282,
+  "payload_bytes": 2982004935,
+  "samples": 10376684,
+  "supervision": {
+    "1": 10369918,
+    "5": 10347081,
+    "20": 10310226
+  },
+  "length_bound_report_sha256": "1d6afbd8eae7a501a99a0bb285df0da4de7f6e39e03fc2697c14181068f4cd4a",
+  "smoke": {
+    "masked_horizons": 35,
+    "packed": 28,
+    "multi_original_packs": 28,
+    "fit": 48,
+    "confirm": 8,
+    "min_original_tokens": 2701,
+    "max_original_tokens": 3025,
+    "mean_original_tokens": 2926.2678571428573,
+    "tokenizer_revision": "b36640b5450552ac96f908c71664932e4fa79485a9a5422436a779230eeb1bff",
+    "native_revision": "6600011eb5cf46232d056ec0717dc726146d29de",
+    "runtime": {
+      "transformers": "5.23.0",
+      "tokenizers": "0.23.3",
+      "jinja2": "3.1.6",
+      "torch": "2.15.0"
+    },
+    "supervision": {
+      "fit": [
+        48,
+        47,
+        24
+      ],
+      "confirm": [
+        8,
+        6,
+        0
+      ]
+    },
+    "last_fit_target": "2023-11-27",
+    "first_confirm_anchor": "2023-12-04",
+    "cpu": true,
+    "training_dependencies_imported": [
+      "verify_original_model",
+      "validate_frozen_m1",
+      "attach",
+      "frozen_identity",
+      "load_weights",
+      "optimizer_and_schedule",
+      "bound_training_memory"
+    ],
+    "sqlite_sha256": "e40859f1d921598592c6342c5e9db1eba9ae603f1bb257af7165ac39899cf6d2",
+    "relocated_before_generation": true,
+    "isolated_cpu_runtime": true
+  }
+}

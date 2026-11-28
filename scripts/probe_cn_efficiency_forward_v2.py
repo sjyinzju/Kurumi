@@ -126,13 +126,13 @@ def make_views(args, token_means):
     return views, reports
 
 
-def point_matrix(points):
+def point_matrix(points, dtype="float32"):
     """Cache scalar numeric projections, including coverage fields for exploratory ablations."""
     names, values = [], []
 
     def append(name, arr):
         names.append(name)
-        values.append(pc.cast(arr, "float32").to_numpy())
+        values.append(pc.cast(arr, dtype).to_numpy())
 
     def numeric_struct(prefix, arr):
         for i, field in enumerate(arr.type):
@@ -150,7 +150,7 @@ def point_matrix(points):
         days = pc.struct_field(points["fundamentals"], key).to_numpy()
         age = np.where(np.isnat(days), np.nan, (today - days) / np.timedelta64(1, "D"))
         names.append(f"fundamentals.age_from_{key}")
-        values.append(age.astype(np.float32))
+        values.append(age.astype(dtype))
     matrix = np.column_stack(values)
     if np.isinf(matrix).any():
         raise ValueError("Infinite numeric proxy input")
@@ -165,13 +165,15 @@ def shown_by_native(field):
     return len(names) == 3 and names[1] in groups[source] and names[2] in COVERAGE_FIELDS
 
 
-def extract(pool, paths, output):
+def extract(pool, paths, output, *, point_dtype="float32"):
     output.mkdir(exist_ok=True)
     anchors = output / "anchors.parquet"
     manifest = output / "manifest.json"
     hashes = {path.name: file_sha(path) for path in sorted(paths)}
     hashes["pool"] = file_sha(pool / "manifest.json")
     hashes["script"] = file_sha(__file__)
+    if point_dtype != "float32":
+        hashes["point_dtype"] = point_dtype
     if manifest.exists():
         result = json.loads(manifest.read_bytes())
         if result["inputs"] != hashes:
@@ -191,10 +193,10 @@ def extract(pool, paths, output):
                          scratch=output / "spill") as reader:
         for batch in view_batches(anchors, 8192):
             points = reader.point_rows(batch)
-            names, numeric = point_matrix(points)
+            names, numeric = point_matrix(points, point_dtype)
             history = reader.history(points)
             if not done:
-                stock = np.lib.format.open_memmap(output / "point.npy", mode="w+", dtype="float32",
+                stock = np.lib.format.open_memmap(output / "point.npy", mode="w+", dtype=point_dtype,
                                                   shape=(total, numeric.shape[1]))
                 series = np.lib.format.open_memmap(output / "history.npy", mode="w+", dtype="float64",
                                                    shape=(total, *history.shape[1:]))

@@ -32,7 +32,13 @@ def repair_metadata(config):
     if ("repair_revision" not in cfg or cfg.get("version") != PORTABLE_VERSION
             or cfg.get("expected_input_tokens_per_original", 0) <= 0):
         raise ValueError("A V3 repair configuration with measured native length is required")
-    return {"repair_revision": cfg["repair_revision"], "input_recipe": cfg["input_recipe"]}
+    metadata = {"repair_revision": cfg["repair_revision"], "input_recipe": cfg["input_recipe"]}
+    if "original_max_tokens" in cfg:
+        limit = cfg["original_max_tokens"]
+        if type(limit) is not int or not 0 < limit < 3200:
+            raise ValueError("A V3 original length limit must be between 1 and 3199")
+        metadata["original_max_tokens"] = limit
+    return metadata
 
 
 def publish_repair(previous, config, output, *, copy_data=False):
@@ -44,6 +50,7 @@ def publish_repair(previous, config, output, *, copy_data=False):
     manifest = json.loads(original.read_bytes())
     if manifest["dataset_version"] != PORTABLE_VERSION:
         raise ValueError("A released V3 pool is required")
+    manifest.pop("original_max_tokens", None)
     manifest.update(repair_metadata(config), previous_v3_manifest_sha256=file_sha(original),
                     repair_builder_sha256=file_sha(__file__))
     config_name = manifest["config"]

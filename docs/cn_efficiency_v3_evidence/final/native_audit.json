@@ -1,0 +1,720 @@
+{
+  "development": {
+    "lengths": {
+      "v2": {
+        "n": 6000,
+        "mean": 4395.8725,
+        "p50": 4397.0,
+        "p95": 4522.0,
+        "p99": 4556.0,
+        "max": 4653,
+        "over_2500": 6000,
+        "over_2800": 6000,
+        "over_3000": 6000,
+        "over_3199": 6000
+      },
+      "initial_v3": {
+        "n": 6000,
+        "mean": 2975.8933333333334,
+        "p50": 2972.0,
+        "p95": 3103.0,
+        "p99": 3122.0,
+        "max": 3154,
+        "over_2500": 6000,
+        "over_2800": 5941,
+        "over_3000": 2770,
+        "over_3199": 0
+      },
+      "r1": {
+        "n": 6000,
+        "mean": 6066.4935,
+        "p50": 6067.0,
+        "p95": 6306.0,
+        "p99": 6350.0,
+        "max": 6400,
+        "over_2500": 6000,
+        "over_2800": 6000,
+        "over_3000": 6000,
+        "over_3199": 6000
+      },
+      "final": {
+        "n": 6000,
+        "mean": 2878.9185,
+        "p50": 2882.0,
+        "p95": 3015.0,
+        "p99": 3044.0,
+        "max": 3101,
+        "over_2500": 6000,
+        "over_2800": 4549,
+        "over_3000": 550,
+        "over_3199": 0
+      }
+    },
+    "mean_module_tokens": {
+      "v2": {
+        "units": 20.0,
+        "identity_current": 241.8145,
+        "history": 1511.1848333333332,
+        "factors": 541.4685,
+        "financials": 172.57066666666665,
+        "market": 539.8075,
+        "industry": 209.20083333333332,
+        "benchmark": 158.55083333333334,
+        "text": 7.0,
+        "question_and_option_text": 710.2748333333333,
+        "native_structure": 284.0
+      },
+      "initial_v3": {
+        "units": 74.0,
+        "identity_current": 235.81966666666668,
+        "history": 875.482,
+        "factors": 272.39983333333333,
+        "financials": 144.88216666666668,
+        "market": 329.3376666666667,
+        "industry": 103.92,
+        "benchmark": 109.7405,
+        "text": 8.0,
+        "decision": 266.3115,
+        "question_and_option_text": 272.0,
+        "native_structure": 284.0
+      },
+      "r1": {
+        "units": 25.0,
+        "identity_current": 241.7245,
+        "history": 3499.3196666666668,
+        "factors": 524.4096666666667,
+        "financials": 171.83066666666667,
+        "market": 480.7896666666667,
+        "industry": 134.557,
+        "benchmark": 158.55083333333334,
+        "text": 8.0,
+        "decision": 266.3115,
+        "question_and_option_text": 272.0,
+        "native_structure": 284.0
+      },
+      "final": {
+        "units": 39.0,
+        "identity_current": 150.46383333333333,
+        "history": 1245.8738333333333,
+        "factors": 279.81033333333335,
+        "financials": 122.184,
+        "market": 258.1445,
+        "industry": 71.84116666666667,
+        "benchmark": 73.2755,
+        "decision": 301.32533333333333,
+        "question_and_option_text": 53.0,
+        "native_structure": 284.0
+      }
+    },
+    "supervision": {
+      "1": 5997,
+      "5": 5957,
+      "20": 5866
+    }
+  },
+  "pressure": {
+    "lengths": {
+      "v2": {
+        "n": 160,
+        "mean": 4288.5625,
+        "p50": 4292.5,
+        "p95": 4487.15,
+        "p99": 4500.82,
+        "max": 4511,
+        "over_2500": 160,
+        "over_2800": 160,
+        "over_3000": 160,
+        "over_3199": 160
+      },
+      "initial_v3": {
+        "n": 160,
+        "mean": 2909.34375,
+        "p50": 2869.5,
+        "p95": 3112.1,
+        "p99": 3118.23,
+        "max": 3127,
+        "over_2500": 160,
+        "over_2800": 129,
+        "over_3000": 55,
+        "over_3199": 0
+      },
+      "r1": {
+        "n": 160,
+        "mean": 5833.975,
+        "p50": 5843.0,
+        "p95": 6226.2,
+        "p99": 6261.1,
+        "max": 6275,
+        "over_2500": 160,
+        "over_2800": 160,
+        "over_3000": 160,
+        "over_3199": 160
+      },
+      "final": {
+        "n": 160,
+        "mean": 2792.625,
+        "p50": 2783.5,
+        "p95": 2976.05,
+        "p99": 2984.23,
+        "max": 2998,
+        "over_2500": 160,
+        "over_2800": 72,
+        "over_3000": 0,
+        "over_3199": 0
+      }
+    },
+    "mean_module_tokens": {
+      "v2": {
+        "units": 20.0,
+        "identity_current": 244.06875,
+        "history": 1433.2375,
+        "factors": 516.1625,
+        "financials": 154.15625,
+        "market": 543.9,
+        "industry": 217.53125,
+        "benchmark": 158.19375,
+        "text": 7.0,
+        "question_and_option_text": 710.3125,
+        "native_structure": 284.0
+      },
+      "initial_v3": {
+        "units": 74.0,
+        "identity_current": 239.5125,
+        "history": 863.63125,
+        "factors": 234.84375,
+        "financials": 113.06875,
+        "market": 327.40625,
+        "industry": 116.75,
+        "benchmark": 110.1375,
+        "text": 8.0,
+        "decision": 265.99375,
+        "question_and_option_text": 272.0,
+        "native_structure": 284.0
+      },
+      "r1": {
+        "units": 25.0,
+        "identity_current": 244.06875,
+        "history": 3345.00625,
+        "factors": 471.85,
+        "financials": 128.78125,
+        "market": 477.9875,
+        "industry": 153.09375,
+        "benchmark": 158.19375,
+        "text": 8.0,
+        "decision": 265.99375,
+        "question_and_option_text": 272.0,
+        "native_structure": 284.0
+      },
+      "final": {
+        "units": 39.0,
+        "identity_current": 154.1875,
+        "history": 1194.675,
+        "factors": 253.75,
+        "financials": 97.94375,
+        "market": 257.9625,
+        "industry": 83.725,
+        "benchmark": 73.625,
+        "decision": 300.75625,
+        "question_and_option_text": 53.0,
+        "native_structure": 284.0
+      }
+    },
+    "supervision": {
+      "1": 160,
+      "5": 160,
+      "20": 160
+    }
+  },
+  "high_risk": {
+    "lengths": {
+      "final": {
+        "n": 12910,
+        "mean": 2878.058326878389,
+        "p50": 2885.0,
+        "p95": 3020.0,
+        "p99": 3059.0,
+        "max": 3124,
+        "over_2500": 12901,
+        "over_2800": 10201,
+        "over_3000": 1140,
+        "over_3199": 0
+      }
+    },
+    "mean_module_tokens": {
+      "final": {
+        "units": 39.0,
+        "identity_current": 151.44856700232378,
+        "history": 1245.7533694810224,
+        "factors": 278.2339271882262,
+        "financials": 122.9557707203718,
+        "market": 253.33477924089854,
+        "industry": 75.50085205267234,
+        "benchmark": 73.60549961270333,
+        "decision": 301.2255615801704,
+        "question_and_option_text": 53.0,
+        "native_structure": 284.0
+      }
+    },
+    "supervision": {
+      "1": 12893,
+      "5": 12841,
+      "20": 12797
+    }
+  },
+  "checked_counts": {
+    "identity.listing_age_sessions": 19061,
+    "current.close_raw": 19070,
+    "current.volume_shares": 19070,
+    "current.security_market_cap_local": 18950,
+    "current.upper_limit_price": 19070,
+    "current.lower_limit_price": 19070,
+    "factors.return_1d": 19070,
+    "factors.return_5d": 19070,
+    "factors.return_20d": 19070,
+    "factors.return_60d": 19070,
+    "factors.price_ma20_gap": 19070,
+    "factors.price_ma60_gap": 19070,
+    "factors.volatility_20d_daily": 19070,
+    "factors.drawdown_from_peak_60d": 19070,
+    "factors.turnover_total_1d": 18950,
+    "factors.turnover_total_mean_20d": 18597,
+    "factors.volume_ratio_1_20": 19069,
+    "factors.market_cap_percentile": 18950,
+    "factors.liquidity_proxy_percentile_20d": 19070,
+    "factors.earnings_yield_ttm": 18213,
+    "factors.book_to_market": 18776,
+    "factors.sales_to_market_ttm": 18133,
+    "factors.roe_ttm": 16432,
+    "factors.roa_ttm": 17052,
+    "factors.net_margin_ttm": 18258,
+    "factors.revenue_growth_yoy_ttm": 16445,
+    "factors.profit_change_to_assets": 16681,
+    "factors.liabilities_to_assets": 18919,
+    "factors.operating_cashflow_to_assets_ttm": 17035,
+    "factors.excess_market_5d": 19070,
+    "factors.excess_market_20d": 19070,
+    "factors.beta_market_60d": 19070,
+    "factors.residual_volatility_60d": 19070,
+    "financials.revenue_ttm": 18266,
+    "financials.net_income_total_ttm": 18383,
+    "financials.net_income_parent_ttm": 18346,
+    "financials.operating_cashflow_ttm": 18329,
+    "financials.assets": 18920,
+    "financials.liabilities": 18919,
+    "financials.parent_equity": 18909,
+    "financials.statement_age_days": 18946,
+    "financials.disclosure_age_days": 18946,
+    "market.return_dispersion_1d": 19070,
+    "market.advance_ratio": 19070,
+    "market.activity_proxy_ratio_20d": 19070,
+    "market.turnover_total_median": 19045,
+    "market.suspension_ratio": 19070,
+    "market.coverage.n_expected": 190700,
+    "market.coverage.n_valid": 190700,
+    "benchmark.benchmark_return_1d": 19070,
+    "benchmark.benchmark_return_5d": 19070,
+    "benchmark.benchmark_return_20d": 19070,
+    "benchmark.benchmark_return_60d": 19070,
+    "benchmark.benchmark_volatility_20d_daily": 19070,
+    "benchmark.benchmark_volatility_60d_daily": 19070,
+    "benchmark.benchmark_drawdown_from_peak_60d": 19070,
+    "history.open_relative": 1144200,
+    "history.older50.open_relative": 953500,
+    "history.high_relative": 1144200,
+    "history.older50.high_relative": 953500,
+    "history.low_relative": 1144200,
+    "history.older50.low_relative": 953500,
+    "history.close_relative": 1144200,
+    "history.older50.close_relative": 953500,
+    "history.log_return_1d": 1144200,
+    "history.older50.log_return_1d": 953500,
+    "history.volume_relative": 1143960,
+    "history.older50.volume_relative": 953300,
+    "history_missing_volume": 4,
+    "market.above_ma20_ratio": 19061,
+    "industry.return_1d": 10598,
+    "industry.advance_ratio": 10842,
+    "industry.activity_proxy_ratio_20d": 10816,
+    "industry.coverage.n_valid": 43412,
+    "market.return_1d": 19023,
+    "factors.excess_industry_5d": 10394,
+    "industry.return_5d": 10394,
+    "industry.above_ma20_ratio": 10723,
+    "factors.excess_industry_20d": 9599,
+    "industry.return_20d": 9599,
+    "industry.volatility_20d_daily": 9599,
+    "market.return_5d": 18890,
+    "market.return_20d": 18462,
+    "market.volatility_20d_daily": 18462,
+    "industry.excess_market_20d": 9479,
+    "industry.return_60d": 8139,
+    "industry.volatility_60d_daily": 8139,
+    "market.return_60d": 17348,
+    "market.volatility_60d_daily": 17348,
+    "market.drawdown_from_peak_60d": 17348,
+    "market.above_ma60_ratio": 18533
+  },
+  "errors": {
+    "identity.listing_age_sessions": {
+      "absolute": 0.0,
+      "relative": 0.0
+    },
+    "current.close_raw": {
+      "absolute": 0.0,
+      "relative": 0.0
+    },
+    "current.volume_shares": {
+      "absolute": 4996601.0,
+      "relative": 0.00488313507619203
+    },
+    "current.security_market_cap_local": {
+      "absolute": 4999565712.159912,
+      "relative": 0.004941235310272033
+    },
+    "current.upper_limit_price": {
+      "absolute": 0.0,
+      "relative": 0.0
+    },
+    "current.lower_limit_price": {
+      "absolute": 0.0,
+      "relative": 0.0
+    },
+    "factors.return_1d": {
+      "absolute": 5.000000000000143e-05,
+      "relative": 2.887524920471875
+    },
+    "factors.return_5d": {
+      "absolute": 5.000000000000143e-05,
+      "relative": 3.675024906738598
+    },
+    "factors.return_20d": {
+      "absolute": 5.000000000000143e-05,
+      "relative": 0.494444461917665
+    },
+    "factors.return_60d": {
+      "absolute": 5.000000000000143e-05,
+      "relative": 3.2121249985193554
+    },
+    "factors.price_ma20_gap": {
+      "absolute": 5.000000000000143e-05,
+      "relative": 225179981367.5248
+    },
+    "factors.price_ma60_gap": {
+      "absolute": 4.999999999999449e-05,
+      "relative": 112589990683.2624
+    },
+    "factors.volatility_20d_daily": {
+      "absolute": 4.999902844429055e-05,
+      "relative": 0.033584460429820134
+    },
+    "factors.drawdown_from_peak_60d": {
+      "absolute": 5.000000000000143e-05,
+      "relative": 0.15860000435885735
+    },
+    "factors.turnover_total_1d": {
+      "absolute": 4.999980330467214e-05,
+      "relative": 0.7842238884654253
+    },
+    "factors.turnover_total_mean_20d": {
+      "absolute": 4.999747276306088e-05,
+      "relative": 0.25021334449170585
+    },
+    "factors.volume_ratio_1_20": {
+      "absolute": 0.035816764831542613,
+      "relative": 0.004967499998517318
+    },
+    "factors.market_cap_percentile": {
+      "absolute": 0.0004999999999999449,
+      "relative": 0.00481955623615727
+    },
+    "factors.liquidity_proxy_percentile_20d": {
+      "absolute": 0.0005000000000000004,
+      "relative": 0.0049018687513890866
+    },
+    "factors.earnings_yield_ttm": {
+      "absolute": 0.004992227554321271,
+      "relative": 0.004923205087373934
+    },
+    "factors.book_to_market": {
+      "absolute": 0.004986810684204146,
+      "relative": 0.0049571793695648335
+    },
+    "factors.sales_to_market_ttm": {
+      "absolute": 0.04985351562499929,
+      "relative": 0.004933838323254683
+    },
+    "factors.roe_ttm": {
+      "absolute": 0.036177062988286934,
+      "relative": 0.004951556645547116
+    },
+    "factors.roa_ttm": {
+      "absolute": 0.004487142562866309,
+      "relative": 0.004908386187194659
+    },
+    "factors.net_margin_ttm": {
+      "absolute": 43.62109375,
+      "relative": 0.004818393245812492
+    },
+    "factors.revenue_growth_yoy_ttm": {
+      "absolute": 3.8253173828125,
+      "relative": 0.004940238039568583
+    },
+    "factors.profit_change_to_assets": {
+      "absolute": 0.04596214294433665,
+      "relative": 0.004758162983655657
+    },
+    "factors.liabilities_to_assets": {
+      "absolute": 0.004921312332153427,
+      "relative": 0.004848867152222783
+    },
+    "factors.operating_cashflow_to_assets_ttm": {
+      "absolute": 0.003618125915527237,
+      "relative": 0.004827299542562723
+    },
+    "factors.excess_market_5d": {
+      "absolute": 4.9996864795684784e-05,
+      "relative": 13.606019287127525
+    },
+    "factors.excess_market_20d": {
+      "absolute": 4.9995362758639694e-05,
+      "relative": 24.36795554150726
+    },
+    "factors.beta_market_60d": {
+      "absolute": 0.004998974800109801,
+      "relative": 0.00492247139730005
+    },
+    "factors.residual_volatility_60d": {
+      "absolute": 4.9999856948854116e-05,
+      "relative": 0.022737110981844937
+    },
+    "financials.revenue_ttm": {
+      "absolute": 4572000000.0,
+      "relative": 0.004841642445211439
+    },
+    "financials.net_income_total_ttm": {
+      "absolute": 493000000.0,
+      "relative": 0.0048376012523778985
+    },
+    "financials.net_income_parent_ttm": {
+      "absolute": 488000000.0,
+      "relative": 0.0048550605343282045
+    },
+    "financials.operating_cashflow_ttm": {
+      "absolute": 3562000000.0,
+      "relative": 0.004940468131117801
+    },
+    "financials.assets": {
+      "absolute": 48618000000.0,
+      "relative": 0.004922881878883119
+    },
+    "financials.liabilities": {
+      "absolute": 48924000000.0,
+      "relative": 0.0048745409712639
+    },
+    "financials.parent_equity": {
+      "absolute": 4896000000.0,
+      "relative": 0.0049288239814241595
+    },
+    "financials.statement_age_days": {
+      "absolute": 0.0,
+      "relative": 0.0
+    },
+    "financials.disclosure_age_days": {
+      "absolute": 0.0,
+      "relative": 0.0
+    },
+    "market.return_dispersion_1d": {
+      "absolute": 4.999799230221563e-05,
+      "relative": 0.0030191557164018557
+    },
+    "market.advance_ratio": {
+      "absolute": 0.0005000000000000004,
+      "relative": 0.004165517241379325
+    },
+    "market.activity_proxy_ratio_20d": {
+      "absolute": 0.004999770055566399,
+      "relative": 0.004877825538727054
+    },
+    "market.turnover_total_median": {
+      "absolute": 4.99984446230943e-05,
+      "relative": 0.288060799215494
+    },
+    "market.suspension_ratio": {
+      "absolute": 0.0004992743105950437,
+      "relative": 0.004799999999999915
+    },
+    "market.coverage.n_expected": {
+      "absolute": 0.0,
+      "relative": 0.0
+    },
+    "market.coverage.n_valid": {
+      "absolute": 0.0,
+      "relative": 0.0
+    },
+    "benchmark.benchmark_return_1d": {
+      "absolute": 4.998215742792536e-05,
+      "relative": 4.694974423949303
+    },
+    "benchmark.benchmark_return_5d": {
+      "absolute": 4.999335803563057e-05,
+      "relative": 14.439521703798302
+    },
+    "benchmark.benchmark_return_20d": {
+      "absolute": 4.996680355917431e-05,
+      "relative": 1.2763466577353042
+    },
+    "benchmark.benchmark_return_60d": {
+      "absolute": 4.9980676000427326e-05,
+      "relative": 0.5115144787632735
+    },
+    "benchmark.benchmark_volatility_20d_daily": {
+      "absolute": 4.9985113227376046e-05,
+      "relative": 0.009626950064460463
+    },
+    "benchmark.benchmark_volatility_60d_daily": {
+      "absolute": 4.999879848316055e-05,
+      "relative": 0.008521586383484474
+    },
+    "benchmark.benchmark_drawdown_from_peak_60d": {
+      "absolute": 4.997791269147067e-05,
+      "relative": 0.6064048066551434
+    },
+    "history.open_relative": {
+      "absolute": 0.0010713411438940668,
+      "relative": 0.00044615199581716787
+    },
+    "history.high_relative": {
+      "absolute": 0.0015280986361760895,
+      "relative": 0.0004751605573045777
+    },
+    "history.low_relative": {
+      "absolute": 0.0009306011646854628,
+      "relative": 0.0004636078316469723
+    },
+    "history.close_relative": {
+      "absolute": 0.0010887941466606321,
+      "relative": 0.00042214004299988224
+    },
+    "history.log_return_1d": {
+      "absolute": 4.999991719181751e-05,
+      "relative": 224.404582925214
+    },
+    "history.volume_relative": {
+      "absolute": 0.0050000000000000044,
+      "relative": 57.0092
+    },
+    "market.above_ma20_ratio": {
+      "absolute": 0.0004999999999999449,
+      "relative": 0.004428571428571428
+    },
+    "industry.return_1d": {
+      "absolute": 4.999871944099451e-05,
+      "relative": 10.984057800112017
+    },
+    "industry.advance_ratio": {
+      "absolute": 0.0005000000000000004,
+      "relative": 0.00488888888888888
+    },
+    "industry.activity_proxy_ratio_20d": {
+      "absolute": 0.004999781708498352,
+      "relative": 0.004955317119261167
+    },
+    "industry.coverage.n_valid": {
+      "absolute": 0.0,
+      "relative": 0.0
+    },
+    "market.return_1d": {
+      "absolute": 4.9982869795163476e-05,
+      "relative": 26.07232952424378
+    },
+    "factors.excess_industry_5d": {
+      "absolute": 4.99964654445649e-05,
+      "relative": 4.94656031103724
+    },
+    "industry.return_5d": {
+      "absolute": 4.9995507966501054e-05,
+      "relative": 30.192258152645287
+    },
+    "industry.above_ma20_ratio": {
+      "absolute": 0.0005000000000000004,
+      "relative": 0.00460000000000006
+    },
+    "factors.excess_industry_20d": {
+      "absolute": 4.9998903274534046e-05,
+      "relative": 1.1033066496001254
+    },
+    "industry.return_20d": {
+      "absolute": 4.998241867809616e-05,
+      "relative": 6.920493933398124
+    },
+    "industry.volatility_20d_daily": {
+      "absolute": 4.999649532240816e-05,
+      "relative": 0.010284226229595052
+    },
+    "market.return_5d": {
+      "absolute": 4.999482175387787e-05,
+      "relative": 7.39544882398984
+    },
+    "market.return_20d": {
+      "absolute": 4.998461808212312e-05,
+      "relative": 0.295452844696751
+    },
+    "market.volatility_20d_daily": {
+      "absolute": 4.996813295702826e-05,
+      "relative": 0.012025924267479907
+    },
+    "industry.excess_market_20d": {
+      "absolute": 4.999837788755013e-05,
+      "relative": 0.48484538470647803
+    },
+    "industry.return_60d": {
+      "absolute": 4.998915457129702e-05,
+      "relative": 0.6279515990728012
+    },
+    "industry.volatility_60d_daily": {
+      "absolute": 4.9966246352402266e-05,
+      "relative": 0.008615793720595304
+    },
+    "market.return_60d": {
+      "absolute": 4.99886076854722e-05,
+      "relative": 0.30097152937017135
+    },
+    "market.volatility_60d_daily": {
+      "absolute": 4.998694371553727e-05,
+      "relative": 0.009485417080094344
+    },
+    "market.drawdown_from_peak_60d": {
+      "absolute": 4.999500574420779e-05,
+      "relative": 0.45247070227279784
+    },
+    "market.above_ma60_ratio": {
+      "absolute": 0.0005000000000000004,
+      "relative": 0.004620408163265284
+    }
+  },
+  "tokenizer_sha256": "b36640b5450552ac96f908c71664932e4fa79485a9a5422436a779230eeb1bff",
+  "native_revision": "6600011eb5cf46232d056ec0717dc726146d29de",
+  "runtime": {
+    "transformers": "5.23.0",
+    "tokenizers": "0.23.3",
+    "jinja2": "3.1.6",
+    "torch": "2.15.0"
+  },
+  "transform_sha256": {
+    "cn_efficiency_data_v2.py": "6f8d8cd81d944390ae1b2b9d5fdbbcdbe60ced5fbd85afde92100daabd4a38ea",
+    "cn_efficiency_display.py": "23723503912920b09dd72686a946850ce95f5a396aa54ef9e110c1b065e5678a",
+    "cn_efficiency_history.py": "49f672f477b6f294a293020d6398c8fc8ffbd51424ffbf746db5ede942c9fea7",
+    "cn_efficiency_recipes.py": "892e5833ea1fe9da7c693c7d4718964bcbfaef09a8d62136d726900ad0da9c69",
+    "cn_efficiency_render.py": "7d8bc4ffa1a2d06768de6cacd6adb2df18520fee6648a1522e59f4fb5c804765",
+    "cn_efficiency_train.py": "df0a33536048540ba5dda0e896571274937a4a556480709c6af75f5fd8fcd02f",
+    "numeric_loader.py": "fc43f9cf63a0c4a0062eb09e3aabf8d24fba098182d8f18ad5a92b35931103ea"
+  },
+  "distinct_originals": 18966,
+  "views_sha256": {
+    "development": "c8a12fc50f06c5032ccdc7369e87bfeb056b18dc06c8ad90f6e133eeb56e610f",
+    "pressure": "c19d87a85f1fb32e8ab98805451582bdda77e383d3deb26452126c9d0424d238",
+    "high_risk": "9cbbf96bc006e89406c018db52accd1ec684c22a106e5a7e8cb86a6a5513891a"
+  },
+  "pressure_fixture_sha256": "9f7f3da82c272f82d2c0faab464c3b41f61562e13f95b8bc68e6bc377bfe5486",
+  "pool_manifest_sha256": "7efd0a9688db76b4b9a9a12c88177f8f03395f902e983e8f6e48eb1f8cd1727a"
+}

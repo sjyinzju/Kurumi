@@ -73,6 +73,18 @@ def plan_tokens(parts):
     return physical - (len(parts) - 1) * shared, physical
 
 
+def checked_original_plan(encoder, request, sample_id, limit):
+    """Measure the complete original before native packing can split its questions."""
+    parts = encoder.plan(request, None)
+    validate_plan(parts)
+    if len(parts) != 1:
+        raise ValueError(f"Native encoder split an unbounded original: {sample_id}")
+    length = parts[0].length
+    if length > limit:
+        raise ValueError(f"Original {sample_id} has {length} native tokens, exceeds the {limit}-token limit")
+    return parts
+
+
 def serialize(parts):
     validate_plan(parts)
     raw = bytearray()
@@ -186,7 +198,7 @@ def prepare_view(source, destination, tokenizer, formats, max_length, native_rev
 def transform_identity():
     code = Path(__file__).resolve().parent
     return {name: hashlib.sha256((code / name).read_text(encoding="utf-8").encode("utf-8")).hexdigest() for name in (
-        "cn_efficiency_data_v2.py", "cn_efficiency_display.py", "cn_efficiency_recipes.py",
+        "cn_efficiency_data_v2.py", "cn_efficiency_display.py", "cn_efficiency_history.py", "cn_efficiency_recipes.py",
         "cn_efficiency_render.py", "cn_efficiency_train.py", "numeric_loader.py",
     )}
 
@@ -217,6 +229,11 @@ def validate_prepared_recipe(manifest, cfg):
             or manifest.get("native_source_files_sha256") != native_source_hashes()
         ):
             raise ValueError("Rebuild the repaired V3 cache for this revision, native source and pack limit")
+        if cfg.get("original_max_tokens") is not None and (
+            provenance.get("original_max_tokens") != cfg["original_max_tokens"]
+            or not 0 < manifest.get("max_original_tokens", 0) <= cfg["original_max_tokens"]
+        ):
+            raise ValueError("Rebuild the V3 cache with full-original length validation")
 
 
 def prepare_parquet(pool, date_view, confirmation_view, destination, tokenizer, formats, max_length,
@@ -225,7 +242,15 @@ def prepare_parquet(pool, date_view, confirmation_view, destination, tokenizer, 
     """Prepare from frozen dated views, with no corpus or unmasked label path in between."""
     import pyarrow.parquet as pq
 
-    from .cn_efficiency_data_v2 import CLASSES, ENDS, ColumnarDataset, file_sha, target_record, verify_view, view_batches
+    from .cn_efficiency_data_v2 import (
+        CLASSES,
+        ENDS,
+        ColumnarDataset,
+        file_sha,
+        target_record,
+        verify_view,
+        view_batches,
+    )
     from .cn_efficiency_recipes import RECIPES, dated_renderer
     from .karpo_numeric import request_from_input
 
@@ -240,6 +265,11 @@ def prepare_parquet(pool, date_view, confirmation_view, destination, tokenizer, 
     with TemporaryDirectory(prefix=".cn-prepare-", dir=destination.parent) as work, ColumnarDataset(
         pool, preload_context=True, trim_history=True, scratch=work,
     ) as dataset:
+        original_limit = dataset.manifest.get("original_max_tokens")
+        if original_limit is not None and (
+            recipe != dataset.manifest["input_recipe"] or formats != ("compact",)
+        ):
+            raise ValueError("The length-constrained V3 release requires its published compact recipe")
         index_sha = file_sha(dataset.index)
         if index_sha != dataset.manifest["files"]["pool.parquet"]["sha256"]:
             raise ValueError("Pool index bytes differ from its release manifest")
@@ -264,6 +294,8 @@ def prepare_parquet(pool, date_view, confirmation_view, destination, tokenizer, 
         if dataset.manifest.get("repair_revision"):
             provenance.update(repair_revision=dataset.manifest["repair_revision"], pack_tokens=pack_tokens,
                               configured_max_length=max_length)
+        if original_limit is not None:
+            provenance["original_max_tokens"] = original_limit
 
         def records():
             for path, segment in views:
@@ -314,6 +346,8 @@ def prepare_records(records, destination, tokenizer, formats, max_length, native
     fit_missing_dates = 0
     supervision = {name: [0, 0, 0] for name in ("fit", "confirm")}
     counts = Counter()
+    original_limit = (provenance or {}).get("original_max_tokens")
+    max_original_tokens = 0
     temp.touch(exist_ok=False)
     try:
         db = sqlite3.connect(temp)
@@ -350,7 +384,12 @@ def prepare_records(records, destination, tokenizer, formats, max_length, native
                     keys[name] = key
                     known = db.execute("SELECT tokens,effective_tokens FROM plans WHERE key=?", (key,)).fetchone()
                     if known is None:
-                        parts = native.encoder.plan(request, max_length)
+                        if original_limit is None:
+                            parts = native.encoder.plan(request, max_length)
+                        else:
+                            parts = checked_original_plan(native.encoder, request, row["id"], original_limit)
+                            if parts[0].length > max_length:
+                                parts = native.encoder.plan(request, max_length)
                         effective, tokens = plan_tokens(parts)
                         db.execute("INSERT INTO plans VALUES (?, ?, ?, ?)",
                                    (key, tokens, effective, serialize(parts)))
@@ -359,6 +398,7 @@ def prepare_records(records, destination, tokenizer, formats, max_length, native
                         tokens, effective = known
                     encoded_tokens[name] += tokens
                     effective_tokens[name] += effective
+                    max_original_tokens = max(max_original_tokens, effective)
                 draw_order = hashlib.sha256(f"{seed}/{row['id']}".encode()).digest()
                 db.execute("INSERT INTO rows VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
                            (ordinal, row["id"], segment, day, json.dumps(targets), weight,
@@ -394,6 +434,8 @@ def prepare_records(records, destination, tokenizer, formats, max_length, native
         }
         if provenance:
             manifest["provenance"] = provenance
+        if original_limit is not None:
+            manifest["max_original_tokens"] = max_original_tokens
         db.execute("INSERT INTO manifest VALUES (?)", (json.dumps(manifest),))
         db.commit()
     except BaseException:

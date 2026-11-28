@@ -1,0 +1,15 @@
+{
+  "pool_manifest_sha256": "7efd0a9688db76b4b9a9a12c88177f8f03395f902e983e8f6e48eb1f8cd1727a",
+  "method": "Read all twelve tape parquet files. Within each security key (tape_key >> 32), compare stored log_return_1d to ln(close_adj / lag(close_adj)) only for contiguous tape_keys and finite positive prices.",
+  "tape_rows": 11745773,
+  "stored_return_rows": 11444912,
+  "consecutive_positive_close_pairs": 11444912,
+  "comparable_pairs": 11444912,
+  "ratios_differ_above_1e_12": 0,
+  "max_absolute_log_return_difference": 2.2204460492503136e-16,
+  "invalid_open": 0,
+  "invalid_high": 0,
+  "invalid_low": 0,
+  "high_below_open_or_close": 0,
+  "low_above_open_or_close": 0
+}

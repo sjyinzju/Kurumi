@@ -12,11 +12,15 @@ from .cn_efficiency_display import (
     decimal_value,
     decision_table,
     display_value,
+    final_benchmark_table,
+    final_context_table,
+    final_stock_sections,
     older_price_ranges,
     round_ticks,
     scalar_table,
     volume_blocks,
 )
+from .cn_efficiency_history import log_path_channels, log_path_lines, recover_log_path
 from .cn_efficiency_render import (
     BOUND_NAMES,
     _context,
@@ -59,12 +63,20 @@ class Recipe:
     terse: bool = False
     delta_prices: bool = False
     shared_bounds: bool = False
+    decision_layout: str = "individual"
     field_units: bool = False
-    full_precision: bool = False
+    scalar_decimals: bool = False
+    compact_display: bool = False
+    price_bp: int = 1
+    return_bp: int = 1
+    anchor_days: int = 12
 
 
 RECIPES = {
-    "v3_repair_full60": Recipe(repeat_prices=True, field_units=True, full_precision=True),
+    "v3_final_full60": Recipe(history="log_path", volume_scale=100, field_units=True, compact_display=True,
+                              decision_layout="shared_bins"),
+    "v3_repair_full60": Recipe(history="distinct_decimals", repeat_prices=True, field_units=True, scalar_decimals=True,
+                               decision_layout="table"),
     "compact": Recipe(),
     "lossless": Recipe(repeat_prices=True),
     "precision6": Recipe(precision=6, repeat_prices=True),
@@ -92,8 +104,8 @@ RECIPES = {
 
 # The decision scales and true labels keep their original precision.
 RECIPES["v3_anchors10_volume"] = replace(
-    RECIPES["basis_points_delta"], recent=10, block_days=25, volume_centered=True,
-    thin_factors=True, field_units=True,
+    RECIPES["basis_points_delta"], history="range_ticks", recent=10, block_days=25, volume_centered=True,
+    thin_factors=True, field_units=True, decision_layout="table",
 )
 
 
@@ -126,9 +138,19 @@ def summarised_blocks(values, recipe):
     return np.where(observed[:, :, None, :], np.stack(statistics, axis=2), np.nan)
 
 
+def _log_path_options(recipe):
+    return dict(price_bp=recipe.price_bp, return_bp=recipe.return_bp,
+                volume_scale=recipe.volume_scale, anchor_days=recipe.anchor_days)
+
+
 def proxy_history(values, name):
     recipe = RECIPES[name]
-    if recipe.field_units and not recipe.full_precision:
+    if recipe.history == "log_path":
+        options = _log_path_options(recipe)
+        rows, anchors = log_path_channels(values, **options)
+        recovered = recover_log_path(rows, anchors, **options)
+        return recovered.reshape(len(values), -1).astype(np.float32)
+    if recipe.history == "range_ticks":
         scales = tick_scales(recipe)
         ticks = tick_values(values, scales)
         boundary = -recipe.recent
@@ -276,9 +298,11 @@ def _full_history_lines(values, recipe):
 
 
 def _history_lines(values, recipe):
-    if recipe.full_precision:
+    if recipe.history == "log_path":
+        return log_path_lines(values, **_log_path_options(recipe))
+    if recipe.history == "distinct_decimals":
         return _full_history_lines(values, recipe)
-    if recipe.field_units:
+    if recipe.history == "range_ticks":
         return _range_history_lines(values, recipe)
     present = np.isfinite(values).any(axis=0)
     kept = np.flatnonzero(present)
@@ -335,10 +359,12 @@ def _history_lines(values, recipe):
 
 
 def _market_sections(recipe, market):
+    if recipe.compact_display:
+        return final_context_table("Market", market, MARKET_FIELDS)
     if recipe.field_units:
         return context_table("Market", market, MARKET_FIELDS,
-                             formatter=decimal_value if recipe.full_precision else display_value,
-                             derive_count=not recipe.full_precision)
+                             formatter=decimal_value if recipe.scalar_decimals else display_value,
+                             derive_count=not recipe.scalar_decimals)
     if recipe.terse:
         lines = _table("Market", market, MARKET_FIELDS) + _context("Market", market, MARKET_FIELDS)[1:]
     else:
@@ -347,10 +373,12 @@ def _market_sections(recipe, market):
 
 
 def _industry_sections(recipe, industry):
+    if recipe.compact_display:
+        return final_context_table("Industry", industry, INDUSTRY_FIELDS)
     if recipe.field_units:
         return context_table("Industry", industry, INDUSTRY_FIELDS,
-                             formatter=decimal_value if recipe.full_precision else display_value,
-                             derive_count=not recipe.full_precision)
+                             formatter=decimal_value if recipe.scalar_decimals else display_value,
+                             derive_count=not recipe.scalar_decimals)
     if recipe.terse:
         return _table("Industry", industry, INDUSTRY_FIELDS) + _context("Industry", industry, INDUSTRY_FIELDS)[1:]
     return _context("Industry", industry, INDUSTRY_FIELDS)
@@ -359,9 +387,11 @@ def _industry_sections(recipe, industry):
 def _benchmark_sections(recipe, market):
     if MARKET_BENCHMARK_FIELDS[0] in market:
         title = "CSI All Share gross total return H00985"
+        if recipe.compact_display:
+            return final_benchmark_table(title, market, MARKET_BENCHMARK_FIELDS)
         if recipe.field_units:
             return scalar_table(title, market, MARKET_BENCHMARK_FIELDS,
-                                formatter=decimal_value if recipe.full_precision else display_value)
+                                formatter=decimal_value if recipe.scalar_decimals else display_value)
         return _table(title, market, MARKET_BENCHMARK_FIELDS)
     return []
 
@@ -401,6 +431,18 @@ def dated_renderer(name):
     return render
 
 
+def _decision_request(model_input, recipe, lines):
+    if recipe.decision_layout in ("table", "shared_bins"):
+        table, questions = decision_table(model_input, concise=recipe.decision_layout == "shared_bins")
+        return {"state": "\n".join(lines + table), "questions": questions}
+    if recipe.shared_bounds:
+        lines += ["[Return bounds (%)]", "\t".join(("sessions", *BOUND_NAMES))]
+        lines += ["\t".join((str(task["horizon"]),
+                             *(_value(x, divisor=0.01, precision=12) + "%" for x in choice_bounds(task))))
+                  for task in model_input["Xchoice"]]
+    return {"state": "\n".join(lines), "questions": compact_questions(model_input, recipe.shared_bounds)}
+
+
 def native_request(model_input, name, *, context=None):
     if name == "compact":
         return {"state": compact_state(model_input), "questions": compact_questions(model_input)}
@@ -414,7 +456,13 @@ def native_request(model_input, name, *, context=None):
         raise ValueError("Numeric recipe requires 60 consecutive exchange sessions")
     fields = tuple(f for f in FACTORS if f != "volatility_60d_daily"
                    and (not recipe.thin_factors or f not in RECONSTRUCTIBLE))
-    if recipe.full_precision:
+    if recipe.compact_display:
+        before_history, after_history = final_stock_sections(stock, fields)
+        history = _history_lines(numeric_history(sequence), recipe)
+        if context is None:
+            context = _context_sections(recipe, **state["Xmarket"])
+        return _decision_request(model_input, recipe, before_history + history + after_history + context)
+    if recipe.scalar_decimals:
         units = ("NA or omitted columns mean missing. Returns, ratios, ranks, volatility and turnover "
                  "are decimals except the decision bounds (%).")
     elif recipe.field_units:
@@ -427,7 +475,7 @@ def native_request(model_input, name, *, context=None):
     lines = [units]
     lines += _table("Identity", stock["identity"], IDENTITY_FIELDS)
     current_title = "Current. Prices in quote currency/share, volume in million shares, cap in million quote currency"
-    formatter = decimal_value if recipe.full_precision else display_value
+    formatter = decimal_value if recipe.scalar_decimals else display_value
     if recipe.field_units:
         lines += scalar_table(current_title, stock["current"], CURRENT_FIELDS, formatter=formatter)
     else:
@@ -448,13 +496,4 @@ def native_request(model_input, name, *, context=None):
         context = _context_sections(recipe, **state["Xmarket"])
     lines += context
     lines.append("[Text slot] not_built")
-    if recipe.field_units:
-        table, questions = decision_table(model_input)
-        lines += table
-        return {"state": "\n".join(lines), "questions": questions}
-    if recipe.shared_bounds:
-        lines += ["[Return bounds (%)]", "\t".join(("sessions", *BOUND_NAMES))]
-        lines += ["\t".join((str(task["horizon"]),
-                             *(_value(x, divisor=0.01, precision=12) + "%" for x in choice_bounds(task))))
-                  for task in model_input["Xchoice"]]
-    return {"state": "\n".join(lines), "questions": compact_questions(model_input, recipe.shared_bounds)}
+    return _decision_request(model_input, recipe, lines)

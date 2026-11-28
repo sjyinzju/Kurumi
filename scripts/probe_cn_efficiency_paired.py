@@ -47,9 +47,9 @@ def matrix(cache, features, indices, recipe):
     for a in range(0, len(indices), 8192):
         ids = indices[a:a + 8192]
         state = p[ids][:, columns]
-        if details.field_units and not details.full_precision:
+        if details.field_units and not details.scalar_decimals:
             for j, i in enumerate(columns):
-                state[:, j] = project_scalar(state[:, j], features[i])
+                state[:, j] = project_scalar(state[:, j], features[i], compact=details.compact_display)
         out[a:a + len(ids), :n_scalar] = state
         out[a:a + len(ids), n_scalar:] = proxy_history(h[ids], recipe)
     return out
@@ -146,18 +146,12 @@ def replay_probabilities(path, expected_sha, frame, ev):
     return np.log(probabilities).reshape(len(frame), len(HORIZONS), 7)
 
 
-def run(pool, spec_file, output, threads, feature_run=None):
-    spec = json.loads(spec_file.read_bytes())
-    root = spec_file.parent
-
-    def view(name):
-        return (root / name).resolve()
-
-    cases = spec["cases"]
-    fit_views = {view(c["fit_view"]) for c in cases}
-    test = view(spec["eval_view"])
-    reference_cases, reference, probability_root = {}, None, None
-    if reuse := spec.get("reference"):
+def reference_probabilities(pool, spec, test, view):
+    sources = spec.get("references", [])
+    if "reference" in spec:
+        sources = [spec["reference"], *sources]
+    cases = {}
+    for reuse in sources:
         ref_spec_path = view(reuse["spec"])
         ref_spec = json.loads(ref_spec_path.read_bytes())
         reference = json.loads(view(reuse["report"]).read_bytes())
@@ -179,10 +173,35 @@ def run(pool, spec_file, output, threads, feature_run=None):
                 or reference["estimator"] != spec["estimator"]
                 or any(ref_spec.get(key) != spec.get(key) for key in ("estimator", "model", "thresholds"))):
             raise ValueError("Reference run differs from the fixed pool, evaluation, or estimator contract")
-        reference_cases = {
-            (c["arm"], c["seed"]): dict(c, fit_view=(ref_spec_path.parent / c["fit_view"]).resolve())
-            for c in ref_spec["cases"]
-        }
+        selected = reuse.get("arms")
+        for case in ref_spec["cases"]:
+            arm, seed = case["arm"], case["seed"]
+            if selected is not None and arm not in selected:
+                continue
+            name = f"{arm}-{seed}"
+            if (arm, seed) in cases:
+                raise ValueError(f"Multiple reference receipts for {name}")
+            if name not in reference["results"]:
+                raise ValueError(f"Reference receipt missing result for {name}")
+            cases[arm, seed] = (
+                dict(case, fit_view=(ref_spec_path.parent / case["fit_view"]).resolve()),
+                reference["results"][name], probability_root / f"{name}.parquet",
+            )
+    return cases
+
+
+def run(pool, spec_file, output, threads, feature_run=None):
+    spec = json.loads(spec_file.read_bytes())
+    root = spec_file.parent
+
+    def view(name):
+        return (root / name).resolve()
+
+    cases = spec["cases"]
+    fit_views = {view(c["fit_view"]) for c in cases}
+    test = view(spec["eval_view"])
+    reference_cases = reference_probabilities(pool, spec, test, view)
+    point_dtype = "float64" if any(RECIPES[c["recipe"]].compact_display for c in cases) else "float32"
     with duckdb.connect(config={"threads": 2, "memory_limit": "768MB"}) as db:
         first, _, _ = verify_view(db, pool / "pool.parquet", test)
         for path in sorted(fit_views):
@@ -192,11 +211,13 @@ def run(pool, spec_file, output, threads, feature_run=None):
     output.mkdir(parents=True, exist_ok=True)
     cache = (feature_run or output) / "features"
     if feature_run is None:
-        anchors, feature = extract(pool, fit_views | {test}, cache)
+        anchors, feature = extract(pool, fit_views | {test}, cache, point_dtype=point_dtype)
     else:
         anchors = cache / "anchors.parquet"
         feature = json.loads((cache / "manifest.json").read_bytes())
         expected = {"pool": file_sha(pool / "manifest.json"), "script": file_sha(inspect.getfile(extract))}
+        if point_dtype != "float32":
+            expected["point_dtype"] = point_dtype
         expected.update({path.name: file_sha(path) for path in fit_views | {test}})
         if any(feature["inputs"].get(key) != value for key, value in expected.items()):
             raise ValueError("Reusable feature cache differs from the pool, extractor, or requested views")
@@ -215,15 +236,14 @@ def run(pool, spec_file, output, threads, feature_run=None):
                 f = view(case["fit_view"])
                 fit = load_view(f, positions)
                 name = f"{arm}-{seed}"
-                reused = (arm, seed) in reference_cases
+                reused = reference_cases.get((arm, seed))
                 prob_path = output / f"{name}.parquet"
                 if reused:
-                    prior_result = reference["results"][name]
-                    if (dict(case, fit_view=f) != reference_cases[arm, seed]
+                    prior_case, prior_result, prob_path = reused
+                    if (dict(case, fit_view=f) != prior_case
                             or prior_result["fit_sha256"] != file_sha(f)
                             or prior_result["fit_rows"] != len(fit["indices"])):
                         raise ValueError(f"Reference arm differs from the fixed fit view: {name}")
-                    prob_path = probability_root / prob_path.name
                     logs = replay_probabilities(prob_path, prior_result["probabilities_sha256"], frame, ev)
                     n_features = prior_result["features"]
                 elif case.get("prior"):

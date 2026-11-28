@@ -1,6 +1,6 @@
 # A 股数值训练数据 V3
 
-本页是初版 V3 的发布记录。当前 V3 使用修复修订 r1 的完整逐日输入与训练配置，见 [V3 r1 修复报告](cn_efficiency_v3_repair_r1.md)。
+本页记录初版 V3。完整逐日输入的过渡修订见 [V3 r1 修复报告](cn_efficiency_v3_repair_r1.md)，当前训练包和原生长度验收见 [V3 最终数值版](cn_efficiency_v3_final.md)。
 
 **CPU_READY / KARPO_VALIDATION_PENDING**
 

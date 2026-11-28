@@ -27,17 +27,35 @@ from kurumi.numeric_loader import CHANNELS, TASK_IDS
 
 
 def compare_questions(name, request, expected):
-    if RECIPES[name].field_units:
-        lines = request["state"].split("[Decision bounds.", 1)[1].splitlines()
-        sigma = lines[1].split("=", 1)[1]
-        for task_id, row in zip(TASK_IDS, lines[3:], strict=True):
-            horizon, scale, *bounds = row.split("\t")
+    if RECIPES[name].decision_layout in ("table", "shared_bins"):
+        concise = RECIPES[name].decision_layout == "shared_bins"
+        header = "[Decision |" if concise else "[Decision bounds."
+        lines = request["state"].split(header, 1)[1].splitlines()
+        sigma = lines[1].split("=", 1)[1].split(";", 1)[0]
+        if concise:
+            import re
+
+            intervals = {key: value for key, value in re.findall(r"(\d)=(.*?)(?= \d=|$)", lines[-1])}
+            if tuple(intervals) != tuple(str(i) for i in range(1, 8)):
+                raise ValueError("Expected seven ordered shared return bins")
+        for task_id, row in zip(TASK_IDS, lines[3:-1] if concise else lines[3:], strict=True):
+            horizon, *bounds = row.split("\t")
             question = request["questions"][task_id]
-            if (task_id != f"return_{horizon}d"
-                    or expected[task_id]["instructions"] !=
-                    f"{question['instructions']} Daily log-return sigma={sigma}; horizon scale={scale}."):
+            if concise:
+                if (question["instructions"] != f"{horizon}-session return bin"
+                        or question["criteria"] != dict.fromkeys(intervals)
+                        or f"Daily log-return sigma={sigma};" not in expected[task_id]["instructions"]):
+                    raise ValueError("Wrong decision-table row")
+            else:
+                scale = bounds.pop(0)
+                instruction = question["instructions"]
+                if expected[task_id]["instructions"] != (
+                    f"{instruction} Daily log-return sigma={sigma}; horizon scale={scale}."
+                ):
+                    raise ValueError("Decision table changes the horizon or scale")
+            if task_id != f"return_{horizon}d":
                 raise ValueError("Decision table changes the horizon or scale")
-            for choice_id, received in question["criteria"].items():
+            for choice_id, received in (intervals if concise else question["criteria"]).items():
                 for i, value in enumerate(bounds, 1):
                     received = received.replace(f"b{i}", f"{value}%")
                 if received != expected[task_id]["criteria"][choice_id]:

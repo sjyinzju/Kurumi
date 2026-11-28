@@ -69,6 +69,29 @@ def test_oversize_native_request_keeps_each_branch_and_its_original_loss_weight(
     torch.testing.assert_close(sum(gradients), expected)
 
 
+def test_original_limit_is_checked_before_pack_splitting():
+    pytest.importorskip("torch")
+    from kurumi.cn_efficiency_train import checked_original_plan
+    from kurumi.numeric_loader import TASK_IDS
+
+    calls = []
+    part = SimpleNamespace(length=3199, keys=TASK_IDS, counts=(7, 7, 7),
+                           positions=(), segment_ids=(), images=None, pixel_values=None,
+                           image_grid_thw=None, image_position_ids=None, mm_token_type_ids=None)
+
+    def plan(request, length):
+        calls.append((request, length))
+        return [part]
+
+    encoder = SimpleNamespace(plan=plan)
+    request = {"state": "original", "questions": {}}
+    assert checked_original_plan(encoder, request, "sample", 3199) == [part]
+    part.length = 3200
+    with pytest.raises(ValueError, match="sample has 3200 native tokens"):
+        checked_original_plan(encoder, request, "sample", 3199)
+    assert calls == [(request, None), (request, None)]
+
+
 def test_cpu_checkpoint_reproduces_the_next_optimizer_update(tmp_path, monkeypatch):
     torch = pytest.importorskip("torch")
     pytest.importorskip("safetensors")

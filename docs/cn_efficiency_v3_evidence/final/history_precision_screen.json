@@ -1,0 +1,49 @@
+{
+  "sample_selection": {
+    "development": 640,
+    "pressure": 160,
+    "development_view_sha256": "c8a12fc50f06c5032ccdc7369e87bfeb056b18dc06c8ad90f6e133eeb56e610f",
+    "pressure_view_sha256": "9f7f3da82c272f82d2c0faab464c3b41f61562e13f95b8bc68e6bc377bfe5486",
+    "last_date_in_either_view": "2023-12-28",
+    "development_indices": "sorted numpy.random.default_rng(43).choice(6000, 640, replace=False)",
+    "pressure_indices": "all fixed pressure rows"
+  },
+  "measurement": "Pinned Karpo tokenizer over the isolated 60-session history section before final wording cleanup",
+  "tokenizer_sha256": "b36640b5450552ac96f908c71664932e4fa79485a9a5422436a779230eeb1bff",
+  "return_bp": 1,
+  "anchor_days": 12,
+  "maximum_error_fields": ["open_log_bp", "high_log_bp", "low_log_bp", "close_log_bp", "daily_log_return", "median_relative_volume"],
+  "candidates": [
+    {"price_bp": 1, "volume_scale": 100, "mean_tokens": 1225.7475, "p99_tokens": 1311.02, "max_tokens": 1343,
+     "maximum_absolute_error": [4.0, 4.01504565, 4.17474549, 3.85765027, 0.0000499974915, 0.00499981735]},
+    {"price_bp": 1, "volume_scale": 1000, "mean_tokens": 1286.28375, "p99_tokens": 1372.01, "max_tokens": 1404,
+     "maximum_absolute_error": [4.0, 4.01504565, 4.17474549, 3.85765027, 0.0000499974915, 0.000499997672]},
+    {"price_bp": 2, "volume_scale": 100, "mean_tokens": 1175.4825, "p99_tokens": 1261.02, "max_tokens": 1302,
+     "maximum_absolute_error": [4.32355829, 4.13887525, 4.50861332, 3.85765027, 0.0000499974915, 0.00499981735]},
+    {"price_bp": 2, "volume_scale": 1000, "mean_tokens": 1236.01875, "p99_tokens": 1321.01, "max_tokens": 1363,
+     "maximum_absolute_error": [4.32355829, 4.13887525, 4.50861332, 3.85765027, 0.0000499974915, 0.000499997672]},
+    {"price_bp": 5, "volume_scale": 100, "mean_tokens": 1117.93375, "p99_tokens": 1198.01, "max_tokens": 1232,
+     "maximum_absolute_error": [5.43511014, 6.77478033, 7.28805226, 3.85765027, 0.0000499974915, 0.00499981735]},
+    {"price_bp": 5, "volume_scale": 1000, "mean_tokens": 1178.47, "p99_tokens": 1258.0, "max_tokens": 1293,
+     "maximum_absolute_error": [5.43511014, 6.77478033, 7.28805226, 3.85765027, 0.0000499974915, 0.000499997672]}
+  ],
+  "comparisons": {
+    "missing_mask_differences": 0,
+    "return_volume_sign_or_exact_zero_differences": 0,
+    "max_mean_difference_between_space_and_comma": 0.0025
+  },
+  "text_alternatives": {
+    "samples": 192,
+    "sample_selection": "Spaced indices across the fixed development rows in 2022",
+    "measurement": "Isolated 60 row text, excluding section headings and notation explanations",
+    "original_mean": 1070.38,
+    "original_max": 1146,
+    "opening_as_prior_close_gap_mean": 1035.91,
+    "median_centered_volume_mean": 1037.19,
+    "omit_trailing_zero_tails_mean": 1058.13,
+    "combined_mean": 990.46,
+    "combined_max": 1077,
+    "decision": "Retain fixed explicit columns and direct intraday ratios to keep notation consistent."
+  },
+  "recommended": {"price_bp": 1, "return_bp": 1, "volume_scale": 100, "anchor_days": 12}
+}

@@ -1,5 +1,47 @@
 """Metadata contract for initializing a new numeric run from a sealed M1 artifact."""
 
+import hashlib
+import json
+import re
+
+
+def verify_original_model(model, provenance, repo_id, revision):
+    """Verify the sealed original checkpoint using the shared benchmark provenance contract."""
+    from .m1_model import sha256
+
+    verified = json.loads(provenance.read_text(encoding="utf-8"))
+    if (verified["repo_id"], verified["revision"]) != (repo_id, revision):
+        raise ValueError("Local model revision or repository disagrees with the verification manifest")
+    if not re.fullmatch(r"[0-9a-f]{40}", revision):
+        raise ValueError("This entry point requires a verified original checkpoint")
+    files = {file["path"]: file for file in verified["files"]}
+    index = json.loads((model / "model.safetensors.index.json").read_text(encoding="utf-8"))
+    shards = set(index["weight_map"].values())
+    required = {"config.json", "decision_config.json", "readout.safetensors", "tokenizer.json",
+                "tokenizer_config.json", "model.safetensors.index.json"}
+    if not shards or not (required | shards) <= files.keys() or any(model.glob("adapter_*")):
+        raise ValueError("Expected all original weight shards, native Readout, processor and no PEFT adapters")
+    for name, expected in files.items():
+        path = model / name
+        details = path.stat()
+        if details.st_size != expected["size"] or details.st_mode & 0o222:
+            raise ValueError(f"Checkpoint file differs in size or is no longer sealed: {path}")
+        if name in shards:
+            continue  # The read-only shards were checked byte-for-byte during setup.
+        if expected["algorithm"] == "git_blob_sha1":
+            payload = path.read_bytes()
+            actual = hashlib.sha1(f"blob {len(payload)}\0".encode() + payload).hexdigest()
+        else:
+            actual = sha256(path)
+        if actual != expected["digest"]:
+            raise ValueError(f"Checkpoint file does not match the verified snapshot: {path}")
+    config = json.loads((model / "decision_config.json").read_text(encoding="utf-8"))
+    if config.get("backbone") or config["readout_dtype"] != "float32":
+        raise ValueError("Expected the bundled backbone and original FP32 Readout")
+    return {"repo_id": repo_id, "revision": revision, "provenance_sha256": sha256(provenance),
+            "readout_sha256": sha256(model / "readout.safetensors")}
+
+
 def initialization_mode(cfg, m1_manifest):
     mode = cfg.get("initialization", "frozen_m1" if m1_manifest else "original")
     if mode not in ("original", "frozen_m1") or (mode == "frozen_m1") != bool(m1_manifest):

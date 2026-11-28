@@ -1,0 +1,82 @@
+{
+  "options": {
+    "price_bp": 1,
+    "return_bp": 1,
+    "volume_scale": 100,
+    "anchor_days": 12
+  },
+  "constants": {
+    "common_header": 133,
+    "anchor_labels": 20,
+    "volume_header": [
+      20,
+      30
+    ],
+    "tokenizer_sha256": "b36640b5450552ac96f908c71664932e4fa79485a9a5422436a779230eeb1bff"
+  },
+  "samples": 10376684,
+  "pool_manifest_sha256": "7efd0a9688db76b4b9a9a12c88177f8f03395f902e983e8f6e48eb1f8cd1727a",
+  "by_year": {
+    "2015": {
+      "samples": 269271,
+      "max_history_tokens_upper_bound": 1392,
+      "worst_tape_key": 15710990374838
+    },
+    "2016": {
+      "samples": 513582,
+      "max_history_tokens_upper_bound": 1385,
+      "worst_tape_key": 5729486378911
+    },
+    "2017": {
+      "samples": 626014,
+      "max_history_tokens_upper_bound": 1371,
+      "worst_tape_key": 1559073134866
+    },
+    "2018": {
+      "samples": 734420,
+      "max_history_tokens_upper_bound": 1388,
+      "worst_tape_key": 19297288067667
+    },
+    "2019": {
+      "samples": 840652,
+      "max_history_tokens_upper_bound": 1385,
+      "worst_tape_key": 19374597479198
+    },
+    "2020": {
+      "samples": 891212,
+      "max_history_tokens_upper_bound": 1413,
+      "worst_tape_key": 9513352567826
+    },
+    "2021": {
+      "samples": 1000246,
+      "max_history_tokens_upper_bound": 1431,
+      "worst_tape_key": 8508330220774
+    },
+    "2022": {
+      "samples": 1119877,
+      "max_history_tokens_upper_bound": 1435,
+      "worst_tape_key": 23957327577176
+    },
+    "2023": {
+      "samples": 1219648,
+      "max_history_tokens_upper_bound": 1410,
+      "worst_tape_key": 23794118827743
+    },
+    "2024": {
+      "samples": 1269785,
+      "max_history_tokens_upper_bound": 1433,
+      "worst_tape_key": 24451248816683
+    },
+    "2025": {
+      "samples": 1277242,
+      "max_history_tokens_upper_bound": 1417,
+      "worst_tape_key": 24691766985466
+    },
+    "2026": {
+      "samples": 614735,
+      "max_history_tokens_upper_bound": 1409,
+      "worst_tape_key": 12597139087694
+    }
+  },
+  "max_history_tokens_upper_bound": 1435
+}
