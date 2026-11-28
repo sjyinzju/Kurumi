@@ -134,13 +134,9 @@ def summarize_validation(rows):
     targets = np.asarray([row["labels"] for row in rows])
     weight = np.asarray([row["weight"] for row in rows], dtype=np.float64)
     mask = targets >= 0
-    expected = np.eye(7)[targets.clip(min=0)]
-    errors = p - expected
-    ce = -np.log(np.take_along_axis(p, targets.clip(min=0)[..., None], axis=-1)[..., 0])
-    brier = np.square(errors).sum(-1)
-    rps = np.square(errors.cumsum(-1)[..., :6]).mean(-1)
+    ce, brier, rps = np.asarray([row["_terms"] for row in rows], dtype=np.float64).transpose(2, 0, 1)
     accuracy = (p.argmax(-1) == targets).astype(np.float64)
-    j = ce + .5 * brier + .5 * rps
+    j = np.asarray([row["_score"] for row in rows], dtype=np.float64)
     original_metrics = {
         key: float(np.average((values * mask).sum(-1) / mask.sum(-1), weights=weight))
         for key, values in (("ce", ce), ("brier", brier), ("rps", rps), ("accuracy", accuracy))
@@ -156,7 +152,7 @@ def summarize_validation(rows):
         )))
     return {
         "originals": len(rows),
-        "original_weighted_score": float(np.average((j * mask).sum(-1) / mask.sum(-1), weights=weight)),
+        "original_weighted_score": float(np.average(j, weights=weight)),
         "original_weighted_metrics": original_metrics,
         "by_horizon": by_horizon,
     }
@@ -173,11 +169,16 @@ def evaluate(view, native, model, rank, width, accumulation, metadata, *, max_gl
         fixtures = islice(fixtures, max_global_batches * accumulation)
     local = []
     for group, (targets, _, prepared, _, _), _ in prefetch(view, native, model, fixtures):
-        probs = logits_for(model, prepared, len(group)).softmax(-1).cpu().tolist()
-        for (_, sid, labels, weight, *_), probability in zip(group, probs, strict=True):
+        logits = logits_for(model, prepared, len(group))
+        scores, terms = losses(logits, targets.to(logits.device, non_blocking=True))
+        probs = logits.softmax(-1).cpu().tolist()
+        for (_, sid, labels, weight, *_), probability, terms_i, score in zip(
+            group, probs, terms.cpu().tolist(), scores.cpu().tolist(), strict=True,
+        ):
             local.append({
                 "sample_id": sid, **metadata[sid], "probabilities": probability,
                 "labels": labels, "mask": [label >= 0 for label in labels], "weight": weight,
+                "_terms": terms_i, "_score": score,
             })
     gathered = [None] * dist.get_world_size() if rank == 0 else None
     dist.gather_object(local, gathered, dst=0)
@@ -305,7 +306,7 @@ def record_boundary(args, view, native, model, adapters, identity, rank, width, 
     if rank == 0:
         def write_predictions(write):
             for row in rows:
-                write(row)
+                write({key: value for key, value in row.items() if not key.startswith("_")})
             return metrics
         record_validation(args.output, identity, step, portable, readout, write_predictions)
         progress = validation_progress(args.output, identity, (2500, 5000, 7500), step)
@@ -401,6 +402,11 @@ def train(args, view, native, model, adapters, trainables, cfg, identity,
     model.train()
     model.packed.train()
     if args.profile_keep is not None:
+        if args.profile_keep == 0:
+            probe_dir = out / "initial-m1"
+            if rank == 0:
+                probe_dir.mkdir()
+            model_probe(view, native, model, probe_dir)
         torch.cuda.reset_peak_memory_stats(device)
     fixtures = ordered_windows(view, "fit", rank, width, accumulation, cursor)
     if args.profile_keep is not None:

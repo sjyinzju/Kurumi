@@ -47,6 +47,9 @@ if [[ "$mode" == profile ]]; then
     for keep in 0 4 2; do
         output="$root/runs/m2-profile/$run/keep-$keep"
         [[ ! -f "$output/profile.json" ]] || continue
+        if [[ -d "$output" ]]; then
+            mv -- "$output" "$output.incomplete-$(date -u +%Y%m%dT%H%M%SZ)"
+        fi
         if ! "${torchrun[@]}" "$trainer" "${common[@]}" --profile-keep "$keep" --output "$output" \
                 > "$controls/profile-$keep.log" 2>&1; then
             printf '%s\n' "profile $keep failed: $controls/profile-$keep.log" >&2
