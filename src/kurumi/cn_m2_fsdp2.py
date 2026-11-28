@@ -14,7 +14,7 @@ from torch.distributed.checkpoint.state_dict import (
 )
 from torch.distributed.device_mesh import init_device_mesh
 from torch.distributed.fsdp import MixedPrecisionPolicy, fully_shard, register_fsdp_forward_method
-from torch.distributed.tensor import DTensor
+from torch.distributed.tensor import DTensor, Replicate, Shard
 from torch.utils.checkpoint import set_checkpoint_early_stop
 
 from .cn_efficiency_train import staged_forward
@@ -90,6 +90,19 @@ def _materialize_buffers(model, source):
         dist.broadcast(buffer, src=0)
 
 
+def paired_frozen_placement(device_type):
+    from torch.distributed.fsdp._fully_shard._fsdp_common import HSDPMeshInfo, ShardPlacementResult
+
+    # Row-major ranks match the two PIX pairs; reuse one mesh-info object.
+    pair_mesh = init_device_mesh(device_type, (2, 2), mesh_dim_names=("replicate", "shard"))
+    result = ShardPlacementResult(Shard(0), HSDPMeshInfo(pair_mesh, shard_mesh_dim=1, replicate_mesh_dim=0))
+
+    def select(parameter):
+        return None if parameter.requires_grad else result
+
+    return select
+
+
 def build_sharded_model(directory, cfg, frozen, device, keep_every, *, execution=None):
     from karpo_decision import checkpoint
     from karpo_decision.config import DecisionConfig
@@ -101,6 +114,12 @@ def build_sharded_model(directory, cfg, frozen, device, keep_every, *, execution
     performance = execution["performance"] if execution is not None else {}
     prefetch_depth = distributed.get("prefetch_depth", 0)
     mesh_shape = distributed.get("mesh_shape")
+    paired_count = distributed.get("paired_frozen_decoder_layers")
+    if paired_count is not None and (
+        type(paired_count) is not int or not 36 <= paired_count <= 40
+        or mesh_shape is not None or distributed.get("layer_reshard") is not None
+    ):
+        raise ValueError("Paired frozen weights require 36–40 decoder layers and standard resharding")
     if mesh_shape is not None and (mesh_shape != [2, 2] or distributed.get("layer_reshard") is not None):
         raise ValueError("The 2×2 HSDP experiment requires the standard decoder reshard policy")
     recompute = performance.get("recompute_mode", "layer")
@@ -141,8 +160,27 @@ def build_sharded_model(directory, cfg, frozen, device, keep_every, *, execution
     if mesh_shape is not None:
         # The row-major mesh shards within GPU 0/1 and 2/3 and replicates across rows.
         shard["mesh"] = init_device_mesh("cuda", tuple(mesh_shape), mesh_dim_names=("replicate", "shard"))
+    paired_start = len(packed.layers) - (paired_count or 0)
+    if paired_count is not None:
+        if paired_start <= 0:
+            raise ValueError("The paired profile requires a strict decoder subset")
+        replicated_bytes = sum(
+            ((param.shape[0] + 1) // 2 - (param.shape[0] + 3) // 4)
+            * prod(param.shape[1:]) * param.element_size()
+            for layer in packed.layers[paired_start:] for param in layer.parameters()
+            if not param.requires_grad
+        )
+        if replicated_bytes > 9 * 2**30:
+            raise ValueError(f"Paired frozen residency {replicated_bytes:,} exceeds 9 GiB per GPU")
+        select_paired = paired_frozen_placement(device.type)
+        if rank == 0:
+            print(f"Paired frozen decoder starts at layer {paired_start}, {replicated_bytes:,} additional bytes/GPU",
+                  flush=True)
     for index, layer in enumerate(packed.layers):
-        fully_shard(layer, **(shard | {"reshard_after_forward": reshard.get(index, True)}))
+        layer_shard = shard | {"reshard_after_forward": reshard.get(index, True)}
+        if paired_count is not None and index >= paired_start:
+            layer_shard["shard_placement_fn"] = select_paired
+        fully_shard(layer, **layer_shard)
         register_fsdp_forward_method(layer, "packed_forward")
     for module in (packed.lm.embed_tokens, packed.lm.norm, readout):
         fully_shard(module, **shard)
@@ -181,6 +219,17 @@ def build_sharded_model(directory, cfg, frozen, device, keep_every, *, execution
         for p in model.parameters() if not p.requires_grad
     ):
         raise ValueError("Original backbone is not frozen BF16 DTensor state")
+    if paired_count is not None:
+        for parameter in trainables.values():
+            if parameter.placements != (Shard(0),) or parameter.device_mesh.mesh.tolist() != [0, 1, 2, 3]:
+                raise ValueError("Paired frozen profile changed a trainable FSDP4 placement")
+        for layer in packed.layers[paired_start:]:
+            for parameter in layer.parameters():
+                if not parameter.requires_grad and (
+                    parameter.placements != (Replicate(), Shard(0))
+                    or parameter.device_mesh.mesh.tolist() != [[0, 1], [2, 3]]
+                ):
+                    raise ValueError("Frozen decoder parameter is outside its intended PIX pair mesh")
     return native, model, adapters, trainables
 
 

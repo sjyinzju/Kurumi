@@ -19,6 +19,11 @@ import numpy as np
 import torch
 import torch.distributed as dist
 import torch.distributed.checkpoint as dcp
+from kurumi.cn_efficiency_init import validate_frozen_m1, validate_output_path, verify_original_model
+from kurumi.cn_efficiency_m2 import record_validation, validate_m2_initializer, validation_progress
+from kurumi.cn_m2_fsdp2 import build_sharded_model, gather_export_state, verify_first_gradients
+from kurumi.m2_resume import reconcile_execution, record_verified_restore
+from kurumi.m2_selection import STATE_FIELDS
 from torch.distributed.checkpoint.state_dict import (
     StateDictOptions,
     get_state_dict,
@@ -28,15 +33,10 @@ from torch.distributed.checkpoint.state_dict import (
 from torch.distributed.elastic.multiprocessing.errors import record
 from train_cn_efficiency import batches, native_identity
 
-from kurumi.cn_efficiency_init import validate_frozen_m1, validate_output_path, verify_original_model
-from kurumi.cn_efficiency_m2 import record_validation, validate_m2_initializer, validation_progress
 from kurumi.cn_efficiency_train import View, cpu_pack, losses, serialize, validate_prepared_recipe
-from kurumi.cn_m2_fsdp2 import build_sharded_model, gather_export_state, verify_first_gradients
 from kurumi.karpo_numeric import KarpoNumericEncoder
 from kurumi.m1_model import adapter_parameters, frozen_identity, sha256, write_json
 from kurumi.m1_optimize import optimizer_and_schedule
-from kurumi.m2_resume import reconcile_execution, record_verified_restore
-from kurumi.m2_selection import STATE_FIELDS
 from kurumi.numeric_loader import HORIZONS
 
 DATA_ARCHIVE_SHA = "35ca1851d9483b3733ffa5393019ffa0354473c6d3430a49caba63611de26570"
@@ -51,7 +51,7 @@ def stop_requested(*_):
     STOP = True
 
 
-def option_contract(execution, cfg, profile_keep):
+def option_contract(execution, cfg, profile_keep, *, resume=False):
     optimization = execution["optimization"]
     performance = execution["performance"]
     distributed = execution["distributed"]
@@ -62,10 +62,18 @@ def option_contract(execution, cfg, profile_keep):
     keep = performance["selected_keep_every"] if profile_keep is None else profile_keep
     if (
         execution["stage"] != "m2" or {key: value for key, value in distributed.items()
-                                      if key not in ("layer_reshard", "prefetch_depth", "mesh_shape")} != {
+                                      if key not in ("layer_reshard", "prefetch_depth", "mesh_shape",
+                                                     "paired_frozen_decoder_layers")} != {
             "backend": "nccl", "strategy": "fsdp2", "world_size": 4, "decoder_reshard_after_forward": True,
         }
         or (profile_keep is None and distributed.get("mesh_shape") is not None)
+        or ("paired_frozen_decoder_layers" in distributed and (
+            performance["minimum_free_vram_gib"] != 3
+            or type(distributed["paired_frozen_decoder_layers"]) is not int
+            or not 36 <= distributed["paired_frozen_decoder_layers"] <= 40
+            or (profile_keep is None and (not resume or distributed["paired_frozen_decoder_layers"] != 38))
+            or (profile_keep is not None and profile_keep != 0)
+        ))
         or execution["precision"] != {
             "base": "bfloat16", "lora_master": "float32", "readout": "float32",
             "reduce": "float32", "loss": "float32",
@@ -346,10 +354,13 @@ def prepare_output(args, identity, rank, view, device):
     plan = [None]
     if rank == 0:
         out = args.output
+        path = out / "provenance" / "identity.json"
+        if (args.profile_keep is None and "paired_frozen_decoder_layers" in identity["execution"]["distributed"]
+                and not path.is_file()):
+            raise ValueError("Paired frozen placement requires resuming an existing formal execution")
         out.mkdir(parents=True, exist_ok=args.resume)
         for name in ("provenance", "logs", "checkpoints"):
             (out / name).mkdir(exist_ok=True)
-        path = out / "provenance" / "identity.json"
         previous = checkpoint_folder(out) if args.resume else None
         if path.is_file():
             restore_identity, baseline_identity = reconcile_execution(
@@ -416,6 +427,8 @@ def train(args, view, native, model, adapters, trainables, cfg, identity,
     step, cursor = 0, -1
     totals = {"effective_tokens": 0, "training_seconds": 0.0}
     previous, restore_identity, baseline_identity = resume_plan
+    paired_formal = args.profile_keep is None and "paired_frozen_decoder_layers" in identity["execution"]["distributed"]
+    first_paired_update = None
     if previous is not None:
         step, cursor, totals = restore(previous, model, optimizer, scheduler, restore_identity, device,
                                        verify_layout=restore_identity != identity)
@@ -424,12 +437,18 @@ def train(args, view, native, model, adapters, trainables, cfg, identity,
             if rank == 0:
                 record_verified_restore(out, baseline_identity, identity, step, cursor)
             dist.barrier()
+        if paired_formal and restore_identity != identity:
+            first_paired_update = step + 1
     if step == total:
         if rank == 0:
             finalize(args, identity, totals, baseline_identity=baseline_identity)
         return
     if step == 0 and args.profile_keep is None:
         record_boundary(args, view, native, model, adapters, identity, rank, width, accumulation, metadata, 0)
+    if (paired_formal and step in boundaries[1:]
+            and not (out / "validation" / f"update-{step:06d}" / "validation.json").is_file()):
+        record_boundary(args, view, native, model, adapters, identity, rank, width, accumulation,
+                        metadata, step, baseline_identity=baseline_identity)
     model.train()
     model.packed.train()
     if args.profile_keep is not None:
@@ -498,6 +517,7 @@ def train(args, view, native, model, adapters, trainables, cfg, identity,
         step += 1
         cursor = current_cursor
         boundary = args.profile_keep is None and step in boundaries
+        first_paired_save = step == first_paired_update
         stop = rank_zero_flag(STOP, device)
         if step == measurement_start:
             torch.cuda.synchronize(device)
@@ -507,7 +527,7 @@ def train(args, view, native, model, adapters, trainables, cfg, identity,
             window_start = time.monotonic()
             start_step = step
         save = args.profile_keep is None and rank_zero_flag(
-            rank == 0 and (boundary or stop or time.monotonic() - last_save >= save_seconds), device,
+            rank == 0 and (first_paired_save or boundary or stop or time.monotonic() - last_save >= save_seconds), device,
         )
         measure = args.profile_keep is None and step % log_every == 0
         if (measure or save or step == stop_at or stop) and step > measurement_start:
@@ -527,15 +547,21 @@ def train(args, view, native, model, adapters, trainables, cfg, identity,
                                  "lr": scheduler.get_last_lr(), "first_gradient_norms": first_norms})
             window.zero_()
             start_step = step
-        if boundary:
+        if boundary and not first_paired_save:
             record_boundary(args, view, native, model, adapters, identity, rank, width, accumulation,
                             metadata, step, baseline_identity=baseline_identity)
         if save:
-            for key, value in peak_memory(device).items():
+            peaks = peak_memory(device)
+            if paired_formal and peaks["minimum_headroom_bytes"] < 3 * 2 ** 30:
+                raise RuntimeError("Formal paired frozen placement fell below the 3 GiB GPU headroom guard")
+            for key, value in peaks.items():
                 existing = totals.get(key, value)
                 totals[key] = min(existing, value) if key == "minimum_headroom_bytes" else max(existing, value)
             snapshot(out, model, optimizer, scheduler, identity, rank, device, step, cursor, totals)
             last_save = time.monotonic()
+        if boundary and first_paired_save:
+            record_boundary(args, view, native, model, adapters, identity, rank, width, accumulation,
+                            metadata, step, baseline_identity=baseline_identity)
         if measure or save:
             window_start = time.monotonic()
         if stop or step == stop_at:
@@ -585,6 +611,9 @@ def train(args, view, native, model, adapters, trainables, cfg, identity,
             if rank == 0:
                 print("Portable adapter and Readout reloaded with the same fixed probabilities", flush=True)
         peaks = peak_memory(device)
+        if ("paired_frozen_decoder_layers" in identity["execution"]["distributed"]
+                and peaks["minimum_headroom_bytes"] < 3 * 2**30):
+            raise ValueError("Paired frozen profile breached 3 GiB reserved-memory headroom")
         local_peak = torch.tensor([torch.cuda.max_memory_allocated(device), torch.cuda.max_memory_reserved(device)],
                                   device=device, dtype=torch.int64)
         rank_peaks = [torch.empty_like(local_peak) for _ in range(dist.get_world_size())]
@@ -655,12 +684,17 @@ def main():
         validate_output_path(args.output, args.model, args.m1_frozen)
         cfg = json.loads(args.data_config.read_bytes())
         execution = json.loads(args.execution_config.read_bytes())
-        width, accumulation, total, boundaries, keep = option_contract(execution, cfg, args.profile_keep)
-        if args.profile_enforce_headroom:
-            if args.profile_keep is None:
-                raise ValueError("The trial memory guard is only for isolated performance profiles")
+        width, accumulation, total, boundaries, keep = option_contract(execution, cfg, args.profile_keep, resume=args.resume)
+        paired = "paired_frozen_decoder_layers" in execution["distributed"]
+        if paired and args.profile_timing_only and not args.profile_checkpoint:
+            raise ValueError("Paired frozen profile requires a DCP and portable round trip")
+        if args.profile_enforce_headroom and args.profile_keep is None:
+            raise ValueError("The trial memory guard is only for isolated performance profiles")
+        if args.profile_enforce_headroom or paired:
             free, total_memory = torch.cuda.mem_get_info(device)
             room = free - execution["performance"]["minimum_free_vram_gib"] * (2 ** 30)
+            if room <= 0:
+                raise ValueError("GPU free memory cannot satisfy the configured headroom guard")
             torch.cuda.memory.set_per_process_memory_fraction(room / total_memory, device)
         profile_digest = None
         if args.profile_keep is None:
@@ -668,7 +702,7 @@ def main():
                 raise ValueError("Supply --profile-evidence for a formal run")
             profile = json.loads(args.profile_evidence.read_bytes())
             distributed, performance = execution["distributed"], execution["performance"]
-            tuned = (distributed.get("layer_reshard") is not None or distributed.get("prefetch_depth", 0)
+            tuned = (paired or distributed.get("layer_reshard") is not None or distributed.get("prefetch_depth", 0)
                      or performance.get("recompute_mode", "layer") != "layer"
                      or performance.get("fused_lora_add", False) or keep in (8, 12, 16))
             if (

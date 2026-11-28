@@ -5,15 +5,7 @@
     "strategy": "fsdp2",
     "world_size": 4,
     "decoder_reshard_after_forward": true,
-    "layer_reshard": {
-      "value": false,
-      "layers": [
-        57,
-        58,
-        59
-      ],
-      "max_extra_bytes": 3221225472
-    }
+    "paired_frozen_decoder_layers": 38
   },
   "optimization": {
     "epochs": 1,

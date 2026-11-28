@@ -28,6 +28,8 @@ BASELINE_IDS = {"M0": "m0-20261125T034500Z", "M1": "m1-eval-20261125T071740Z"}
 CN_TIME = timezone(timedelta(hours=8))
 TRANSITION = "provenance/execution-transition"
 TRANSITION_FILES = tuple(f"{TRANSITION}/{name}.json" for name in ("record", "profile-evidence", "restore-verified"))
+FOLLOWUP = "provenance/execution-followup"
+FOLLOWUP_FILES = tuple(f"{FOLLOWUP}/{name}.json" for name in ("record", "profile-evidence", "restore-verified"))
 BASELINE_FILES = (
     "validation/m1-baseline/validation.json", "validation/m1-baseline/predictions.jsonl",
     "provenance/probe-00000000/probe.json", "provenance/probe-00000000/probe.plan.zlib",
@@ -97,6 +99,17 @@ def identity_hash(identity):
     return hashlib.sha256(json.dumps(identity, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
 
 
+def verify_checkpoint_inventory(source, hashes, label):
+    source_hashes = source["checkpoint_files_sha256"]
+    require({"READY.json", "meta.json", "dcp/.metadata", *(f"rank-{i}.pt" for i in range(4))} <= source_hashes.keys()
+            and any(name.endswith(".distcp") for name in source_hashes), f"{label} source checkpoint inventory is incomplete")
+    for name, digest in source_hashes.items():
+        entry = PurePosixPath(name)
+        require(not entry.is_absolute() and ".." not in entry.parts and re.fullmatch(r"[0-9a-f]{64}", digest)
+                and (not hashes or hashes.get(f"{source['checkpoint']}/{name}") == digest),
+                f"{label} source checkpoint checksum changed: {name}")
+
+
 def verified_transition(root, original, manifest, validation, hashes):
     if not any(name in hashes or (root / name).is_file() for name in TRANSITION_FILES):
         return {}
@@ -132,14 +145,7 @@ def verified_transition(root, original, manifest, validation, hashes):
     expected = read(root / BASELINE_FILES[0])
     require((expected["checkpoint"], expected["update"], expected["identity_sha256"]) == ("m1-baseline", 0, original_hash),
             "Frozen M1 baseline is not tied to the original run identity")
-    source_hashes = source["checkpoint_files_sha256"]
-    require({"READY.json", "meta.json", "dcp/.metadata", *(f"rank-{i}.pt" for i in range(4))} <= source_hashes.keys()
-            and any(name.endswith(".distcp") for name in source_hashes), "Transition source checkpoint inventory is incomplete")
-    for name, digest in source_hashes.items():
-        entry = PurePosixPath(name)
-        require(not entry.is_absolute() and ".." not in entry.parts and re.fullmatch(r"[0-9a-f]{64}", digest)
-                and (not hashes or hashes.get(f"{source['checkpoint']}/{name}") == digest),
-                f"Transition source checkpoint checksum changed: {name}")
+    verify_checkpoint_inventory(source, hashes, "Transition")
     if validation:
         require(validation[0]["identity_sha256"] == original_hash
                 and all(validation[0].get(key) == value for key, value in expected.items())
@@ -149,6 +155,73 @@ def verified_transition(root, original, manifest, validation, hashes):
         require(manifest["identity"] == active, "Frozen M2 is not tied to the active optimized execution")
     return {"active": active, "original_hash": original_hash, "active_hash": active_hash, "source": source,
             "evidence": evidence}
+
+
+def verified_followup(root, original, transition, manifest, validation, hashes):
+    require(transition and hashes and manifest and validation,
+            "Follow-up reporting requires a verified first transition and final HF training release")
+    for name in FOLLOWUP_FILES:
+        require((root / name).is_file() and sha256(root / name) == hashes.get(name),
+                f"Follow-up HF evidence is missing or changed: {name}")
+    record, evidence, restored = (read(root / name) for name in FOLLOWUP_FILES)
+    active, source = record["active_identity"], record["source"]
+    original_hash, active_hash = transition["original_hash"], identity_hash(active)
+    predecessor = {
+        "identity_sha256": transition["active_hash"],
+        "transition_record_sha256": sha256(root / TRANSITION_FILES[0]),
+        "restore_verified_sha256": sha256(root / TRANSITION_FILES[2]),
+    }
+    require(record["predecessor"] == predecessor and record["original_identity_sha256"] == original_hash
+            and active_hash not in (original_hash, predecessor["identity_sha256"])
+            and (active["artifact_role"], active["train_run_id"]) == ("FORMAL", original["train_run_id"]),
+            "Follow-up does not bind the previous verified lineage")
+    step, cursor = source["step"], source["cursor"]
+    require(transition["source"]["step"] < step < original["execution"]["optimization"]["validation_updates"][1]
+            and source["checkpoint"] == f"checkpoints/step-{step:08d}"
+            and source["baseline_files_sha256"] == transition["source"]["baseline_files_sha256"],
+            "Follow-up does not preserve the approved source checkpoint and M1 baseline")
+    verify_checkpoint_inventory(source, hashes, "Follow-up")
+    require(restored == {"step": step, "cursor": cursor, "original_identity_sha256": original_hash,
+                         "active_identity_sha256": active_hash, "predecessor_identity_sha256": predecessor["identity_sha256"]},
+            "Follow-up restore attestation does not match both lineages")
+    require(sha256(root / FOLLOWUP_FILES[1]) == active["profile_evidence_sha256"]
+            and evidence["run_id"] == original["train_run_id"] and evidence["accepted_execution"] == active["execution"]
+            and evidence["m1_probe"]["passed"] is True and evidence["distributed_gradient_check"] is True
+            and evidence["selected"]["minimum_headroom_bytes"] >= active["execution"]["performance"]["minimum_free_vram_gib"] * 2 ** 30
+            and evidence["execution_transition"] == {
+                "source_step": step, "source_code_commit": transition["active"]["code_commit"],
+                "target_code_commit": active["code_commit"],
+                "source_checkpoint_meta_sha256": source["checkpoint_files_sha256"]["meta.json"],
+            }, "Follow-up execution does not match accepted profiling and predecessor evidence")
+    distributed = active["execution"]["distributed"]
+    replicas = distributed.get("replicated_frozen")
+    paired = distributed.get("paired_frozen_decoder_layers")
+    cached = active["execution"]["performance"].get("cache_frozen_down_projection", False)
+    require(type(cached) is bool and sum((replicas is not None, cached, paired is not None)) == 1,
+            "Expected one verified frozen-only follow-up selection")
+    if paired is not None:
+        require(type(paired) is int and paired == 38 and distributed["world_size"] == 4
+                and distributed["strategy"] == "fsdp2" and distributed.get("mesh_shape") is None
+                and distributed.get("layer_reshard") is None and active["execution"]["precision"] == {
+                    "base": "bfloat16", "lora_master": "float32", "readout": "float32",
+                    "reduce": "float32", "loss": "float32",
+                }, "Paired follow-up must keep the verified 38 frozen BF16 layers and four-rank FP32 trainables")
+    baseline = read(root / BASELINE_FILES[0])
+    require(all(validation[0].get(key) == value for key, value in baseline.items())
+            and all(item["identity_sha256"] == active_hash for item in validation[1:])
+            and manifest["identity"] == active,
+            "Current frozen M2 and validation identities do not match the final follow-up")
+    parity = evidence.get("source_parity")
+    require(paired is None or parity is not None, "Paired follow-up lacks the accepted same-source comparison")
+    if parity is not None:
+        require(parity["passed"] is True and parity["optimizer_roundtrip_exact"] is True
+                and parity["source_optimizer_exact"] is True and parity["source_trainables_exact"] is True
+                and all(parity[key]["passed"] is True for key in ("probabilities_before", "probabilities_after",
+                                                                  "weighted_j", "gradient_norms")),
+                "Follow-up source-parity evidence reports a failed comparison")
+    return {"active": active, "active_hash": active_hash, "source": source, "evidence": evidence,
+            "predecessor": predecessor, "record_sha256": hashes[FOLLOWUP_FILES[0]],
+            "restore_sha256": hashes[FOLLOWUP_FILES[2]], "replicas": replicas, "paired": paired}
 
 
 def verified_training(root, run_id, publication):
@@ -199,7 +272,12 @@ def verified_training(root, run_id, publication):
                 and summary["best_originals"] == best["update"] * 8, "Frozen candidate selection differs")
         if complete:
             require(complete["best_checkpoint"] == best["checkpoint"], "Selected M2 differs from HF COMPLETE")
-    transition = verified_transition(root, identity, manifest, validation, hashes)
+    followup_present = any(name in hashes or (root / name).is_file() for name in FOLLOWUP_FILES)
+    transition = verified_transition(root, identity, {} if followup_present else manifest,
+                                     [] if followup_present else validation, hashes)
+    followup = verified_followup(root, identity, transition, manifest, validation, hashes) if followup_present else {}
+    if followup:
+        require(complete["model_manifest_sha256"] == sha256(manifest_file), "Follow-up model digest differs from HF COMPLETE")
     system = root / "provenance/environment.txt"
     gpu = []
     topology = []
@@ -209,6 +287,7 @@ def verified_training(root, run_id, publication):
         topo = content.partition("GPU topology\n")[2].partition("\nDisk and architecture")[0]
         topology = [line for line in topo.splitlines() if re.match(r"\s*GPU\d+\s", line)]
     return {"summary": summary, "identity": identity, "best": best, "profile": profile, "transition": transition,
+            "followup": followup, "training_commit": publication.get("hf_complete_commit"),
             "gpu": gpu, "topology": topology}, windows, validation
 
 
@@ -436,6 +515,80 @@ def transition_report(lines, transition, windows):
     bandwidth_report(lines, evidence.get("bandwidth", {}))
 
 
+def followup_performance_report(lines, comparison):
+    rows = [comparison["reference"]] if comparison.get("reference") else []
+    rows.extend(comparison.get("trials", {}).values())
+    if not rows:
+        return False
+    lines += ["", "追加比较中的独立短测记录。", "",
+              "| 短测 | 有效 token/s | 最小显存余量 (GiB) |",
+              "| --- | ---: | ---: |"]
+    for row in rows:
+        rate, headroom = row.get("effective_tokens_per_second"), row.get("min_headroom_gib")
+        require(all(value is None or math.isfinite(value) for value in (rate, headroom)),
+                "Non-finite follow-up short-profile performance reading")
+        lines.append(f"| `{row['case']}` | {fmt(rate, 2)} | {fmt(headroom, 2)} |")
+    return True
+
+
+def followup_report(lines, first, followup, windows, commit):
+    source, active, evidence = (followup[key] for key in ("source", "active", "evidence"))
+    selection = evidence["selected"]
+    step = source["step"]
+    prior_step = first["source"]["step"]
+    first_hashes = followup["predecessor"]
+    hf_prefix = f"https://huggingface.co/{REPO}/tree/{commit}/m2/{active['train_run_id']}" if commit else None
+    lines += ["", "## 追加正式训练接续", "",
+              f"- 从第 {step:,} 次更新完成后的检查点恢复，游标 `{source['cursor']}`。"
+              f"上段身份 `{first['active_hash']}`，最终身份 `{followup['active_hash']}`。",
+              f"- 最终源码 `{active['code_commit']}`，验收 profile SHA256 `{active['profile_evidence_sha256']}`。 "
+              f"[GitHub 固定源码](https://github.com/sjyinzju/Kurumi/tree/{active['code_commit']})",
+              f"- 首次接续记录 SHA256 `{first_hashes['transition_record_sha256']}`，"
+              f"恢复回执 SHA256 `{first_hashes['restore_verified_sha256']}`。"
+              + (f" [HF 首次接续证据]({hf_prefix}/{TRANSITION})" if hf_prefix else ""),
+              f"- 追加接续记录 SHA256 `{followup['record_sha256']}`，恢复回执 SHA256 `{followup['restore_sha256']}`。"
+              + (f" [HF 追加接续证据]({hf_prefix}/{FOLLOWUP})" if hf_prefix else "")]
+    for label, linked in (("首次", first["source"]), ("追加", source)):
+        name, files = linked["checkpoint"], linked["checkpoint_files_sha256"]
+        lines.append(f"- {label}接续源 `{name}` 已与 HF 清单逐项核对 {len(files)} 个文件，"
+                     f"元数据 SHA256 `{files['meta.json']}`。"
+                     + (f" [HF 源检查点]({hf_prefix}/{name})" if hf_prefix else ""))
+    lines.append(f"- 冻结 M2 manifest 和三次正式验证候选对应最终身份 `{followup['active_hash']}`。"
+                 + (f" [HF 冻结模型]({hf_prefix}/model)" if hf_prefix else ""))
+    if paired := followup["paired"]:
+        lines.append(f"- 获选 `paired_frozen_decoder_layers={paired}`。末尾 {paired} 个 decoder 层的冻结 BF16 参数"
+                     "使用双卡子组分片，两个子组各保留一份。LoRA 与 Readout 继续以 FP32 四卡分片。")
+    elif replicas := followup["replicas"]:
+        indexes = ", ".join(map(str, replicas["layers"]))
+        lines.append(f"- 获选 `replicated_frozen`，层 {indexes} 的冻结 BF16 参数常驻，每卡预算 "
+                     f"{replicas['max_replicated_bytes'] / 2 ** 30:.2f} GiB。LoRA 与 Readout 继续以 FP32 四卡分片。")
+    else:
+        lines.append("- 获选 `cache_frozen_down_projection`，复用激活重算中的冻结下投影结果。")
+    if not followup_performance_report(lines, evidence.get("performance_followup", {})):
+        lines.append(f"- 获选配置独立短测吞吐 {fmt(selection.get('effective_tokens_per_second'), 2)} token/s，"
+                     f"最小显存余量 {selection['minimum_headroom_bytes'] / 2 ** 30:.2f} GiB。")
+    if parity := evidence.get("source_parity"):
+        lines.append(f"- 同一 DCP 源与下一正式批次的对照通过。更新前后最大概率差分别为 "
+                     f"{fmt(parity['probabilities_before']['max_absolute'])}、{fmt(parity['probabilities_after']['max_absolute'])}，"
+                     f"加权 J 差 {fmt(parity['weighted_j']['difference'])}，"
+                     f"FP32 梯度范数最大相对差 {parity['gradient_norms']['max_relative']:.2%}。Adam 样本重载一致。")
+    last = active["execution"]["optimization"]["total_updates"]
+    phases = (("正式启动", 0, prior_step), ("首次接续", prior_step, step), ("追加接续", step, last))
+    lines += ["", "| 正式阶段 | 更新区间 | 计时窗口 | 覆盖更新 | 有效 token | 窗口时长 (h) | 有效 token/s |",
+              "| --- | --- | ---: | ---: | ---: | ---: | ---: |"]
+    assigned = 0
+    for label, left, right in phases:
+        rows = [row for row in windows if left <= row["step"] - row["window_updates"] and row["step"] <= right]
+        count = sum(row["window_updates"] for row in rows)
+        seconds = sum(row["seconds"] for row in rows)
+        tokens = sum(row["effective_tokens"] for row in rows)
+        assigned += len(rows)
+        lines.append(f"| {label} | {left + 1:,}–{right:,} | {len(rows):,} | {count:,} | {tokens:,} | "
+                     f"{seconds / 3600:.3f} | {fmt(tokens / seconds if rows else None, 2)} |")
+    if assigned != len(windows):
+        lines.append(f"- {len(windows) - assigned} 个跨阶段或超出正式更新区间的窗口未分配到上述阶段。")
+
+
 def training_report(lines, data, windows, validation, operations):
     lines += ["## 四卡训练", ""]
     identity = data.get("identity", {})
@@ -502,8 +655,11 @@ def training_report(lines, data, windows, validation, operations):
         lines += ["", *[f"- `{line}`" for line in data["gpu"]]]
     if data.get("topology"):
         lines += ["", "```text", *data["topology"], "```"]
-    if data.get("transition"):
-        transition_report(lines, data["transition"], windows)
+    if transition := data.get("transition"):
+        followup = data.get("followup")
+        transition_report(lines, transition, [] if followup else windows)
+        if followup:
+            followup_report(lines, transition, followup, windows, data.get("training_commit"))
     if validation:
         validation_report(lines, validation, data["best"])
 
