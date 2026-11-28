@@ -11,8 +11,8 @@
     "global_originals_per_update": 8,
     "originals_per_rank_per_microstep": 2,
     "gradient_accumulation_steps": 1,
-    "lora_lr": 0.00005,
-    "readout_lr": 0.000005,
+    "lora_lr": 5e-05,
+    "readout_lr": 5e-06,
     "warmup_fraction": 0.03,
     "total_updates": 7500,
     "validation_updates": [
@@ -37,7 +37,7 @@
       4,
       2
     ],
-    "selected_keep_every": null,
+    "selected_keep_every": 0,
     "minimum_free_vram_gib": 3,
     "cpu_parameter_offload": false,
     "optimizer_offload": false,
