@@ -483,8 +483,10 @@ def train(args, view, native, model, adapters, trainables, cfg, identity,
         measure = args.profile_keep is None and step % log_every == 0
         if (measure or save or step == stop_at or stop) and step > measurement_start:
             torch.cuda.synchronize(device)
-            elapsed = time.monotonic() - window_start
+            elapsed_window = torch.tensor(time.monotonic() - window_start, device=device, dtype=torch.float64)
             dist.all_reduce(window)
+            dist.all_reduce(elapsed_window, op=dist.ReduceOp.MAX)
+            elapsed = elapsed_window.item()
             j, ce, brier, rps, weight, tokens = window.tolist()
             totals["effective_tokens"] += int(tokens)
             totals["training_seconds"] += elapsed
@@ -523,6 +525,8 @@ def train(args, view, native, model, adapters, trainables, cfg, identity,
             if restored != (step, cursor, totals):
                 raise ValueError("Profile recovery cursor differs")
             torch.testing.assert_close(model_probe(view, native, model, None), before, rtol=0, atol=0)
+            if rank == 0:
+                print("Four-rank recovery checkpoint restored the same cursor and fixed probabilities", flush=True)
             portable, readout = gather_export_state(model, adapters)
             if rank == 0:
                 from kurumi.cn_efficiency_m2 import export_frozen_m2
@@ -545,6 +549,8 @@ def train(args, view, native, model, adapters, trainables, cfg, identity,
                 full_state_dict=True, broadcast_from_rank0=True, strict=False,
             ))
             torch.testing.assert_close(model_probe(view, native, model, None), before, rtol=0, atol=0)
+            if rank == 0:
+                print("Portable adapter and Readout reloaded with the same fixed probabilities", flush=True)
         peaks = peak_memory(device)
         if rank == 0:
             write_json(out / "profile.json", {
@@ -596,6 +602,8 @@ def main():
         width, accumulation, total, boundaries, keep = option_contract(execution, cfg, args.profile_keep)
         profile_digest = None
         if args.profile_keep is None:
+            if args.profile_evidence is None:
+                raise ValueError("Supply --profile-evidence for a formal run")
             profile = json.loads(args.profile_evidence.read_bytes())
             if (
                 profile["selected_keep_every"] != keep or profile["run_id"] != args.output.name
