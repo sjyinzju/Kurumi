@@ -10,8 +10,21 @@ import time
 from pathlib import Path, PurePosixPath
 
 from m2_handoff import exclusive
-from m2_hf_artifacts import ARCHIVES, SHA256, STEP, atomic_json, checkpoint_files, now, read_json, run_prefix
+from m2_hf_artifacts import (
+    ARCHIVES,
+    SHA256,
+    STEP,
+    atomic_json,
+    checkpoint_files,
+    checkpoint_receipts,
+    now,
+    read_json,
+    run_prefix,
+)
 from m2_hf_ssh_relay import ssh_helper
+
+KEEP_LOCAL_STEPS = 2
+MAX_LOCAL_STEPS = 3
 
 REMOTE = """
 import hashlib, json, re, sys
@@ -146,17 +159,65 @@ def fetch_step(client, sftp, source, spool, step, run_id):
     print(f"{now()} spooled {step}, {sum(file['size'] for file in inventory.values())} bytes verified", flush=True)
 
 
+def safe_step(root, step):
+    path = root / step
+    if not STEP.fullmatch(step) or path.resolve(strict=True) != path or not path.is_dir():
+        raise ValueError(f"invalid local checkpoint deletion target: {path}")
+    if any(item.is_symlink() or item.resolve(strict=True) != item for item in path.rglob("*")):
+        raise ValueError(f"links are forbidden in checkpoint deletion targets: {path}")
+    return path
+
+
+def trim_checkpoints(spool, run_id, receipts):
+    checkpoint_root = spool / "checkpoints"
+    retired = spool / ".retired-checkpoints"
+    for root in (checkpoint_root, retired):
+        if root.resolve() != root or root.is_symlink():
+            raise ValueError(f"invalid local checkpoint root: {root}")
+    for path in retired.glob("step-*"):
+        if path.name not in receipts:
+            raise ValueError(f"retired checkpoint lacks a verified HF receipt: {path.name}")
+        shutil.rmtree(safe_step(retired, path.name))
+    local = sorted(path.name for path in checkpoint_root.glob("step-*") if STEP.fullmatch(path.name))
+    for step in local[:-KEEP_LOCAL_STEPS]:
+        if step not in receipts:
+            continue
+        path = safe_step(checkpoint_root, step)
+        files = checkpoint_files(spool, path, run_id)
+        expected = receipts[step]
+        if files.keys() != expected.keys() or any(
+            not file_matches(file, {"size": expected[name][0], "sha256": expected[name][1]})
+            for name, file in files.items()
+        ):
+            raise ValueError(f"checkpoint differs from its verified HF receipt: {step}")
+        retired.mkdir(exist_ok=True)
+        path.rename(retired / step)
+        shutil.rmtree(safe_step(retired, step))
+        print(f"{now()} removed local spool copy {step} after verified HF receipt", flush=True)
+        local.remove(step)
+    return set(local)
+
+
 def tick(client, source, spool, run_id):
     scan = inspect_source(client, source, run_id, "scan")
+    receipts = checkpoint_receipts(spool, run_id)
+    local = trim_checkpoints(spool, run_id, receipts)
     with client.open_sftp() as sftp:
         for step in scan["steps"]:
+            if step in receipts or step in local:
+                continue
+            if len(local) >= MAX_LOCAL_STEPS:
+                break
             fetch_step(client, sftp, source, spool, step, run_id)
+            local.add(step)
         seal = scan["seal"]
         if seal is None:
             return False
         sealed_steps = {name.split("/")[1] for name in seal["files"] if name.startswith("checkpoints/")}
         if sealed_steps - set(scan["steps"]):
             raise ValueError("the final source seal references unclosed checkpoints")
+        if sealed_steps - (local | receipts.keys()):
+            return False
         if seal["data_archive_sha256"] != ARCHIVES["data"][1] or "step-00007500" not in sealed_steps:
             raise ValueError("final source seal has the wrong input identity or final step")
         inventory = inspect_source(client, source, run_id, "final")
@@ -168,7 +229,8 @@ def tick(client, source, spool, run_id):
             copy_file(sftp, source / relative, spool / relative, identity)
     copied = set(inventory)
     for step in sealed_steps:
-        copied.update(checkpoint_files(spool, spool / "checkpoints" / step, run_id))
+        published = receipts.get(step)
+        copied.update(published or checkpoint_files(spool, spool / "checkpoints" / step, run_id))
     if copied != set(seal["files"]):
         raise ValueError("the verified offsite spool differs from the final training seal")
     atomic_json(spool / "TRAINING_COMPLETE.json", seal)

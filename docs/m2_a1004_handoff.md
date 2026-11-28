@@ -34,6 +34,8 @@ python -u scripts/m2_checkpoint_spool.py --ssh-helper $SshHelper --run-id $RunId
 
 控制机获准保存训练恢复点到 HF 时，可在相同本地运行目录上启动 `watch --checkpoints-only`。该模式复用不可变检查点路径与对象摘要验证，凭据留在控制机。它仅生成 `checkpoint-archive.json`，完整发布流程可复用已上传的恢复点。该回执不触发 GB10 接收或租赁释放。
 
+控制机最多累计三份检查点，保留最近两份本地副本。HF 校验完成后，发布进程原子写入 `.hf-checkpoint-receipts/step-*.json`，记录固定 commit 和每个文件的摘要。控制机只在逐文件比较一致时回收旧副本。HF 离线且控制机队列已满时，后续检查点仍保存在 A100，等待发布恢复后拉取。最终发布使用这些持久回执在 HF 固定 commit 上复核全部恢复点。
+
 ## 控制机与 GB10
 
 本地配置使用 JSON。以下是字段清单，具体值来自实际 SSH、目录和凭据准备记录。

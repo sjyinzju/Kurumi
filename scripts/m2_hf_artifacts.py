@@ -147,6 +147,8 @@ def publish(api, files, identities, message):
         if name in remote:
             if not matching_file(remote[name], identities[name]):
                 raise ValueError(f"refusing to replace an existing HF artifact with different bytes: {name}")
+        elif source is None:
+            raise ValueError(f"a previously verified checkpoint object is missing from HF: {name}")
         else:
             operations.append(CommitOperationAdd(path_in_repo=name, path_or_fileobj=source))
     if operations:
@@ -231,6 +233,43 @@ def checkpoint_files(run, step, run_id):
     return files
 
 
+def checkpoint_receipts(run, run_id):
+    receipts = {}
+    directory = run.resolve() / ".hf-checkpoint-receipts"
+    if directory.resolve() != directory or directory.is_symlink():
+        raise ValueError("checkpoint receipt directory must be inside the local run")
+    for path in sorted(directory.glob("step-*.json")):
+        step = path.stem
+        if path.is_symlink():
+            raise ValueError(f"symlinked HF checkpoint receipt: {path.name}")
+        record = read_json(path)
+        if (not STEP.fullmatch(step) or record["step"] != step or record["run_id"] != run_id
+                or record["repository"] != REPO or not COMMIT.fullmatch(record["hf_commit"])):
+            raise ValueError(f"invalid immutable HF checkpoint receipt: {path.name}")
+        files = {}
+        for name, file in record["files"].items():
+            parts = name.split("/")
+            if (not SAFE_PATH.fullmatch(name) or parts[:2] != ["checkpoints", step]
+                    or set(parts) & {"..", "."} or len(parts) < 3 or not SHA256.fullmatch(file["sha256"])
+                    or not COMMIT.fullmatch(file["git_blob"]) or not isinstance(file["size"], int) or file["size"] < 0):
+                raise ValueError(f"invalid file identity in HF checkpoint receipt: {name}")
+            files[name] = (file["size"], file["sha256"], file["git_blob"])
+        required = {"dcp/.metadata", "meta.json", "READY.json"} | {f"rank-{rank}.pt" for rank in range(4)}
+        if (not {f"checkpoints/{step}/{name}" for name in required} <= files.keys()
+                or not any(name.endswith(".distcp") for name in files)):
+            raise ValueError(f"incomplete HF checkpoint receipt: {path.name}")
+        receipts[step] = files
+    return receipts
+
+
+def write_checkpoint_receipt(run, run_id, step, commit, identities):
+    atomic_json(run / ".hf-checkpoint-receipts" / f"{step}.json", {
+        "repository": REPO, "run_id": run_id, "step": step, "hf_commit": commit,
+        "files": {name: {"size": size, "sha256": digest, "git_blob": blob}
+                  for name, (size, digest, blob) in identities.items()},
+    })
+
+
 def scoped_files(run, names):
     files = {}
     for name in names:
@@ -270,7 +309,10 @@ def publish_final(api, args, state, checkpoint_files_by_step, checkpoint_hashes)
     prefix = run_prefix(args.run_id)
     if seal["run_id"] != args.run_id or seal["data_archive_sha256"] != ARCHIVES["data"][1]:
         raise ValueError("training seal identity mismatch")
-    files = scoped_files(run, seal["files"])
+    if len(seal["files"]) != len(set(seal["files"])):
+        raise ValueError("training seal repeats an artifact path")
+    sealed_checkpoints = {name for name in seal["files"] if name.startswith("checkpoints/")}
+    files = scoped_files(run, (name for name in seal["files"] if name not in sealed_checkpoints))
     required = {f"model/{name}" for name in MODEL_FILES} | {"logs/training.jsonl", "provenance/summary.json"}
     for name in VALIDATION_NAMES:
         required |= {f"validation/{name}/predictions.jsonl", f"validation/{name}/validation.json"}
@@ -279,7 +321,7 @@ def publish_final(api, args, state, checkpoint_files_by_step, checkpoint_hashes)
     if not required <= files.keys():
         raise ValueError(f"training seal lacks mandatory artifacts: {sorted(required - files.keys())}")
     archived = set().union(*checkpoint_files_by_step.values())
-    if archived != {name for name in files if name.startswith("checkpoints/")}:
+    if archived != sealed_checkpoints or sealed_checkpoints != checkpoint_hashes.keys():
         raise ValueError("training seal and closed recovery snapshots disagree")
     if not {seal["best_step_directory"], "step-00007500"} <= checkpoint_files_by_step.keys():
         raise ValueError("training seal misses the best or final recovery step")
@@ -287,8 +329,8 @@ def publish_final(api, args, state, checkpoint_files_by_step, checkpoint_hashes)
     if manifest["checkpoint"] != seal["best_checkpoint"] or seal["best_checkpoint"] not in VALIDATION_NAMES[1:]:
         raise ValueError("best model manifest and training seal disagree")
     identities = {name: digests(path) for name, path in files.items()}
-    if any(identities[name] != identity for name, identity in checkpoint_hashes.items()):
-        raise ValueError("a closed recovery checkpoint changed before final publication")
+    files.update(dict.fromkeys(sealed_checkpoints))
+    identities.update(checkpoint_hashes)
     preparation = args.state_dir / "preparation.json"
     files["provenance/preparation.json"] = preparation
     identities["provenance/preparation.json"] = digests(preparation)
@@ -351,8 +393,9 @@ def run_uploader(args):
         if state["run_id"] != args.run_id or state["assets"] != preparation_assets():
             raise ValueError("preparation belongs to a different training run")
     prefix = run_prefix(args.run_id)
-    checkpoint_files_by_step = {}
-    checkpoint_hashes = {}
+    receipts = checkpoint_receipts(args.run_dir, args.run_id)
+    checkpoint_files_by_step = {step: set(files) for step, files in receipts.items()}
+    checkpoint_hashes = {name: identity for files in receipts.values() for name, identity in files.items()}
     while not marker.exists():
         try:
             for path in sorted((args.run_dir / "checkpoints").glob("step-*")):
@@ -361,6 +404,7 @@ def run_uploader(args):
                 files = checkpoint_files(args.run_dir, path, args.run_id)
                 identities = {name: digests(file) for name, file in files.items()}
                 head = publish_relative(api, prefix, files, identities, f"Back up {args.run_id} {path.name}")
+                write_checkpoint_receipt(args.run_dir, args.run_id, path.name, head, identities)
                 checkpoint_files_by_step[path.name] = set(files)
                 checkpoint_hashes.update(identities)
                 print(f"{now()} archived {path.name}", flush=True)
@@ -370,7 +414,7 @@ def run_uploader(args):
                 sealed_steps = {name.split("/")[1] for name in seal["files"] if name.startswith("checkpoints/")}
                 if sealed_steps - checkpoint_files_by_step.keys():
                     if any(not (args.run_dir / "checkpoints" / step / "READY.json").is_file()
-                           for step in sealed_steps):
+                           for step in sealed_steps - checkpoint_files_by_step.keys()):
                         raise ValueError("training seal references a checkpoint without a READY.json marker")
                     continue
                 if args.checkpoints_only:
@@ -378,6 +422,8 @@ def run_uploader(args):
                     if (seal["run_id"] != args.run_id or seal["data_archive_sha256"] != ARCHIVES["data"][1]
                             or "step-00007500" not in sealed_steps or sealed != set(checkpoint_hashes)):
                         raise ValueError("final checkpoint-only archive differs from the sealed training run")
+                    head = publish_relative(api, prefix, dict.fromkeys(sealed), checkpoint_hashes,
+                                            f"Verify recovery archive for {args.run_id}")
                     atomic_json(marker, {"run_id": args.run_id, "checkpoint_archive_commit": head,
                                          "recoveries": len(sealed_steps), "archived_at": now()})
                     return
