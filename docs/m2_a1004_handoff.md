@@ -43,10 +43,13 @@ python -u scripts/m2_checkpoint_spool.py --ssh-helper $SshHelper --run-id $RunId
 | 根 | `run_id` 为训练 ID，`eval_run_id` 为独立测评 ID |
 | `a100` | `ssh_host`、可选 `ssh_args` 数组、`python`、`state_dir`、`instance_id` |
 | `a100.identity` | `hostname` 与 `boot_id` 取自已登录的目标实例 |
-| `gb10` | `ssh_host`、可选 `ssh_args` 数组、独立 `checkout`、`python`、`activate`、`runtime`、`state_dir`、`receive_dir`、`benchmark_dir`、`hf_token_file` |
+| `gb10` | `ssh_host`、可选 `ssh_args` 数组、独立 `checkout`、`python`、`activate`、`runtime`、`state_dir`、`receive_dir`、`benchmark_dir` |
+| `gb10` HF 授权 | `hf_token_source` 指向控制机上的单凭据文件或 `.env`，可另设 `hf_read_token_source` 用于接收和读取验收。部署已有私有远端凭据文件时使用 `hf_token_file` |
 | `gb10` 可选 | `data_archive`、`m1_archive` 指向可复用的已封存归档。缺少本地归档时由 GB10 从同一 HF commit 下载 |
 
 `a100.state_dir` 对应发布命令的 `--state-dir`。`gb10.runtime` 使用 M2 单独的 TOML，`[m2].frozen_manifest` 为 `<receive_dir>/m2/<run_id>/model/manifest.json`，`benchmark_dir` 为 runtime 中 `<run_root>/karpo-m2/<eval_run_id>`。`gb10.python` 用于登录节点下载、校验和提交作业。模型加载由 `scripts/m2_gb10.slurm` 在 GPU 节点执行。
+
+使用 `hf_token_source` 时，协调器通过已经核对主机密钥的 SSH 标准输入传入单个 token，GB10 的 HF 子进程仅从自己的环境读取。下载和归档进程在独立会话中运行。进程退出后凭据随其环境销毁。给相关运行进程的日志保留在独立控制目录。
 
 直接访问 HF 失败时，`scripts/m2_hf_ssh_relay.py` 可在控制机建立经授权 SSH 的反向回环转发。中继仅接受经认证的 CONNECT 到 Hugging Face 官方域名的 443 端口，保留终端 TLS 校验，并使用控制机现有 HTTPS 路由。`--ssh-helper` 指向本轮经核对的本地 SSH 接入模块；其中 `a100_client()`、`gb10_client()` 返回已校验宿主密钥的客户端。用 `--state-dir` 保留每台机器的中继凭据，重启时复用端口和凭据。远端发布命令用 `--proxy-file` 读取对应的私有中继配置，GB10 配置使用 `gb10.hf_proxy_file`。需要沿用本地 SSH 模块时，在 `a100` 和 `gb10` 下分别设置 `ssh_helper` 为文件路径，`ssh_connector` 为对应的连接函数。控制机失联期间，A100 训练仍可保存检查点，HF 发布和接收会在中继恢复后继续。
 

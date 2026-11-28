@@ -17,6 +17,28 @@ from m2_hf_artifacts import COMMIT, SHA256, atomic_json, json_bytes, now, read_j
 RETRYABLE_JOBS = {"PREEMPTED", "TIMEOUT", "NODE_FAIL", "BOOT_FAIL"}
 BILLING_TERMINAL = {"RELEASED", "STOPPED"}
 IDENTITY = ("run_id", "hf_complete_commit", "model_manifest_sha256")
+TOKEN_LAUNCHER = """
+import fcntl, os, re, subprocess, sys
+from pathlib import Path
+mode, *args = sys.argv[1:]
+token = sys.stdin.readline(4096).rstrip('\\r\\n')
+if not re.fullmatch(r'hf_[A-Za-z0-9]{20,}', token):
+    sys.exit('missing or invalid task HF credential on stdin')
+env = dict(os.environ, HF_TOKEN=token)
+if mode == 'foreground':
+    os.execvpe(args[0], args, env)
+log, lock, *command = args
+os.umask(0o077)
+Path(log).parent.mkdir(parents=True, exist_ok=True)
+with open(lock, 'ab') as guard:
+    try:
+        fcntl.flock(guard, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except BlockingIOError:
+        sys.exit(0)
+    with open(log, 'ab', buffering=0) as stream:
+        subprocess.Popen(command, stdin=subprocess.DEVNULL, stdout=stream, stderr=stream,
+                         env=env, start_new_session=True, pass_fds=(guard.fileno(),))
+"""
 
 
 @contextmanager
@@ -35,15 +57,15 @@ def exclusive(path):
         yield
 
 
-def execute(command, *, check=True, timeout=45):
+def execute(command, *, check=True, timeout=45, stdin=None):
     result = subprocess.run(command, capture_output=True, text=True, encoding="utf-8", errors="replace",
-                            timeout=timeout, check=False)
+                            timeout=timeout, check=False, input=stdin)
     if check and result.returncode:
         raise RuntimeError(f"{command[0]} ended with code {result.returncode}: {result.stderr.strip()[-1000:]}")
     return result
 
 
-def ssh(host, command, *, check=True):
+def ssh(host, command, *, check=True, stdin=None):
     if host.get("ssh_helper"):
         from m2_hf_ssh_relay import ssh_helper
 
@@ -51,7 +73,11 @@ def ssh(host, command, *, check=True):
         connector = getattr(helper, host["ssh_connector"])
         try:
             with connector() as connection:
-                _, out, err = connection.exec_command(command, timeout=45)
+                user_input, out, err = connection.exec_command(command, timeout=45)
+                if stdin is not None:
+                    user_input.write(stdin)
+                    user_input.flush()
+                    user_input.channel.shutdown_write()
                 stdout = out.read().decode("utf-8", errors="replace")
                 stderr = err.read().decode("utf-8", errors="replace")
                 code = out.channel.recv_exit_status()
@@ -64,7 +90,8 @@ def ssh(host, command, *, check=True):
     if not re.fullmatch(r"[a-zA-Z0-9_.@-]+", name) or name.startswith("-"):
         raise ValueError("invalid SSH host")
     return execute(["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=10",
-                    "-o", "StrictHostKeyChecking=yes", *host.get("ssh_args", []), name, command], check=check)
+                    "-o", "StrictHostKeyChecking=yes", *host.get("ssh_args", []), name, command],
+                   check=check, stdin=stdin)
 
 
 def remote_json(host, path):
@@ -107,26 +134,52 @@ def preflight(args):
     commands.append(shlex.join(["grep", "-Fq", str(model), gb["runtime"]]))
     commands.append(shlex.join(["mkdir", "-p", gb["receive_dir"], str(control)]))
     commands.append(shlex.join(["df", "-h", gb["receive_dir"]]))
-    check_read = [gb["python"], str(checkout / "scripts/m2_hf_artifacts.py"), "check-read",
-                  "--token-file", gb["hf_token_file"]]
-    if gb.get("hf_proxy_file"):
-        check_read.extend(["--proxy-file", gb["hf_proxy_file"]])
+    token = transient_hf_token(gb, "check-read")
+    check_read = artifact_command(config, "check-read")
+    if token:
+        check_read = [gb["python"], "-c", TOKEN_LAUNCHER, "foreground", *check_read]
     commands.append(shlex.join(check_read))
-    print(ssh(gb, "umask 077; " + " && ".join(commands)).stdout, end="")
+    print(ssh(gb, "umask 077; " + " && ".join(commands), stdin=token).stdout, end="")
 
 
-def detached(host, control, action, command):
-    args = shlex.join(["nohup", "flock", "-n", str(control / f"{action}.lock"), *map(str, command)])
-    quoted_log = shlex.quote(str(control / f"{action}.log"))
+def detached(host, control, action, command, *, token=None):
+    lock = str(control / f"{action}.lock")
+    log = str(control / f"{action}.log")
+    if token:
+        args = [host["python"], "-c", TOKEN_LAUNCHER, "detached", log, lock, *map(str, command)]
+        ssh(host, shlex.join(args), stdin=token)
+        return
+    args = shlex.join(["nohup", "flock", "-n", lock, *map(str, command)])
+    quoted_log = shlex.quote(log)
     ssh(host, f"umask 077; mkdir -p -- {shlex.quote(str(control))} && "
               f"{{ {args} </dev/null >>{quoted_log} 2>&1 & }}")
+
+
+def token_source(host, action):
+    if action != "archive-benchmark" and host.get("hf_read_token_source"):
+        return host["hf_read_token_source"]
+    return host.get("hf_token_source")
+
+
+def transient_hf_token(host, action):
+    source = token_source(host, action)
+    if not source:
+        return None
+    contents = Path(source).read_text(encoding="utf-8-sig")
+    tokens = set(re.findall(r"(?<![A-Za-z0-9_])hf_[A-Za-z0-9]{20,}\b", contents))
+    if len(tokens) != 1:
+        raise ValueError("the controller token source must contain exactly one HF credential")
+    return tokens.pop() + "\n"
 
 
 def artifact_command(config, action):
     gb = config["gb10"]
     checkout = PurePosixPath(gb["checkout"])
-    result = [gb["python"], "-u", checkout / "scripts/m2_hf_artifacts.py", action,
-              "--run-id", config["run_id"], "--token-file", gb["hf_token_file"]]
+    result = [gb["python"], "-u", str(checkout / "scripts/m2_hf_artifacts.py"), action]
+    if action != "check-read":
+        result.extend(["--run-id", config["run_id"]])
+    if not token_source(gb, action):
+        result.extend(["--token-file", gb["hf_token_file"]])
     if gb.get("hf_proxy_file"):
         result.extend(["--proxy-file", gb["hf_proxy_file"]])
     return result
@@ -262,7 +315,7 @@ def tick(config, args, state):
         for kind in ("data", "m1"):
             if gb.get(f"{kind}_archive"):
                 command.extend([f"--{kind}", gb[f"{kind}_archive"]])
-        detached(gb, control, "receive", command)
+        detached(gb, control, "receive", command, token=transient_hf_token(gb, "receive"))
         return
     validate_artifact_identity(publication, received)
     if (received.get("gb10_received_verified") is not True or received.get("model_manifest") != str(model)
@@ -324,7 +377,8 @@ def tick(config, args, state):
         archived = remote_json(gb, receipt_path)
         if archived is None:
             detached(gb, control, "archive-benchmark", [*artifact_command(config, "archive-benchmark"),
-                     "--benchmark-dir", gb["benchmark_dir"], "--receipt", receipt_path])
+                     "--benchmark-dir", gb["benchmark_dir"], "--receipt", receipt_path],
+                     token=transient_hf_token(gb, "archive-benchmark"))
         elif archived["run_id"] != config["run_id"] or not COMMIT.fullmatch(archived["benchmark_commit"]):
             raise ValueError("malformed benchmark publication receipt")
         else:
