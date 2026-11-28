@@ -23,6 +23,17 @@ python -u scripts/m2_hf_artifacts.py watch --run-id "$RUN_ID" \
 
 发布进程仅处理包含 `READY.json` 的原子检查点目录。训练进程写出 `TRAINING_COMPLETE.json` 后，发布进程检查训练封存清单与所有已备份快照的一致性，验证 HF 路径、大小和对象摘要，最后单独提交 `COMPLETE.json`。`published.json` 记录包含该标记的 HF 固定 commit。
 
+## 写入凭据留在控制机时的异地检查点
+
+在控制机的持久进程中启动以下拉取程序。它只读取准确指定的 A100 运行目录，每个 `READY.json` 检查点按远端文件 SHA256 校验，传输中断后从现有临时文件长度继续。全部文件校验后原子公开该检查点目录。正式训练封存后才拉取模型、验证、日志和来源文件，并写出本地 `TRAINING_COMPLETE.json`。拉取过程只需要经核对的 SSH 接入，无需 HF token。
+
+```powershell
+python -u scripts/m2_checkpoint_spool.py --ssh-helper $SshHelper --run-id $RunId `
+  --source $A100TrainRunDir --spool $LocalTrainRunDir
+```
+
+控制机获准保存训练恢复点到 HF 时，可在相同本地运行目录上启动 `watch --checkpoints-only`。该模式复用不可变检查点路径与对象摘要验证，凭据留在控制机。它仅生成 `checkpoint-archive.json`，完整发布流程可复用已上传的恢复点。该回执不触发 GB10 接收或租赁释放。
+
 ## 控制机与 GB10
 
 本地配置使用 JSON。以下是字段清单，具体值来自实际 SSH、目录和凭据准备记录。

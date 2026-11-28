@@ -336,30 +336,31 @@ def verify_remote_assets(api, head):
 
 
 def watch(args):
-    import fcntl
+    from m2_handoff import exclusive
 
-    args.state_dir.mkdir(parents=True, exist_ok=True)
-    with (args.state_dir / "publisher.lock").open("a") as lock:
-        fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    with exclusive(args.state_dir / "publisher.lock"):
         run_uploader(args)
 
 
 def run_uploader(args):
     api = client(args)
-    state = read_json(args.state_dir / "prepared.json")
-    if state["run_id"] != args.run_id or state["assets"] != preparation_assets():
-        raise ValueError("preparation belongs to a different training run")
+    state = None
+    marker = args.state_dir / "checkpoint-archive.json" if args.checkpoints_only else args.state_dir / "published.json"
+    if not args.checkpoints_only:
+        state = read_json(args.state_dir / "prepared.json")
+        if state["run_id"] != args.run_id or state["assets"] != preparation_assets():
+            raise ValueError("preparation belongs to a different training run")
     prefix = run_prefix(args.run_id)
     checkpoint_files_by_step = {}
     checkpoint_hashes = {}
-    while not (args.state_dir / "published.json").exists():
+    while not marker.exists():
         try:
             for path in sorted((args.run_dir / "checkpoints").glob("step-*")):
                 if path.name in checkpoint_files_by_step or not (path / "READY.json").is_file():
                     continue
                 files = checkpoint_files(args.run_dir, path, args.run_id)
                 identities = {name: digests(file) for name, file in files.items()}
-                publish_relative(api, prefix, files, identities, f"Back up {args.run_id} {path.name}")
+                head = publish_relative(api, prefix, files, identities, f"Back up {args.run_id} {path.name}")
                 checkpoint_files_by_step[path.name] = set(files)
                 checkpoint_hashes.update(identities)
                 print(f"{now()} archived {path.name}", flush=True)
@@ -372,6 +373,14 @@ def run_uploader(args):
                            for step in sealed_steps):
                         raise ValueError("training seal references a checkpoint without a READY.json marker")
                     continue
+                if args.checkpoints_only:
+                    sealed = {name for name in seal["files"] if name.startswith("checkpoints/")}
+                    if (seal["run_id"] != args.run_id or seal["data_archive_sha256"] != ARCHIVES["data"][1]
+                            or "step-00007500" not in sealed_steps or sealed != set(checkpoint_hashes)):
+                        raise ValueError("final checkpoint-only archive differs from the sealed training run")
+                    atomic_json(marker, {"run_id": args.run_id, "checkpoint_archive_commit": head,
+                                         "recoveries": len(sealed_steps), "archived_at": now()})
+                    return
                 publish_final(api, args, state, checkpoint_files_by_step, checkpoint_hashes)
                 return
         except Exception as error:
@@ -483,6 +492,7 @@ def main():
         if action == "watch":
             sub.add_argument("--run-dir", required=True, type=Path)
             sub.add_argument("--poll-seconds", type=int, default=30)
+            sub.add_argument("--checkpoints-only", action="store_true")
         if action in {"receive", "archive-benchmark"}:
             sub.add_argument("--receipt", required=True, type=Path)
         if action == "receive":
